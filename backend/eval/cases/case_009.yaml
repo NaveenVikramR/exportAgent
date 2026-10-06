@@ -1,0 +1,42 @@
+id: case_009
+title: PO amendment with a lower price and a changed size ratio, same total (GBP)
+demo: true
+sender: "Olivia Grant <olivia.grant@harrowfinch.example>"
+subject: "AMENDMENT 1 - HF/PO/26/3391"
+received_at: "2026-09-25"
+body: |
+  Hello Karthik,
+
+  Further to our price discussion, please find Amendment 1 to HF/PO/26/3391 attached. Unit price is now £2.80 as agreed.
+
+  We've also rebalanced the size curve towards the larger sizes based on last season's sell-through - total units are unchanged. Delivery terms and the ex-factory date remain as per the original order.
+
+  Kind regards,
+  Olivia Grant
+  Buying Team, Harrow & Finch Ltd
+attachments:
+  - filename: HF_PO_26_3391_A1.pdf
+    content_type: application/pdf
+    text: |
+      HARROW & FINCH LTD
+      Unit 7, Wharfside Trading Estate, Leeds LS10 1AB, United Kingdom
+
+      PURCHASE ORDER No: HF/PO/26/3391   AMENDMENT 1
+      Amendment date: 25/09/2026
+      Vendor: Sri Velan Knits
+
+      Style Ref: HF-KL-0932
+      Description: Kids' leggings, 95% organic cotton 5% elastane, GOTS certified
+      Order Currency: GBP
+      Price per unit: £2.80
+      Delivery terms: CIF Felixstowe
+      Ship to: Harrow & Finch DC, Leeds, United Kingdom
+      Required ex-factory date: 05/01/2027
+
+      Colour       2-3Y   4-5Y   6-7Y   8-9Y   Total
+      Dusty Pink   400    600    800    600    2400
+      Sage         400    600    800    600    2400
+      Charcoal     300    500    700    500    2000
+
+      Total units: 6,800
+      Order value: GBP 19,040.00

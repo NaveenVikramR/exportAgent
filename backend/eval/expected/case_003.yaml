@@ -1,0 +1,22 @@
+id: case_003
+classification:
+  category: new_po
+  intents: [new_po, sample_or_approval, shipment_docs]
+  has_po_data: true
+extraction:
+  buyer: Maison Clairet SAS
+  po_number: MC-2026-0871
+  style: MC-PL-118
+  currency: EUR
+  unit_price: "6.40"
+  total_quantity: 6000
+  delivery_date: "2027-01-20"
+  incoterms: CIF
+  port: Le Havre
+  destination_country: France
+  # Sizes are given only as a ratio, so no per-size quantities are expected.
+  line_items:
+    - {colour: Blanc, quantity: 2000}
+    - {colour: Marine, quantity: 2500}
+    - {colour: Rouge, quantity: 1500}
+expected_review_fields: []

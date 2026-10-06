@@ -1,0 +1,27 @@
+id: case_010
+title: Informal forwarded order with no PO number yet (AUD)
+demo: true
+sender: "Suresh <suresh@srivelanknits.example>"
+subject: "Fwd: summer rompers order - pls action"
+received_at: "2026-09-28"
+body: |
+  Karthik pls see below from Priya and book it in, PO number will come from their system next week - Suresh
+
+  ---------- Forwarded message ----------
+  From: Priya Nair <priya@kestrelkids.example>
+  Date: Mon, 28 Sep 2026
+  Subject: summer rompers order
+
+  hi Suresh, great to chat yesterday. confirming what we agreed -
+
+  romper style KK-RS-310, the organic interlock one
+  mint 1200, lemon 1000, sky blue 800... so 3000 all up
+  sizes 0-3M / 3-6M / 6-12M / 12-18M split evenly
+  AUD 5.75 each FOB Chennai
+  need it to leave your factory by 18th Dec (2026 obviously!) so it lands in Melbourne for Feb
+  our system is down so official PO no. to follow, pls dont wait for it
+
+  cheers
+  Priya
+  Kestrel Kids Pty Ltd
+attachments: []

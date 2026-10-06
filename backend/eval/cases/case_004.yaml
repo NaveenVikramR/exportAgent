@@ -1,0 +1,19 @@
+id: case_004
+title: New PO with missing price, delivery date and terms
+demo: true
+sender: "Dana Whitfield <dana.whitfield@bluepeakoutfitters.example>"
+subject: "PO BP-778301 - fleece hoodie reorder"
+received_at: "2026-09-10"
+body: |
+  Hi Karthik,
+
+  We're going ahead with the reorder of the pullover hoodie (style BP-HD-5512), same spec as last season, 320 GSM brushed fleece. This is PO BP-778301.
+
+  Quantities: Charcoal 1,800 / Forest Green 1,200 / Black 2,000 - total 5,000 units. Size breakdown to follow once planning signs off.
+
+  Price as agreed with Suresh on our call last week. I'll confirm the ship window after our Thursday allocation meeting - please pencil in the fabric in the meantime.
+
+  Thanks,
+  Dana Whitfield
+  Bluepeak Outfitters Inc., Portland, OR
+attachments: []

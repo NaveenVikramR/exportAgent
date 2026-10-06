@@ -1,0 +1,44 @@
+id: case_002
+title: Revised PO, quantity up and delivery date silently pulled forward
+demo: true
+sender: "Anna Becker <anna.becker@nordwind-mode.example>"
+subject: "REVISED PO NW-45120 Rev.1 - please replace previous version"
+received_at: "2026-09-18"
+body: |
+  Dear Karthik,
+
+  Following our sales meeting we have revised PO NW-45120. Please work to the attached Rev.1 and discard the earlier version.
+
+  Our store launch plan has moved, so please review the document carefully and confirm.
+
+  Regards,
+  Anna Becker
+  Senior Buyer, Nordwind Mode GmbH, Hamburg
+attachments:
+  - filename: PO_NW-45120_Rev1.pdf
+    content_type: application/pdf
+    text: |
+      NORDWIND MODE GMBH
+      Speicherstrasse 14, 20457 Hamburg, Germany
+
+      PURCHASE ORDER - REVISION 1
+      PO Number: NW-45120
+      Revision Date: 18 September 2026
+      Supplier: Sri Velan Knits, Tiruppur, India
+
+      Style No: NW-TS-2207
+      Description: Men's crew neck T-shirt, 100% combed cotton single jersey, 160 GSM
+      Currency: USD
+      Unit Price: 4.85 per piece
+      Incoterms: FOB Tuticorin
+      Destination: Hamburg, Germany
+      Delivery Date (ex-factory): 30 November 2026
+      Payment Terms: LC at sight
+
+      Colour        S      M      L      XL     Total
+      Navy          800    2000   2000   1200   6000
+      White         600    1500   1500   900    4500
+      Heather Grey  400    1000   1000   600    3000
+
+      Total Quantity: 13,500 pcs
+      Total Value: USD 65,475.00

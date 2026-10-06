@@ -1,0 +1,31 @@
+id: case_007
+title: Delivery date changed inside a reply thread (old date still quoted below)
+demo: true
+sender: "Anna Becker <anna.becker@nordwind-mode.example>"
+subject: "RE: RE: PO NW-45098 - delivery"
+received_at: "2026-09-20"
+body: |
+  Hi Karthik,
+
+  Thanks for the update. Unfortunately the retail calendar has changed again on our side. We now need NW-45098 ex-factory by 10 November 2026 at the latest - the 24 November date below no longer works for us. Quantities and prices are unchanged.
+
+  Please confirm this is feasible.
+
+  Anna Becker
+  Nordwind Mode GmbH
+
+  -----Original Message-----
+  From: Karthik <merch@srivelanknits.example>
+  Sent: 17 September 2026
+  Subject: RE: PO NW-45098 - delivery
+
+  Dear Anna, fabric is in-house and we are on track for ex-factory 24 November 2026 as per PO.
+  Regards, Karthik
+
+  -----Original Message-----
+  From: Anna Becker <anna.becker@nordwind-mode.example>
+  Sent: 16 September 2026
+  Subject: PO NW-45098 - delivery
+
+  Karthik, can you confirm the ex-factory date for NW-45098 (women's long sleeve tee, 9,000 pcs)? Our PO says 24 November 2026.
+attachments: []

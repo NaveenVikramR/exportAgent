@@ -1,0 +1,23 @@
+id: case_004
+classification:
+  category: new_po
+  intents: [new_po]
+  has_po_data: true
+extraction:
+  buyer: Bluepeak Outfitters Inc.
+  po_number: BP-778301
+  style: BP-HD-5512
+  currency: null
+  unit_price: null
+  total_quantity: 5000
+  delivery_date: null
+  incoterms: null
+  port: null
+  destination_country: null
+  line_items:
+    - {colour: Charcoal, quantity: 1800}
+    - {colour: Forest Green, quantity: 1200}
+    - {colour: Black, quantity: 2000}
+# The buyer is in the US but no ship-to is stated; either answer is defensible.
+skip_fields: [destination_country]
+expected_review_fields: [currency, unit_price, delivery_date, incoterms, port]

@@ -1,0 +1,8 @@
+id: case_008
+classification:
+  category: sample_or_approval
+  intents: [sample_or_approval, order_query]
+  has_po_data: false
+# No purchase order data, so no extraction is expected.
+extraction: null
+expected_review_fields: []

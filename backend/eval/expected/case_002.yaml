@@ -1,0 +1,33 @@
+id: case_002
+classification:
+  category: po_revision
+  intents: [po_revision]
+  has_po_data: true
+extraction:
+  buyer: Nordwind Mode GmbH
+  po_number: NW-45120
+  style: NW-TS-2207
+  currency: USD
+  unit_price: "4.85"
+  total_quantity: 13500
+  delivery_date: "2026-11-30"
+  incoterms: FOB
+  port: Tuticorin
+  destination_country: Germany
+  line_items:
+    - colour: Navy
+      quantity: 6000
+      sizes: {S: 800, M: 2000, L: 2000, XL: 1200}
+    - colour: White
+      quantity: 4500
+      sizes: {S: 600, M: 1500, L: 1500, XL: 900}
+    - colour: Heather Grey
+      quantity: 3000
+      sizes: {S: 400, M: 1000, L: 1000, XL: 600}
+expected_review_fields: []
+# Used from Milestone 3 (change detection).
+revises: case_001
+expected_changes:
+  - {field: total_quantity, old: 12000, new: 13500}
+  - {field: delivery_date, old: "2026-12-15", new: "2026-11-30"}
+  - {field: "line_items.Navy.quantity", old: 4500, new: 6000}

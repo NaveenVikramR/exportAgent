@@ -1,0 +1,22 @@
+id: case_010
+classification:
+  category: new_po
+  intents: [new_po]
+  has_po_data: true
+extraction:
+  # Forwarded internally by the factory; the buyer is the original sender's company.
+  buyer: Kestrel Kids Pty Ltd
+  po_number: null
+  style: KK-RS-310
+  currency: AUD
+  unit_price: "5.75"
+  total_quantity: 3000
+  delivery_date: "2026-12-18"
+  incoterms: FOB
+  port: Chennai
+  destination_country: Australia
+  line_items:
+    - {colour: Mint, quantity: 1200}
+    - {colour: Lemon, quantity: 1000}
+    - {colour: Sky Blue, quantity: 800}
+expected_review_fields: [po_number]

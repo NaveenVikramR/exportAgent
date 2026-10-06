@@ -1,0 +1,19 @@
+id: case_008
+title: No PO data, sample request plus shipment status query
+demo: true
+sender: "Priya Nair <priya@kestrelkids.example>"
+subject: "Fit samples for style KK-RS-310 + shipment status"
+received_at: "2026-09-22"
+body: |
+  Hi team,
+
+  Two quick ones.
+
+  Could you send 3 fit samples of the romper KK-RS-310 in size 6-12M to our Melbourne office by courier this week?
+
+  And where is the shipment for our August order - has the vessel sailed from Chennai yet? We haven't heard anything since the goods left the factory.
+
+  Thanks,
+  Priya Nair
+  Kestrel Kids Pty Ltd
+attachments: []

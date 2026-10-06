@@ -1,0 +1,36 @@
+id: case_006
+title: Contradictory quantities (email says 8,000, attached PO adds up to 8,400)
+demo: true
+sender: "Dana Whitfield <dana.whitfield@bluepeakoutfitters.example>"
+subject: "PO BP-778455 - women's rib tank, 8,000 pcs"
+received_at: "2026-09-15"
+body: |
+  Hi Karthik,
+
+  Attached is PO BP-778455 for the women's rib tank (style BP-TK-2040). 8,000 pcs total as discussed, $3.20 FOB Chennai, ex-factory Nov 20, 2026.
+
+  Please confirm.
+
+  Dana Whitfield
+  Bluepeak Outfitters Inc.
+attachments:
+  - filename: BP-778455.pdf
+    content_type: application/pdf
+    text: |
+      BLUEPEAK OUTFITTERS INC.
+      PURCHASE ORDER BP-778455
+      Issued: September 15, 2026
+
+      Style: BP-TK-2040  Women's 2x2 rib tank, 95/5 cotton spandex
+      Currency: USD
+      Unit cost: 3.20
+      Terms: FOB Chennai
+      Ship to: Bluepeak DC, Reno, NV, USA
+      Ex-factory: November 20, 2026
+
+      Color       XS    S     M      L     XL    Total
+      Black       300   900   1200   900   300   3600
+      Ivory       250   700   1000   700   250   2900
+      Dusty Rose  150   500   600    500   150   1900
+
+      TOTAL: 8,400 PCS

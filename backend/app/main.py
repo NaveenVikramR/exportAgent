@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import health, trace
+from app.api import emails, health, trace
 from app.config import get_settings
 
 app = FastAPI(title="ExportAgent API", version="0.1.0")
@@ -15,3 +15,4 @@ app.add_middleware(
 
 app.include_router(health.router, prefix="/api")
 app.include_router(trace.router, prefix="/api")
+app.include_router(emails.router, prefix="/api")

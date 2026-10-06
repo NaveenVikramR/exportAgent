@@ -1,0 +1,40 @@
+id: case_005
+title: GBP order with day-first dates and age sizes (CIF)
+demo: true
+sender: "Olivia Grant <olivia.grant@harrowfinch.example>"
+subject: "Purchase Order HF/PO/26/3391 - Kids' organic leggings"
+received_at: "2026-09-12"
+body: |
+  Hello Karthik,
+
+  Please see our purchase order attached for the kids' organic leggings. GOTS transaction certificate will be required with the shipping documents.
+
+  Kind regards,
+  Olivia Grant
+  Buying Team, Harrow & Finch Ltd
+attachments:
+  - filename: HF_PO_26_3391.pdf
+    content_type: application/pdf
+    text: |
+      HARROW & FINCH LTD
+      Unit 7, Wharfside Trading Estate, Leeds LS10 1AB, United Kingdom
+
+      PURCHASE ORDER No: HF/PO/26/3391
+      Date: 12/09/2026
+      Vendor: Sri Velan Knits
+
+      Style Ref: HF-KL-0932
+      Description: Kids' leggings, 95% organic cotton 5% elastane, GOTS certified
+      Order Currency: GBP
+      Price per unit: £2.95
+      Delivery terms: CIF Felixstowe
+      Ship to: Harrow & Finch DC, Leeds, United Kingdom
+      Required ex-factory date: 05/01/2027
+
+      Colour       2-3Y   4-5Y   6-7Y   8-9Y   Total
+      Dusty Pink   500    700    700    500    2400
+      Sage         500    700    700    500    2400
+      Charcoal     400    600    600    400    2000
+
+      Total units: 6,800
+      Order value: GBP 20,060.00

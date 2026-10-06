@@ -1,0 +1,27 @@
+id: case_003
+title: One email mixing three requests (new order in body, lab dips, packing list), EUR
+demo: true
+sender: "Julien Moreau <j.moreau@maison-clairet.example>"
+subject: "Order MC-2026-0871 + lab dips + packing list for last shipment"
+received_at: "2026-09-08"
+body: |
+  Hello Karthik,
+
+  Three things today:
+
+  1) New order. Please book the following, PO number MC-2026-0871:
+  Style: MC-PL-118 ladies' pique polo, 95% cotton 5% elastane
+  Colours and quantities: Blanc 2,000 pcs / Marine 2,500 pcs / Rouge 1,500 pcs (total 6,000 pcs)
+  Size ratio XS:S:M:L:XL = 1:2:3:3:1 for every colour
+  Price: EUR 6.40 per piece, CIF Le Havre
+  Ex-factory: 20 January 2027
+  The formal PO document will follow from our system this week.
+
+  2) Lab dips for MC-2026-0795 (the Vert Sauge colour) - we still have not received the second submission. When was it sent? Our design team needs it before Friday.
+
+  3) Please resend the packing list for invoice SVK/EXP/0412 - our warehouse in Lyon cannot find the carton breakdown.
+
+  Merci,
+  Julien Moreau
+  Acheteur, Maison Clairet SAS, Lyon, France
+attachments: []

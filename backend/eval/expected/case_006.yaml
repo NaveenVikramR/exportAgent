@@ -1,0 +1,28 @@
+id: case_006
+classification:
+  category: new_po
+  intents: [new_po]
+  has_po_data: true
+extraction:
+  buyer: Bluepeak Outfitters Inc.
+  po_number: BP-778455
+  style: BP-TK-2040
+  currency: USD
+  unit_price: "3.20"
+  # The PO document governs (8,400); the email's 8,000 must surface as a review flag.
+  total_quantity: 8400
+  delivery_date: "2026-11-20"
+  incoterms: FOB
+  port: Chennai
+  destination_country: United States
+  line_items:
+    - colour: Black
+      quantity: 3600
+      sizes: {XS: 300, S: 900, M: 1200, L: 900, XL: 300}
+    - colour: Ivory
+      quantity: 2900
+      sizes: {XS: 250, S: 700, M: 1000, L: 700, XL: 250}
+    - colour: Dusty Rose
+      quantity: 1900
+      sizes: {XS: 150, S: 500, M: 600, L: 500, XL: 150}
+expected_review_fields: [total_quantity]
