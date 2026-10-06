@@ -16,6 +16,7 @@ class LLMCallOut(BaseModel):
     output_tokens: int
     latency_ms: int
     cost_usd: Decimal
+    source: str
     success: bool
     error: str | None
     created_at: datetime
@@ -24,6 +25,7 @@ class LLMCallOut(BaseModel):
 class ModelUsage(BaseModel):
     model: str
     tier: str
+    source: str
     calls: int
     input_tokens: int
     output_tokens: int
@@ -34,6 +36,9 @@ class ModelUsage(BaseModel):
 class TraceSummary(BaseModel):
     total_calls: int
     total_cost_usd: Decimal
+    llm_mode: str
+    spent_today_usd: Decimal
+    daily_spend_cap_usd: Decimal
     by_model: list[ModelUsage]
 
 

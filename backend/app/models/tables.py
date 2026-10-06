@@ -14,8 +14,11 @@ def _now() -> datetime:
 
 class Email(Base):
     __tablename__ = "emails"
+    __table_args__ = (UniqueConstraint("external_id", name="uq_emails_external_id"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    # eval/seed case id, so seeding is idempotent
+    external_id: Mapped[str | None] = mapped_column(String(50))
     sender: Mapped[str] = mapped_column(String(320))
     subject: Mapped[str] = mapped_column(String(500))
     body: Mapped[str] = mapped_column(Text)
@@ -24,7 +27,10 @@ class Email(Base):
     source: Mapped[str] = mapped_column(String(20), default="seed")
     # new | processing | analysed | needs_review | failed
     status: Mapped[str] = mapped_column(String(20), default="new", index=True)
-    classification: Mapped[dict[str, Any] | None] = mapped_column(JSON)
+    classification: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
+    # {"fields": POExtraction, "review": [ReviewFlag]}; null when the email carries no PO data
+    extraction: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
+    analysis_error: Mapped[str | None] = mapped_column(Text)
     order_id: Mapped[int | None] = mapped_column(ForeignKey("orders.id"), index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
@@ -77,9 +83,9 @@ class POVersion(Base):
     version: Mapped[int]
     email_id: Mapped[int | None] = mapped_column(ForeignKey("emails.id"))
     # extracted PO fields, per-field confidence, and the diff against the previous version
-    data: Mapped[dict[str, Any]] = mapped_column(JSON)
-    confidence: Mapped[dict[str, Any] | None] = mapped_column(JSON)
-    changes: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON)
+    data: Mapped[dict[str, Any]] = mapped_column(JSON(none_as_null=True))
+    confidence: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
+    changes: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON(none_as_null=True))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
     order: Mapped[Order] = relationship(back_populates="versions")
@@ -111,8 +117,8 @@ class AgentStep(Base):
     # llm | tool
     kind: Mapped[str] = mapped_column(String(10))
     name: Mapped[str] = mapped_column(String(100))
-    input: Mapped[dict[str, Any] | None] = mapped_column(JSON)
-    output: Mapped[dict[str, Any] | None] = mapped_column(JSON)
+    input: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
+    output: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
     run: Mapped[AgentRun] = relationship(back_populates="steps")
@@ -132,9 +138,22 @@ class LLMCall(Base):
     output_tokens: Mapped[int] = mapped_column(default=0)
     latency_ms: Mapped[int] = mapped_column(default=0)
     cost_usd: Mapped[Decimal] = mapped_column(Numeric(12, 8), default=Decimal("0"))
+    # live | cache | mock. Only live calls cost money.
+    source: Mapped[str] = mapped_column(String(10), default="live", server_default="live")
     success: Mapped[bool] = mapped_column(default=True)
     error: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, index=True)
+
+
+class LLMCache(Base):
+    """Live responses keyed by request hash, so re-runs do not re-spend credits."""
+
+    __tablename__ = "llm_cache"
+
+    key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    model: Mapped[str] = mapped_column(String(200))
+    response: Mapped[dict[str, Any]] = mapped_column(JSON(none_as_null=True))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
 
 class Draft(Base):

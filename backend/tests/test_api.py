@@ -4,17 +4,19 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.db import get_session
+from app.llm.router import LLMRouter, get_router
 from app.main import app
 from app.models import LLMCall
 
 
 @pytest.fixture
-def client(session_factory):
+def client(session_factory, settings):
     def override():
         with session_factory() as session:
             yield session
 
     app.dependency_overrides[get_session] = override
+    app.dependency_overrides[get_router] = lambda: LLMRouter(settings, session_factory=session_factory)
     yield TestClient(app)
     app.dependency_overrides.clear()
 
@@ -52,6 +54,8 @@ def test_summary_aggregates_calls_per_model(client, session_factory):
     body = client.get("/api/trace/summary").json()
 
     assert body["total_calls"] == 3
+    assert Decimal(body["spent_today_usd"]) == Decimal("0.00011")
+    assert Decimal(body["daily_spend_cap_usd"]) == Decimal("1.00")
     assert Decimal(body["total_cost_usd"]) == Decimal("0.00011")
     nano = next(row for row in body["by_model"] if row["model"] == "m/nano")
     assert nano["calls"] == 2

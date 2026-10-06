@@ -1,6 +1,7 @@
 from decimal import Decimal
 from functools import lru_cache
 from pathlib import Path
+from typing import Literal
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -36,6 +37,16 @@ class Settings(BaseSettings):
     llm_force_tier: Tier | None = None
     llm_task_tier_overrides: dict[TaskType, Tier] = Field(default_factory=dict)
     llm_timeout_seconds: float = 60.0
+    # live = call Token Factory; mock = rule-based stand-in, no network, no cost
+    llm_mode: Literal["live", "mock"] = "live"
+    llm_cache_enabled: bool = True
+    # Live calls stop once today's (UTC) spend reaches this. Cached responses still serve.
+    daily_spend_cap_usd: Decimal = Decimal("1.00")
+
+    # Requests per IP per minute on endpoints that trigger LLM work
+    rate_limit_per_minute: int = 10
+    # Extracted fields below this confidence are flagged for human review
+    review_confidence_threshold: float = 0.7
 
     tavily_api_key: str | None = None
 

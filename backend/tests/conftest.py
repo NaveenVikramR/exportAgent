@@ -30,4 +30,9 @@ def settings() -> Settings:
         nebius_model_ultra="test/ultra",
         llm_force_tier=None,
         llm_task_tier_overrides={},
+        llm_mode="live",
+        llm_cache_enabled=True,
+        daily_spend_cap_usd="1.00",
+        rate_limit_per_minute=10,
+        review_confidence_threshold=0.7,
     )
