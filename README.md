@@ -49,8 +49,11 @@ python -m venv .venv
 .venv/Scripts/activate        # macOS/Linux: source .venv/bin/activate
 pip install -e ".[dev]"
 alembic upgrade head
+python -m scripts.seed --analyse   # load the 10 demo emails and analyse them
 uvicorn app.main:app --reload --port 8000
 ```
+
+No Nebius key yet? Set `LLM_MODE=mock` in `.env`. Calls are then answered by a rule-based stand-in ([backend/app/llm/mock.py](backend/app/llm/mock.py)) with no network and no cost, so the whole pipeline runs. Mock results are labelled as such in the trace and the eval report.
 
 Frontend:
 
@@ -67,11 +70,28 @@ pytest                           # unit tests, no network
 python -m scripts.list_models    # NVIDIA model IDs served by Token Factory for your key
 python -m scripts.smoke_llm      # one live call per Nemotron tier: model, tokens, latency, cost
 python -m scripts.smoke_tavily   # one live Tavily search with source URLs
+python -m eval.run_eval          # score extraction against the labelled cases, writes eval/report.md
 ```
+
+Docker (Postgres, API and web together, reading secrets from `.env`):
+
+```bash
+docker compose up --build        # web on :3000, API on :8000
+```
+
+## Cost controls for the public demo
+
+- **Response cache:** live responses are cached by request hash, so re-running the same email costs nothing.
+- **Daily spend cap:** `DAILY_SPEND_CAP_USD` defaults to $1/day (UTC). Once it is reached, live calls stop, cached responses still serve, and analysed emails show their stored result.
+- **Rate limit:** endpoints that trigger LLM work allow `RATE_LIMIT_PER_MINUTE` requests per IP (default 10).
 
 ## Evaluation
 
-_To be filled: 40-case synthetic dataset, extraction accuracy, change-detection precision and recall, risk flag rate, cost and latency per case._
+Synthetic buyer emails modelled on real export paperwork live in [backend/eval/cases/](backend/eval/cases/), with hand-written expected outputs in [backend/eval/expected/](backend/eval/expected/). The first 10 cover a clean PO, revised and amended POs, one email mixing three requests, missing fields, contradictory quantities, a date changed inside a reply thread, day-first dates, and USD, EUR, GBP and AUD.
+
+Every extracted field carries a confidence and the source quote it came from. Plain-Python rules then lower the confidence and flag the field for human review when the quote is not in the email, the quantities do not add up, or a required field is missing ([backend/app/services/review.py](backend/app/services/review.py)).
+
+_To be filled: results on Nemotron (live), growing to 40 cases with change-detection precision and recall, risk flag rate, and cost and latency per case._
 
 ## What we'd improve
 
