@@ -57,9 +57,10 @@ export default function Home() {
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-6 py-10">
       <header>
-        <h1 className="text-2xl font-semibold">ExportAgent</h1>
+        <h1 className="text-2xl font-semibold">Agent trace</h1>
         <p className="text-sm text-zinc-600">
-          AI export desk for apparel exporters. Milestone 1: system status and agent trace.
+          Every LLM call goes through one router. This page shows where each task is routed and what
+          each call cost.
         </p>
       </header>
 
@@ -115,8 +116,16 @@ export default function Home() {
           <Card title="Agent trace">
             <p className="mb-3 text-sm">
               {data.summary.total_calls} calls, running cost{" "}
-              <span className="font-mono">${Number(data.summary.total_cost_usd).toFixed(6)}</span>
+              <span className="font-mono">${Number(data.summary.total_cost_usd).toFixed(6)}</span>.
+              Today: <span className="font-mono">${Number(data.summary.spent_today_usd).toFixed(4)}</span>{" "}
+              of the <span className="font-mono">${Number(data.summary.daily_spend_cap_usd).toFixed(2)}</span>{" "}
+              daily cap.
             </p>
+            {data.summary.llm_mode === "mock" && (
+              <p className="mb-3 rounded border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                Mock mode: calls are answered by a rule-based stand-in, not a Nemotron model.
+              </p>
+            )}
             {data.calls.length === 0 ? (
               <p className="text-sm text-zinc-500">
                 No LLM calls yet. Run <code className="font-mono">python -m scripts.smoke_llm</code>.
@@ -130,6 +139,7 @@ export default function Home() {
                       <th className="py-1 font-medium">Task</th>
                       <th className="py-1 font-medium">Tier</th>
                       <th className="py-1 font-medium">Model</th>
+                      <th className="py-1 font-medium">Source</th>
                       <th className="py-1 text-right font-medium">In</th>
                       <th className="py-1 text-right font-medium">Out</th>
                       <th className="py-1 text-right font-medium">Latency</th>
@@ -146,6 +156,7 @@ export default function Home() {
                           <TierBadge tier={call.tier} />
                         </td>
                         <td className="py-1.5 font-mono text-xs">{call.model}</td>
+                        <td className="py-1.5">{call.source}</td>
                         <td className="py-1.5 text-right">{call.input_tokens}</td>
                         <td className="py-1.5 text-right">{call.output_tokens}</td>
                         <td className="py-1.5 text-right">{call.latency_ms} ms</td>
