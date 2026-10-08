@@ -24,6 +24,7 @@ export type LLMCall = {
   latency_ms: number;
   cost_usd: string;
   source: string;
+  detail: string | null;
   success: boolean;
   error: string | null;
   created_at: string;
@@ -87,9 +88,65 @@ export type ScalarField =
   | "port"
   | "destination_country";
 
+export type Escalation = {
+  field: string;
+  reason: string;
+  model: string;
+  calls: number;
+  input_tokens: number;
+  output_tokens: number;
+  cost_usd: string;
+  outcome: "resolved" | "unresolved" | "failed" | "skipped_spend_cap";
+  before: unknown;
+  after: unknown;
+};
+
 export type Extraction = {
   fields: Record<ScalarField, Extracted> & { line_items: LineItem[] };
   review: ReviewFlag[];
+  escalations: Escalation[];
+};
+
+export type RiskFlag = {
+  severity: "high" | "medium" | "low";
+  category: string;
+  reason: string;
+  evidence: string[];
+  verified: boolean;
+  source: "model" | "rule";
+};
+
+export type AgentStep = {
+  id: number;
+  seq: number;
+  round: number;
+  kind: "llm" | "tool";
+  name: string;
+  input: Record<string, unknown> | null;
+  output: Record<string, unknown> | null;
+  summary: string | null;
+  evidence_id: string | null;
+  model: string | null;
+  tier: string | null;
+  input_tokens: number | null;
+  output_tokens: number | null;
+  latency_ms: number | null;
+  cost_usd: string | null;
+  call_source: string | null;
+};
+
+export type AgentRun = {
+  id: number;
+  status: string;
+  rounds: number;
+  result: { summary: string; flags: RiskFlag[] } | null;
+  error: string | null;
+  started_at: string;
+  finished_at: string | null;
+  steps: AgentStep[];
+  ultra_calls: number;
+  total_cost_usd: string;
+  notice: string | null;
 };
 
 export type EmailSummary = {
@@ -170,6 +227,9 @@ export const api = {
   emails: () => get<EmailSummary[]>("/emails"),
   email: (id: string) => get<EmailDetail>(`/emails/${id}`),
   orders: () => get<OrderSummary[]>("/orders"),
+  agentRun: (id: string) => get<AgentRun>(`/emails/${id}/agent`),
+  assess: (id: string, force: boolean) =>
+    request<AgentRun>(`/emails/${id}/agent?force=${force}`, { method: "POST" }),
   order: (id: string) => get<OrderDetail>(`/orders/${id}`),
   analyse: (id: string, force: boolean) =>
     request<EmailDetail>(`/emails/${id}/analyse?force=${force}`, { method: "POST" }),

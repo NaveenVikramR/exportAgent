@@ -151,7 +151,10 @@ export default function Home() {
                     {data.calls.map((call) => (
                       <tr key={call.id} className="border-t border-zinc-100">
                         <td className="py-1.5 text-zinc-500">{call.id}</td>
-                        <td className="py-1.5">{call.task_type}</td>
+                        <td className="py-1.5">
+                          {call.task_type}
+                          {call.detail && <p className="text-xs text-amber-800">{call.detail}</p>}
+                        </td>
                         <td className="py-1.5">
                           <TierBadge tier={call.tier} />
                         </td>

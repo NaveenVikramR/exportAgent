@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CATEGORY_LABELS, CategoryBadge, StatusBadge } from "@/components/badges";
-import { api, type EmailDetail, type Extraction, type ScalarField } from "@/lib/api";
+import { AgentTrace, RiskFlags } from "@/components/risk-panel";
+import { api, type AgentRun, type EmailDetail, type Extraction, type ScalarField } from "@/lib/api";
 
 const FIELD_LABELS: [ScalarField, string][] = [
   ["buyer", "Buyer"],
@@ -25,6 +26,19 @@ const REASON_LABELS: Record<string, string> = {
   evidence_not_found: "Source quote not found",
   evidence_mismatch: "Source quote does not state this value",
   quantity_mismatch: "Quantities do not add up",
+};
+
+const ESCALATION_REASONS: Record<string, string> = {
+  size_table_not_extracted: "size table present but not extracted",
+  size_total_mismatch: "size breakdown did not add up",
+  source_quote_missing: "quoted source text missing or did not state the value",
+};
+
+const ESCALATION_OUTCOMES: Record<string, string> = {
+  resolved: "fixed, check passed",
+  unresolved: "still failing, kept for review",
+  failed: "no usable answer",
+  skipped_spend_cap: "skipped, daily spend cap reached",
 };
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
@@ -135,13 +149,32 @@ export default function EmailPage() {
   const [email, setEmail] = useState<EmailDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
+  const [run, setRun] = useState<AgentRun | null>(null);
+  const [assessing, setAssessing] = useState(false);
 
   useEffect(() => {
     api
       .email(id)
       .then(setEmail)
       .catch((err: Error) => setError(err.message));
+    // No stored assessment yet is normal; the button below starts one.
+    api
+      .agentRun(id)
+      .then(setRun)
+      .catch(() => setRun(null));
   }, [id]);
+
+  async function assess(force: boolean) {
+    setAssessing(true);
+    setError(null);
+    try {
+      setRun(await api.assess(id, force));
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setAssessing(false);
+    }
+  }
 
   async function analyse(force: boolean) {
     setRunning(true);
@@ -227,8 +260,63 @@ export default function EmailPage() {
               }
             >
               <ExtractionTable extraction={email.extraction} />
+              {email.extraction.escalations?.length > 0 && (
+                <div className="mt-5">
+                  <h3 className="mb-2 text-sm font-medium">Escalated to a stronger model</h3>
+                  <ul className="flex flex-col gap-1.5 text-sm">
+                    {email.extraction.escalations.map((escalation, index) => (
+                      <li key={index} className="flex flex-wrap items-baseline gap-2 rounded border border-zinc-200 px-3 py-2">
+                        <span className="font-medium">{escalation.field}</span>
+                        <span className="text-zinc-600">{ESCALATION_REASONS[escalation.reason] ?? escalation.reason}</span>
+                        <span className="font-mono text-xs text-zinc-500">{escalation.model}</span>
+                        <span
+                          className={`text-xs font-medium ${
+                            escalation.outcome === "resolved" ? "text-emerald-700" : "text-amber-800"
+                          }`}
+                        >
+                          {ESCALATION_OUTCOMES[escalation.outcome] ?? escalation.outcome}
+                        </span>
+                        <span className="ml-auto text-xs tabular-nums text-zinc-500">
+                          ${Number(escalation.cost_usd).toFixed(5)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </Card>
           )}
+          {email.order_id && (
+            <Card title="Risk assessment">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                <p className="text-sm text-zinc-600">
+                  Nemotron Ultra plans the checks; Python tools do the maths. Every flag cites its evidence.
+                </p>
+                <button
+                  onClick={() => assess(run !== null)}
+                  disabled={assessing}
+                  className="rounded bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50"
+                >
+                  {assessing ? "Assessing… (up to a minute)" : run ? "Re-run assessment" : "Assess risk"}
+                </button>
+              </div>
+              {run?.notice && (
+                <p className="mb-3 rounded border border-sky-200 bg-sky-50 px-3 py-2 text-sm text-sky-900">{run.notice}</p>
+              )}
+              {run?.error && (
+                <p className="mb-3 rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+                  The assessment did not complete: {run.error}
+                </p>
+              )}
+              {run && <RiskFlags run={run} />}
+            </Card>
+          )}
+          {run && run.steps.length > 0 && (
+            <Card title="Agent trace">
+              <AgentTrace run={run} />
+            </Card>
+          )}
+
           {email.classification && !email.extraction && (
             <p className="text-sm text-zinc-500">This email carries no purchase order data, so nothing was extracted.</p>
           )}
