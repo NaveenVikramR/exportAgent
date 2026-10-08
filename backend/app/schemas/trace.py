@@ -17,6 +17,7 @@ class LLMCallOut(BaseModel):
     latency_ms: int
     cost_usd: Decimal
     source: str
+    detail: str | None
     success: bool
     error: str | None
     created_at: datetime

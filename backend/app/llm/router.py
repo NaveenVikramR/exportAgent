@@ -73,10 +73,13 @@ class LLMRouter:
         settings: Settings | None = None,
         client: OpenAI | None = None,
         session_factory: sessionmaker[Session] = SessionLocal,
+        cache_session_factory: sessionmaker[Session] | None = None,
     ) -> None:
         self.settings = settings or get_settings()
         self._client = client
         self._session_factory = session_factory
+        # The eval logs to a scratch database but shares the main response cache.
+        self._cache_session_factory = cache_session_factory or session_factory
 
     @property
     def client(self) -> OpenAI:
@@ -125,17 +128,19 @@ class LLMRouter:
         response_format: dict[str, Any] | None = None,
         reasoning: bool | None = None,
         run_id: int | None = None,
+        detail: str | None = None,
     ) -> LLMResult:
         """Run one chat completion for `task` and log it.
 
         `reasoning` toggles Nemotron's thinking for this request; None leaves
-        the model default.
+        the model default. `detail` is stored with the log row (e.g. why a call
+        was escalated).
         """
         tier = self.tier_for(task)
         model = self.settings.model_for(tier)
 
         if self.settings.llm_mode == "mock":
-            return self._complete_mock(task, tier, model, messages, run_id)
+            return self._complete_mock(task, tier, model, messages, run_id, detail, tools)
 
         request: dict[str, Any] = {
             "model": model,
@@ -156,7 +161,7 @@ class LLMRouter:
             if cached is not None:
                 return self._result_from_payload(
                     cached, task=task, tier=tier, model=model, run_id=run_id,
-                    source="cache", latency_ms=0, cost=Decimal("0"),
+                    source="cache", latency_ms=0, cost=Decimal("0"), detail=detail,
                 )
 
         cap = self.settings.daily_spend_cap_usd
@@ -173,7 +178,7 @@ class LLMRouter:
             latency_ms = round((time.perf_counter() - started) * 1000)
             self._log(
                 run_id=run_id, task=task, tier=tier, model=model, latency_ms=latency_ms,
-                success=False, error=str(exc),
+                success=False, error=str(exc), detail=detail,
             )
             raise LLMError(f"Token Factory call failed ({model}): {exc}") from exc
         latency_ms = round((time.perf_counter() - started) * 1000)
@@ -199,7 +204,7 @@ class LLMRouter:
 
         return self._result_from_payload(
             payload, task=task, tier=tier, model=model, run_id=run_id,
-            source="live", latency_ms=latency_ms, cost=cost,
+            source="live", latency_ms=latency_ms, cost=cost, detail=detail,
         )
 
     def _complete_mock(
@@ -209,18 +214,23 @@ class LLMRouter:
         model: str,
         messages: list[dict[str, Any]],
         run_id: int | None,
+        detail: str | None,
+        tools: list[dict[str, Any]] | None,
     ) -> LLMResult:
         started = time.perf_counter()
-        content = mock_completion(task, messages)
+        reply = mock_completion(task, messages, tools=tools)
+        content = reply.get("content")
         payload = {
             "content": content,
-            "finish_reason": "stop",
+            "finish_reason": "tool_calls" if reply.get("tool_calls") else "stop",
+            "tool_calls": reply.get("tool_calls") or [],
             "input_tokens": estimate_tokens(json.dumps(messages)),
-            "output_tokens": estimate_tokens(content),
+            "output_tokens": estimate_tokens(content or json.dumps(reply.get("tool_calls"))),
         }
         return self._result_from_payload(
             payload, task=task, tier=tier, model=model, run_id=run_id, source="mock",
             latency_ms=round((time.perf_counter() - started) * 1000), cost=Decimal("0"),
+            detail=detail,
         )
 
     def _result_from_payload(
@@ -234,11 +244,12 @@ class LLMRouter:
         source: str,
         latency_ms: int,
         cost: Decimal,
+        detail: str | None = None,
     ) -> LLMResult:
         call_id = self._log(
             run_id=run_id, task=task, tier=tier, model=model, latency_ms=latency_ms,
             input_tokens=payload["input_tokens"], output_tokens=payload["output_tokens"],
-            cost_usd=cost, source=source,
+            cost_usd=cost, source=source, detail=detail,
         )
         return LLMResult(
             task=task,
@@ -258,7 +269,7 @@ class LLMRouter:
 
     def _cache_get(self, key: str) -> dict[str, Any] | None:
         try:
-            with self._session_factory() as session:
+            with self._cache_session_factory() as session:
                 row = session.get(LLMCache, key)
                 return row.response if row else None
         except SQLAlchemyError:
@@ -267,7 +278,7 @@ class LLMRouter:
 
     def _cache_put(self, key: str, model: str, payload: dict[str, Any]) -> None:
         try:
-            with self._session_factory() as session:
+            with self._cache_session_factory() as session:
                 session.merge(LLMCache(key=key, model=model, response=payload))
                 session.commit()
         except SQLAlchemyError:
@@ -287,6 +298,7 @@ class LLMRouter:
         source: str = "live",
         success: bool = True,
         error: str | None = None,
+        detail: str | None = None,
     ) -> int | None:
         # Own session, so the log row survives a rollback in the caller's transaction.
         try:
@@ -301,6 +313,7 @@ class LLMRouter:
                     latency_ms=latency_ms,
                     cost_usd=cost_usd,
                     source=source,
+                    detail=detail,
                     success=success,
                     error=error,
                 )

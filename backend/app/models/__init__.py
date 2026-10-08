@@ -9,6 +9,7 @@ from app.models.tables import (
     LLMCall,
     Order,
     POVersion,
+    SearchCache,
 )
 
 __all__ = [
@@ -22,4 +23,5 @@ __all__ = [
     "LLMCall",
     "Order",
     "POVersion",
+    "SearchCache",
 ]

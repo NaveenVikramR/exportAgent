@@ -13,6 +13,7 @@ from datetime import date
 from typing import Any
 
 from app.llm.prompts.common import EMAIL_CLOSE, EMAIL_OPEN
+from app.llm.mock_agent import mock_plan
 from app.llm.tasks import TaskType
 
 _MONTHS = {m: i for i, m in enumerate(
@@ -45,15 +46,23 @@ def estimate_tokens(text: str) -> int:
     return max(1, len(text) // 4)
 
 
-def mock_completion(task: TaskType, messages: list[dict[str, Any]]) -> str:
+def mock_completion(
+    task: TaskType, messages: list[dict[str, Any]], *, tools: list[dict[str, Any]] | None = None
+) -> dict[str, Any]:
+    """{"content": str | None, "tool_calls": [{"id", "name", "arguments"}]}"""
+    if task in (TaskType.PLANNING, TaskType.RISK_REASONING):
+        return mock_plan(messages, tools)
     text = _email_text(messages)
     if task is TaskType.CLASSIFY:
-        return json.dumps(_classify(text))
+        return {"content": json.dumps(_classify(text))}
     if task is TaskType.EXTRACT:
-        return json.dumps(_extract(text))
+        return {"content": json.dumps(_extract(text))}
+    if task is TaskType.EXTRACT_ESCALATION:
+        field = re.search(r'extract ONLY the field "(\w+)"', messages[0]["content"]).group(1)
+        return {"content": json.dumps({field: _extract(text)[field]})}
     if task is TaskType.CHANGE_DETECTION:
-        return json.dumps(_stated_changes(text))
-    return "[mock response: set LLM_MODE=live for model output]"
+        return {"content": json.dumps(_stated_changes(text))}
+    return {"content": "[mock response: set LLM_MODE=live for model output]"}
 
 
 def _email_text(messages: list[dict[str, Any]]) -> str:

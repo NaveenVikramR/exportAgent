@@ -99,9 +99,13 @@ class AgentRun(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     email_id: Mapped[int | None] = mapped_column(ForeignKey("emails.id"), index=True)
+    order_id: Mapped[int | None] = mapped_column(ForeignKey("orders.id"), index=True)
     # running | completed | needs_review | failed
     status: Mapped[str] = mapped_column(String(20), default="running")
+    # tool-call rounds used (hard cap 8)
     rounds: Mapped[int] = mapped_column(default=0)
+    # the final RiskReport
+    result: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
     error: Mapped[str | None] = mapped_column(Text)
     started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
@@ -117,11 +121,18 @@ class AgentStep(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     run_id: Mapped[int] = mapped_column(ForeignKey("agent_runs.id"), index=True)
     seq: Mapped[int]
+    round: Mapped[int] = mapped_column(default=0, server_default="0")
     # llm | tool
     kind: Mapped[str] = mapped_column(String(10))
     name: Mapped[str] = mapped_column(String(100))
     input: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
     output: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
+    # one line for the trace panel
+    summary: Mapped[str | None] = mapped_column(Text)
+    # tool steps: the id the model cites as evidence (E1, E2, ...)
+    evidence_id: Mapped[str | None] = mapped_column(String(10))
+    # llm steps: the router's log row (model, tokens, cost)
+    call_id: Mapped[int | None] = mapped_column(ForeignKey("llm_calls.id"))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
     run: Mapped[AgentRun] = relationship(back_populates="steps")
@@ -143,9 +154,22 @@ class LLMCall(Base):
     cost_usd: Mapped[Decimal] = mapped_column(Numeric(12, 8), default=Decimal("0"))
     # live | cache | mock. Only live calls cost money.
     source: Mapped[str] = mapped_column(String(10), default="live", server_default="live")
+    # why the call was made, when that is not obvious from the task (e.g. an escalation)
+    detail: Mapped[str | None] = mapped_column(String(300))
     success: Mapped[bool] = mapped_column(default=True)
     error: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, index=True)
+
+
+class SearchCache(Base):
+    """Tavily results keyed by query, so repeated lookups do not spend search credits."""
+
+    __tablename__ = "search_cache"
+
+    key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    query: Mapped[str] = mapped_column(Text)
+    response: Mapped[dict[str, Any]] = mapped_column(JSON)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
 
 class LLMCache(Base):

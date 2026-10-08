@@ -4,7 +4,7 @@ from typing import Any, TypeVar
 
 from pydantic import BaseModel, ValidationError
 
-from app.llm.router import LLMError, LLMRouter
+from app.llm.router import LLMError, LLMResult, LLMRouter
 from app.llm.tasks import TaskType
 
 SchemaT = TypeVar("SchemaT", bound=BaseModel)
@@ -14,7 +14,7 @@ class StructuredOutputError(LLMError):
     """The model's reply failed validation twice; the item goes to human review."""
 
 
-def _json_block(text: str) -> str:
+def json_block(text: str) -> str:
     # Tolerate code fences or stray prose around the object.
     start, end = text.find("{"), text.rfind("}")
     return text[start:end + 1] if start != -1 and end > start else text
@@ -29,16 +29,22 @@ def complete_structured(
     max_tokens: int,
     reasoning: bool | None = None,
     run_id: int | None = None,
+    detail: str | None = None,
+    collect: list[LLMResult] | None = None,
 ) -> SchemaT:
+    """`collect`, if given, receives every LLMResult (for callers that report cost)."""
     messages = list(messages)
     error = ""
     for _attempt in range(2):
         result = router.complete(
-            task, messages, max_tokens=max_tokens, temperature=0, reasoning=reasoning, run_id=run_id
+            task, messages, max_tokens=max_tokens, temperature=0, reasoning=reasoning,
+            run_id=run_id, detail=detail,
         )
+        if collect is not None:
+            collect.append(result)
         content = result.content or ""
         try:
-            return schema.model_validate_json(_json_block(content))
+            return schema.model_validate_json(json_block(content))
         except ValidationError as exc:
             error = str(exc)
             messages += [
