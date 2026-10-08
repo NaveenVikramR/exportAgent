@@ -33,6 +33,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <Link href="/" className="text-zinc-600 hover:text-zinc-900">
               Inbox
             </Link>
+            <Link href="/orders" className="text-zinc-600 hover:text-zinc-900">
+              Orders
+            </Link>
             <Link href="/trace" className="text-zinc-600 hover:text-zinc-900">
               Agent trace
             </Link>

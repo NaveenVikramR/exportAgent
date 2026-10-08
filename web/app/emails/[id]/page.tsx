@@ -171,6 +171,11 @@ export default function EmailPage() {
             <div className="min-w-0">
               <h1 className="text-xl font-semibold">{email.subject}</h1>
               <p className="text-sm text-zinc-600">{email.sender}</p>
+              {email.order_id && (
+                <Link href={`/orders/${email.order_id}`} className="text-sm text-sky-700 hover:underline">
+                  View order →
+                </Link>
+              )}
             </div>
             <div className="flex shrink-0 items-center gap-2">
               <StatusBadge status={email.status} />

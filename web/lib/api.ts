@@ -99,6 +99,7 @@ export type EmailSummary = {
   subject: string;
   received_at: string;
   status: string;
+  order_id: number | null;
   classification: Classification | null;
   review_count: number;
 };
@@ -110,6 +111,43 @@ export type EmailDetail = EmailSummary & {
   analysis_error: string | null;
   notice: string | null;
 };
+
+export type Change = {
+  field: string;
+  kind: "quantity" | "price" | "delivery_date" | "size_ratio" | "colour" | "incoterms" | "other";
+  old: unknown;
+  new: unknown;
+  detail: string;
+  alert: string | null;
+};
+
+export type POSnapshot = Record<ScalarField, string | number | null> & { line_items: LineItem[] };
+
+export type POVersion = {
+  id: number;
+  version: number;
+  email_id: number | null;
+  basis: "document" | "thread_reference";
+  data: POSnapshot;
+  confidence: Record<string, number> | null;
+  changes: Change[] | null;
+  created_at: string;
+};
+
+export type OrderSummary = {
+  id: number;
+  buyer: string;
+  po_number: string;
+  style: string | null;
+  status: string;
+  profile: string;
+  current_version: number;
+  updated_at: string;
+  alerts: string[];
+  latest_change_count: number;
+};
+
+export type OrderDetail = OrderSummary & { versions: POVersion[] };
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_URL}/api${path}`, { cache: "no-store", ...init });
@@ -131,6 +169,8 @@ export const api = {
   summary: () => get<TraceSummary>("/trace/summary"),
   emails: () => get<EmailSummary[]>("/emails"),
   email: (id: string) => get<EmailDetail>(`/emails/${id}`),
+  orders: () => get<OrderSummary[]>("/orders"),
+  order: (id: string) => get<OrderDetail>(`/orders/${id}`),
   analyse: (id: string, force: boolean) =>
     request<EmailDetail>(`/emails/${id}/analyse?force=${force}`, { method: "POST" }),
 };

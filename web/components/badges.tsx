@@ -23,6 +23,18 @@ export const CATEGORY_LABELS: Record<string, string> = {
   other: "Other",
 };
 
+export const ALERT_LABELS: Record<string, string> = {
+  delivery_pulled_forward: "Delivery pulled forward",
+};
+
+export function AlertBadge({ alert }: { alert: string }) {
+  return (
+    <span className="whitespace-nowrap rounded bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800">
+      {ALERT_LABELS[alert] ?? alert}
+    </span>
+  );
+}
+
 export function StatusBadge({ status }: { status: string }) {
   return (
     <span
