@@ -1,15 +1,19 @@
-"""Classify an email, extract PO fields when it has any, and flag what needs review."""
+"""Classify an email, extract PO fields when it has any, flag what needs review,
+and record the result as a version of its order."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from sqlalchemy.orm import Session
 
 from app.agent.tools.classify import classify_email
 from app.agent.tools.extract import extract_po_fields
+from app.agent.tools.stated_changes import extract_stated_changes
 from app.config import get_settings
 from app.llm.router import LLMError, LLMRouter, SpendCapExceeded
 from app.models import Email
-from app.schemas.extraction import Classification, ReviewedExtraction
+from app.schemas.extraction import Classification, EmailCategory, ReviewedExtraction
+from app.schemas.orders import StatedChange
+from app.services.orders import record_po_version
 from app.services.review import review_extraction
 
 
@@ -17,6 +21,12 @@ from app.services.review import review_extraction
 class Analysis:
     classification: Classification
     extraction: ReviewedExtraction | None
+    # old -> new values the email itself states, e.g. a date changed inside a reply thread
+    stated_changes: list[StatedChange] = field(default_factory=list)
+
+
+# Emails that change an existing order may quote its earlier values.
+_CHANGE_CATEGORIES = {EmailCategory.DELIVERY_CHANGE, EmailCategory.PO_REVISION}
 
 
 def render_email_text(
@@ -55,7 +65,12 @@ def analyse_text(router: LLMRouter, text: str) -> Analysis:
         classification.category,
         get_settings().review_confidence_threshold,
     )
-    return Analysis(classification=classification, extraction=reviewed)
+    stated = (
+        extract_stated_changes(router, text)
+        if classification.category in _CHANGE_CATEGORIES
+        else []
+    )
+    return Analysis(classification=classification, extraction=reviewed, stated_changes=stated)
 
 
 def analyse_email(session: Session, email: Email, router: LLMRouter) -> Email:
@@ -75,6 +90,8 @@ def analyse_email(session: Session, email: Email, router: LLMRouter) -> Email:
     email.classification = analysis.classification.model_dump(mode="json")
     email.extraction = analysis.extraction.model_dump(mode="json") if analysis.extraction else None
     email.analysis_error = None
+    if analysis.extraction:
+        record_po_version(session, email, analysis.extraction.fields, analysis.stated_changes)
     needs_review = bool(analysis.extraction and analysis.extraction.review)
     email.status = "needs_review" if needs_review else "analysed"
     session.commit()

@@ -37,6 +37,7 @@ class Email(Base):
     attachments: Mapped[list["EmailAttachment"]] = relationship(
         back_populates="email", cascade="all, delete-orphan"
     )
+    order: Mapped["Order | None"] = relationship()
 
 
 class EmailAttachment(Base):
@@ -82,7 +83,9 @@ class POVersion(Base):
     order_id: Mapped[int] = mapped_column(ForeignKey("orders.id"), index=True)
     version: Mapped[int]
     email_id: Mapped[int | None] = mapped_column(ForeignKey("emails.id"))
-    # extracted PO fields, per-field confidence, and the diff against the previous version
+    # document: values from a PO or order email; thread_reference: earlier values quoted in a reply thread
+    basis: Mapped[str] = mapped_column(String(30), default="document", server_default="document")
+    # PO snapshot, per-field confidence, and the diff against the previous version
     data: Mapped[dict[str, Any]] = mapped_column(JSON(none_as_null=True))
     confidence: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
     changes: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON(none_as_null=True))

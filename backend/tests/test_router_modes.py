@@ -1,3 +1,4 @@
+import json
 from decimal import Decimal
 
 import pytest
@@ -88,3 +89,18 @@ def test_cache_hits_do_not_count_towards_spend(settings, session_factory):
     router.complete(TaskType.CLASSIFY, MESSAGES, max_tokens=64)
 
     assert router.spent_today() == Decimal("0.00018")
+
+
+def test_mock_stated_changes_reads_new_date_first_and_quoted_old_date_second(settings, session_factory):
+    settings.llm_mode = "mock"
+    router = LLMRouter(settings, session_factory=session_factory)
+    text = (
+        "<email>\nWe now need ex-factory by 10 November 2026.\n\n"
+        "-----Original Message-----\nwe are on track for ex-factory 24 November 2026 as per PO.\n</email>"
+    )
+
+    result = router.complete(TaskType.CHANGE_DETECTION, [{"role": "user", "content": text}], max_tokens=100)
+
+    assert json.loads(result.content)["changes"] == [
+        {"field": "delivery_date", "old": "2026-11-24", "new": "2026-11-10", "evidence": None}
+    ]

@@ -51,6 +51,8 @@ def mock_completion(task: TaskType, messages: list[dict[str, Any]]) -> str:
         return json.dumps(_classify(text))
     if task is TaskType.EXTRACT:
         return json.dumps(_extract(text))
+    if task is TaskType.CHANGE_DETECTION:
+        return json.dumps(_stated_changes(text))
     return "[mock response: set LLM_MODE=live for model output]"
 
 
@@ -151,6 +153,22 @@ def _line_items(text: str) -> list[dict[str, Any]]:
             )
         return items
     return []
+
+
+def _stated_changes(text: str) -> dict[str, Any]:
+    """The first delivery date is the new one; a later, different one is the old one."""
+    dates = []
+    for match in re.finditer(rf"(?:ex-factory|delivery)[^\n\d]{{0,40}}({_DATE})", text, re.IGNORECASE):
+        parsed = _parse_date(match.group(1))
+        if parsed and parsed not in dates:
+            dates.append(parsed)
+    if len(dates) < 2:
+        return {"changes": []}
+    return {
+        "changes": [
+            {"field": "delivery_date", "old": dates[1].isoformat(), "new": dates[0].isoformat(), "evidence": None}
+        ]
+    }
 
 
 def _extract(text: str) -> dict[str, Any]:

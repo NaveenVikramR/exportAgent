@@ -50,6 +50,9 @@ class Settings(BaseSettings):
 
     tavily_api_key: str | None = None
 
+    # Factory/country profile new orders are processed under (profiles arrive in a later milestone)
+    factory_profile: str = "india_tiruppur"
+
     database_url: str = f"sqlite:///{(BACKEND_DIR / 'exportagent.db').as_posix()}"
     web_origin: str = "http://localhost:3000"
 

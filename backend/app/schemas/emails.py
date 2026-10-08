@@ -22,6 +22,7 @@ class EmailSummary(BaseModel):
     subject: str
     received_at: datetime
     status: str
+    order_id: int | None
     classification: dict[str, Any] | None
     review_count: int = 0
 
