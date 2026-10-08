@@ -6,6 +6,16 @@ from sqlalchemy.pool import StaticPool
 from app import models  # noqa: F401
 from app.config import Settings
 from app.db import Base
+from app.services import tavily_client
+
+
+@pytest.fixture(autouse=True)
+def no_real_web_search(monkeypatch):
+    """Tests never call Tavily; a test that needs search results passes its own fake."""
+    def refuse(*_args, **_kwargs):
+        raise AssertionError("A test tried to call the real Tavily API")
+
+    monkeypatch.setattr(tavily_client, "search", refuse)
 
 
 @pytest.fixture

@@ -1,0 +1,22 @@
+# Factory profile: everything country- or factory-specific lives here, not in code.
+# Capacity figures are illustrative for a ~200-person knitwear unit with in-house dyeing.
+id: bangladesh_dhaka
+factory: Meghna Knit Composite
+city: Dhaka
+country: Bangladesh
+export_currency: USD
+default_port: Chittagong
+ports: [Chittagong]
+incoterms: [FOB, CFR, CIF]
+
+capacity:
+  pcs_per_week: 14000
+  baseline_utilisation: 0.6
+
+lead_times:
+  fabric_days: 35
+  min_production_days: 10
+
+thresholds:
+  tight_utilisation: 0.85
+  min_slack_days: 7

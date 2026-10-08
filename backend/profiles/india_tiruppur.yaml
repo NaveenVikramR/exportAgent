@@ -1,0 +1,28 @@
+# Factory profile: everything country- or factory-specific lives here, not in code.
+# Capacity figures are illustrative for a ~150-person knitwear unit.
+id: india_tiruppur
+factory: Sri Velan Knits
+city: Tiruppur
+country: India
+export_currency: USD
+default_port: Tuticorin
+ports: [Tuticorin, Chennai]
+incoterms: [FOB, CFR, CIF]
+
+capacity:
+  # sewing output across all lines, pieces per week
+  pcs_per_week: 10000
+  # share of capacity already booked by orders outside ExportAgent
+  baseline_utilisation: 0.6
+
+lead_times:
+  # yarn to finished fabric (knitting, dyeing, compacting) before cutting can start
+  fabric_days: 42
+  # cutting to packed cartons for even a small order
+  min_production_days: 10
+
+thresholds:
+  # above this share of free capacity the plan is tight
+  tight_utilisation: 0.85
+  # less spare time than this before ex-factory is tight
+  min_slack_days: 7
