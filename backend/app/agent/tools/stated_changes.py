@@ -19,6 +19,8 @@ def extract_stated_changes(
         email_messages(prompt.SYSTEM, email_text),
         StatedChanges,
         max_tokens=600,
+        # Thinking off: with it on, Nemotron Nano spends the whole budget reasoning and returns no JSON.
+        reasoning=False,
         run_id=run_id,
     )
     return result.changes

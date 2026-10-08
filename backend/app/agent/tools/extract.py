@@ -13,5 +13,7 @@ def extract_po_fields(router: LLMRouter, email_text: str, *, run_id: int | None 
         email_messages(prompt.SYSTEM, email_text),
         POExtraction,
         max_tokens=1500,
+        # Thinking off: with it on, Nemotron Nano spends the whole budget reasoning and returns no JSON.
+        reasoning=False,
         run_id=run_id,
     )

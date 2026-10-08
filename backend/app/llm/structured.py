@@ -27,12 +27,15 @@ def complete_structured(
     schema: type[SchemaT],
     *,
     max_tokens: int,
+    reasoning: bool | None = None,
     run_id: int | None = None,
 ) -> SchemaT:
     messages = list(messages)
     error = ""
     for _attempt in range(2):
-        result = router.complete(task, messages, max_tokens=max_tokens, temperature=0, run_id=run_id)
+        result = router.complete(
+            task, messages, max_tokens=max_tokens, temperature=0, reasoning=reasoning, run_id=run_id
+        )
         content = result.content or ""
         try:
             return schema.model_validate_json(_json_block(content))

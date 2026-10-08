@@ -13,5 +13,7 @@ def classify_email(router: LLMRouter, email_text: str, *, run_id: int | None = N
         email_messages(prompt.SYSTEM, email_text),
         Classification,
         max_tokens=400,
+        # Thinking off: with it on, Nemotron Nano spends the whole budget reasoning and returns no JSON.
+        reasoning=False,
         run_id=run_id,
     )

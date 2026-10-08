@@ -66,6 +66,20 @@ def test_two_invalid_replies_raise_for_human_review():
     assert len(router.requests) == 2
 
 
+def test_reasoning_setting_is_passed_to_the_router():
+    seen = []
+
+    class Recording(ScriptedRouter):
+        def complete(self, task, messages, **kwargs):
+            seen.append(kwargs.get("reasoning"))
+            return super().complete(task, messages, **kwargs)
+
+    complete_structured(Recording([VALID]), TaskType.CLASSIFY, MESSAGES, Classification,
+                        max_tokens=100, reasoning=False)
+
+    assert seen == [False]
+
+
 def test_category_is_always_included_in_intents():
     reply = '{"category": "new_po", "intents": ["payment"], "has_po_data": true, "summary": "s", "confidence": 1}'
 

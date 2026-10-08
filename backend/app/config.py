@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     nebius_api_key: str | None = None
     nebius_base_url: str = "https://api.tokenfactory.nebius.com/v1/"
 
-    nebius_model_nano: str = "nvidia/nvidia-nemotron-3-nano-30b-a3b"
+    nebius_model_nano: str = "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
     nebius_model_super: str = "nvidia/nemotron-3-super-120b-a12b"
     nebius_model_ultra: str = "nvidia/Nemotron-3-Ultra-550b-a55b"
 
