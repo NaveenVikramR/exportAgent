@@ -20,7 +20,19 @@ Model IDs, prices and per-task tier overrides come from environment variables (s
 
 The router writes one row per call to the `llm_calls` table: task type, tier, model, input tokens, output tokens, latency and estimated cost. The UI trace panel and the numbers below are read from that table.
 
-_To be filled: real per-model cost and latency numbers, tokens per processed email, evaluation results._
+Model IDs, verified against Token Factory's `/v1/models` on 2026-10-08:
+
+| Tier | Model ID | USD per 1M tokens (in / out) |
+|---|---|---|
+| Nano | `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B` | 0.06 / 0.24 |
+| Super | `nvidia/nemotron-3-super-120b-a12b` | 0.30 / 0.90 |
+| Ultra | `nvidia/Nemotron-3-Ultra-550b-a55b` | 1.00 / 3.00 |
+
+Reasoning is switched per request with `chat_template_kwargs: {"enable_thinking": false}`. Classification, extraction and change detection run on Nano with thinking off: with it on, Nano spent its whole token budget reasoning and returned no JSON. Super and Ultra keep thinking available for drafting and risk reasoning.
+
+First live numbers (10 labelled emails, Nano only so far): about $0.0003 and 9 seconds per email for classification plus extraction. See [backend/eval/report.md](backend/eval/report.md).
+
+_To be filled: Super and Ultra numbers once drafting and the agent loop run live._
 
 ## Architecture
 
