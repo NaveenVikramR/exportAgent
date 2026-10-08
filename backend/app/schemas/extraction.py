@@ -1,7 +1,7 @@
 from datetime import date
 from decimal import Decimal
 from enum import StrEnum
-from typing import Generic, TypeVar
+from typing import Any, Generic, TypeVar
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -99,6 +99,26 @@ class ReviewFlag(BaseModel):
     detail: str
 
 
+class Escalation(BaseModel):
+    """One field re-extracted by a stronger model after a Python check failed."""
+
+    field: str
+    # size_table_not_extracted | size_total_mismatch | source_quote_missing
+    reason: str
+    model: str
+    calls: int = 0
+    input_tokens: int = 0
+    output_tokens: int = 0
+    cost_usd: Decimal = Decimal("0")
+    # resolved: the stronger model's value passed the check and was kept
+    # unresolved: it did not, the first value stays and remains flagged
+    # failed / skipped_spend_cap: no usable answer
+    outcome: str
+    before: Any = None
+    after: Any = None
+
+
 class ReviewedExtraction(BaseModel):
     fields: POExtraction
     review: list[ReviewFlag] = Field(default_factory=list)
+    escalations: list[Escalation] = Field(default_factory=list)

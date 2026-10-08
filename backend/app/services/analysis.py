@@ -14,15 +14,19 @@ from app.models import Email
 from app.schemas.extraction import Classification, EmailCategory, ReviewedExtraction
 from app.schemas.orders import StatedChange
 from app.services.orders import record_po_version
+from app.services.escalation import escalate
 from app.services.review import review_extraction
 
 
 @dataclass(frozen=True)
 class Analysis:
     classification: Classification
+    # final result, after any escalation to the stronger model
     extraction: ReviewedExtraction | None
     # old -> new values the email itself states, e.g. a date changed inside a reply thread
     stated_changes: list[StatedChange] = field(default_factory=list)
+    # Nano's result before escalation, kept so the eval can compare
+    extraction_before_escalation: ReviewedExtraction | None = None
 
 
 # Emails that change an existing order may quote its earlier values.
@@ -58,19 +62,21 @@ def analyse_text(router: LLMRouter, text: str) -> Analysis:
     classification = classify_email(router, text)
     if not classification.has_po_data:
         return Analysis(classification=classification, extraction=None)
+    threshold = get_settings().review_confidence_threshold
     extraction = extract_po_fields(router, text)
-    reviewed = review_extraction(
-        extraction,
-        text,
-        classification.category,
-        get_settings().review_confidence_threshold,
-    )
+    reviewed = review_extraction(extraction, text, classification.category, threshold)
+    final = escalate(router, reviewed, text, classification.category, threshold)
     stated = (
         extract_stated_changes(router, text)
         if classification.category in _CHANGE_CATEGORIES
         else []
     )
-    return Analysis(classification=classification, extraction=reviewed, stated_changes=stated)
+    return Analysis(
+        classification=classification,
+        extraction=final,
+        stated_changes=stated,
+        extraction_before_escalation=reviewed,
+    )
 
 
 def analyse_email(session: Session, email: Email, router: LLMRouter) -> Email:
