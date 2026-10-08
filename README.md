@@ -4,7 +4,7 @@ An AI export desk for small and mid-size apparel and textile exporters. A buyer 
 
 Built for the Nebius x NVIDIA Global AI Hackathon (track: Best Apps and Agents).
 
-> Status: Milestone 1 (skeleton). The sections marked _to be filled_ are completed as the build progresses.
+> Status: Milestone 4 of 8 (agent loop and risk). Sections marked _to be filled_ are completed as the build progresses.
 
 ## How we use NVIDIA Nemotron + Nebius Token Factory
 
@@ -13,8 +13,25 @@ Every LLM call in ExportAgent is a runtime call to the Nebius Token Factory infe
 | Task | Tier | Why |
 |---|---|---|
 | Email classification, field extraction, PO change detection | Nemotron Nano | Fast and cheap for high-volume structured work |
+| Re-extracting a single field that failed a Python check (escalation) | Nemotron Super | Stronger model, only where Nano demonstrably failed |
 | Drafting buyer replies and internal notes | Nemotron Super | Better writing quality at moderate cost |
 | Risk reasoning and multi-step planning in the agent loop | Nemotron Ultra | Strongest reasoning, used sparingly |
+
+**Escalation routing.** Nano extracts every field first. Plain-Python checks then look for three failures: a size breakdown that does not add up, a size table in the email that was not extracted, and a quoted source text that is missing from the email or does not state the value. Only the failing field is re-extracted by Super, and Super's value is kept only if the same check then passes. Every escalation is logged with field, reason, model and cost ([backend/app/services/escalation.py](backend/app/services/escalation.py)).
+
+**The risk agent.** Ultra runs an observe → reason → act loop with OpenAI-style tool calling, a hard cap of 8 tool rounds, and `max_tokens` on every call ([backend/app/agent/loop.py](backend/app/agent/loop.py)). It decides which tools to call; the tools do all the maths in Python:
+
+| Tool | What it does |
+|---|---|
+| `find_order` | The order and every stored PO version |
+| `diff_po_versions` | Old → new changes between two versions, with the delivery-pulled-forward alert |
+| `check_delivery_feasibility` | Capacity and fabric lead time from the factory profile, minus other orders due in the same window |
+| `check_compliance` | Tavily search for the destination country's import and labelling rules, with source URLs |
+| `lookup_buyer` | Tavily search for buyer background, only for buyers with no earlier orders |
+
+Each tool result gets an evidence id (E1, E2, …). The final risk report lists flags with severity, a one-line reason and evidence. Python then keeps only evidence that points at a real tool result or a URL a tool returned, and a safety rule adds any infeasible or tight capacity finding the model left out (marked as such). The email page shows every step: tool, inputs, result, model, tokens, latency and cost.
+
+Factory capacity, lead times, ports and Incoterms live in [backend/profiles/](backend/profiles/) (India/Tiruppur and Bangladesh/Dhaka). The capacity figures are illustrative.
 
 Model IDs, prices and per-task tier overrides come from environment variables (see [.env.example](.env.example)), so tiers can be swapped without code changes.
 
