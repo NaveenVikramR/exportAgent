@@ -131,6 +131,26 @@ def test_quantity_change_detail_shows_delta():
     assert change.detail == "Total quantity 1,000 → 1,200 pcs, +200 (+20.0%)."
 
 
+def test_line_prices_repeating_the_order_price_change_are_not_listed_again():
+    old, new = _base(), _base(unit_price="3.80")
+    for item in old["line_items"]:
+        item["unit_price"] = "4.00"
+    for item in new["line_items"]:
+        item["unit_price"] = "3.80"
+
+    assert _keys(diff_po_versions(old, new)) == {"unit_price"}
+
+
+def test_line_price_change_for_one_colour_is_listed():
+    old, new = _base(), _base()
+    old["line_items"][0]["unit_price"] = "4.00"
+    new["line_items"][0]["unit_price"] = "4.20"
+
+    [change] = diff_po_versions(old, new)
+
+    assert (change.field, change.kind) == ("line_items.Navy.unit_price", "price")
+
+
 def test_size_ratio_change():
     new = _base()
     new["line_items"][0]["sizes"] = {"S": 100, "M": 400}

@@ -122,7 +122,11 @@ def _ratio(sizes: dict[str, int]) -> dict[str, Fraction] | None:
     return {size: Fraction(qty, total) for size, qty in sizes.items()} if total else None
 
 
-def _line_item_changes(old_items: list[dict[str, Any]], new_items: list[dict[str, Any]]) -> list[Change]:
+def _line_item_changes(
+    old_items: list[dict[str, Any]],
+    new_items: list[dict[str, Any]],
+    order_price: tuple[Any, Any],
+) -> list[Change]:
     old_by_colour = {(item.get("colour") or "").casefold(): item for item in old_items}
     new_by_colour = {(item.get("colour") or "").casefold(): item for item in new_items}
     changes: list[Change] = []
@@ -142,8 +146,14 @@ def _line_item_changes(old_items: list[dict[str, Any]], new_items: list[dict[str
                        old=old.get("quantity"), new=new["quantity"],
                        detail=_quantity_detail(colour, old.get("quantity"), new["quantity"]))
             )
+        # A line price that only repeats the order-level price change is not a separate change.
+        repeats_order_price = (
+            None not in order_price
+            and _same("unit_price", old.get("unit_price"), order_price[0])
+            and _same("unit_price", new.get("unit_price"), order_price[1])
+        )
         if new.get("unit_price") is not None and old.get("unit_price") is not None \
-                and not _same("unit_price", old["unit_price"], new["unit_price"]):
+                and not _same("unit_price", old["unit_price"], new["unit_price"]) and not repeats_order_price:
             changes.append(
                 Change(field=f"line_items.{colour}.unit_price", kind="price",
                        old=old["unit_price"], new=new["unit_price"],
@@ -182,7 +192,8 @@ def diff_po_versions(old: Snapshot, new: Snapshot) -> list[Change]:
             continue
         changes.append(_scalar_change(field, old_value, new_value))
     if new.get("line_items"):
-        changes += _line_item_changes(old.get("line_items") or [], new["line_items"])
+        order_price = (old.get("unit_price"), new.get("unit_price"))
+        changes += _line_item_changes(old.get("line_items") or [], new["line_items"], order_price)
     return changes
 
 
