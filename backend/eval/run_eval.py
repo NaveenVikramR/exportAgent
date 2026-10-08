@@ -1,4 +1,7 @@
-"""Runs classification and extraction on every eval case and scores it against the labels.
+"""Runs classification, extraction and change detection on every eval case and scores them.
+
+Cases run in file order, against an in-memory order store, so a revised PO is
+compared with the version an earlier case created.
 
 Usage (from backend/):  python -m eval.run_eval [--out eval/report.md]
 """
@@ -17,9 +20,11 @@ from app.db import SessionLocal
 from app.llm.router import LLMError, get_router
 from app.models import LLMCall
 from app.schemas.extraction import SCALAR_FIELDS
-from app.services.analysis import analyse_text, render_email_text
+from app.agent.tools.diff_po_versions import plan_versions, snapshot_from_extraction
+from app.services.analysis import Analysis, analyse_text, render_email_text
+from app.services.orders import normalise_po_number
 from eval.dataset import EVAL_DIR, load_cases, load_expected
-from eval.scoring import CaseScore, score_case
+from eval.scoring import CaseScore, ChangeScore, score_case, score_changes
 
 
 def _pct(correct: int, total: int) -> str:
@@ -31,7 +36,23 @@ def _max_call_id() -> int:
         return session.scalar(select(func.coalesce(func.max(LLMCall.id), 0)))
 
 
-def build_report(scores: list[CaseScore], failures: dict[str, str], first_call_id: int) -> str:
+def predict_changes(store: dict[str, dict], analysis: Analysis) -> list:
+    """The same versioning the order store applies, kept in memory."""
+    if not analysis.extraction or not analysis.extraction.fields.po_number.value:
+        return []
+    key = normalise_po_number(analysis.extraction.fields.po_number.value)
+    planned = plan_versions(store.get(key), snapshot_from_extraction(analysis.extraction.fields), analysis.stated_changes)
+    if planned:
+        store[key] = planned[-1].data
+    return [change for version in planned for change in version.changes]
+
+
+def build_report(
+    scores: list[CaseScore],
+    change_scores: list[ChangeScore],
+    failures: dict[str, str],
+    first_call_id: int,
+) -> str:
     settings = get_settings()
     n = len(scores)
     lines = [
@@ -72,6 +93,24 @@ def build_report(scores: list[CaseScore], failures: dict[str, str], first_call_i
     lines += ["", "## Human-review flags", "", "| Metric | Result |", "|---|---|"]
     lines.append(f"| Recall (fields that needed review and were flagged) | {_pct(hits, expected)} |")
     lines.append(f"| Precision (flagged fields that needed review) | {_pct(hits, flagged)} |")
+
+    expected_changes = sum(s.expected for s in change_scores)
+    predicted_changes = sum(s.predicted for s in change_scores)
+    correct_changes = sum(s.correct for s in change_scores)
+    lines += [
+        "",
+        "## Change detection",
+        "",
+        "A change counts as correct when its field and both old and new values match the label.",
+        "",
+        "| Metric | Result |",
+        "|---|---|",
+        f"| Recall (labelled changes found) | {_pct(correct_changes, expected_changes)} |",
+        f"| Precision (reported changes that are correct) | {_pct(correct_changes, predicted_changes)} |",
+    ]
+    for s in change_scores:
+        if s.missed or s.unexpected:
+            lines.append(f"| {s.case_id} | missed {s.missed or '-'}, unexpected {s.unexpected or '-'} |")
 
     with SessionLocal() as session:
         usage = session.execute(
@@ -125,6 +164,8 @@ def main() -> int:
     router = get_router()
     first_call_id = _max_call_id()
     scores: list[CaseScore] = []
+    change_scores: list[ChangeScore] = []
+    store: dict[str, dict] = {}
     failures: dict[str, str] = {}
     for case in load_cases():
         text = render_email_text(
@@ -140,10 +181,14 @@ def main() -> int:
             failures[case.id] = str(exc)
             print(f"{case.id}: FAILED {exc}")
             continue
-        scores.append(score_case(case.id, load_expected(case.id), analysis))
+        expected = load_expected(case.id)
+        scores.append(score_case(case.id, expected, analysis))
+        change_scores.append(
+            score_changes(case.id, expected.get("expected_changes") or [], predict_changes(store, analysis))
+        )
         print(f"{case.id}: done")
 
-    report = build_report(scores, failures, first_call_id)
+    report = build_report(scores, change_scores, failures, first_call_id)
     args.out.write_text(report, encoding="utf-8")
     print(f"\n{report}\nWritten to {args.out}")
     return 1 if failures else 0

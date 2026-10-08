@@ -5,6 +5,7 @@ from decimal import Decimal, InvalidOperation
 from typing import Any
 
 from app.schemas.extraction import SCALAR_FIELDS
+from app.schemas.orders import Change
 from app.services.analysis import Analysis
 
 
@@ -82,3 +83,45 @@ def score_case(case_id: str, expected: dict[str, Any], analysis: Analysis) -> Ca
             flag.field for flag in analysis.extraction.review if flag.field in SCALAR_FIELDS
         } - skip
     return score
+
+
+def _canonical(value: Any) -> str | None:
+    """Comparable form of a change value: numbers and dates as text, dicts sorted."""
+    if value is None:
+        return None
+    if isinstance(value, dict):
+        return str(sorted((str(k), int(v)) for k, v in value.items()))
+    try:
+        return str(Decimal(str(value)).normalize())
+    except InvalidOperation:
+        return str(value).strip().casefold()
+
+
+@dataclass
+class ChangeScore:
+    case_id: str
+    expected: int
+    predicted: int
+    correct: int
+    missed: list[str] = field(default_factory=list)
+    unexpected: list[str] = field(default_factory=list)
+
+
+def score_changes(case_id: str, expected: list[dict[str, Any]], predicted: list[Change]) -> ChangeScore:
+    """A predicted change is correct when its field and both values match the label."""
+    labelled = {item["field"].casefold(): item for item in expected}
+    found = {change.field.casefold(): change for change in predicted}
+    correct = [
+        key for key, item in labelled.items()
+        if key in found
+        and _canonical(found[key].old) == _canonical(item["old"])
+        and _canonical(found[key].new) == _canonical(item["new"])
+    ]
+    return ChangeScore(
+        case_id=case_id,
+        expected=len(labelled),
+        predicted=len(found),
+        correct=len(correct),
+        missed=sorted(key for key in labelled if key not in correct),
+        unexpected=sorted(key for key in found if key not in correct),
+    )

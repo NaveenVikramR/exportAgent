@@ -1,6 +1,6 @@
 # ExportAgent evaluation report
 
-- Generated: 2026-10-06 17:58 UTC
+- Generated: 2026-10-08 14:18 UTC
 - Cases scored: 10 (failed to run: 0)
 - LLM mode: `mock`
 
@@ -38,11 +38,20 @@
 | Recall (fields that needed review and were flagged) | 5/7 (71%) |
 | Precision (flagged fields that needed review) | 5/7 (71%) |
 
+## Change detection
+
+A change counts as correct when its field and both old and new values match the label.
+
+| Metric | Result |
+|---|---|
+| Recall (labelled changes found) | 8/8 (100%) |
+| Precision (reported changes that are correct) | 8/8 (100%) |
+
 ## Cost and latency
 
 | Model | Tier | Source | Calls | Input tokens | Output tokens | Avg latency | Cost (USD) |
 |---|---|---|---|---|---|---|---|
-| `nvidia/nvidia-nemotron-3-nano-30b-a3b` | nano | mock | 18 | 12884 | 2595 | 2 ms | 0.000000 |
+| `nvidia/nvidia-nemotron-3-nano-30b-a3b` | nano | mock | 21 | 14583 | 2626 | 1 ms | 0.000000 |
 
 Average cost per case: $0.000000
 

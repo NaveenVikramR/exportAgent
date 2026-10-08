@@ -91,6 +91,8 @@ Synthetic buyer emails modelled on real export paperwork live in [backend/eval/c
 
 Every extracted field carries a confidence and the source quote it came from. Plain-Python rules then lower the confidence and flag the field for human review when the quote is not in the email, the quantities do not add up, or a required field is missing ([backend/app/services/review.py](backend/app/services/review.py)).
 
+Each email that carries a PO is matched to its order by PO number and stored as a new version; earlier versions are never overwritten. [`diff_po_versions`](backend/app/agent/tools/diff_po_versions.py) is plain Python and reports quantity, price, delivery date, size ratio, colour and Incoterm changes with old and new values. Size breakdowns are compared as ratios, so scaling a colour up is a quantity change, not a ratio change. A delivery date moved earlier is flagged as **delivery pulled forward**, the most expensive change for an exporter. When a reply thread quotes the old value of an order we have not seen (for example "the 24 November date below no longer works"), the earlier version is rebuilt from the quote so the change is still visible.
+
 _To be filled: results on Nemotron (live), growing to 40 cases with change-detection precision and recall, risk flag rate, and cost and latency per case._
 
 ## What we'd improve
