@@ -23,6 +23,7 @@ const REASON_LABELS: Record<string, string> = {
   missing: "Missing",
   low_confidence: "Low confidence",
   evidence_not_found: "Source quote not found",
+  evidence_mismatch: "Source quote does not state this value",
   quantity_mismatch: "Quantities do not add up",
 };
 

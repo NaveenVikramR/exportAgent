@@ -1,8 +1,8 @@
 """Plain-Python checks on an extraction: which fields a human must look at.
 
 The model reports a confidence per field; these rules correct it with things
-that can be verified: is the quoted evidence really in the email, do the
-quantities add up, is a required field missing.
+that can be verified: is the quoted evidence really in the email, does it
+contain the value, do the quantities add up, is a required field missing.
 """
 
 import re
@@ -24,9 +24,20 @@ _REQUIRED_BY_CATEGORY: dict[EmailCategory, tuple[str, ...]] = {
 }
 _REQUIRED_DEFAULT: tuple[str, ...] = ("po_number",)
 
+# Codes are copied, not paraphrased, so the quote must contain the value itself.
+_CODE_FIELDS = ("po_number", "style", "currency", "incoterms", "port")
+_CURRENCY_SYMBOLS = {"USD": ("$",), "EUR": ("€",), "GBP": ("£",), "AUD": ("$", "a$")}
+
 
 def _normalise(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip().casefold()
+
+
+def _evidence_states(name: str, value: str, evidence: str) -> bool:
+    quote = _normalise(evidence)
+    if _normalise(value) in quote:
+        return True
+    return name == "currency" and any(symbol in quote for symbol in _CURRENCY_SYMBOLS.get(value.upper(), ()))
 
 
 def review_extraction(
@@ -56,8 +67,22 @@ def review_extraction(
                     detail="The quoted source text does not appear in the email.",
                 )
             )
+        elif name in _CODE_FIELDS and not _evidence_states(name, str(field.value), field.evidence):
+            field.confidence = min(field.confidence, _UNVERIFIED_CONFIDENCE)
+            flags.append(
+                ReviewFlag(
+                    field=name,
+                    reason="evidence_mismatch",
+                    detail=f"The quoted source text does not contain {field.value}.",
+                )
+            )
 
-    item_quantities = [item.quantity for item in fields.line_items if item.quantity is not None]
+    # A line without a stated quantity still counts with its size breakdown.
+    item_quantities = [
+        item.quantity if item.quantity is not None else sum(item.sizes.values())
+        for item in fields.line_items
+        if item.quantity is not None or item.sizes
+    ]
     for item in fields.line_items:
         if item.sizes and item.quantity is not None and sum(item.sizes.values()) != item.quantity:
             flags.append(

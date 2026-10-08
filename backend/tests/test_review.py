@@ -78,6 +78,31 @@ def test_change_notice_only_requires_the_po_number():
     assert ("po_number", "missing") in _flags(_review(POExtraction(), EmailCategory.DELIVERY_CHANGE))
 
 
+def test_code_value_missing_from_its_quote_is_flagged():
+    # The quote is real text from the email, but it does not state a currency.
+    extraction = _full(currency={"value": "USD", "confidence": 1.0, "evidence": "Buyer: Acme Apparel Ltd"})
+
+    reviewed = _review(extraction)
+
+    assert _flags(reviewed) == {("currency", "evidence_mismatch")}
+    assert reviewed.fields.currency.confidence == 0.4
+
+
+def test_currency_symbol_counts_as_stating_the_currency():
+    source = SOURCE + "\nPrice per unit: £2.95"
+    extraction = _full(currency={"value": "GBP", "confidence": 0.9, "evidence": "£2.95"})
+
+    reviewed = review_extraction(extraction, source, EmailCategory.NEW_PO, threshold=0.7)
+
+    assert ("currency", "evidence_mismatch") not in _flags(reviewed)
+
+
+def test_size_breakdown_counts_towards_total_when_line_quantity_is_missing():
+    extraction = _full(line_items=[{"colour": "Navy", "sizes": {"S": 750, "M": 750}, "quantity": None}])
+
+    assert ("total_quantity", "quantity_mismatch") in _flags(_review(extraction))
+
+
 def test_low_model_confidence_is_flagged():
     extraction = _full(port={"value": "Chennai", "confidence": 0.5, "evidence": "FOB Chennai"})
 

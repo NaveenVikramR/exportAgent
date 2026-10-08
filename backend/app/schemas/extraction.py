@@ -94,7 +94,7 @@ SCALAR_FIELDS: tuple[str, ...] = (
 
 class ReviewFlag(BaseModel):
     field: str
-    # missing | low_confidence | evidence_not_found | quantity_mismatch
+    # missing | low_confidence | evidence_not_found | evidence_mismatch | quantity_mismatch
     reason: str
     detail: str
 
