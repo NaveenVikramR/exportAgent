@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useSyncExternalStore } from "react";
+import { GenerateDocuments } from "@/components/documents-panel";
 import { api, type Draft } from "@/lib/api";
 
 const REVIEWER_KEY = "exportagent.reviewer";
@@ -215,6 +216,12 @@ export function DraftCard({
         <p className="mt-3 text-sm text-emerald-800">
           Approved and marked sent by {draft.reviewed_by} on {when(draft.sent_at)}. (Demo: no email leaves the system.)
         </p>
+      )}
+      {draft.offer && (
+        <div className="mt-3 rounded border border-sky-200 bg-sky-50 p-3">
+          <p className="mb-2 text-sm text-sky-900">{draft.offer.message}</p>
+          <GenerateDocuments orderId={draft.offer.order_id} enabled />
+        </div>
       )}
       {draft.status === "rejected" && (
         <p className="mt-3 text-sm text-red-800">

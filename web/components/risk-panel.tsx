@@ -81,6 +81,11 @@ export function RiskFlags({ run }: { run: AgentRun }) {
               {flag.adverse_finding && (
                 <span className="block text-xs text-zinc-600">Finding: {flag.adverse_finding}</span>
               )}
+              {flag.related.length > 0 && (
+                <span className="mt-0.5 block text-xs text-zinc-600">
+                  Also: {flag.related.join(" · ")}
+                </span>
+              )}
               {flag.severity_adjusted_from && (
                 <span className="block text-xs text-zinc-500">
                   Severity set by the rubric (model said {flag.severity_adjusted_from}).

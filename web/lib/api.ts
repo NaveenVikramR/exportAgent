@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 export type Health = {
   status: string;
@@ -117,6 +117,20 @@ export type RiskFlag = {
   verified: boolean;
   source: "model" | "rule";
   severity_adjusted_from: "high" | "medium" | "low" | null;
+  related: string[];
+};
+
+export type ExportDocument = {
+  id: number;
+  order_id: number;
+  po_version: number;
+  kind: "commercial_invoice" | "packing_list";
+  number: string | null;
+  profile: string | null;
+  tbc_fields: string[];
+  created_at: string;
+  totals: Record<string, string | number | null>;
+  download_url: string;
 };
 
 export type InfoItem = {
@@ -147,6 +161,7 @@ export type Draft = {
   cost_usd: string | null;
   email_subject: string | null;
   email_sender: string | null;
+  offer: { action: "generate_documents"; order_id: number; message: string } | null;
 };
 
 export type AgentStep = {
@@ -264,6 +279,9 @@ export const api = {
   assess: (id: string, force: boolean) =>
     request<AgentRun>(`/emails/${id}/agent?force=${force}`, { method: "POST" }),
   order: (id: string) => get<OrderDetail>(`/orders/${id}`),
+  orderDocuments: (orderId: string) => get<ExportDocument[]>(`/orders/${orderId}/documents`),
+  generateDocuments: (orderId: number) =>
+    request<ExportDocument[]>(`/orders/${orderId}/documents`, { method: "POST" }),
   drafts: (emailId: string) => get<Draft[]>(`/emails/${emailId}/drafts`),
   writeDrafts: (emailId: string, force: boolean) =>
     request<Draft[]>(`/emails/${emailId}/drafts?force=${force}`, { method: "POST" }),

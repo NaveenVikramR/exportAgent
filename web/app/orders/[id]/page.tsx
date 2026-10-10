@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ALERT_LABELS, AlertBadge } from "@/components/badges";
-import { api, type Change, type OrderDetail, type POVersion, type ScalarField } from "@/lib/api";
+import { GenerateDocuments } from "@/components/documents-panel";
+import { api, type Change, type ExportDocument, type OrderDetail, type POVersion, type ScalarField } from "@/lib/api";
 
 const FIELDS: [ScalarField, string][] = [
   ["buyer", "Buyer"],
@@ -110,6 +111,7 @@ function VersionEntry({ version, isCurrent }: { version: POVersion; isCurrent: b
 export default function OrderPage() {
   const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<OrderDetail | null>(null);
+  const [documents, setDocuments] = useState<ExportDocument[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -117,6 +119,10 @@ export default function OrderPage() {
       .order(id)
       .then(setOrder)
       .catch((err: Error) => setError(err.message));
+    api
+      .orderDocuments(id)
+      .then(setDocuments)
+      .catch(() => setDocuments([]));
   }, [id]);
 
   const current = order?.versions[0]?.data;
@@ -139,7 +145,7 @@ export default function OrderPage() {
             <div>
               <h1 className="text-xl font-semibold">PO {order.po_number}</h1>
               <p className="text-sm text-zinc-600">
-                {order.buyer} · version {order.current_version}
+                {order.buyer} · version {order.current_version} · {order.status === "confirmed" ? "confirmed" : order.status}
               </p>
             </div>
             <div className="flex gap-1.5">
@@ -148,6 +154,22 @@ export default function OrderPage() {
               ))}
             </div>
           </header>
+
+          <section className="rounded-lg border border-zinc-200 bg-white p-5">
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500">Export documents</h2>
+            <p className="mb-3 text-sm text-zinc-600">
+              Commercial Invoice and Packing List from PO version {order.current_version}. Every number is computed
+              in Python from the order and the factory profile; anything we do not know prints as TO BE CONFIRMED.
+            </p>
+            {documents && (
+              <GenerateDocuments
+                orderId={order.id}
+                enabled={order.status === "confirmed"}
+                disabledReason="Approve the reply to the buyer first."
+                initial={documents}
+              />
+            )}
+          </section>
 
           {order.alerts.includes("delivery_pulled_forward") && (
             <p className="rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-900">
