@@ -1,0 +1,2202 @@
+{
+ "records": [
+  {
+   "case_id": "case_001",
+   "score": {
+    "case_id": "case_001",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_001",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_001",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Nordwind Mode GmbH",
+     "confidence": 1.0,
+     "evidence": "Senior Buyer, Nordwind Mode GmbH, Hamburg"
+    },
+    "po_number": {
+     "value": "NW-45120",
+     "confidence": 1.0,
+     "evidence": "PO Number: NW-45120"
+    },
+    "style": {
+     "value": "NW-TS-2207",
+     "confidence": 1.0,
+     "evidence": "Style No: NW-TS-2207"
+    },
+    "currency": {
+     "value": "USD",
+     "confidence": 1.0,
+     "evidence": "Currency: USD"
+    },
+    "unit_price": {
+     "value": "4.85",
+     "confidence": 1.0,
+     "evidence": "Unit Price: 4.85 per piece"
+    },
+    "total_quantity": {
+     "value": 12000,
+     "confidence": 1.0,
+     "evidence": "Total Quantity: 12,000 pcs"
+    },
+    "delivery_date": {
+     "value": "2026-12-15",
+     "confidence": 1.0,
+     "evidence": "Delivery Date (ex-factory): 15 December 2026"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Incoterms: FOB Tuticorin"
+    },
+    "port": {
+     "value": "Tuticorin",
+     "confidence": 1.0,
+     "evidence": "Incoterms: FOB Tuticorin"
+    },
+    "destination_country": {
+     "value": "Germany",
+     "confidence": 1.0,
+     "evidence": "Destination: Hamburg, Germany"
+    },
+    "line_items": [
+     {
+      "colour": "Navy",
+      "sizes": {
+       "S": 600,
+       "M": 1500,
+       "L": 1500,
+       "XL": 900
+      },
+      "quantity": 4500,
+      "unit_price": null
+     },
+     {
+      "colour": "White",
+      "sizes": {
+       "S": 600,
+       "M": 1500,
+       "L": 1500,
+       "XL": 900
+      },
+      "quantity": 4500,
+      "unit_price": null
+     },
+     {
+      "colour": "Heather Grey",
+      "sizes": {
+       "S": 400,
+       "M": 1000,
+       "L": 1000,
+       "XL": 600
+      },
+      "quantity": 3000,
+      "unit_price": null
+     }
+    ]
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer requests confirmation of receipt and the ex-factory date for PO NW-45120 for men's crew neck tees.",
+    "confidence": 0.99
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [],
+    "info_checked": 5,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "lookup_buyer",
+     "check_compliance"
+    ]
+   },
+   "drafts": [
+    {
+     "kind": "buyer_reply",
+     "words": 57,
+     "checked": 3,
+     "violations": [],
+     "text": "Dear Anna,\n\nThank you for sending PO\u202fNW\u201145120; we have received it and confirm the ex\u2011factory date of\u202f15\u202fDecember\u202f2026 for the full quantity of\u202f12,000\u202fpieces (style\u202fNW\u2011TS\u20112207) at the agreed unit price of\u202fUSD\u202f4.85\u202fFOB\u202fTuticorin.\n\nPlease let us know if you need any further details.\n\nBest regards,  \nKarthik  \nMerchandiser  \nSri Velan Knits"
+    },
+    {
+     "kind": "internal_note",
+     "words": 99,
+     "checked": 9,
+     "violations": [],
+     "text": "- Buyer placed new PO NW-45120 (01 Sep 2026) for 12,000 pcs men\u2019s crew neck tee (style NW\u2011TS\u20112207) at USD\u202f4.85 each, colours Navy (4,500), White (4,500), Heather Grey (3,000) with size splits as per PO; delivery ex\u2011factory 15 Dec 2026, FOB Tuticorin, LC at sight.  \n- No changes or risk flags noted in the order.  \n- Management decision: confirm receipt of PO and approve the 15\u202fDec\u202f2026 ex\u2011factory date (or request clarification).  \n- Production: prepare fabric, trim and capacity for the full 12,000 pcs per colour/size breakdown; hold actual cut\u2011and\u2011sew start until buyer confirms the ex\u2011factory date."
+    }
+   ],
+   "seconds": 23.29,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00030366",
+     "latency_ms": 3762,
+     "input_tokens": 1977,
+     "output_tokens": 771,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01405700",
+     "latency_ms": 8918,
+     "input_tokens": 7343,
+     "output_tokens": 2238,
+     "failed": 0
+    },
+    "super": {
+     "calls": 2,
+     "cost": "0.00283350",
+     "latency_ms": 10393,
+     "input_tokens": 2638,
+     "output_tokens": 2269,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_003",
+   "score": {
+    "case_id": "case_003",
+    "category_ok": true,
+    "intents_ok": false,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_003",
+    "category_ok": true,
+    "intents_ok": false,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_003",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Maison Clairet SAS",
+     "confidence": 1.0,
+     "evidence": "Acheteur, Maison Clairet SAS, Lyon, France"
+    },
+    "po_number": {
+     "value": "MC-2026-0871",
+     "confidence": 1.0,
+     "evidence": "PO number MC-2026-0871"
+    },
+    "style": {
+     "value": "MC-PL-118",
+     "confidence": 1.0,
+     "evidence": "Style: MC-PL-118 ladies' pique polo"
+    },
+    "currency": {
+     "value": "EUR",
+     "confidence": 1.0,
+     "evidence": "Price: EUR 6.40 per piece"
+    },
+    "unit_price": {
+     "value": "6.40",
+     "confidence": 1.0,
+     "evidence": "Price: EUR 6.40 per piece"
+    },
+    "total_quantity": {
+     "value": 6000,
+     "confidence": 1.0,
+     "evidence": "total 6,000 pcs"
+    },
+    "delivery_date": {
+     "value": "2027-01-20",
+     "confidence": 1.0,
+     "evidence": "Ex-factory: 20 January 2027"
+    },
+    "incoterms": {
+     "value": "CIF",
+     "confidence": 1.0,
+     "evidence": "Price: EUR 6.40 per piece, CIF Le Havre"
+    },
+    "port": {
+     "value": "Le Havre",
+     "confidence": 1.0,
+     "evidence": "CIF Le Havre"
+    },
+    "destination_country": {
+     "value": "France",
+     "confidence": 1.0,
+     "evidence": "Maison Clairet SAS, Lyon, France"
+    },
+    "line_items": [
+     {
+      "colour": "Blanc",
+      "sizes": {},
+      "quantity": 2000,
+      "unit_price": null
+     },
+     {
+      "colour": "Marine",
+      "sizes": {},
+      "quantity": 2500,
+      "unit_price": null
+     },
+     {
+      "colour": "Rouge",
+      "sizes": {},
+      "quantity": 1500,
+      "unit_price": null
+     }
+    ]
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po",
+     "order_query",
+     "shipment_docs"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer requests a new PO booking, asks about the status of a lab dip, and wants the packing list resent.",
+    "confidence": 0.96
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "low",
+      "category": "delivery",
+      "reason": "Current plan feasible: 34% free capacity used (40,571 pcs available vs 6,000 needed), 60 days slack after 32 production days needed.",
+      "evidence": [
+       "E2"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 5,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ]
+   },
+   "drafts": [
+    {
+     "kind": "buyer_reply",
+     "words": 166,
+     "checked": 8,
+     "violations": [],
+     "text": "Hi Julien,\n\nThank you for your email.\n\n1) New PO \u2013 I have noted the details for PO MC\u20112026\u20110871, style MC\u2011PL\u2011118, 2\u202f000 Blanc, 2\u202f500 Marine, 1\u202f500 Rouge (total 6\u202f000 pcs), size ratio XS:S:M:L:XL\u202f=\u202f1:2:3:3:1, price EUR\u202f6.40 CIF Le Havre, ex\u2011factory 20\u202fJanuary\u202f2027. I will await the formal PO from your system.\n\n2) Lab dips for MC\u20112026\u20110795 (Vert Sauge) \u2013 I will check internally and let you know when the second submission was sent, aiming to reply before Friday.\n\n3) Packing list for invoice SVK/EXP/0412 \u2013 I will resend it shortly.\n\nRegarding the current order, fabric preparation is still pending, but the production plan shows sufficient capacity and the delivery of the full 6\u202f000 pcs remains feasible for 20\u202fJanuary\u202f2027. If any change arises, I will propose the earliest feasible date or a split shipment based on available capacity.\n\nPlease confirm receipt and let me know if you need anything else.\n\nBest regards,\nKarthik\nMerchandiser\nSri Velan Knits"
+    },
+    {
+     "kind": "internal_note",
+     "words": 112,
+     "checked": 8,
+     "violations": [],
+     "text": "- Buyer placed new PO MC-2026-0871 for style MC-PL-118: Blanc 2,000, Marine 2,500, Rouge 1,500 pcs (total 6,000) at EUR\u202f6.40/piece CIF Le Havre, ex\u2011factory 20\u202fJan\u202f2027; size ratio XS:S:M:L:XL\u202f=\u202f1:2:3:3:1 per colour.  \n- Risk flag: low\u2011severity delivery risk \u2013 current plan feasible with 34\u202f% free\u2011capacity use and 60\u202fdays slack.  \n- Management decision needed: confirm PO booking and resource allocation; advise on lab\u2011dip follow\u2011up for MC-2026-0795 and packing\u2011list resend for invoice SVK/EXP/0412.  \n- Production: prepare materials and schedule for 6,000 pcs per the colour/size mix to meet 20\u202fJan\u202f2027 ex\u2011factory date, but hold final commitment until buyer\u2019s formal PO and clarification on lab dip/packing list are received."
+    }
+   ],
+   "seconds": 23.9,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00027798",
+     "latency_ms": 4165,
+     "input_tokens": 1741,
+     "output_tokens": 723,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01360000",
+     "latency_ms": 8073,
+     "input_tokens": 7021,
+     "output_tokens": 2193,
+     "failed": 0
+    },
+    "super": {
+     "calls": 2,
+     "cost": "0.00289590",
+     "latency_ms": 11538,
+     "input_tokens": 2306,
+     "output_tokens": 2449,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_004",
+   "score": {
+    "case_id": "case_004",
+    "category_ok": false,
+    "intents_ok": false,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [
+     "currency",
+     "delivery_date",
+     "incoterms",
+     "port",
+     "unit_price"
+    ],
+    "review_flagged": [
+     "currency",
+     "delivery_date",
+     "incoterms",
+     "port",
+     "unit_price"
+    ]
+   },
+   "score_before_escalation": {
+    "case_id": "case_004",
+    "category_ok": false,
+    "intents_ok": false,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": false,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [
+     "currency",
+     "delivery_date",
+     "incoterms",
+     "port",
+     "unit_price"
+    ],
+    "review_flagged": [
+     "currency",
+     "delivery_date",
+     "incoterms",
+     "port",
+     "unit_price"
+    ]
+   },
+   "changes": {
+    "case_id": "case_004",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [
+    {
+     "field": "currency",
+     "reason": "source_quote_missing",
+     "model": "nvidia/nemotron-3-super-120b-a12b",
+     "calls": 1,
+     "input_tokens": 979,
+     "output_tokens": 31,
+     "cost_usd": "0.00032160",
+     "outcome": "resolved",
+     "before": "USD",
+     "after": null
+    }
+   ],
+   "extracted": {
+    "buyer": {
+     "value": "Bluepeak Outfitters Inc.",
+     "confidence": 0.95,
+     "evidence": "Bluepeak Outfitters Inc., Portland, OR"
+    },
+    "po_number": {
+     "value": "BP-778301",
+     "confidence": 0.98,
+     "evidence": "PO BP-778301"
+    },
+    "style": {
+     "value": "BP-HD-5512",
+     "confidence": 0.99,
+     "evidence": "style BP-HD-5512"
+    },
+    "currency": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "unit_price": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "total_quantity": {
+     "value": 5000,
+     "confidence": 0.99,
+     "evidence": "total 5,000 units"
+    },
+    "delivery_date": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "incoterms": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "port": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "destination_country": {
+     "value": "United States",
+     "confidence": 0.95,
+     "evidence": "Portland, OR"
+    },
+    "line_items": [
+     {
+      "colour": "Charcoal",
+      "sizes": {},
+      "quantity": 1800,
+      "unit_price": null
+     },
+     {
+      "colour": "Forest Green",
+      "sizes": {},
+      "quantity": 1200,
+      "unit_price": null
+     },
+     {
+      "colour": "Black",
+      "sizes": {},
+      "quantity": 2000,
+      "unit_price": null
+     }
+    ]
+   },
+   "classification": {
+    "category": "po_revision",
+    "intents": [
+     "po_revision",
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants to reorder 5,000 fleece hoodies under PO BP-778301 with specified colors and quantities.",
+    "confidence": 0.96
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 2,
+    "error": null,
+    "flags": [
+     {
+      "severity": "medium",
+      "category": "data_quality",
+      "reason": "Delivery date is not yet specified; the buyer will confirm the ship window after their Thursday allocation meeting.",
+      "evidence": [
+       "E1"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": [
+       "Incoterms and destination port are not specified in the PO."
+      ]
+     },
+     {
+      "severity": "medium",
+      "category": "price",
+      "reason": "Unit price and currency are not stated in the email; the buyer references a price agreed on a call but it is not documented in the PO.",
+      "evidence": [
+       "E1"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 2,
+    "tools": [
+     "find_order (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ]
+   },
+   "drafts": [
+    {
+     "kind": "buyer_reply",
+     "words": 160,
+     "checked": 4,
+     "violations": [],
+     "text": "Hi Dana,\n\nThank you for your email. I\u2019ve noted your requests for a PO revision and a new PO for style BP\u2011HD\u20115512.\n\nI can confirm the following details from your message and our records:\n- Style: BP\u2011HD\u20115512 (320\u202fGSM brushed fleece)\n- Quantities: Charcoal\u202f1,800 / Forest Green\u202f1,200 / Black\u202f2,000 (total\u202f5,000 units)\n- Destination country: United States\n\nHowever, the delivery date, unit price, currency, INCOTERMS and port of loading are still unspecified, as highlighted in our internal check. Until you confirm the ship window after Thursday\u2019s allocation meeting and provide the agreed price and currency, we cannot finalise the PO or schedule production.\n\nCould you please send the missing information listed below so we can proceed?\n- Currency\n- Unit price\n- Delivery date (or preferred ship window)\n- INCOTERMS\n- Port of loading\n\nOnce we have these details, we\u2019ll issue the revised PO and a new PO as needed.\n\nBest regards,  \nKarthik  \nMerchandiser  \nSri Velan Knits"
+    },
+    {
+     "kind": "internal_note",
+     "words": 112,
+     "checked": 5,
+     "violations": [],
+     "text": "Buyer confirmed reorder of style BP-HD-5512: 5,000 fleece hoodies (Charcoal 1,800; Forest Green 1,200; Black 2,000) under PO BP-778301. Price per prior call agreement; unit price/currency undocumented. Ship window pending post-Thursday allocation meeting confirmation.\n\nRisks:\n- Medium: Delivery date unspecified\u2014buyer to confirm ship window after Thursday meeting.\n- Medium: Unit price and currency missing\u2014referenced verbally but not in PO.\n\nDecision needed: Management to verify price/currency alignment with prior call and approve provisional fabric hold.\n\nProduction: Pencil in fabric for 5,000 units (style BP-HD-5512) per color split above. Hold final cutting/sewing until buyer confirms delivery date and documents price/currency. Do not proceed with size breakdown without buyer sign-off. Await email update before scheduling."
+    }
+   ],
+   "seconds": 35.49,
+   "usage": {
+    "nano": {
+     "calls": 3,
+     "cost": "0.00027366",
+     "latency_ms": 3837,
+     "input_tokens": 1969,
+     "output_tokens": 648,
+     "failed": 0
+    },
+    "super": {
+     "calls": 4,
+     "cost": "0.00465960",
+     "latency_ms": 19376,
+     "input_tokens": 3844,
+     "output_tokens": 3896,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 3,
+     "cost": "0.01780900",
+     "latency_ms": 12090,
+     "input_tokens": 9343,
+     "output_tokens": 2822,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_005",
+   "score": {
+    "case_id": "case_005",
+    "category_ok": true,
+    "intents_ok": false,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_005",
+    "category_ok": true,
+    "intents_ok": false,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_005",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [
+    {
+     "field": "line_items",
+     "reason": "size_table_not_extracted",
+     "model": "nvidia/nemotron-3-super-120b-a12b",
+     "calls": 1,
+     "input_tokens": 1202,
+     "output_tokens": 271,
+     "cost_usd": "0.00060450",
+     "outcome": "resolved",
+     "before": [
+      {
+       "colour": "Dusty Pink",
+       "sizes": {},
+       "quantity": 2400,
+       "unit_price": null
+      },
+      {
+       "colour": "Sage",
+       "sizes": {},
+       "quantity": 2400,
+       "unit_price": null
+      },
+      {
+       "colour": "Charcoal",
+       "sizes": {},
+       "quantity": 2000,
+       "unit_price": null
+      }
+     ],
+     "after": [
+      {
+       "colour": "Dusty Pink",
+       "sizes": {
+        "2-3Y": 500,
+        "4-5Y": 700,
+        "6-7Y": 700,
+        "8-9Y": 500
+       },
+       "quantity": 2400,
+       "unit_price": null
+      },
+      {
+       "colour": "Sage",
+       "sizes": {
+        "2-3Y": 500,
+        "4-5Y": 700,
+        "6-7Y": 700,
+        "8-9Y": 500
+       },
+       "quantity": 2400,
+       "unit_price": null
+      },
+      {
+       "colour": "Charcoal",
+       "sizes": {
+        "2-3Y": 400,
+        "4-5Y": 600,
+        "6-7Y": 600,
+        "8-9Y": 400
+       },
+       "quantity": 2000,
+       "unit_price": null
+      }
+     ]
+    }
+   ],
+   "extracted": {
+    "buyer": {
+     "value": "Harrow & Finch Ltd",
+     "confidence": 1.0,
+     "evidence": "HARROW & FINCH LTD"
+    },
+    "po_number": {
+     "value": "HF/PO/26/3391",
+     "confidence": 1.0,
+     "evidence": "PURCHASE ORDER No: HF/PO/26/3391"
+    },
+    "style": {
+     "value": "HF-KL-0932",
+     "confidence": 1.0,
+     "evidence": "Style Ref: HF-KL-0932"
+    },
+    "currency": {
+     "value": "GBP",
+     "confidence": 1.0,
+     "evidence": "Order Currency: GBP"
+    },
+    "unit_price": {
+     "value": "2.95",
+     "confidence": 1.0,
+     "evidence": "Price per unit: \u00a32.95"
+    },
+    "total_quantity": {
+     "value": 6800,
+     "confidence": 1.0,
+     "evidence": "Total units: 6,800"
+    },
+    "delivery_date": {
+     "value": "2027-01-05",
+     "confidence": 1.0,
+     "evidence": "Required ex-factory date: 05/01/2027"
+    },
+    "incoterms": {
+     "value": "CIF",
+     "confidence": 1.0,
+     "evidence": "Delivery terms: CIF Felixstowe"
+    },
+    "port": {
+     "value": "Felixstowe",
+     "confidence": 1.0,
+     "evidence": "Delivery terms: CIF Felixstowe"
+    },
+    "destination_country": {
+     "value": "United Kingdom",
+     "confidence": 1.0,
+     "evidence": "Ship to: Harrow & Finch DC, Leeds, United Kingdom"
+    },
+    "line_items": [
+     {
+      "colour": "Dusty Pink",
+      "sizes": {
+       "2-3Y": 500,
+       "4-5Y": 700,
+       "6-7Y": 700,
+       "8-9Y": 500
+      },
+      "quantity": 2400,
+      "unit_price": null
+     },
+     {
+      "colour": "Sage",
+      "sizes": {
+       "2-3Y": 500,
+       "4-5Y": 700,
+       "6-7Y": 700,
+       "8-9Y": 500
+      },
+      "quantity": 2400,
+      "unit_price": null
+     },
+     {
+      "colour": "Charcoal",
+      "sizes": {
+       "2-3Y": 400,
+       "4-5Y": 600,
+       "6-7Y": 600,
+       "8-9Y": 400
+      },
+      "quantity": 2000,
+      "unit_price": null
+     }
+    ]
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po",
+     "order_query"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants confirmation that the attached purchase order for kids' organic leggings is received and asks for the GOTS transaction certificate to be included with shipping documents.",
+    "confidence": 0.96
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [],
+    "info_checked": 5,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ]
+   },
+   "drafts": [
+    {
+     "kind": "buyer_reply",
+     "words": 92,
+     "checked": 2,
+     "violations": [],
+     "text": "Hello Olivia,\n\nThank you for sending Purchase Order HF/PO/26/3391. I confirm we have received the PO for the kids\u2019 organic leggings (style HF\u2011KL\u20110932) and note that the GOTS transaction certificate will be required with the shipping documents.\n\nBased on our current production plan, the full quantity of 6,800 units can be shipped CIF Felixstowe by the required ex\u2011factory date of 5\u202fJanuary\u202f2027. Should any change arise, we will advise you promptly and discuss options.\n\nPlease let me know if you need any further details.\n\nBest regards,  \nKarthik  \nMerchandiser  \nSri Velan Knits"
+    },
+    {
+     "kind": "internal_note",
+     "words": 97,
+     "checked": 7,
+     "violations": [],
+     "text": "- Buyer ordered new PO HF/PO/26/3391 (style HF\u2011KL\u20110932) for 6,800 kids\u2019 organic leggings at GBP\u202f2.95 each (total GBP\u202f20,060), delivery CIF Felixstowe, ex\u2011factory 05/01/2027; breakdown: Dusty Pink 2,400 (500/700/700/500), Sage 2,400 (same), Charcoal 2,000 (400/600/600/400).  \n- No changes, missing information, or risk flags were recorded in the FACTS.  \n- Management must confirm PO receipt and agree to provide the GOTS transaction certificate with shipping documents.  \n- Production should prepare fabric and cut according to the above colour/size quantities but hold the start of production until buyer\u2019s confirmation (or management\u2019s go\u2011ahead) and the GOTS cert is ready."
+    }
+   ],
+   "seconds": 25.65,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00030426",
+     "latency_ms": 4075,
+     "input_tokens": 1935,
+     "output_tokens": 784,
+     "failed": 0
+    },
+    "super": {
+     "calls": 3,
+     "cost": "0.00307830",
+     "latency_ms": 10919,
+     "input_tokens": 3874,
+     "output_tokens": 2129,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 3,
+     "cost": "0.01853400",
+     "latency_ms": 10507,
+     "input_tokens": 12519,
+     "output_tokens": 2005,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_006",
+   "score": {
+    "case_id": "case_006",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": false
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [
+     "total_quantity"
+    ],
+    "review_flagged": [
+     "total_quantity"
+    ]
+   },
+   "score_before_escalation": {
+    "case_id": "case_006",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": false
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [
+     "total_quantity"
+    ],
+    "review_flagged": [
+     "total_quantity"
+    ]
+   },
+   "changes": {
+    "case_id": "case_006",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Bluepeak Outfitters Inc.",
+     "confidence": 1.0,
+     "evidence": "Bluepeak Outfitters Inc."
+    },
+    "po_number": {
+     "value": "BP-778455",
+     "confidence": 1.0,
+     "evidence": "PO BP-778455"
+    },
+    "style": {
+     "value": "BP-TK-2040",
+     "confidence": 1.0,
+     "evidence": "style BP-TK-2040"
+    },
+    "currency": {
+     "value": "USD",
+     "confidence": 1.0,
+     "evidence": "Currency: USD"
+    },
+    "unit_price": {
+     "value": "3.20",
+     "confidence": 1.0,
+     "evidence": "Unit cost: 3.20"
+    },
+    "total_quantity": {
+     "value": 8400,
+     "confidence": 0.5,
+     "evidence": "TOTAL: 8,400 PCS"
+    },
+    "delivery_date": {
+     "value": "2026-11-20",
+     "confidence": 1.0,
+     "evidence": "Ex-factory: November 20, 2026"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Chennai"
+    },
+    "port": {
+     "value": "Chennai",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Chennai"
+    },
+    "destination_country": {
+     "value": "USA",
+     "confidence": 1.0,
+     "evidence": "Ship to: Bluepeak DC, Reno, NV, USA"
+    },
+    "line_items": [
+     {
+      "colour": "Black",
+      "sizes": {
+       "XS": 300,
+       "S": 900,
+       "M": 1200,
+       "L": 900,
+       "XL": 300
+      },
+      "quantity": 3600,
+      "unit_price": null
+     },
+     {
+      "colour": "Ivory",
+      "sizes": {
+       "XS": 250,
+       "S": 700,
+       "M": 1000,
+       "L": 700,
+       "XL": 250
+      },
+      "quantity": 2900,
+      "unit_price": null
+     },
+     {
+      "colour": "Dusty Rose",
+      "sizes": {
+       "XS": 150,
+       "S": 500,
+       "M": 600,
+       "L": 500,
+       "XL": 150
+      },
+      "quantity": 1900,
+      "unit_price": null
+     }
+    ]
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants confirmation of the new purchase order for 8,000 women's rib tanks.",
+    "confidence": 0.96
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "medium",
+      "category": "data_quality",
+      "reason": "Email body says 8,000 pcs but PO attachment totals 8,400 pcs; extraction confidence for total_quantity is 0.50 (below 0.70 threshold).",
+      "evidence": [
+       "E1"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 3,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "check_compliance"
+    ]
+   },
+   "drafts": [
+    {
+     "kind": "buyer_reply",
+     "words": 106,
+     "checked": 8,
+     "violations": [],
+     "text": "Hi Dana,\n\nThank you for sending PO\u202fBP\u2011778455. I\u2019ve reviewed the attached PDF and note that the email mentions\u202f8,000\u202fpcs while the PO totals\u202f8,400\u202fpcs (Black\u202f3,600\u202f+ Ivory\u202f2,900\u202f+ Dusty\u202fRose\u202f1,900). Could you please confirm the exact quantity you\u2019d like us to proceed with?\n\nAssuming the PO quantity of\u202f8,400\u202fpcs is correct, the current schedule shows an ex\u2011factory date of\u202f20\u202fNov\u202f2026\u202fis feasible. If you prefer the\u202f8,000\u202fpcs figure, let us know and we\u2019ll adjust accordingly.\n\nPlease confirm the quantity at your earliest convenience so we can finalize the order.\n\nBest regards,  \nKarthik  \nMerchandiser  \nSri Velan Knits"
+    },
+    {
+     "kind": "internal_note",
+     "words": 83,
+     "checked": 11,
+     "violations": [],
+     "text": "- Buyer emailed PO BP\u2011778455 for style BP\u2011TK\u20112040 women\u2019s rib tank, quoting 8,000 pcs @ $3.20 FOB Chennai, ex\u2011factory 2026\u201111\u201120; attached PO lists Black 3,600, Ivory 2,900, Dusty Rose 1,900 (total 8,400 pcs).  \n- Risk: medium severity \u2013 data quality mismatch (email 8,000 pcs vs PO 8,400 pcs).  \n- Management decision needed: confirm correct total quantity (8,000 or 8,400 pcs) before proceeding.  \n- Production: hold final scheduling, fabric cut and trim procurement until buyer confirms the quantity; prepare only based on confirmed total."
+    }
+   ],
+   "seconds": 22.99,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00029934",
+     "latency_ms": 4291,
+     "input_tokens": 1901,
+     "output_tokens": 772,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01238000",
+     "latency_ms": 9033,
+     "input_tokens": 6500,
+     "output_tokens": 1960,
+     "failed": 0
+    },
+    "super": {
+     "calls": 2,
+     "cost": "0.00232380",
+     "latency_ms": 9516,
+     "input_tokens": 2700,
+     "output_tokens": 1682,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_002",
+   "score": {
+    "case_id": "case_002",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_002",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_002",
+    "expected": 3,
+    "predicted": 3,
+    "correct": 3,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Nordwind Mode GmbH",
+     "confidence": 1.0,
+     "evidence": "Supplier: Sri Velan Knits, Tiruppur, India"
+    },
+    "po_number": {
+     "value": "NW-45120",
+     "confidence": 1.0,
+     "evidence": "PO Number: NW-45120"
+    },
+    "style": {
+     "value": "NW-TS-2207",
+     "confidence": 1.0,
+     "evidence": "Style No: NW-TS-2207"
+    },
+    "currency": {
+     "value": "USD",
+     "confidence": 1.0,
+     "evidence": "Currency: USD"
+    },
+    "unit_price": {
+     "value": "4.85",
+     "confidence": 1.0,
+     "evidence": "Unit Price: 4.85 per piece"
+    },
+    "total_quantity": {
+     "value": 13500,
+     "confidence": 1.0,
+     "evidence": "Total Quantity: 13,500 pcs"
+    },
+    "delivery_date": {
+     "value": "2026-11-30",
+     "confidence": 1.0,
+     "evidence": "Delivery Date (ex-factory): 30 November 2026"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Incoterms: FOB Tuticorin"
+    },
+    "port": {
+     "value": "Tuticorin",
+     "confidence": 1.0,
+     "evidence": "Incoterms: FOB Tuticorin"
+    },
+    "destination_country": {
+     "value": "Germany",
+     "confidence": 1.0,
+     "evidence": "Destination: Hamburg, Germany"
+    },
+    "line_items": [
+     {
+      "colour": "Navy",
+      "sizes": {
+       "S": 800,
+       "M": 2000,
+       "L": 2000,
+       "XL": 1200
+      },
+      "quantity": 6000,
+      "unit_price": null
+     },
+     {
+      "colour": "White",
+      "sizes": {
+       "S": 600,
+       "M": 1500,
+       "L": 1500,
+       "XL": 900
+      },
+      "quantity": 4500,
+      "unit_price": null
+     },
+     {
+      "colour": "Heather Grey",
+      "sizes": {
+       "S": 400,
+       "M": 1000,
+       "L": 1000,
+       "XL": 600
+      },
+      "quantity": 3000,
+      "unit_price": null
+     }
+    ]
+   },
+   "classification": {
+    "category": "po_revision",
+    "intents": [
+     "po_revision"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants the supplier to adopt the revised PO (Rev.1) and discard the previous version.",
+    "confidence": 0.96
+   },
+   "expected_high": [
+    "schedule",
+    "value"
+   ],
+   "predicted_high": [
+    "schedule",
+    "value"
+   ],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "high",
+      "category": "delivery",
+      "reason": "Current plan infeasible: 13,500 pcs needed but only 9,314 pcs free capacity before 30 Nov 2026, shortfall 4,186 pcs.",
+      "evidence": [
+       "E3"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     },
+     {
+      "severity": "high",
+      "category": "price",
+      "reason": "Contract value increased 12.5% (USD 7,275) from USD 58,200 to USD 65,475, exceeding the 10% threshold.",
+      "evidence": [
+       "E2"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 5,
+    "tools": [
+     "find_order (0)",
+     "diff_po_versions (0)",
+     "check_delivery_feasibility (0)",
+     "check_delivery_feasibility (0)",
+     "propose_delivery_options (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ]
+   },
+   "drafts": [
+    {
+     "kind": "buyer_reply",
+     "words": 124,
+     "checked": 9,
+     "violations": [],
+     "text": "Dear Anna,\n\nThank you for sending the revised PO\u202fNW\u201145120\u202fRev.1. We confirm we will work to this revision and discard the previous version.\n\nBased on our current capacity, delivering the full 13,500\u202fpcs by the requested date of\u202f30\u202fNov\u202f2026 is not feasible (shortfall\u202f4,186\u202fpcs). The contract value for the revised PO is\u202fUSD\u202f65,475.00, reflecting the 12.5\u202f% increase.\n\nTo move forward we can propose:\n\n1. **Full quantity** by the earliest feasible date\u202f08\u202fDec\u202f2026.  \n2. **Split shipment**:\u202f9,300\u202fpcs by\u202f30\u202fNov\u202f2026 and the remaining\u202f4,200\u202fpcs by\u202f08\u202fDec\u202f2026.\n\nPlease let us know which option you would like to confirm, or if you have another arrangement in mind.\n\nBest regards,  \nKarthik  \nMerchandiser  \nSri Velan Knits"
+    },
+    {
+     "kind": "internal_note",
+     "words": 108,
+     "checked": 18,
+     "violations": [],
+     "text": "Buyer confirmed revision of PO NW-45120 Rev.1 dated 2026-09-18; total quantity increased to 13,500 pcs, delivery date advanced to 2026-11-30, unit price remains USD 4.85.\n\nRisk findings: high severity \u2013 delivery infeasible (only 9,314 pcs free capacity before 2026-11-30, shortfall 4,186 pcs); high severity \u2013 contract value increased by USD 7,275 (12.5%) to USD 65,475.\n\nDecision needed: management must approve revised schedule or resource adjustments to meet 2026-11-30 delivery.\n\nProduction: prepare for 13,500 pcs (Navy 6,000, White 4,500, Heather Grey 3,000) but hold confirmation until buyer approves feasible plan or accepts partial shipment (9,300 pcs on 2026-11-30, balance 4,200 pcs by 2026-12-08). Do not proceed without buyer sign-off."
+    }
+   ],
+   "seconds": 29.85,
+   "usage": {
+    "nano": {
+     "calls": 3,
+     "cost": "0.00036270",
+     "latency_ms": 4350,
+     "input_tokens": 2677,
+     "output_tokens": 842,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01442400",
+     "latency_ms": 6666,
+     "input_tokens": 9987,
+     "output_tokens": 1479,
+     "failed": 0
+    },
+    "super": {
+     "calls": 3,
+     "cost": "0.00550080",
+     "latency_ms": 18666,
+     "input_tokens": 6261,
+     "output_tokens": 4025,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_007",
+   "score": {
+    "case_id": "case_007",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": false,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": false
+    },
+    "line_items_total": 0,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_007",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": false,
+     "currency": false,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": false,
+     "port": true,
+     "destination_country": false
+    },
+    "line_items_total": 0,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": [
+     "currency",
+     "incoterms"
+    ]
+   },
+   "changes": {
+    "case_id": "case_007",
+    "expected": 1,
+    "predicted": 1,
+    "correct": 1,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [
+    {
+     "field": "currency",
+     "reason": "source_quote_missing",
+     "model": "nvidia/nemotron-3-super-120b-a12b",
+     "calls": 1,
+     "input_tokens": 1079,
+     "output_tokens": 22,
+     "cost_usd": "0.00034350",
+     "outcome": "resolved",
+     "before": "USD",
+     "after": null
+    },
+    {
+     "field": "incoterms",
+     "reason": "source_quote_missing",
+     "model": "nvidia/nemotron-3-super-120b-a12b",
+     "calls": 1,
+     "input_tokens": 1085,
+     "output_tokens": 25,
+     "cost_usd": "0.00034800",
+     "outcome": "resolved",
+     "before": "EXW",
+     "after": null
+    }
+   ],
+   "extracted": {
+    "buyer": {
+     "value": "Nordwind Mode GmbH",
+     "confidence": 1.0,
+     "evidence": "Nordwind Mode GmbH"
+    },
+    "po_number": {
+     "value": "NW-45098",
+     "confidence": 1.0,
+     "evidence": "PO NW-45098"
+    },
+    "style": {
+     "value": "NW-45098",
+     "confidence": 1.0,
+     "evidence": "PO NW-45098"
+    },
+    "currency": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "unit_price": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "total_quantity": {
+     "value": 9000,
+     "confidence": 1.0,
+     "evidence": "9,000 pcs"
+    },
+    "delivery_date": {
+     "value": "2026-11-10",
+     "confidence": 1.0,
+     "evidence": "by 10 November 2026"
+    },
+    "incoterms": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "port": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "destination_country": {
+     "value": "Germany",
+     "confidence": 1.0,
+     "evidence": "Nordwind Mode GmbH"
+    },
+    "line_items": [
+     {
+      "colour": "null",
+      "sizes": {},
+      "quantity": 9000,
+      "unit_price": null
+     }
+    ]
+   },
+   "classification": {
+    "category": "delivery_change",
+    "intents": [
+     "delivery_change"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer requests moving the ex-factory delivery date of PO NW-45098 to 10 November 2026.",
+    "confidence": 0.96
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 2,
+    "error": null,
+    "flags": [
+     {
+      "severity": "medium",
+      "category": "delivery",
+      "reason": "The previously committed date 2026-11-24 was infeasible: 4,258 pcs shortfall due to order BP-778455 (8,400 pcs due 2026-11-20) consuming capacity.",
+      "evidence": [
+       "E4",
+       "E3",
+       "E6",
+       "E2"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": "high",
+      "related": [
+       "New date 2026-11-10 is feasible only because fabric is in-house (per Karthik 17 Sep). Without fabric ready, only 9 production days available vs 10 minimum needed (shortfall 3,858 pcs).",
+       "Delivery pulled forward by 14 days (2026-11-24 \u2192 2026-11-10) reducing production window."
+      ]
+     }
+    ],
+    "info_checked": 2,
+    "tools": [
+     "find_order (0)",
+     "diff_po_versions (0)",
+     "check_delivery_feasibility (0)",
+     "check_delivery_feasibility (0)",
+     "propose_delivery_options (0)",
+     "check_delivery_feasibility",
+     "check_compliance"
+    ]
+   },
+   "drafts": [
+    {
+     "kind": "buyer_reply",
+     "words": 109,
+     "checked": 7,
+     "violations": [],
+     "text": "Hi Anna,\n\nThank you for your message. I acknowledge your request to move the ex\u2011factory delivery of PO\u202fNW\u201145098 to\u202f10\u202fNovember\u202f2026.\n\nBased on our current capacity check, delivering the full quantity of\u202f9,000\u202fpcs by\u202f10\u202fNov\u202f2026 is feasible; the fabric is already in\u2011house and there is sufficient free capacity.\n\nIf you would prefer to see a split shipment as a backup, we could ship\u202f5,100\u202fpcs on\u202f10\u202fNov\u202f2026 and the remaining\u202f3,900\u202fpcs by\u202f17\u202fNov\u202f2026. Please let me know if you would like to proceed with the full\u2011quantity date or consider the partial option.\n\nBest regards,  \nKarthik  \nMerchandiser  \nSri Velan Knits"
+    },
+    {
+     "kind": "internal_note",
+     "words": 100,
+     "checked": 13,
+     "violations": [],
+     "text": "- Buyer change: requests ex\u2011factory delivery moved to 2026-11-10 for PO NW-45098, quantity unchanged 9000 pcs, price unchanged.  \n- Risk: medium severity delivery risk \u2013 previously committed 2026-11-24 infeasible due to 4,258 pcs shortfall from order BP-778455 (8,400 pcs due 2026-11-20) consuming capacity.  \n- Decision needed: management must confirm acceptance of 2026-11-10 delivery (feasible per current plan) or approve partial shipment (5,100 pcs by 2026-11-10, balance 3,900 pcs by 2026-11-17) or retain original date.  \n- Production: prepare to shift schedule for full 9,000 pcs by 2026-11-10, but hold final resource commitment until buyer confirms; alternatively stage for partial shipment option."
+    }
+   ],
+   "seconds": 29.55,
+   "usage": {
+    "nano": {
+     "calls": 3,
+     "cost": "0.00028470",
+     "latency_ms": 4235,
+     "input_tokens": 2269,
+     "output_tokens": 619,
+     "failed": 0
+    },
+    "super": {
+     "calls": 4,
+     "cost": "0.00400170",
+     "latency_ms": 14087,
+     "input_tokens": 5134,
+     "output_tokens": 2735,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 3,
+     "cost": "0.02078200",
+     "latency_ms": 11027,
+     "input_tokens": 11674,
+     "output_tokens": 3036,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_008",
+   "score": {
+    "case_id": "case_008",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {},
+    "line_items_total": 0,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_008",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {},
+    "line_items_total": 0,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_008",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": false,
+   "escalations": [],
+   "extracted": null,
+   "classification": {
+    "category": "sample_or_approval",
+    "intents": [
+     "sample_or_approval",
+     "order_query"
+    ],
+    "has_po_data": false,
+    "summary": "Request for three fit samples of romper KK-RS-310 in size 6-12M and inquiry about the August shipment status.",
+    "confidence": 0.96
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "drafts": [
+    {
+     "kind": "buyer_reply",
+     "words": 68,
+     "checked": 0,
+     "violations": [],
+     "text": "Hi Priya,\n\nThank you for your email.\n\nI will arrange to send three fit samples of romper KK\u2011RS\u2011310 in size 6\u201112\u202fM to your Melbourne office by courier this week.\n\nRegarding your August order, I am checking the shipment status and will let you know as soon as I have an update.\n\nPlease let me know if you need anything else.\n\nBest regards,\nKarthik\nMerchandiser\nSri Velan Knits"
+    }
+   ],
+   "seconds": 4.45,
+   "usage": {
+    "nano": {
+     "calls": 1,
+     "cost": "0.00005196",
+     "latency_ms": 925,
+     "input_tokens": 534,
+     "output_tokens": 83,
+     "failed": 0
+    },
+    "super": {
+     "calls": 1,
+     "cost": "0.00064740",
+     "latency_ms": 3493,
+     "input_tokens": 598,
+     "output_tokens": 520,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_009",
+   "score": {
+    "case_id": "case_009",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_009",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_009",
+    "expected": 4,
+    "predicted": 4,
+    "correct": 4,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Harrow & Finch Ltd",
+     "confidence": 1.0,
+     "evidence": "Buying Team, Harrow & Finch Ltd"
+    },
+    "po_number": {
+     "value": "HF/PO/26/3391",
+     "confidence": 1.0,
+     "evidence": "Purchase Order No: HF/PO/26/3391"
+    },
+    "style": {
+     "value": "HF-KL-0932",
+     "confidence": 1.0,
+     "evidence": "Style Ref: HF-KL-0932"
+    },
+    "currency": {
+     "value": "GBP",
+     "confidence": 1.0,
+     "evidence": "Order Currency: GBP"
+    },
+    "unit_price": {
+     "value": "2.80",
+     "confidence": 1.0,
+     "evidence": "Price per unit: \u00a32.80"
+    },
+    "total_quantity": {
+     "value": 6800,
+     "confidence": 1.0,
+     "evidence": "Total units: 6,800"
+    },
+    "delivery_date": {
+     "value": "2027-01-05",
+     "confidence": 1.0,
+     "evidence": "Required ex-factory date: 05/01/2027"
+    },
+    "incoterms": {
+     "value": "CIF",
+     "confidence": 1.0,
+     "evidence": "Delivery terms: CIF Felixstowe"
+    },
+    "port": {
+     "value": "Felixstowe",
+     "confidence": 1.0,
+     "evidence": "Delivery terms: CIF Felixstowe"
+    },
+    "destination_country": {
+     "value": "United Kingdom",
+     "confidence": 1.0,
+     "evidence": "Ship to: Harrow & Finch DC, Leeds, United Kingdom"
+    },
+    "line_items": [
+     {
+      "colour": "Dusty Pink",
+      "sizes": {
+       "2-3Y": 400,
+       "4-5Y": 600,
+       "6-7Y": 800,
+       "8-9Y": 600
+      },
+      "quantity": 2400,
+      "unit_price": null
+     },
+     {
+      "colour": "Sage",
+      "sizes": {
+       "2-3Y": 400,
+       "4-5Y": 600,
+       "6-7Y": 800,
+       "8-9Y": 600
+      },
+      "quantity": 2400,
+      "unit_price": null
+     },
+     {
+      "colour": "Charcoal",
+      "sizes": {
+       "2-3Y": 300,
+       "4-5Y": 500,
+       "6-7Y": 700,
+       "8-9Y": 500
+      },
+      "quantity": 2000,
+      "unit_price": null
+     }
+    ]
+   },
+   "classification": {
+    "category": "po_revision",
+    "intents": [
+     "po_revision"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants to amend PO HF/PO/26/3391 with a new unit price of \u00a32.80 and updated size curve.",
+    "confidence": 0.96
+   },
+   "expected_high": [
+    "schedule"
+   ],
+   "predicted_high": [
+    "schedule"
+   ],
+   "agent": {
+    "status": "completed",
+    "rounds": 3,
+    "error": null,
+    "flags": [
+     {
+      "severity": "high",
+      "category": "delivery",
+      "reason": "Current plan infeasible: 6,800 pcs needed but only 3,385 pcs free capacity before 2027-01-05, shortfall 3,415 pcs (E3).",
+      "evidence": [
+       "E3",
+       "E4"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     },
+     {
+      "severity": "medium",
+      "category": "price",
+      "reason": "Contract value decreased by \u00a31,020 (5.1%) from \u00a320,060 to \u00a319,040 due to unit price change \u00a32.95 \u2192 \u00a32.80 (E2).",
+      "evidence": [
+       "E2"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 3,
+    "tools": [
+     "find_order (0)",
+     "diff_po_versions (0)",
+     "check_delivery_feasibility (0)",
+     "propose_delivery_options (0)",
+     "check_compliance",
+     "lookup_buyer",
+     "lookup_buyer"
+    ]
+   },
+   "drafts": [
+    {
+     "kind": "buyer_reply",
+     "words": 131,
+     "checked": 9,
+     "violations": [],
+     "text": "Hello Olivia,\n\nThank you for sending Amendment 1 to HF/PO/26/3391. I confirm receipt of the requested PO revision with the new unit price of \u00a32.80 and the updated size curve for Dusty Pink, Sage and Charcoal.\n\nOur current capacity check indicates that the full 6,800 pieces cannot be completed by the required ex\u2011factory date of 5\u202fJanuary\u202f2027; we are short approximately 3,415 pieces.\n\nTo move forward, I can propose two options for your confirmation:\n\n1. Ship the complete order on the earliest feasible date, 11\u202fJanuary\u202f2027.\n2. Split the shipment: deliver 3,300 pieces by 5\u202fJanuary\u202f2027 and the remaining 3,500 pieces by 11\u202fJanuary\u202f2027.\n\nPlease let me know which option works best for you, or if you have another preference.\n\nKind regards,\nKarthik\nMerchandiser\nSri Velan Knits"
+    },
+    {
+     "kind": "internal_note",
+     "words": 168,
+     "checked": 14,
+     "violations": [],
+     "text": "Note for Production Planning Team \u2013 Sri Velan Knits  \nBuyer: Harrow & Finch Ltd | PO: HF/PO/26/3391 | Style: HF-KL-0932  \n\nWhat changed:  \n- Unit price revised from \u00a32.95 to \u00a32.80 (per buyer email and attachment)  \n- Size curve updated: Dusty Pink, Sage, Charcoal shifted toward larger sizes (per facts); total quantity unchanged at 6,800 pcs  \n- Delivery terms, ex-factory date (05/01/2027), port (Felixstowe), Incoterms (CIF) unchanged  \n\nRisk findings:  \n- High severity: Current plan infeasible \u2013 only 3,385 pcs free capacity before 2027-01-05; shortfall of 3,415 pcs (facts)  \n- Medium severity: Contract value reduced by \u00a31,020 (5.1%) due to price drop (facts)  \n\nDecision needed from management:  \nConfirm whether to accept partial shipment (3,300 pcs on 2027-01-05, balance 3,500 pcs on 2027-01-11) or negotiate revised delivery date (earliest feasible full quantity: 2027-01-11)  \n\nProduction should prepare:  \n- Cutting, sewing, finishing for all colours/sizes per updated size curve  \n- Hold final shipment until buyer confirms delivery option (full or partial)  \nDo not proceed with full shipment before 2027-01-05 without explicit buyer approval."
+    }
+   ],
+   "seconds": 52.56,
+   "usage": {
+    "nano": {
+     "calls": 4,
+     "cost": "0.00048534",
+     "latency_ms": 9423,
+     "input_tokens": 3777,
+     "output_tokens": 1078,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 5,
+     "cost": "0.04315500",
+     "latency_ms": 21190,
+     "input_tokens": 31278,
+     "output_tokens": 3959,
+     "failed": 0
+    },
+    "super": {
+     "calls": 3,
+     "cost": "0.00634680",
+     "latency_ms": 21626,
+     "input_tokens": 7089,
+     "output_tokens": 4689,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_010",
+   "score": {
+    "case_id": "case_010",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 1,
+    "review_expected": [
+     "po_number"
+    ],
+    "review_flagged": [
+     "po_number"
+    ]
+   },
+   "score_before_escalation": {
+    "case_id": "case_010",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 1,
+    "review_expected": [
+     "po_number"
+    ],
+    "review_flagged": [
+     "po_number"
+    ]
+   },
+   "changes": {
+    "case_id": "case_010",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Kestrel Kids Pty Ltd",
+     "confidence": 1.0,
+     "evidence": "Kestrel Kids Pty Ltd"
+    },
+    "po_number": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "style": {
+     "value": "KK-RS-310",
+     "confidence": 1.0,
+     "evidence": "KK-RS-310"
+    },
+    "currency": {
+     "value": "AUD",
+     "confidence": 1.0,
+     "evidence": "AUD"
+    },
+    "unit_price": {
+     "value": "5.75",
+     "confidence": 1.0,
+     "evidence": "AUD 5.75 each"
+    },
+    "total_quantity": {
+     "value": 3000,
+     "confidence": 1.0,
+     "evidence": "3000 all up"
+    },
+    "delivery_date": {
+     "value": "2026-12-18",
+     "confidence": 1.0,
+     "evidence": "18th Dec (2026 obviously!)"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "FOB Chennai"
+    },
+    "port": {
+     "value": "Chennai",
+     "confidence": 1.0,
+     "evidence": "FOB Chennai"
+    },
+    "destination_country": {
+     "value": "Australia",
+     "confidence": 1.0,
+     "evidence": "Melbourne"
+    },
+    "line_items": [
+     {
+      "colour": "mint",
+      "sizes": {},
+      "quantity": 1000,
+      "unit_price": "5.75"
+     },
+     {
+      "colour": "lemon",
+      "sizes": {},
+      "quantity": 1000,
+      "unit_price": "5.75"
+     },
+     {
+      "colour": "sky blue",
+      "sizes": {},
+      "quantity": 1000,
+      "unit_price": "5.75"
+     }
+    ]
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants to place a new order for summer rompers with specific styles, quantities, colors, pricing, and a delivery deadline of December 18, 2026.",
+    "confidence": 0.96
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "drafts": [
+    {
+     "kind": "buyer_reply",
+     "words": 157,
+     "checked": 6,
+     "violations": [],
+     "text": "Karthik here \u2013 thank you for forwarding Priya\u2019s note. I\u2019ve recorded the request to place a new order for style KK\u2011RS\u2011310 (organic interlock) at AUD\u202f5.75\u202fFOB Chennai, targeting a factory\u2011out date of\u202f18\u202fDec\u202f2026.\n\nI notice a slight difference in the colour split: your email specifies mint\u202f1200, lemon\u202f1000, sky\u202fblue\u202f800 (total\u202f3000), while the current order draft shows 1000\u202funits each. Please confirm which breakdown you\u2019d like us to proceed with.\n\nTo move forward, I\u2019ll need the official PO number once your system is back online. Assuming the quantities are confirmed, the full 3000\u202funits can be ready for shipment by the requested\u202f18\u202fDec\u202f2026 date; if any adjustment is needed, we can discuss a split shipment (e.g., the portion ready by\u202f18\u202fDec and the balance shortly after).\n\nKindly reply with the confirmed colour split and the PO number at your earliest convenience.\n\nBest regards,  \nKarthik  \nMerchandiser  \nSri Velan Knits"
+    }
+   ],
+   "seconds": 10.22,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00025638",
+     "latency_ms": 5581,
+     "input_tokens": 1653,
+     "output_tokens": 655,
+     "failed": 0
+    },
+    "super": {
+     "calls": 1,
+     "cost": "0.00105030",
+     "latency_ms": 4611,
+     "input_tokens": 993,
+     "output_tokens": 836,
+     "failed": 0
+    }
+   }
+  }
+ ],
+ "split": "dev",
+ "variant": "routed",
+ "run": 2,
+ "llm_mode": "live",
+ "cache": false,
+ "drafts": true,
+ "started": "2026-10-10T19:19:53.167276+00:00",
+ "finished": "2026-10-10T19:24:11.362951+00:00",
+ "models": {
+  "nano": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+  "super": "nvidia/nemotron-3-super-120b-a12b",
+  "ultra": "nvidia/Nemotron-3-Ultra-550b-a55b"
+ }
+}

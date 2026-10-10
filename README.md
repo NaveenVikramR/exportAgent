@@ -4,7 +4,7 @@ An AI export desk for small and mid-size apparel and textile exporters. A buyer 
 
 Built for the Nebius x NVIDIA Global AI Hackathon (track: Best Apps and Agents).
 
-> Status: Milestone 6 of 8 (export documents). Sections marked _to be filled_ are completed as the build progresses.
+> Status: Milestone 7 of 8 (evaluation). Sections marked _to be filled_ are completed as the build progresses.
 
 ## How we use NVIDIA Nemotron + Nebius Token Factory
 
@@ -63,7 +63,7 @@ Model IDs, verified against Token Factory's `/v1/models` on 2026-10-08:
 
 Reasoning is switched per request with `chat_template_kwargs: {"enable_thinking": false}`. Classification, extraction and change detection run on Nano with thinking off: with it on, Nano spent its whole token budget reasoning and returned no JSON. Super and Ultra keep thinking available for drafting and risk reasoning.
 
-First live numbers (10 labelled emails, Nano only so far): about $0.0003 and 9 seconds per email for classification plus extraction. See [backend/eval/report.md](backend/eval/report.md).
+First live numbers (10 labelled emails, Nano only so far): about $0.0003 and 9 seconds per email for classification plus extraction. See [backend/eval/REPORT.md](backend/eval/REPORT.md).
 
 Live numbers with every model tier (10 labelled emails, cache off, 2026-10-10):
 
@@ -124,8 +124,8 @@ pytest                           # unit tests, no network
 python -m scripts.list_models    # NVIDIA model IDs served by Token Factory for your key
 python -m scripts.smoke_llm      # one live call per Nemotron tier: model, tokens, latency, cost
 python -m scripts.smoke_tavily   # one live Tavily search with source URLs
-python -m eval.run_eval          # score extraction against the labelled cases, writes eval/report.md
-python -m eval.run_eval --agent --compare-prefetch   # also the risk agent (with and without pre-fetch) and drafts
+python -m eval.run_eval --split dev --run 1   # one end-to-end evaluation pass, writes eval/runs/
+python -m eval.report            # builds eval/REPORT.md from the passes
 python -m scripts.rebuild_demo   # rebuild the local demo database, keeping the response cache
 ```
 
@@ -143,13 +143,29 @@ docker compose up --build        # web on :3000, API on :8000
 
 ## Evaluation
 
-Synthetic buyer emails modelled on real export paperwork live in [backend/eval/cases/](backend/eval/cases/), with hand-written expected outputs in [backend/eval/expected/](backend/eval/expected/). The first 10 cover a clean PO, revised and amended POs, one email mixing three requests, missing fields, contradictory quantities, a date changed inside a reply thread, day-first dates, and USD, EUR, GBP and AUD.
+Synthetic buyer emails modelled on real export paperwork, with hand-written expected outputs, in two splits: **DEV** ([backend/eval/dev/](backend/eval/dev/), 10 cases the system was built against) and a held-out **TEST** set ([backend/eval/test/](backend/eval/test/), 30 cases written and committed before any run on them, never used to tune prompts). Labels cover classification, every field, line items, review flags, expected changes and expected high-risk findings.
 
 Every extracted field carries a confidence and the source quote it came from. Plain-Python rules then lower the confidence and flag the field for human review when the quote is not in the email, the quantities do not add up, or a required field is missing ([backend/app/services/review.py](backend/app/services/review.py)).
 
 Each email that carries a PO is matched to its order by PO number and stored as a new version; earlier versions are never overwritten. [`diff_po_versions`](backend/app/agent/tools/diff_po_versions.py) is plain Python and reports quantity, price, delivery date, size ratio, colour and Incoterm changes with old and new values. Size breakdowns are compared as ratios, so scaling a colour up is a quantity change, not a ratio change. A delivery date moved earlier is flagged as **delivery pulled forward**, the most expensive change for an exporter. When a reply thread quotes the old value of an order we have not seen (for example "the 24 November date below no longer works"), the earlier version is rebuilt from the quote so the change is still visible.
 
-_To be filled: results on Nemotron (live), growing to 40 cases with change-detection precision and recall, risk flag rate, and cost and latency per case._
+The full pipeline ran 3× on DEV and 3× on TEST, live on Nemotron with the cache off; full tables, baselines and failure analysis in **[backend/eval/REPORT.md](backend/eval/REPORT.md)**. Highlights, mean over 3 runs:
+
+| Metric | DEV | TEST |
+|---|---|---|
+| Field extraction accuracy | 97.8% | 91.9% |
+| Line-item accuracy | 88.9% | 88.7% |
+| Change detection recall / precision | 100% / 100% | 28.2% / 63.1% |
+| High-risk flags precision / recall | 100% / 100% | 78.0% / 66.7% |
+| Drafts with no fact-check violations | 100% | 98.7% |
+| Cost per email (all models, incl. drafts) | $0.0169 | $0.0157 |
+
+The held-out set exposed real weaknesses that DEV did not: revision suffixes kept in PO numbers ("CL-7731 Revision A") break order matching, which is most of the low change-detection recall on TEST. They are documented in the report, not tuned away on the TEST set.
+
+```bash
+python -m eval.run_eval --split test --variant routed --run 1   # one pass; also nano_only, ultra_all
+python -m eval.report                                             # builds eval/REPORT.md from eval/runs/
+```
 
 ## What we'd improve
 
