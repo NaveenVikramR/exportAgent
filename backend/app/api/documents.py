@@ -25,6 +25,8 @@ class DocumentOut(BaseModel):
     profile: str | None
     tbc_fields: list[str]
     created_at: datetime
+    # "Shipment 1 of 2: ..." for split shipments
+    shipment: str | None = None
     # headline figures from the computed content
     totals: dict[str, Any]
     download_url: str
@@ -40,6 +42,7 @@ def document_out(document: Document) -> DocumentOut:
         id=document.id, order_id=document.order_id, po_version=document.po_version, kind=document.kind,
         number=document.number, profile=document.profile, tbc_fields=document.tbc_fields or [],
         created_at=document.created_at, totals=totals, download_url=f"/api/documents/{document.id}/pdf",
+        shipment=data.get("shipment"),
     )
 
 

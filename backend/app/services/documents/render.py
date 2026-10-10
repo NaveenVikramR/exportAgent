@@ -94,6 +94,10 @@ def _to_confirm(fields: list[str]) -> list:
     return [Spacer(1, 4 * mm), box]
 
 
+def _shipment_line(shipment: str | None) -> list:
+    return [Spacer(1, 3 * mm), Paragraph(f"<b>{escape(shipment)}</b> (part shipment)", TEXT)] if shipment else []
+
+
 def _grid(pairs: list[tuple[str, object]], columns: int = 2) -> Table:
     """Label/value pairs in a grid, `columns` pairs per row."""
     rows, row = [], []
@@ -154,6 +158,7 @@ def _build(story: list) -> bytes:
 def render_invoice(invoice: Invoice) -> bytes:
     places = 0 if invoice.currency == "JPY" else 2
     story = [_header(invoice.exporter_name, invoice.exporter_address, invoice.title, invoice.number, invoice.date)]
+    story += _shipment_line(invoice.shipment)
     story += _to_confirm(invoice.tbc_fields)
     story += [
         Spacer(1, 4 * mm),
@@ -200,6 +205,7 @@ def render_invoice(invoice: Invoice) -> bytes:
 
 def render_packing_list(packing: PackingList) -> bytes:
     story = [_header(packing.exporter_name, packing.exporter_address, "PACKING LIST", packing.number, packing.date)]
+    story += _shipment_line(packing.shipment)
     story += _to_confirm(packing.tbc_fields)
     story += [
         Spacer(1, 4 * mm),

@@ -128,6 +128,7 @@ class Invoice:
     amount_in_words: str
     declarations: list[str]
     bank: list[tuple[str, str]]
+    shipment: str | None = None
     tbc_fields: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
@@ -165,6 +166,7 @@ class PackingList:
     total_gross_kg: Decimal | None
     carton_dimensions_cm: str
     total_cbm: Decimal | None
+    shipment: str | None = None
     notes: list[str] = field(default_factory=list)
     tbc_fields: list[str] = field(default_factory=list)
 
@@ -207,8 +209,71 @@ def _ports(data: dict, profile: FactoryProfile) -> tuple[str | None, str | None,
     return incoterm, profile.default_port, named
 
 
-def document_number(prefix: str, order_id: int, version: int, on: date) -> str:
-    return f"{prefix}{on.year}/{order_id:04d}-{version}"
+def document_number(prefix: str, order_id: int, version: int, on: date, shipment: int | None = None) -> str:
+    number = f"{prefix}{on.year}/{order_id:04d}-{version}"
+    return f"{number}-S{shipment}" if shipment else number
+
+
+def _cells(data: dict) -> list[list]:
+    """[line index, size or None, quantity] for every colour/size cell with a quantity."""
+    cells = []
+    for index, item in enumerate(_quantities(data)):
+        sizes = {size: int(qty) for size, qty in (item.get("sizes") or {}).items() if qty}
+        if sizes:
+            cells += [[index, size, qty] for size, qty in sizes.items()]
+        else:
+            cells.append([index, None, int(item.get("quantity") or 0)])
+    return cells
+
+
+def split_shipments(data: dict) -> list[dict]:
+    """One PO snapshot per agreed shipment, or the order itself if there is a single shipment.
+
+    Each shipment takes the same share of every colour and size (largest-remainder
+    rounding, so shipment totals are exact); the last shipment takes what is left.
+    Each snapshot carries `shipment`: {"index", "of", "quantity", "delivery_date"}.
+    """
+    shipments = data.get("shipments") or []
+    if len(shipments) <= 1:
+        return [data]
+    lines = _quantities(data)
+    remaining = _cells(data)
+    snapshots = []
+    for number, shipment in enumerate(shipments, start=1):
+        target = int(shipment["quantity"])
+        left = sum(cell[2] for cell in remaining)
+        if number == len(shipments) or left <= target:
+            taken = [cell[2] for cell in remaining]
+        else:
+            exact = [Decimal(cell[2]) * target / left for cell in remaining]
+            taken = [int(share) for share in exact]
+            by_remainder = sorted(range(len(exact)), key=lambda i: (-(exact[i] - taken[i]), i))
+            for i in by_remainder[: target - sum(taken)]:
+                taken[i] += 1
+        items: dict[int, dict] = {}
+        for (index, size, _), quantity in zip(remaining, taken):
+            if not quantity:
+                continue
+            item = items.setdefault(index, {**lines[index], "sizes": {}, "quantity": 0})
+            if size is not None:
+                item["sizes"][size] = quantity
+            item["quantity"] += quantity
+        for cell, quantity in zip(remaining, taken):
+            cell[2] -= quantity
+        snapshot = {**data, "line_items": [items[i] for i in sorted(items)],
+                    "total_quantity": sum(taken), "delivery_date": shipment["delivery_date"]}
+        snapshot["shipment"] = {"index": number, "of": len(shipments), "quantity": sum(taken),
+                                "delivery_date": shipment["delivery_date"]}
+        snapshots.append(snapshot)
+    return snapshots
+
+
+def _shipment_label(data: dict) -> str | None:
+    shipment = data.get("shipment")
+    if not shipment:
+        return None
+    return (f"Shipment {shipment['index']} of {shipment['of']}: {shipment['quantity']:,} pcs, "
+            f"ex-factory {shipment['delivery_date']}")
 
 
 def build_invoice(order: Any, data: dict, version: int, profile: FactoryProfile, on: date) -> Invoice:
@@ -239,7 +304,7 @@ def build_invoice(order: Any, data: dict, version: int, profile: FactoryProfile,
     incoterm, loading, discharge = _ports(data, profile)
     return Invoice(
         title=docs.format.invoice_title,
-        number=document_number(docs.invoice_prefix, order.id, version, on),
+        number=document_number(docs.invoice_prefix, order.id, version, on, (data.get("shipment") or {}).get("index")),
         date=on.isoformat(),
         exporter_name=docs.exporter.name,
         exporter_address=docs.exporter.address,
@@ -263,6 +328,7 @@ def build_invoice(order: Any, data: dict, version: int, profile: FactoryProfile,
         amount_in_words=amount_in_words(total, currency) if total is not None else TBC,
         declarations=docs.format.declarations,
         bank=[(name, tbc(name, docs.bank.get(name))) for name in docs.bank_fields],
+        shipment=_shipment_label(data),
         tbc_fields=tbc.fields,
     )
 
@@ -320,7 +386,7 @@ def build_packing_list(
         length, width, height = (Decimal(str(d)) for d in dimensions)
         cbm = (total_cartons * length * width * height / Decimal(1_000_000)).quantize(_CBM, rounding=ROUND_HALF_UP)
     return PackingList(
-        number=document_number(docs.packing_prefix, order.id, version, on),
+        number=document_number(docs.packing_prefix, order.id, version, on, (data.get("shipment") or {}).get("index")),
         date=on.isoformat(),
         invoice_number=invoice_number,
         exporter_name=docs.exporter.name,
@@ -336,6 +402,7 @@ def build_packing_list(
         total_gross_kg=sum((r.gross_kg for r in rows), Decimal(0)) if weight is not None else None,
         carton_dimensions_cm=" x ".join(str(d) for d in dimensions) if dimensions else tbc("Carton dimensions", None),
         total_cbm=cbm,
+        shipment=_shipment_label(data),
         notes=notes,
         tbc_fields=tbc.fields,
     )

@@ -129,8 +129,15 @@ export type ExportDocument = {
   profile: string | null;
   tbc_fields: string[];
   created_at: string;
+  shipment: string | null;
   totals: Record<string, string | number | null>;
   download_url: string;
+};
+
+export type DecisionOption = {
+  id: "as_requested" | "full_by_earliest" | "split";
+  label: string;
+  shipments: { quantity: number; delivery_date: string }[];
 };
 
 export type InfoItem = {
@@ -161,7 +168,7 @@ export type Draft = {
   cost_usd: string | null;
   email_subject: string | null;
   email_sender: string | null;
-  offer: { action: "generate_documents"; order_id: number; message: string } | null;
+  offer: { action: "generate_documents" | "record_buyer_decision"; order_id: number; message: string } | null;
 };
 
 export type AgentStep = {
@@ -280,6 +287,13 @@ export const api = {
     request<AgentRun>(`/emails/${id}/agent?force=${force}`, { method: "POST" }),
   order: (id: string) => get<OrderDetail>(`/orders/${id}`),
   orderDocuments: (orderId: string) => get<ExportDocument[]>(`/orders/${orderId}/documents`),
+  decisionOptions: (orderId: number) => get<DecisionOption[]>(`/orders/${orderId}/decision-options`),
+  recordDecision: (orderId: number, choice: string, decidedBy: string) =>
+    request<{ status: string; version: number }>(`/orders/${orderId}/decision`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ choice, decided_by: decidedBy }),
+    }),
   generateDocuments: (orderId: number) =>
     request<ExportDocument[]>(`/orders/${orderId}/documents`, { method: "POST" }),
   drafts: (emailId: string) => get<Draft[]>(`/emails/${emailId}/drafts`),

@@ -88,7 +88,11 @@ def record_po_version(
 
     previous = order.versions[-1].data if order.versions else None
     version = None
-    for planned in plan_versions(previous, update, stated_changes):
+    planned_versions = plan_versions(previous, update, stated_changes)
+    if planned_versions:
+        # New PO data: whatever was agreed before has to be agreed again.
+        order.status = "open"
+    for planned in planned_versions:
         version = _add_version(
             session,
             order,

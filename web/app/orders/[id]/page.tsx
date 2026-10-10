@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ALERT_LABELS, AlertBadge } from "@/components/badges";
+import { BuyerDecision, OrderStatusBadge } from "@/components/buyer-decision";
 import { GenerateDocuments } from "@/components/documents-panel";
 import { api, type Change, type ExportDocument, type OrderDetail, type POVersion, type ScalarField } from "@/lib/api";
 
@@ -114,6 +115,13 @@ export default function OrderPage() {
   const [documents, setDocuments] = useState<ExportDocument[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  function reload() {
+    api
+      .order(id)
+      .then(setOrder)
+      .catch((err: Error) => setError(err.message));
+  }
+
   useEffect(() => {
     api
       .order(id)
@@ -145,7 +153,7 @@ export default function OrderPage() {
             <div>
               <h1 className="text-xl font-semibold">PO {order.po_number}</h1>
               <p className="text-sm text-zinc-600">
-                {order.buyer} · version {order.current_version} · {order.status === "confirmed" ? "confirmed" : order.status}
+                {order.buyer} · version {order.current_version} · <OrderStatusBadge status={order.status} />
               </p>
             </div>
             <div className="flex gap-1.5">
@@ -155,6 +163,19 @@ export default function OrderPage() {
             </div>
           </header>
 
+          {order.status !== "confirmed" && (
+            <section className="rounded-lg border border-zinc-200 bg-white p-5">
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500">Record buyer decision</h2>
+              <p className="mb-3 text-sm text-zinc-600">
+                {order.status === "awaiting_buyer"
+                  ? "The approved reply proposed alternatives. When the buyer answers, record which plan they accepted."
+                  : "When the buyer confirms, record the plan they accepted."}{" "}
+                This adds an internal PO version with the agreed plan and confirms the order.
+              </p>
+              <BuyerDecision orderId={order.id} onRecorded={reload} />
+            </section>
+          )}
+
           <section className="rounded-lg border border-zinc-200 bg-white p-5">
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500">Export documents</h2>
             <p className="mb-3 text-sm text-zinc-600">
@@ -163,9 +184,14 @@ export default function OrderPage() {
             </p>
             {documents && (
               <GenerateDocuments
+                key={`${order.status}-${order.current_version}`}
                 orderId={order.id}
                 enabled={order.status === "confirmed"}
-                disabledReason="Approve the reply to the buyer first."
+                disabledReason={
+                  order.status === "awaiting_buyer"
+                    ? "Record the buyer's decision first."
+                    : "Approve the reply to the buyer first."
+                }
                 initial={documents}
               />
             )}

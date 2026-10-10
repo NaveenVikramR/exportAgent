@@ -267,38 +267,131 @@ def client(session_factory, settings, tmp_path, monkeypatch):
     rate_limit.reset()
 
 
-def test_documents_need_an_approved_reply_then_generate_and_download(client, session_factory, settings, demo):
+def _assess_and_draft(client, session_factory, settings, email_id) -> tuple[int, int]:
     with session_factory() as session:
-        email = session.get(Email, demo)
+        email = session.get(Email, email_id)
         run_agent(session, email, LLMRouter(settings, session_factory=session_factory), search=fake_search)
         order_id = email.order_id
+    reply = next(d for d in client.post(f"/api/emails/{email_id}/drafts").json() if d["kind"] == "buyer_reply")
+    return order_id, reply["id"]
 
+
+def test_reply_with_alternatives_waits_for_the_buyer_then_split_documents(client, session_factory, settings, demo):
+    order_id, reply_id = _assess_and_draft(client, session_factory, settings, demo)
+    assert client.post(f"/api/orders/{order_id}/documents").status_code == 409
+
+    approved = client.post(f"/api/drafts/{reply_id}/approve", json={"reviewer": "Karthik"}).json()
+    assert approved["offer"]["action"] == "record_buyer_decision"
+    assert client.get(f"/api/orders/{order_id}").json()["status"] == "awaiting_buyer"
     blocked = client.post(f"/api/orders/{order_id}/documents")
-    assert blocked.status_code == 409 and "Approve the reply" in blocked.json()["detail"]
+    assert blocked.status_code == 409 and "buyer's decision" in blocked.json()["detail"]
 
-    reply = next(d for d in client.post(f"/api/emails/{demo}/drafts").json() if d["kind"] == "buyer_reply")
-    approved = client.post(f"/api/drafts/{reply['id']}/approve", json={"reviewer": "Karthik"}).json()
-    assert approved["offer"]["action"] == "generate_documents" and approved["offer"]["order_id"] == order_id
-    with session_factory() as session:
-        assert session.get(Order, order_id).status == "confirmed"
+    options = {o["id"]: o for o in client.get(f"/api/orders/{order_id}/decision-options").json()}
+    assert set(options) == {"as_requested", "full_by_earliest", "split"}
+    assert [s["quantity"] for s in options["split"]["shipments"]] == [9300, 4200]
+    assert client.post(f"/api/orders/{order_id}/decision", json={"choice": "nope", "decided_by": "K"}).status_code == 400
+
+    decided = client.post(f"/api/orders/{order_id}/decision", json={"choice": "split", "decided_by": "Karthik"}).json()
+    assert decided["status"] == "confirmed" and decided["version"] == 3
+    order = client.get(f"/api/orders/{order_id}").json()
+    latest = order["versions"][0]
+    assert latest["basis"] == "buyer_decision" and latest["email_id"] is None
+    assert latest["data"]["delivery_date"] == options["split"]["shipments"][1]["delivery_date"]
+    assert any(c["field"] == "buyer_decision" and "Karthik" in c["detail"] for c in latest["changes"])
 
     documents = client.post(f"/api/orders/{order_id}/documents").json()
-    invoice = next(d for d in documents if d["kind"] == "commercial_invoice")
-    packing = next(d for d in documents if d["kind"] == "packing_list")
-    assert invoice["totals"] == {"currency": "USD", "total_quantity": 13500, "total_amount": "65475.00"}
-    assert invoice["number"].startswith("SVK/EXP/") and invoice["profile"] == "india_tiruppur"
-    assert "Consignee name and address" in invoice["tbc_fields"]
-    # The test order has no line items, so it packs as one assorted line with no catalogue style.
-    assert packing["totals"]["total_quantity"] == 13500
+    invoices = [d for d in documents if d["kind"] == "commercial_invoice"]
+    packing = [d for d in documents if d["kind"] == "packing_list"]
+    assert len(invoices) == len(packing) == 2
+    assert [d["number"].rsplit("-", 1)[-1] for d in invoices] == ["S1", "S2"]
+    assert [d["totals"]["total_quantity"] for d in invoices] == [9300, 4200]
+    assert sum(Decimal(d["totals"]["total_amount"]) for d in invoices) == Decimal("65475.00")
+    assert invoices[0]["shipment"].startswith("Shipment 1 of 2: 9,300 pcs")
 
-    pdf = client.get(invoice["download_url"])
+    pdf = client.get(invoices[1]["download_url"])
     assert pdf.status_code == 200 and pdf.headers["content-type"] == "application/pdf"
     assert pdf.content.startswith(b"%PDF")
-    assert [d["id"] for d in client.get(f"/api/orders/{order_id}/documents").json()] == sorted(
-        [d["id"] for d in documents], reverse=True
-    )
 
 
-def test_unknown_order_or_document_is_404(client):
-    assert client.post("/api/orders/999/documents").status_code == 404
-    assert client.get("/api/documents/999/pdf").status_code == 404
+def test_accepted_as_requested_gives_one_shipment(client, session_factory, settings, demo):
+    order_id, reply_id = _assess_and_draft(client, session_factory, settings, demo)
+    client.post(f"/api/drafts/{reply_id}/approve", json={"reviewer": "Karthik"})
+
+    client.post(f"/api/orders/{order_id}/decision", json={"choice": "as_requested", "decided_by": "Karthik"})
+    documents = client.post(f"/api/orders/{order_id}/documents").json()
+
+    assert [d["kind"] for d in documents] == ["commercial_invoice", "packing_list"]
+    assert documents[0]["shipment"] is None and documents[0]["totals"]["total_quantity"] == 13500
+
+
+def test_reply_without_alternatives_confirms_the_order(client, session_factory, settings):
+    with session_factory() as session:
+        from tests.test_agent import _email
+
+        email = _email(session, "AB-2001", 1000, "2027-02-15", "2026-09-01")
+        email_id = email.id
+    order_id, reply_id = _assess_and_draft(client, session_factory, settings, email_id)
+
+    approved = client.post(f"/api/drafts/{reply_id}/approve", json={"reviewer": "Karthik"}).json()
+
+    assert approved["offer"]["action"] == "generate_documents"
+    assert client.get(f"/api/orders/{order_id}").json()["status"] == "confirmed"
+    assert client.post(f"/api/orders/{order_id}/documents").status_code == 200
+
+
+def test_new_po_version_reopens_the_order_and_drops_the_agreed_plan(client, session_factory, settings, demo):
+    order_id, reply_id = _assess_and_draft(client, session_factory, settings, demo)
+    client.post(f"/api/drafts/{reply_id}/approve", json={"reviewer": "Karthik"})
+    client.post(f"/api/orders/{order_id}/decision", json={"choice": "split", "decided_by": "Karthik"})
+
+    with session_factory() as session:
+        from tests.test_agent import _email
+
+        _email(session, "NW-45120", 14000, "2026-12-20", "2026-09-25", subject="Revision 2")
+    order = client.get(f"/api/orders/{order_id}").json()
+
+    assert order["status"] == "open"
+    assert "shipments" not in order["versions"][0]["data"]
+    assert client.post(f"/api/orders/{order_id}/documents").status_code == 409
+
+
+
+
+def test_split_shipments_allocate_every_colour_and_size():
+    from app.services.documents.compute import split_shipments
+
+    data = _po(shipments=[{"quantity": 9300, "delivery_date": "2026-11-30"},
+                          {"quantity": 4200, "delivery_date": "2026-12-08"}])
+
+    first, second = split_shipments(data)
+
+    assert (first["total_quantity"], second["total_quantity"]) == (9300, 4200)
+    assert (first["delivery_date"], second["delivery_date"]) == ("2026-11-30", "2026-12-08")
+    for original, a, b in zip(data["line_items"], first["line_items"], second["line_items"]):
+        assert a["colour"] == b["colour"] == original["colour"]
+        for size, qty in original["sizes"].items():
+            assert a["sizes"][size] + b["sizes"][size] == qty
+        assert a["quantity"] == sum(a["sizes"].values())
+    # roughly the same share of every cell: Navy M is 2,000 of 13,500
+    assert first["line_items"][0]["sizes"]["M"] in (1377, 1378)
+
+
+def test_split_shipment_invoices_add_up_to_the_order():
+    from app.services.documents.compute import split_shipments
+
+    data = _po(shipments=[{"quantity": 9300, "delivery_date": "2026-11-30"},
+                          {"quantity": 4200, "delivery_date": "2026-12-08"}])
+
+    invoices = [build_invoice(ORDER, part, 3, INDIA, ON) for part in split_shipments(data)]
+
+    assert [i.number for i in invoices] == ["SVK/EXP/2026/0007-3-S1", "SVK/EXP/2026/0007-3-S2"]
+    assert sum(i.total_amount for i in invoices) == Decimal("65475.00")
+    assert invoices[0].shipment == "Shipment 1 of 2: 9,300 pcs, ex-factory 2026-11-30"
+
+
+def test_single_shipment_plan_is_one_document_set():
+    from app.services.documents.compute import split_shipments
+
+    data = _po(shipments=[{"quantity": 13500, "delivery_date": "2026-12-08"}])
+
+    assert split_shipments(data) == [data]

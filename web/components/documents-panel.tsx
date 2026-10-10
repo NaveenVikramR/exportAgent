@@ -34,6 +34,7 @@ export function DocumentList({ documents }: { documents: ExportDocument[] }) {
             </a>
             <span className="font-mono text-xs text-zinc-500">{doc.number}</span>
             <span className="text-xs text-zinc-500">PO version {doc.po_version}</span>
+            {doc.shipment && <span className="text-xs font-medium text-zinc-700">{doc.shipment}</span>}
             <span className="ml-auto text-xs text-zinc-600">{headline(doc)}</span>
           </div>
           {doc.tbc_fields.length > 0 && (

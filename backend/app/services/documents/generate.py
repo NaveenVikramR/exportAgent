@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.config import BACKEND_DIR
 from app.models import Document, Order
-from app.services.documents.compute import build_invoice, build_packing_list
+from app.services.documents.compute import build_invoice, build_packing_list, split_shipments
 from app.services.documents.render import render_invoice, render_packing_list
 from app.services.profiles import load_profile
 
@@ -26,25 +26,30 @@ def _plain(value: Any) -> Any:
 
 def generate_documents(session: Session, order: Order, *, on: date | None = None) -> list[Document]:
     if order.status != "confirmed":
-        raise DocumentError("Approve the reply to the buyer first; documents are generated for confirmed orders only.")
+        raise DocumentError(
+            "Documents are generated for confirmed orders only: approve the reply to the buyer, and if it proposed "
+            "alternatives, record the buyer's decision."
+        )
     if not order.versions:
         raise DocumentError("The order has no PO data.")
     on = on or datetime.now(UTC).date()
     version = order.versions[-1]
     profile = load_profile(order.profile)
 
-    invoice = build_invoice(order, version.data, version.version, profile, on)
-    packing = build_packing_list(order, version.data, version.version, profile, on, invoice.number)
-
     folder = GENERATED_DIR / str(order.id)
     folder.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S%f")
     documents = []
-    for kind, content, pdf in (
-        ("commercial_invoice", invoice, render_invoice(invoice)),
-        ("packing_list", packing, render_packing_list(packing)),
-    ):
-        path = folder / f"{kind}-v{version.version}-{stamp}.pdf"
+    # One invoice and packing list per agreed shipment.
+    pairs = []
+    for shipment in split_shipments(version.data):
+        invoice = build_invoice(order, shipment, version.version, profile, on)
+        packing = build_packing_list(order, shipment, version.version, profile, on, invoice.number)
+        suffix = f"-s{shipment['shipment']['index']}" if shipment.get("shipment") else ""
+        pairs += [("commercial_invoice", invoice, render_invoice(invoice), suffix),
+                  ("packing_list", packing, render_packing_list(packing), suffix)]
+    for kind, content, pdf, suffix in pairs:
+        path = folder / f"{kind}-v{version.version}{suffix}-{stamp}.pdf"
         path.write_bytes(pdf)
         document = Document(
             order_id=order.id, po_version=version.version, kind=kind, number=content.number,

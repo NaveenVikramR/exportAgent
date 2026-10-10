@@ -220,7 +220,13 @@ export function DraftCard({
       {draft.offer && (
         <div className="mt-3 rounded border border-sky-200 bg-sky-50 p-3">
           <p className="mb-2 text-sm text-sky-900">{draft.offer.message}</p>
-          <GenerateDocuments orderId={draft.offer.order_id} enabled />
+          {draft.offer.action === "generate_documents" ? (
+            <GenerateDocuments orderId={draft.offer.order_id} enabled />
+          ) : (
+            <Link href={`/orders/${draft.offer.order_id}`} className="text-sm font-medium text-sky-800 hover:underline">
+              Open the order to record the buyer&apos;s decision →
+            </Link>
+          )}
         </div>
       )}
       {draft.status === "rejected" && (

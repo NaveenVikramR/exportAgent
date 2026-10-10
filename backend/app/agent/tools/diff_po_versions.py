@@ -46,6 +46,8 @@ def merge_snapshots(previous: Snapshot, update: Snapshot) -> Snapshot:
     A delivery-change email names only the date; everything else stays as it was.
     """
     merged = deepcopy(previous)
+    # A shipment plan agreed for the previous version does not carry over.
+    merged.pop("shipments", None)
     for name in SCALAR_FIELDS:
         if update.get(name) is not None:
             merged[name] = update[name]
