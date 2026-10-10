@@ -4,6 +4,7 @@ Every draft is fact-checked and waits in the approval queue; nothing is sent.
 """
 
 import json
+import re
 from datetime import UTC, datetime
 from typing import Any
 
@@ -26,6 +27,22 @@ _SCALARS = (
 )
 # Feasibility fields the reply may use; the list of other orders stays internal.
 _PLAN_FIELDS = ("verdict", "reason", "delivery_date", "quantity", "shortfall_pcs", "fabric_ready")
+
+
+# Internal review policy (thresholds, rubric) stays internal: clauses that mention it are
+# cut from anything a draft is written from.
+_POLICY_WORD = re.compile(r"\b(?:thresholds?|rubric|policy|review limits?)\b", re.IGNORECASE)
+
+
+def without_policy(text: str) -> str:
+    kept_sentences = []
+    for sentence in re.split(r"(?<=\.)\s+", text.strip()):
+        end = "." if sentence.endswith(".") else ""
+        clauses = re.split(r",\s+|;\s*", sentence[: len(sentence) - len(end)])
+        kept = [clause for clause in clauses if not _POLICY_WORD.search(clause)]
+        if kept:
+            kept_sentences.append(", ".join(kept) + end)
+    return " ".join(kept_sentences)
 
 
 class DraftingError(RuntimeError):
@@ -82,7 +99,8 @@ def build_facts(session: Session, email: Email) -> dict[str, Any]:
     if run is not None:
         report = run.result or {}
         facts["risk_flags"] = [
-            {"severity": f["severity"], "category": f["category"], "reason": f["reason"]} for f in report.get("flags", [])
+            {"severity": f["severity"], "category": f["category"], "reason": without_policy(f["reason"])}
+            for f in report.get("flags", [])
         ]
         for step in run.steps:
             output = step.output or {}

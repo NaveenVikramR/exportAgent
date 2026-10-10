@@ -195,3 +195,23 @@ def test_k_suffix_scales_money():
 
     assert fact_check("above the $5k threshold", facts, SOURCE)["violations"] == []
     assert fact_check("above the $6k threshold", facts, SOURCE)["violations"][0]["text"] == "$6k"
+
+
+def test_policy_thresholds_never_reach_the_drafting_facts(settings, session_factory, demo):
+    from app.models import AgentRun
+    from app.services.drafting import without_policy
+
+    _assessed(settings, session_factory, demo)
+    with session_factory() as session:
+        run = session.scalars(__import__("sqlalchemy").select(AgentRun)).first()
+        run.result = run.result | {"flags": run.result["flags"] + [{
+            "severity": "high", "category": "price", "evidence": ["E2"],
+            "reason": "Contract value increased 12.5% (+$7,275) from $58,200 to $65,475, exceeding the 10% and $5,000 thresholds.",
+        }]}
+        session.commit()
+        facts = json.dumps(build_facts(session, session.get(Email, demo)))
+
+    assert "threshold" not in facts.lower()
+    assert "$5,000" not in facts and "review" not in facts.lower()
+    assert without_policy("Value up 12.5%, exceeding the 10% and $5,000 thresholds.") == "Value up 12.5%."
+    assert without_policy("Short by 4,186 pcs; per the review policy this is high.") == "Short by 4,186 pcs."
