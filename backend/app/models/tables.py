@@ -218,5 +218,11 @@ class Document(Base):
     po_version: Mapped[int]
     # commercial_invoice | packing_list
     kind: Mapped[str] = mapped_column(String(30))
+    number: Mapped[str | None] = mapped_column(String(100))
+    # factory profile whose format, ports and IDs the document used
+    profile: Mapped[str | None] = mapped_column(String(50))
     path: Mapped[str] = mapped_column(String(500))
+    # the computed content (every number on the PDF) and the fields printed as TO BE CONFIRMED
+    data: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
+    tbc_fields: Mapped[list[str] | None] = mapped_column(JSON(none_as_null=True))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)

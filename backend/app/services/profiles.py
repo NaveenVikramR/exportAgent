@@ -25,6 +25,35 @@ class Thresholds(BaseModel):
     min_slack_days: int
 
 
+class Exporter(BaseModel):
+    name: str
+    address: str
+
+
+class DocumentFormat(BaseModel):
+    invoice_title: str
+    country_of_origin: str
+    registration_fields: list[str]
+    declarations: list[str]
+
+
+class Packing(BaseModel):
+    default_pcs_per_carton: int
+    carton_tare_kg: float
+
+
+class DocumentSettings(BaseModel):
+    exporter: Exporter
+    invoice_prefix: str
+    packing_prefix: str
+    format: DocumentFormat
+    # values for format.registration_fields / bank_fields; anything missing prints as TO BE CONFIRMED
+    registration: dict[str, str] = {}
+    bank_fields: list[str] = []
+    bank: dict[str, str] = {}
+    packing: Packing
+
+
 class FactoryProfile(BaseModel):
     id: str
     factory: str
@@ -39,6 +68,7 @@ class FactoryProfile(BaseModel):
     capacity: Capacity
     lead_times: LeadTimes
     thresholds: Thresholds
+    documents: DocumentSettings
 
 
 @lru_cache

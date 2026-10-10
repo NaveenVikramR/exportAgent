@@ -22,3 +22,24 @@ lead_times:
 thresholds:
   tight_utilisation: 0.85
   min_slack_days: 7
+
+documents:
+  exporter:
+    name: Meghna Knit Composite
+    address: Plot 22, Meghna Industrial Park, Gazipur, Dhaka 1704, Bangladesh
+  invoice_prefix: MKC/EXP/
+  packing_prefix: MKC/PL/
+  # The invoice format for exports from Bangladesh
+  format:
+    invoice_title: COMMERCIAL INVOICE
+    country_of_origin: Bangladesh
+    registration_fields: [ERC No., BIN, BGMEA Reg. No., EXP No.]
+    declarations:
+      - We certify that the goods described in this invoice are of Bangladesh origin.
+      - Export proceeds will be repatriated through the exporter's bank against the EXP form stated above.
+  registration: {}
+  bank_fields: [Beneficiary bank, Account number, SWIFT code]
+  bank: {}
+  packing:
+    default_pcs_per_carton: 48
+    carton_tare_kg: 1.0

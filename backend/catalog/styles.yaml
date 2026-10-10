@@ -1,0 +1,23 @@
+# Per-style data a purchase order does not carry, used for export documents.
+# Fictional sample values for some demo styles. A style or value missing here prints as
+# TO BE CONFIRMED on the documents; nothing is guessed.
+NW-TS-2207:
+  description: Men's crew neck T-shirt, 100% combed cotton single jersey, 160 GSM
+  hs_code: "6109.10"
+  net_weight_per_piece_kg: 0.17
+  pcs_per_carton: 50
+  carton_dimensions_cm: [60, 40, 30]
+
+BP-TK-2040:
+  description: Women's 2x2 rib tank top, 95% cotton 5% spandex, knitted
+  hs_code: "6109.10"
+  net_weight_per_piece_kg: 0.12
+  pcs_per_carton: 60
+  carton_dimensions_cm: [58, 38, 28]
+
+HF-KL-0932:
+  description: Kids' leggings, 95% organic cotton 5% elastane, knitted
+  hs_code: "6104.62"
+  net_weight_per_piece_kg: 0.11
+  pcs_per_carton: 60
+  carton_dimensions_cm: [58, 38, 28]

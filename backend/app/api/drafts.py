@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from app.api.rate_limit import rate_limit
 from app.db import get_session
 from app.llm.router import LLMRouter, SpendCapExceeded, get_router
-from app.models import Draft, Email, LLMCall
+from app.models import Draft, Email, LLMCall, Order
 from app.services.drafting import DraftingError, approve, generate_drafts, recheck, reject
 
 router = APIRouter(tags=["drafts"])
@@ -38,6 +38,8 @@ class DraftOut(BaseModel):
     cost_usd: Decimal | None = None
     email_subject: str | None = None
     email_sender: str | None = None
+    # what the agent suggests next, e.g. generating documents once the reply is approved
+    offer: dict[str, Any] | None = None
 
 
 class EditIn(BaseModel):
@@ -59,7 +61,16 @@ def draft_out(session: Session, draft: Draft) -> DraftOut:
     check = draft.fact_check or {}
     call = session.get(LLMCall, draft.call_id) if draft.call_id else None
     email = session.get(Email, draft.email_id)
+    offer = None
+    order = session.get(Order, draft.order_id) if draft.order_id else None
+    if draft.kind == "buyer_reply" and draft.status == "sent" and order is not None and order.status == "confirmed":
+        offer = {
+            "action": "generate_documents",
+            "order_id": order.id,
+            "message": f"Reply approved. Generate the Commercial Invoice and Packing List for PO {order.po_number}?",
+        }
     return DraftOut(
+        offer=offer,
         id=draft.id, email_id=draft.email_id, order_id=draft.order_id, kind=draft.kind, subject=draft.subject,
         body=draft.body, edited_body=draft.edited_body,
         text=draft.edited_body if draft.edited_body is not None else draft.body,
@@ -140,6 +151,9 @@ def approve_draft(draft_id: int, payload: ApproveIn, session: Session = Depends(
     email = session.get(Email, draft.email_id)
     if draft.kind == "buyer_reply" and email is not None:
         email.status = "replied"
+        # An approved reply confirms the order as it stands, so its documents can be generated.
+        if email.order is not None:
+            email.order.status = "confirmed"
     session.commit()
     return draft_out(session, draft)
 

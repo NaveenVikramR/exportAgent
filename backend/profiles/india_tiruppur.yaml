@@ -29,3 +29,26 @@ thresholds:
   tight_utilisation: 0.85
   # less spare time than this before ex-factory is tight
   min_slack_days: 7
+
+documents:
+  exporter:
+    name: Sri Velan Knits
+    address: Unit 14, Velan Industrial Park, Tiruppur 641 604, Tamil Nadu, India
+  invoice_prefix: SVK/EXP/
+  packing_prefix: SVK/PL/
+  # The invoice format for exports from India
+  format:
+    invoice_title: COMMERCIAL INVOICE
+    country_of_origin: India
+    registration_fields: [IEC Code, GSTIN, AD Code, LUT ARN]
+    declarations:
+      - Supply meant for export under Letter of Undertaking (LUT) without payment of IGST.
+      - We declare that this invoice shows the actual price of the goods described and that all particulars are true and correct.
+  # Real registration numbers and bank details are deliberately not stored in the demo;
+  # every field listed above prints as TO BE CONFIRMED until it is filled in here.
+  registration: {}
+  bank_fields: [Beneficiary bank, Account number, SWIFT code]
+  bank: {}
+  packing:
+    default_pcs_per_carton: 40
+    carton_tare_kg: 0.9
