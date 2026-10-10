@@ -188,3 +188,10 @@ def test_typographic_thousands_separators_are_read_as_numbers():
 
     assert fact_check(text, FACTS, SOURCE)["violations"] == []
     assert fact_check("Ship 9 400 pcs.", FACTS, SOURCE)["violations"][0]["text"] == "9,400 pcs"
+
+
+def test_k_suffix_scales_money():
+    facts = FACTS | {"threshold": "5,000"}
+
+    assert fact_check("above the $5k threshold", facts, SOURCE)["violations"] == []
+    assert fact_check("above the $6k threshold", facts, SOURCE)["violations"][0]["text"] == "$6k"

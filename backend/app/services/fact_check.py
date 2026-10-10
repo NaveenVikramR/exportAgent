@@ -24,7 +24,9 @@ _DAY_MONTH = re.compile(rf"\b{_DAY}\s+(?:of\s+)?{_MONTH}{_YEAR}\b", re.IGNORECAS
 _MONTH_DAY = re.compile(rf"\b{_MONTH}\s+{_DAY}{_YEAR}\b", re.IGNORECASE)
 
 _AMOUNT = r"(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)"
-_MONEY = re.compile(rf"(?:USD|EUR|GBP|AUD|INR|US\$|A\$|\$|€|£)\s?{_AMOUNT}", re.IGNORECASE)
+# An optional k/m suffix scales the amount ("$5k" is 5,000).
+_MONEY = re.compile(rf"(?:USD|EUR|GBP|AUD|INR|US\$|A\$|\$|€|£)\s?{_AMOUNT}([km])?\b", re.IGNORECASE)
+_SCALE = {"k": 1000, "m": 1_000_000}
 # Amounts with cents and thousands separators but no currency sign, e.g. "65,475.00"
 _PLAIN_AMOUNT = re.compile(r"(?<![\d.,])(\d{1,3}(?:,\d{3})+\.\d{2})(?![\d])")
 _UNIT_PRICE = re.compile(r"\b(\d+\.\d{2})\s*(?:per piece|per pc|/pc|/piece|each)\b", re.IGNORECASE)
@@ -134,6 +136,9 @@ def fact_check(draft: str, facts: dict[str, Any], source_text: str) -> dict[str,
                 continue
             taken.append(match.span())
             value = _number(match.group(1))
+            suffix = match.group(2) if pattern is _MONEY else None
+            if value is not None and suffix:
+                value = (value * _SCALE[suffix.lower()]).normalize()
             if value is None:
                 continue
             checked += 1
