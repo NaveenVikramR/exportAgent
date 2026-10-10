@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CATEGORY_LABELS, CategoryBadge, StatusBadge } from "@/components/badges";
+import { DraftCard, ReviewerField, useReviewer } from "@/components/draft-card";
 import { AgentTrace, RiskFlags } from "@/components/risk-panel";
-import { api, type AgentRun, type EmailDetail, type Extraction, type ScalarField } from "@/lib/api";
+import { api, type AgentRun, type Draft, type EmailDetail, type Extraction, type ScalarField } from "@/lib/api";
 
 const FIELD_LABELS: [ScalarField, string][] = [
   ["buyer", "Buyer"],
@@ -151,6 +152,9 @@ export default function EmailPage() {
   const [running, setRunning] = useState(false);
   const [run, setRun] = useState<AgentRun | null>(null);
   const [assessing, setAssessing] = useState(false);
+  const [drafts, setDrafts] = useState<Draft[]>([]);
+  const [drafting, setDrafting] = useState(false);
+  const [reviewer, setReviewer] = useReviewer();
 
   useEffect(() => {
     api
@@ -162,7 +166,30 @@ export default function EmailPage() {
       .agentRun(id)
       .then(setRun)
       .catch(() => setRun(null));
+    api
+      .drafts(id)
+      .then(setDrafts)
+      .catch(() => setDrafts([]));
   }, [id]);
+
+  async function writeDrafts(force: boolean) {
+    setDrafting(true);
+    setError(null);
+    try {
+      setDrafts(await api.writeDrafts(id, force));
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setDrafting(false);
+    }
+  }
+
+  function replaceDraft(updated: Draft) {
+    setDrafts((rows) => rows.map((row) => (row.id === updated.id ? updated : row)));
+    if (updated.status === "sent" && updated.kind === "buyer_reply") {
+      setEmail((current) => (current ? { ...current, status: "replied" } : current));
+    }
+  }
 
   async function assess(force: boolean) {
     setAssessing(true);
@@ -311,6 +338,35 @@ export default function EmailPage() {
               {run && <RiskFlags run={run} />}
             </Card>
           )}
+          {email.classification && (
+            <Card title="Drafts">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                <p className="text-sm text-zinc-600">
+                  Nemotron Super drafts from the order data and risk findings only. Nothing is sent automatically.
+                </p>
+                <div className="flex flex-wrap items-center gap-3">
+                  <ReviewerField name={reviewer} onChange={setReviewer} />
+                  <button
+                    onClick={() => writeDrafts(drafts.some((d) => d.status === "pending"))}
+                    disabled={drafting || (email.order_id !== null && run === null)}
+                    title={email.order_id !== null && run === null ? "Assess the risk first" : undefined}
+                    className="rounded bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50"
+                  >
+                    {drafting ? "Drafting…" : drafts.some((d) => d.status === "pending") ? "Redraft" : "Draft reply"}
+                  </button>
+                </div>
+              </div>
+              {email.order_id !== null && run === null && (
+                <p className="text-sm text-zinc-500">Assess the risk first, so the reply is grounded in it.</p>
+              )}
+              <div className="flex flex-col gap-3">
+                {drafts.map((draft) => (
+                  <DraftCard key={draft.id} draft={draft} reviewer={reviewer} onChange={replaceDraft} />
+                ))}
+              </div>
+            </Card>
+          )}
+
           {run && run.steps.length > 0 && (
             <Card title="Agent trace">
               <AgentTrace run={run} />

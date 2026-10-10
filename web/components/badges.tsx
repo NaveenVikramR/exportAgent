@@ -2,6 +2,7 @@ const STATUS_STYLES: Record<string, string> = {
   new: "bg-zinc-100 text-zinc-700",
   analysed: "bg-emerald-100 text-emerald-800",
   needs_review: "bg-amber-100 text-amber-900",
+  replied: "bg-sky-100 text-sky-800",
   failed: "bg-red-100 text-red-800",
 };
 
@@ -9,6 +10,7 @@ const STATUS_LABELS: Record<string, string> = {
   new: "New",
   analysed: "Analysed",
   needs_review: "Needs review",
+  replied: "Replied",
   failed: "Failed",
 };
 

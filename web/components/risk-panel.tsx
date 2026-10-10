@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { AgentRun, AgentStep, RiskFlag } from "@/lib/api";
+import type { AgentRun, AgentStep, InfoItem, RiskFlag } from "@/lib/api";
 
 const SEVERITY_STYLES: Record<RiskFlag["severity"], string> = {
   high: "bg-red-600 text-white",
@@ -13,6 +13,7 @@ const TOOL_LABELS: Record<string, string> = {
   find_order: "Find order",
   diff_po_versions: "Compare PO versions",
   check_delivery_feasibility: "Check delivery feasibility",
+  propose_delivery_options: "Propose delivery options",
   check_compliance: "Check compliance (Tavily)",
   lookup_buyer: "Look up buyer (Tavily)",
   plan: "Ultra plans",
@@ -39,6 +40,28 @@ function Evidence({ item }: { item: string }) {
   );
 }
 
+function InfoChecked({ items }: { items: InfoItem[] }) {
+  if (items.length === 0) return null;
+  return (
+    <div>
+      <h3 className="mb-1.5 text-sm font-medium text-zinc-700">Info checked (not flags)</h3>
+      <ul className="flex flex-col gap-1 text-sm text-zinc-600">
+        {items.map((item, index) => (
+          <li key={index} className="flex flex-wrap items-baseline gap-2">
+            <span className="text-xs uppercase tracking-wide text-zinc-400">{item.topic}</span>
+            <span className="min-w-0 flex-1 basis-64">{item.finding}</span>
+            <span className="flex flex-wrap gap-1.5 text-xs">
+              {item.evidence.map((evidence) => (
+                <Evidence key={evidence} item={evidence} />
+              ))}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export function RiskFlags({ run }: { run: AgentRun }) {
   const flags = run.result?.flags ?? [];
   return (
@@ -52,7 +75,18 @@ export function RiskFlags({ run }: { run: AgentRun }) {
               {flag.severity}
             </span>
             <span className="text-xs uppercase tracking-wide text-zinc-500">{flag.category}</span>
-            <span className="min-w-0 flex-1 basis-64">{flag.reason}</span>
+            <span className="min-w-0 flex-1 basis-64">
+              {flag.reason}
+              {flag.rule && <span className="block text-xs text-zinc-600">Rule: {flag.rule}</span>}
+              {flag.adverse_finding && (
+                <span className="block text-xs text-zinc-600">Finding: {flag.adverse_finding}</span>
+              )}
+              {flag.severity_adjusted_from && (
+                <span className="block text-xs text-zinc-500">
+                  Severity set by the rubric (model said {flag.severity_adjusted_from}).
+                </span>
+              )}
+            </span>
             <span className="flex flex-wrap items-center gap-1.5 text-xs">
               {flag.evidence.map((item) => (
                 <Evidence key={item} item={item} />
@@ -67,6 +101,7 @@ export function RiskFlags({ run }: { run: AgentRun }) {
           </li>
         ))}
       </ul>
+      <InfoChecked items={run.result?.info_checked ?? []} />
     </div>
   );
 }
@@ -89,13 +124,15 @@ function StepRow({ step }: { step: AgentStep }) {
         onClick={() => setOpen(!open)}
         className="flex w-full flex-wrap items-baseline gap-x-3 gap-y-1 rounded px-2 py-1.5 text-left text-sm hover:bg-zinc-50"
       >
-        <span className="w-14 shrink-0 text-xs text-zinc-400">round {step.round}</span>
+        <span className="w-14 shrink-0 text-xs text-zinc-400">
+          {step.round === 0 ? "pre-fetch" : `round ${step.round}`}
+        </span>
         <span
           className={`rounded px-1.5 py-0.5 text-xs font-medium ${
-            isLlm ? "bg-violet-100 text-violet-800" : "bg-sky-100 text-sky-800"
+            isLlm ? "bg-violet-100 text-violet-800" : step.round === 0 ? "bg-zinc-100 text-zinc-700" : "bg-sky-100 text-sky-800"
           }`}
         >
-          {isLlm ? "Ultra" : "tool"}
+          {isLlm ? "Ultra" : step.round === 0 ? "Python" : "tool"}
         </span>
         <span className="font-medium">{TOOL_LABELS[step.name] ?? step.name}</span>
         {step.evidence_id && <span className="font-mono text-xs text-zinc-500">{step.evidence_id}</span>}
@@ -138,8 +175,9 @@ export function AgentTrace({ run }: { run: AgentRun }) {
   return (
     <div className="flex flex-col gap-2">
       <p className="text-xs text-zinc-500">
-        {run.rounds} tool {run.rounds === 1 ? "round" : "rounds"} (cap 8) · {run.ultra_calls} Ultra calls ·{" "}
-        {money(run.total_cost_usd)} total. Click a step for its inputs and result.
+        Pre-fetched checks run in Python first; then {run.rounds} tool {run.rounds === 1 ? "round" : "rounds"} (cap
+        8) · {run.ultra_calls} Ultra {run.ultra_calls === 1 ? "call" : "calls"} · {money(run.total_cost_usd)} total.
+        Click a step for its inputs and result.
       </p>
       <ol className="flex flex-col">
         {run.steps.map((step) => (

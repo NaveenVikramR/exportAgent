@@ -112,8 +112,41 @@ export type RiskFlag = {
   category: string;
   reason: string;
   evidence: string[];
+  rule: string | null;
+  adverse_finding: string | null;
   verified: boolean;
   source: "model" | "rule";
+  severity_adjusted_from: "high" | "medium" | "low" | null;
+};
+
+export type InfoItem = {
+  topic: string;
+  finding: string;
+  evidence: string[];
+  note: string | null;
+};
+
+export type Draft = {
+  id: number;
+  email_id: number;
+  order_id: number | null;
+  kind: "buyer_reply" | "internal_note";
+  subject: string | null;
+  body: string;
+  edited_body: string | null;
+  text: string;
+  status: "pending" | "sent" | "rejected" | "superseded";
+  checked: number;
+  violations: { kind: string; text: string; detail: string }[];
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  sent_at: string | null;
+  reject_reason: string | null;
+  created_at: string;
+  model: string | null;
+  cost_usd: string | null;
+  email_subject: string | null;
+  email_sender: string | null;
 };
 
 export type AgentStep = {
@@ -139,7 +172,7 @@ export type AgentRun = {
   id: number;
   status: string;
   rounds: number;
-  result: { summary: string; flags: RiskFlag[] } | null;
+  result: { summary: string; flags: RiskFlag[]; info_checked: InfoItem[] } | null;
   error: string | null;
   started_at: string;
   finished_at: string | null;
@@ -231,6 +264,28 @@ export const api = {
   assess: (id: string, force: boolean) =>
     request<AgentRun>(`/emails/${id}/agent?force=${force}`, { method: "POST" }),
   order: (id: string) => get<OrderDetail>(`/orders/${id}`),
+  drafts: (emailId: string) => get<Draft[]>(`/emails/${emailId}/drafts`),
+  writeDrafts: (emailId: string, force: boolean) =>
+    request<Draft[]>(`/emails/${emailId}/drafts?force=${force}`, { method: "POST" }),
+  queue: (status = "pending") => get<Draft[]>(`/drafts?draft_status=${status}`),
+  editDraft: (id: number, body: string) =>
+    request<Draft>(`/drafts/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ body }),
+    }),
+  approveDraft: (id: number, reviewer: string, acknowledgeViolations = false) =>
+    request<Draft>(`/drafts/${id}/approve`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ reviewer, acknowledge_violations: acknowledgeViolations }),
+    }),
+  rejectDraft: (id: number, reviewer: string, reason: string) =>
+    request<Draft>(`/drafts/${id}/reject`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ reviewer, reason }),
+    }),
   analyse: (id: string, force: boolean) =>
     request<EmailDetail>(`/emails/${id}/analyse?force=${force}`, { method: "POST" }),
 };
