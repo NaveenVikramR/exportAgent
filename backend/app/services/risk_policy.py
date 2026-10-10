@@ -88,10 +88,23 @@ def _urls(evidence: dict[str, dict]) -> set[str]:
     }
 
 
+def current_plan_checks(evidence: dict[str, dict]) -> dict[str, dict]:
+    """Feasibility results for the order's current date and quantity.
+
+    A check run with fabric_ready=true (the email says fabric is already in-house)
+    supersedes the default check, which assumes the fabric lead time still applies.
+    """
+    current = {eid: r for eid, r in evidence.items() if r.get("is_current_plan") and "verdict" in r}
+    if any(r.get("fabric_ready") for r in current.values()):
+        current = {eid: r for eid, r in current.items() if r.get("fabric_ready")}
+    return current
+
+
 def apply_policy(report: RiskReport, evidence: dict[str, dict], policy: RiskPolicy | None = None) -> RiskReport:
     policy = policy or load_policy()
     urls = _urls(evidence)
-    infeasible = {eid for eid, r in evidence.items() if r.get("is_current_plan") and r.get("verdict") == "infeasible"}
+    current = current_plan_checks(evidence)
+    infeasible = {eid for eid, r in current.items() if r["verdict"] == "infeasible"}
     high_value = {eid for eid, r in evidence.items()
                   if r.get("contract_value") and is_high_value_change(r["contract_value"], policy)}
 
@@ -131,7 +144,7 @@ def apply_policy(report: RiskReport, evidence: dict[str, dict], policy: RiskPoli
 
     # Findings that must never be missing, whatever the model concluded.
     for eid, result in evidence.items():
-        if result.get("is_current_plan") and result.get("verdict") in ("infeasible", "tight") \
+        if eid in current and result.get("verdict") in ("infeasible", "tight") \
                 and not covered(eid, result["suggested_severity"]):
             flags.append(RiskFlag(severity=result["suggested_severity"], category="capacity",
                                   reason=result["reason"], evidence=[eid], verified=True, source="rule"))
@@ -140,7 +153,7 @@ def apply_policy(report: RiskReport, evidence: dict[str, dict], policy: RiskPoli
             flags.append(RiskFlag(
                 severity="high", category="price", evidence=[eid], verified=True, source="rule",
                 reason=(f"Contract value {change['old_value']} → {change['new_value']} {change['currency'] or ''} "
-                        f"({change['change_pct']:+}%), above the review threshold.").replace("  ", " "),
+                        f"({change['change_pct']:+}%).").replace("  ", " ").replace(" (", " ("),
             ))
         if DELIVERY_PULLED_FORWARD in result.get("alerts", []) and not covered(eid, "medium"):
             change = next((c for c in result.get("changes", []) if c.get("alert") == DELIVERY_PULLED_FORWARD), None)

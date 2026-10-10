@@ -4,7 +4,8 @@ PREFETCHED_STEPS = """The order facts have already been checked in Python and ar
 
 How to work:
 - Base your judgement on that evidence. Never calculate dates, capacity or quantities yourself; quote tool results.
-- Optional tools: call check_compliance when a destination country is known, describing the garment as the email does; call lookup_buyer only when the buyer has no earlier orders; call check_delivery_feasibility only for a what-if the email itself raises (for example fabric already in-house: fabric_ready=true).
+- Optional tools: call check_compliance when a destination country is known, describing the garment as the email does; call lookup_buyer only when the buyer has no earlier orders; call check_delivery_feasibility only for a what-if the email itself raises.
+- Read the whole email, including quoted earlier messages from our own team. If anyone in the thread says the fabric is already in-house, produced or ready, the pre-fetched check (which assumes the fabric lead time) does not apply: call check_delivery_feasibility for the current plan with fabric_ready=true.
 - Never repeat a tool call with the same arguments. If you need no optional tool, answer straight away."""
 
 FULL_LOOP_STEPS = """How to work:

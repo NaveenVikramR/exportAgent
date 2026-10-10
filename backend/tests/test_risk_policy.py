@@ -136,3 +136,17 @@ def test_merged_flag_keeps_the_models_wording_over_a_rule():
 
     [capacity] = [f for f in report.flags if f.category == "capacity"]
     assert (capacity.reason, capacity.source) == ("Short by 4,186 pcs.", "model")
+
+
+def test_fabric_ready_check_supersedes_the_default_current_plan_check():
+    evidence = EVIDENCE | {
+        "E5": {"evidence_id": "E5", "is_current_plan": True, "fabric_ready": True, "verdict": "feasible",
+               "suggested_severity": "low", "reason": "Feasible with fabric in-house."},
+    }
+    report = apply_policy(RiskReport(summary="s", flags=[
+        _flag(severity="high", category="delivery", reason="Infeasible.", evidence=["E1"]),
+    ]), evidence)
+
+    delivery = _by_category(report, "delivery")
+    assert (delivery.severity, delivery.severity_adjusted_from) == ("medium", "high")
+    assert _by_category(report, "capacity") is None
