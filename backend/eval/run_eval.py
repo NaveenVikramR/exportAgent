@@ -30,6 +30,7 @@ from app.llm.router import LLMError, LLMRouter, get_router
 from app.models import AgentRun, Email, EmailAttachment, LLMCall, SearchCache
 from app.schemas.extraction import SCALAR_FIELDS, Escalation
 from app.services.analysis import Analysis, analyse_email, analyse_text, render_email_text
+from app.services.drafting import generate_drafts
 from app.services.orders import normalise_po_number
 from eval.dataset import EVAL_DIR, Case, load_cases, load_expected
 from eval.scoring import CaseScore, ChangeScore, score_case, score_changes
@@ -91,6 +92,30 @@ class AgentResult:
     cost: Decimal
     tools: list[str]
     flags: list[dict]
+    info_checked: int = 0
+
+
+@dataclass
+class DraftResult:
+    case_id: str
+    kind: str
+    words: int
+    checked: int
+    violations: list[dict]
+    cost: Decimal
+
+
+@dataclass
+class AgentPass:
+    label: str
+    prefetch: bool
+    results: list[AgentResult]
+    usage: list
+    drafts: list[DraftResult] = field(default_factory=list)
+
+    def per_email(self, attribute: str) -> float | Decimal:
+        values = [getattr(r, attribute) for r in self.results]
+        return (sum(values, type(values[0])()) / len(values)) if values else 0
 
 
 def _field_accuracy(scores: list[CaseScore]) -> tuple[dict[str, list[bool]], list[bool]]:
@@ -118,8 +143,7 @@ def build_report(
     results: list[CaseResult],
     failures: dict[str, str],
     first_call_id: int,
-    agent_results: list[AgentResult] | None = None,
-    agent_usage: list | None = None,
+    agent_passes: list[AgentPass] | None = None,
 ) -> str:
     settings = get_settings()
     after = [r.after for r in results]
@@ -218,53 +242,94 @@ def build_report(
         if s.missed or s.unexpected:
             lines.append(f"| {s.case_id} | missed {s.missed or '-'}, unexpected {s.unexpected or '-'} |")
 
-    if agent_results is not None:
-        assessed = len(agent_results)
-        ultra_calls = sum(a.ultra_calls for a in agent_results)
-        ultra_cost = sum((a.ultra_cost for a in agent_results), Decimal("0"))
+    for agent_pass in agent_passes or []:
+        if agent_pass is not agent_passes[-1]:
+            continue
         lines += [
             "",
             "## Risk agent (Ultra)",
             "",
-            "Runs on every email linked to an order. Ultra plans and writes the report; tools do the maths.",
+            "Runs on every email linked to an order. With pre-fetch, Python looks up the order, diffs it and "
+            "checks feasibility (and proposes delivery options) before the loop; Ultra keeps the optional "
+            "tools and the final judgement. The flag policy then moves anything without specific evidence "
+            "to *Info checked* and corrects severities to the rubric.",
             "",
-            "| Metric | Result |",
-            "|---|---|",
-            f"| Emails assessed | {assessed} |",
-            f"| Average Ultra calls per email | {ultra_calls / assessed:.1f} |" if assessed else "| Average Ultra calls per email | n/a |",
-            f"| Average Ultra cost per email | {_usd(ultra_cost / assessed)} |" if assessed else "| Average Ultra cost per email | n/a |",
-            f"| Average tool rounds per email (cap 8) | {sum(a.rounds for a in agent_results) / assessed:.1f} |" if assessed else "| Average tool rounds | n/a |",
-            f"| Total agent cost | {_usd(sum((a.cost for a in agent_results), Decimal('0')))} |",
-            "",
-            "| Case | Status | Rounds | Ultra calls | Ultra cost | Tools called | Flags |",
-            "|---|---|---|---|---|---|---|",
+            "| Metric | " + " | ".join(p.label for p in agent_passes) + " |",
+            "|---|" + "---|" * len(agent_passes),
+            "| Emails assessed | " + " | ".join(str(len(p.results)) for p in agent_passes) + " |",
+            "| Average Ultra calls per email | " + " | ".join(f"{p.per_email('ultra_calls'):.1f}" for p in agent_passes) + " |",
+            "| Average Ultra cost per email | " + " | ".join(_usd(p.per_email("ultra_cost")) for p in agent_passes) + " |",
+            "| Average tool rounds per email (cap 8) | " + " | ".join(f"{p.per_email('rounds'):.1f}" for p in agent_passes) + " |",
         ]
-        for a in agent_results:
+        for severity in ("high", "medium", "low"):
+            lines.append(f"| {severity.capitalize()} flags | " + " | ".join(
+                str(sum(1 for r in p.results for f in r.flags if f["severity"] == severity)) for p in agent_passes
+            ) + " |")
+        lines.append("| Info checked items | " + " | ".join(str(sum(r.info_checked for r in p.results)) for p in agent_passes) + " |")
+        lines += [
+            "",
+            f"Per case ({agent_pass.label}):",
+            "",
+            "| Case | Status | Rounds | Ultra calls | Ultra cost | Tools called (round 0 = pre-fetched) | Flags | Info |",
+            "|---|---|---|---|---|---|---|---|",
+        ]
+        for a in agent_pass.results:
             flags = ", ".join(
-                f"**{f['severity']}** {f['category']}" + ("" if f.get("verified") else " (unverified)")
+                f"**{f['severity']}** {f['category']}" + (" (rule)" if f.get("source") == "rule" else "")
                 for f in a.flags
             ) or "none"
             lines.append(
                 f"| {a.case_id} | {a.status} | {a.rounds} | {a.ultra_calls} | {_usd(a.ultra_cost)} "
-                f"| {', '.join(a.tools) or '-'} | {flags} |"
+                f"| {', '.join(a.tools) or '-'} | {flags} | {a.info_checked} |"
             )
 
-    usage = list(_usage_rows(first_call_id)) + list(agent_usage or [])
-    total_cost = sum((Decimal(str(row[7])) for row in usage), Decimal("0"))
+        if agent_pass.drafts:
+            drafts = agent_pass.drafts
+            violations = [v for d in drafts for v in d.violations]
+            emails = {d.case_id for d in drafts}
+            draft_cost = sum((d.cost for d in drafts), Decimal("0"))
+            lines += [
+                "",
+                "## Drafts (Super) and fact check",
+                "",
+                "Every date, quantity and price in a draft must appear in the order data, the tool results or "
+                "the buyer's email; anything else is a violation shown to the reviewer.",
+                "",
+                "| Metric | Result |",
+                "|---|---|",
+                f"| Drafts written | {len(drafts)} ({sum(d.kind == 'buyer_reply' for d in drafts)} replies, "
+                f"{sum(d.kind == 'internal_note' for d in drafts)} internal notes) |",
+                f"| Values checked | {sum(d.checked for d in drafts)} |",
+                f"| Fact-check violations | {len(violations)} |",
+                f"| Drafts with no violations | {_pct(sum(not d.violations for d in drafts), len(drafts))} |",
+                f"| Average drafting cost per email | {_usd(draft_cost / len(emails))} |",
+                "",
+                "| Case | Draft | Words | Values checked | Violations |",
+                "|---|---|---|---|---|",
+            ]
+            for d in drafts:
+                found = "; ".join(f"{v['kind']}: {v['text']}" for v in d.violations) or "none"
+                lines.append(f"| {d.case_id} | {d.kind} | {d.words} | {d.checked} | {found} |")
+
+    usage = [("Scoring", row) for row in _usage_rows(first_call_id)] + [
+        (p.label, row) for p in agent_passes or [] for row in p.usage
+    ]
+    total_cost = sum((Decimal(str(row[7])) for _, row in usage), Decimal("0"))
     lines += [
         "",
         "## Cost and latency (this run)",
         "",
         "Source `cache` means the response was reused from an earlier identical request at no cost. "
-        "For real cost and latency, run with `LLM_CACHE_ENABLED=false`. With `--agent`, the risk agent's "
-        "Ultra calls are included.",
+        "For real cost and latency, run with `LLM_CACHE_ENABLED=false`. With `--agent`, the agent's Ultra "
+        "calls and Super's escalation and drafting calls are included per agent pass; Nano's analysis calls "
+        "in the agent passes are not repeated here.",
         "",
-        "| Model | Tier | Source | Calls | Input tokens | Output tokens | Avg latency | Cost (USD) |",
-        "|---|---|---|---|---|---|---|---|",
+        "| Pass | Model | Tier | Source | Calls | Input tokens | Output tokens | Avg latency | Cost (USD) |",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
-    for model, tier, source, calls, tokens_in, tokens_out, latency, cost in usage:
+    for label, (model, tier, source, calls, tokens_in, tokens_out, latency, cost) in usage:
         lines.append(
-            f"| `{model}` | {tier} | {source} | {calls} | {tokens_in} | {tokens_out} | "
+            f"| {label} | `{model}` | {tier} | {source} | {calls} | {tokens_in} | {tokens_out} | "
             f"{round(latency)} ms | {Decimal(str(cost)):.6f} |"
         )
     if n:
@@ -283,8 +348,8 @@ def build_report(
     return "\n".join(lines) + "\n"
 
 
-def run_agent_pass(cases: list[Case]) -> tuple[list[AgentResult], list]:
-    """Real order store + risk agent in a scratch database; caches shared with the main one."""
+def run_agent_pass(cases: list[Case], *, prefetch: bool, drafts: bool, label: str) -> AgentPass:
+    """Real order store, risk agent (and drafts) in a scratch database; caches shared with the main one."""
     scratch_dir = tempfile.mkdtemp(prefix="exportagent-eval-")
     engine = create_engine(f"sqlite:///{Path(scratch_dir, 'eval.db').as_posix()}")
     Base.metadata.create_all(engine)
@@ -295,7 +360,7 @@ def run_agent_pass(cases: list[Case]) -> tuple[list[AgentResult], list]:
         scratch.commit()
 
     router = LLMRouter(get_settings(), session_factory=Scratch, cache_session_factory=SessionLocal)
-    results: list[AgentResult] = []
+    result = AgentPass(label=label, prefetch=prefetch, results=[], usage=[])
     with Scratch() as session:
         for case in cases:
             email = Email(
@@ -307,41 +372,51 @@ def run_agent_pass(cases: list[Case]) -> tuple[list[AgentResult], list]:
             session.add(email)
             session.commit()
             analyse_email(session, email, router)
-            if email.order_id is None:
-                continue
-            run = run_agent(session, email, router)
-            calls = session.scalars(select(LLMCall).where(LLMCall.run_id == run.id)).all()
-            ultra = [c for c in calls if c.tier == "ultra"]
-            results.append(
-                AgentResult(
-                    case_id=case.id,
-                    status=run.status,
-                    rounds=run.rounds,
-                    ultra_calls=len(ultra),
-                    ultra_cost=sum((c.cost_usd for c in ultra), Decimal("0")),
-                    cost=sum((c.cost_usd for c in calls), Decimal("0")),
-                    tools=[s.name for s in run.steps if s.kind == "tool"],
-                    flags=(run.result or {}).get("flags", []),
+            if email.order_id is not None:
+                run = run_agent(session, email, router, prefetch=prefetch)
+                calls = session.scalars(select(LLMCall).where(LLMCall.run_id == run.id)).all()
+                ultra = [c for c in calls if c.tier == "ultra"]
+                report = run.result or {}
+                result.results.append(
+                    AgentResult(
+                        case_id=case.id,
+                        status=run.status,
+                        rounds=run.rounds,
+                        ultra_calls=len(ultra),
+                        ultra_cost=sum((c.cost_usd for c in ultra), Decimal("0")),
+                        cost=sum((c.cost_usd for c in calls), Decimal("0")),
+                        tools=[f"{s.name}" + (" (0)" if s.round == 0 else "") for s in run.steps if s.kind == "tool"],
+                        flags=report.get("flags", []),
+                        info_checked=len(report.get("info_checked", [])),
+                    )
                 )
-            )
-            print(f"{case.id}: agent {run.status}, {len(ultra)} Ultra calls")
+                print(f"{case.id}: agent ({label}) {run.status}, {len(ultra)} Ultra calls")
+            if drafts and email.classification is not None:
+                for draft in generate_drafts(session, email, router):
+                    call = session.get(LLMCall, draft.call_id) if draft.call_id else None
+                    check = draft.fact_check or {}
+                    result.drafts.append(DraftResult(
+                        case_id=case.id, kind=draft.kind, words=len(draft.body.split()),
+                        checked=check.get("checked", 0), violations=check.get("violations", []),
+                        cost=call.cost_usd if call else Decimal("0"),
+                    ))
 
         with SessionLocal() as main:
             for row in session.scalars(select(SearchCache)):
                 main.merge(SearchCache(key=row.key, query=row.query, response=row.response))
             main.commit()
-    agent_usage = [
-        row for row in _usage_rows(0, Scratch) if row[1] == "ultra"
-    ]
+    result.usage = [row for row in _usage_rows(0, Scratch) if row[1] in ("ultra", "super")]
     engine.dispose()
-    return results, agent_usage
+    return result
 
 
 def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", type=Path, default=EVAL_DIR / "report.md")
-    parser.add_argument("--agent", action="store_true", help="also run the order store and risk agent")
+    parser.add_argument("--agent", action="store_true", help="also run the order store, risk agent and drafts")
+    parser.add_argument("--compare-prefetch", action="store_true",
+                        help="with --agent: run the agent without and with pre-fetch and compare")
     args = parser.parse_args()
 
     cases = sorted(load_cases(), key=lambda case: (case.received_at, case.id))
@@ -371,9 +446,14 @@ def main() -> int:
         )
         print(f"{case.id}: done")
 
-    agent_results, agent_usage = run_agent_pass(cases) if args.agent else (None, None)
+    passes: list[AgentPass] | None = None
+    if args.agent:
+        passes = []
+        if args.compare_prefetch:
+            passes.append(run_agent_pass(cases, prefetch=False, drafts=False, label="Full loop (before)"))
+        passes.append(run_agent_pass(cases, prefetch=True, drafts=True, label="Pre-fetch (after)"))
     results.sort(key=lambda r: r.case_id)
-    report = build_report(results, failures, first_call_id, agent_results, agent_usage)
+    report = build_report(results, failures, first_call_id, passes)
     args.out.write_text(report, encoding="utf-8")
     print(f"\n{report}\nWritten to {args.out}")
     return 1 if failures else 0

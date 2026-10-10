@@ -4,7 +4,7 @@ An AI export desk for small and mid-size apparel and textile exporters. A buyer 
 
 Built for the Nebius x NVIDIA Global AI Hackathon (track: Best Apps and Agents).
 
-> Status: Milestone 4 of 8 (agent loop and risk). Sections marked _to be filled_ are completed as the build progresses.
+> Status: Milestone 5 of 8 (drafts and human-in-the-loop). Sections marked _to be filled_ are completed as the build progresses.
 
 ## How we use NVIDIA Nemotron + Nebius Token Factory
 
@@ -14,22 +14,25 @@ Every LLM call in ExportAgent is a runtime call to the Nebius Token Factory infe
 |---|---|---|
 | Email classification, field extraction, PO change detection | Nemotron Nano | Fast and cheap for high-volume structured work |
 | Re-extracting a single field that failed a Python check (escalation) | Nemotron Super | Stronger model, only where Nano demonstrably failed |
-| Drafting buyer replies and internal notes | Nemotron Super | Better writing quality at moderate cost |
+| Drafting buyer replies and internal notes (thinking on) | Nemotron Super | Better writing quality at moderate cost |
 | Risk reasoning and multi-step planning in the agent loop | Nemotron Ultra | Strongest reasoning, used sparingly |
 
 **Escalation routing.** Nano extracts every field first. Plain-Python checks then look for three failures: a size breakdown that does not add up, a size table in the email that was not extracted, and a quoted source text that is missing from the email or does not state the value. Only the failing field is re-extracted by Super, and Super's value is kept only if the same check then passes. Every escalation is logged with field, reason, model and cost ([backend/app/services/escalation.py](backend/app/services/escalation.py)).
 
-**The risk agent.** Ultra runs an observe → reason → act loop with OpenAI-style tool calling, a hard cap of 8 tool rounds, and `max_tokens` on every call ([backend/app/agent/loop.py](backend/app/agent/loop.py)). It decides which tools to call; the tools do all the maths in Python:
+**The risk agent.** Ultra runs an observe → reason → act loop with OpenAI-style tool calling, a hard cap of 8 tool rounds, and `max_tokens` on every call ([backend/app/agent/loop.py](backend/app/agent/loop.py)). The checks every order needs run deterministically in Python first (pre-fetch): find the order, diff the last two versions, check feasibility for the current and the previous plan, and propose delivery options if the plan is infeasible. Ultra receives those results as evidence and keeps the loop for the optional tools and the final judgement. All maths is in Python:
 
 | Tool | What it does |
 |---|---|
 | `find_order` | The order and every stored PO version |
 | `diff_po_versions` | Old → new changes between two versions, with the delivery-pulled-forward alert |
-| `check_delivery_feasibility` | Capacity and fabric lead time from the factory profile, minus other orders due in the same window |
-| `check_compliance` | Tavily search for the destination country's import and labelling rules, with source URLs |
-| `lookup_buyer` | Tavily search for buyer background, only for buyers with no earlier orders |
+| `check_delivery_feasibility` | Capacity and fabric lead time from the factory profile, minus other orders due in the same window (Ultra can also run a what-if, e.g. fabric already in-house) |
+| `propose_delivery_options` | When the plan is infeasible: the earliest feasible date for the full quantity, and the split that ships on time |
+| `check_compliance` | Tavily search for the destination country's import and labelling rules, with source URLs (cached per normalised country and product, per day) |
+| `lookup_buyer` | Tavily search for buyer background, only for buyers with no earlier orders (cached per normalised name, per day) |
 
-Each tool result gets an evidence id (E1, E2, …). The final risk report lists flags with severity, a one-line reason and evidence. Python then keeps only evidence that points at a real tool result or a URL a tool returned, and a safety rule adds any infeasible or tight capacity finding the model left out (marked as such). The email page shows every step: tool, inputs, result, model, tokens, latency and cost.
+Each tool result gets an evidence id (E1, E2, …). The final risk report lists flags with severity, a one-line reason and evidence, plus an *Info checked* list. The flag policy in [backend/policy/risk_policy.yaml](backend/policy/risk_policy.yaml) is enforced in Python ([backend/app/services/risk_policy.py](backend/app/services/risk_policy.py)): evidence must point at a real tool result or a URL a tool returned; a compliance flag must name a concrete rule with a source URL; a buyer flag needs an adverse finding; anything short of that moves to *Info checked*. Severity follows a rubric: high only for an infeasible plan or a contract value change above 10% or 5,000; medium needs confirmation; low is minor. The email page shows every step: pre-fetched Python checks, Ultra's calls, tool inputs and results, model, tokens, latency and cost.
+
+**Drafts and human-in-the-loop.** Super drafts the buyer reply and an internal note for production from facts assembled in Python: the order and its versions, the risk flags, the feasibility results and the delivery options (other buyers' orders are never included). A Python fact check then compares every date, quantity and price in the draft with those facts and the buyer's email, and flags anything else ([backend/app/services/fact_check.py](backend/app/services/fact_check.py)). Drafts wait in the approval queue: edit (re-checked on save), approve, or reject. Approving a draft with open violations needs an explicit acknowledgement. Approve marks the reply sent and records who and when; no real email leaves the system.
 
 Factory capacity, lead times, ports and Incoterms live in [backend/profiles/](backend/profiles/) (India/Tiruppur and Bangladesh/Dhaka). The capacity figures are illustrative.
 
@@ -49,7 +52,16 @@ Reasoning is switched per request with `chat_template_kwargs: {"enable_thinking"
 
 First live numbers (10 labelled emails, Nano only so far): about $0.0003 and 9 seconds per email for classification plus extraction. See [backend/eval/report.md](backend/eval/report.md).
 
-_To be filled: Super and Ultra numbers once drafting and the agent loop run live._
+Live numbers with every model tier (10 labelled emails, cache off, 2026-10-10):
+
+| Step | Model | Per email |
+|---|---|---|
+| Classification and extraction | Nano | about $0.0003 |
+| Escalated fields (33% of emails, 1 field each) | Super | about $0.0001 |
+| Risk agent with pre-fetch (2.2 calls, down from 4.1 with the full loop) | Ultra | $0.0165 (was $0.0210) |
+| Reply and internal note drafts | Super | $0.0026 |
+
+All 18 drafts passed the fact check (132 values checked, 0 violations).
 
 ## Architecture
 
@@ -78,7 +90,7 @@ python -m venv .venv
 .venv/Scripts/activate        # macOS/Linux: source .venv/bin/activate
 pip install -e ".[dev]"
 alembic upgrade head
-python -m scripts.seed --analyse   # load the 10 demo emails and analyse them
+python -m scripts.seed --analyse --agent --drafts   # load, analyse, assess and draft the 10 demo emails
 uvicorn app.main:app --reload --port 8000
 ```
 
@@ -100,6 +112,8 @@ python -m scripts.list_models    # NVIDIA model IDs served by Token Factory for 
 python -m scripts.smoke_llm      # one live call per Nemotron tier: model, tokens, latency, cost
 python -m scripts.smoke_tavily   # one live Tavily search with source URLs
 python -m eval.run_eval          # score extraction against the labelled cases, writes eval/report.md
+python -m eval.run_eval --agent --compare-prefetch   # also the risk agent (with and without pre-fetch) and drafts
+python -m scripts.rebuild_demo   # rebuild the local demo database, keeping the response cache
 ```
 
 Docker (Postgres, API and web together, reading secrets from `.env`):
