@@ -1,0 +1,16 @@
+id: test_023
+title: PO in the body without Incoterm or port, DKK, packs not pieces
+sender: Freja Holm <freja@nordickids.example>
+subject: PO NK-118 baby bodysuits
+received_at: '2026-10-30'
+body: |
+  Hej Karthik,
+
+  PO NK-118 for the baby bodysuit 2-pack, style NK-BB-05, organic cotton:
+  Off-white 2,000 packs and Dusty Blue 1,600 packs, total 3,600 packs, DKK 38.50 per pack.
+  Ex-factory 1 March 2027. Shipping terms will be agreed with our forwarder.
+
+  Venlig hilsen,
+  Freja Holm
+  Nordic Kids ApS, Copenhagen, Denmark
+attachments: []

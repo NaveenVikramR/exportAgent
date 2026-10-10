@@ -1,0 +1,19 @@
+id: test_028
+title: PO pasted as CSV from the buyer's system, EUR
+sender: Ingrid Solberg <ingrid@fjordline.example>
+subject: PO FJ-3305 base layers
+received_at: '2026-10-04'
+body: |
+  Hei Karthik,
+
+  Our PO FJ-3305 is below, exported from our system. Style FJ-WL-15 merino-blend base layer top. EUR 11.40 per piece, FOB Tuticorin, ex-factory 2027-01-08, deliver to Bergen, Norway.
+
+  Colour,XS,S,M,L,XL,Total
+  Charcoal,100,250,350,250,100,1050
+  Slate Blue,80,200,300,200,70,850
+  Total,,,,,,1900
+
+  Hilsen,
+  Ingrid Solberg
+  Fjordline Apparel AS
+attachments: []

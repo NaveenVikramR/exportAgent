@@ -1,0 +1,48 @@
+id: test_021
+classification:
+  category: po_revision
+  intents:
+  - po_revision
+  has_po_data: true
+extraction:
+  buyer: Copperleaf Ltd
+  po_number: CPL-2044
+  style: CPL-LS-330
+  currency: EUR
+  unit_price: '4.35'
+  total_quantity: 5000
+  delivery_date: '2027-01-20'
+  incoterms: CIF
+  port: Dublin
+  destination_country: Ireland
+  line_items:
+  - colour: Black
+    quantity: 2500
+    sizes:
+      S: 400
+      M: 900
+      L: 900
+      XL: 300
+  - colour: Stone
+    quantity: 2500
+    sizes:
+      S: 400
+      M: 900
+      L: 900
+      XL: 300
+expected_review_fields: []
+expected_changes:
+- field: unit_price
+  old: '4.10'
+  new: '4.35'
+- field: incoterms
+  old: FOB
+  new: CIF
+- field: port
+  old: Tuticorin
+  new: Dublin
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: [schedule]
+risk_note: 'infeasible: 5,000 pcs needed but only 1,771 pcs of free capacity remain before 2027-01-20 after other orders (3,229 pcs short). | value +6.1% (1250.00)'

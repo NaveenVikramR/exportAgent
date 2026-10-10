@@ -1,0 +1,29 @@
+id: test_007
+title: Email price contradicts the attached PO (US dates)
+sender: Mike Alvarez <malvarez@hudsonpike.example>
+subject: PO HP-40981 ribbed tanks
+received_at: '2026-10-09'
+body: |
+  Karthik -
+
+  PO HP-40981 attached for the ribbed tank HP-TK-301, 3,000 units at $3.40 as we discussed, FOB Chennai. Ex-factory January 22, 2027.
+
+  Thanks,
+  Mike Alvarez
+  Hudson & Pike LLC
+attachments:
+- filename: HP-40981.pdf
+  content_type: application/pdf
+  text: |
+    HUDSON & PIKE LLC
+    PO #: HP-40981   Date: 10/09/2026
+    Item: HP-TK-301 Women's ribbed tank, 100% cotton
+    Unit cost (USD): 3.60
+    Terms: FOB Chennai   Ship to: Hudson & Pike DC, Newark, NJ, USA
+    Ex-factory: 01/22/2027
+
+    Color     S     M     L     XL    Total
+    Black     250   500   500   250   1500
+    Heather   250   500   500   250   1500
+
+    TOTAL UNITS: 3,000   PO VALUE: USD 10,800.00

@@ -32,3 +32,8 @@ expected_changes:
   - {field: "line_items.Dusty Pink.sizes", old: {"2-3Y": 500, "4-5Y": 700, "6-7Y": 700, "8-9Y": 500}, new: {"2-3Y": 400, "4-5Y": 600, "6-7Y": 800, "8-9Y": 600}}
   - {field: "line_items.Sage.sizes", old: {"2-3Y": 500, "4-5Y": 700, "6-7Y": 700, "8-9Y": 500}, new: {"2-3Y": 400, "4-5Y": 600, "6-7Y": 800, "8-9Y": 600}}
   - {field: "line_items.Charcoal.sizes", old: {"2-3Y": 400, "4-5Y": 600, "6-7Y": 600, "8-9Y": 400}, new: {"2-3Y": 300, "4-5Y": 500, "6-7Y": 700, "8-9Y": 500}}
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: [schedule]
+risk_note: 'infeasible: 6,800 pcs needed but only 3,385 pcs of free capacity remain before 2027-01-05 after other orders (3,415 pcs short). | value -5.1% (-1020.00)'

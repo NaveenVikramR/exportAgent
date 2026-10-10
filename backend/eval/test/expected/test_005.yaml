@@ -1,0 +1,30 @@
+id: test_005
+classification:
+  category: new_po
+  intents:
+  - new_po
+  - sample_or_approval
+  - payment
+  has_po_data: true
+extraction:
+  buyer: Maple & Moss Inc.
+  po_number: MM-2290
+  style: MM-CR-115
+  currency: CAD
+  unit_price: '6.85'
+  total_quantity: 2200
+  delivery_date: '2027-01-10'
+  incoterms: FOB
+  port: Tuticorin
+  destination_country: Canada
+  line_items:
+  - colour: Heather Grey
+    quantity: 1200
+  - colour: Navy
+    quantity: 1000
+expected_review_fields: []
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'feasible: Feasible: 40% of free capacity used, 32 days of slack.'

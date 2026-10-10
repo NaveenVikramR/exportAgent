@@ -1,0 +1,39 @@
+id: test_007
+classification:
+  category: new_po
+  intents:
+  - new_po
+  has_po_data: true
+extraction:
+  buyer: Hudson & Pike LLC
+  po_number: HP-40981
+  style: HP-TK-301
+  currency: USD
+  unit_price: '3.60'
+  total_quantity: 3000
+  delivery_date: '2027-01-22'
+  incoterms: FOB
+  port: Chennai
+  destination_country: United States
+  line_items:
+  - colour: Black
+    quantity: 1500
+    sizes:
+      S: 250
+      M: 500
+      L: 500
+      XL: 250
+  - colour: Heather
+    quantity: 1500
+    sizes:
+      S: 250
+      M: 500
+      L: 500
+      XL: 250
+expected_review_fields:
+- unit_price
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'feasible: Feasible: 67% of free capacity used, 20 days of slack.'

@@ -1,0 +1,16 @@
+id: test_017
+title: Revision adds a colour (contract value up more than 10%)
+sender: Chloé Tremblay <chloe@maplemoss.example>
+subject: MM-2290 rev 1 - adding Forest
+received_at: '2026-10-29'
+body: |
+  Hi Karthik,
+
+  We are adding a third colour to MM-2290 (style MM-CR-115). Revised order, rev 1:
+  Heather Grey 1,200 pcs, Navy 1,000 pcs, Forest 800 pcs, total 3,000 pcs.
+  Price unchanged at CAD 6.85, FOB Tuticorin, same ex-factory 10 January 2027.
+
+  Merci,
+  Chloé
+  Maple & Moss Inc.
+attachments: []

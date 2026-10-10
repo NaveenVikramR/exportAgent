@@ -26,3 +26,8 @@ extraction:
       quantity: 1900
       sizes: {XS: 150, S: 500, M: 600, L: 500, XL: 150}
 expected_review_fields: [total_quantity]
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'feasible: Feasible: 61% of free capacity used, 9 days of slack.'

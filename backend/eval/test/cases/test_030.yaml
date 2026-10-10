@@ -1,0 +1,30 @@
+id: test_030
+title: Revision cuts the quantity by 20% and moves the date later
+sender: Omar Haddad <omar@desertbloom.example>
+subject: DB-2026-077 Rev 1
+received_at: '2026-11-05'
+body: |
+  Dear Karthik,
+
+  Further to your concerns about capacity, we have revised DB-2026-077: 2,400 pcs with ex-factory 15.02.2027. Revised PO attached.
+
+  Regards,
+  Omar Haddad
+  Desert Bloom Trading LLC
+attachments:
+- filename: DB-2026-077_Rev1.pdf
+  content_type: application/pdf
+  text: |
+    DESERT BLOOM TRADING LLC
+    P.O. No: DB-2026-077 Rev 1    Date: 05.11.2026
+    Style: DB-TS-900 Men's basic crew T-shirt, 100% cotton, 140 GSM
+    Price: USD 2.10 per piece   CFR Jebel Ali
+    Delivery (ex-factory): 15.02.2027
+    Destination: Dubai, United Arab Emirates
+
+    Colour  S      M      L      XL     XXL   Total
+    White   100    200    200    200    100   800
+    Black   100    200    200    200    100   800
+    Grey    100    200    200    200    100   800
+
+    TOTAL 2,400 pcs   USD 5,040.00

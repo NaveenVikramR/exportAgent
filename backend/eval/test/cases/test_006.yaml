@@ -1,0 +1,18 @@
+id: test_006
+title: Order without a PO number or price yet
+sender: Aroha Ngata <aroha@kiwicoast.example>
+subject: Order for summer tees
+received_at: '2026-10-08'
+body: |
+  Kia ora Karthik,
+
+  We'd like to go ahead with the organic tee, style KC-TE-020: White 2,500 and Sand 1,500, so 4,000 pieces in total.
+
+  On price, we'll confirm once we've seen the revised costing. Our PO number will come from the new ERP next week.
+
+  Ship FOB Chennai, ex-factory end of February 2027, let's say 26/02/2027.
+
+  Ngā mihi,
+  Aroha Ngata
+  Kiwi Coast Clothing Ltd, Auckland, New Zealand
+attachments: []

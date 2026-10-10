@@ -1,0 +1,33 @@
+id: test_006
+classification:
+  category: new_po
+  intents:
+  - new_po
+  has_po_data: true
+extraction:
+  buyer: Kiwi Coast Clothing Ltd
+  po_number: null
+  style: KC-TE-020
+  currency: null
+  unit_price: null
+  total_quantity: 4000
+  delivery_date: '2027-02-26'
+  incoterms: FOB
+  port: Chennai
+  destination_country: null
+  line_items:
+  - colour: White
+    quantity: 2500
+  - colour: Sand
+    quantity: 1500
+expected_review_fields:
+- po_number
+- unit_price
+- currency
+skip_fields:
+- destination_country
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'no order'

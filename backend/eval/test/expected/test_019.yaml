@@ -1,0 +1,35 @@
+id: test_019
+classification:
+  category: po_revision
+  intents:
+  - po_revision
+  has_po_data: true
+extraction:
+  buyer: Van der Berg Mode B.V.
+  po_number: VDB-6610
+  style: null
+  currency: null
+  unit_price: null
+  total_quantity: 3000
+  delivery_date: null
+  incoterms: null
+  port: null
+  destination_country: null
+  line_items:
+  - colour: Ecru
+    quantity: 1500
+  - colour: Navy
+    quantity: 1500
+expected_review_fields: []
+expected_changes:
+- field: total_quantity
+  old: 4200
+  new: 3000
+- field: line_items.Rust
+  old: 1200
+  new: null
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: [value]
+risk_note: 'tight: Feasible but tight: 98% of free capacity used, 1 days of slack. | value -28.6% (-11760.00)'

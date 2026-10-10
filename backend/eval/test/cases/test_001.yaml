@@ -1,0 +1,37 @@
+id: test_001
+title: Clean new PO, EUR, five sizes, FOB
+sender: Marta Ruiz <marta.ruiz@casalumen.example>
+subject: Pedido CL-7731 - women's jersey dress
+received_at: '2026-10-01'
+body: |
+  Hola Karthik,
+
+  Please find attached our order CL-7731 for the jersey dress, style CL-DR-410. Delivery terms FOB Chennai as usual.
+
+  Kindly confirm receipt and the ex-factory date.
+
+  Saludos,
+  Marta Ruiz
+  Compras, Casa Lumen S.L., Valencia, Spain
+attachments:
+- filename: PO_CL-7731.pdf
+  content_type: application/pdf
+  text: |
+    CASA LUMEN S.L.
+    Calle del Mar 21, 46011 Valencia, Spain
+
+    ORDER No.: CL-7731
+    Order date: 01/10/2026
+    Style: CL-DR-410 - Women's jersey midi dress, 95% viscose 5% elastane
+    Price: EUR 7.20 / pc
+    Terms: FOB Chennai
+    Destination: Valencia, Spain
+    Ex-factory: 15/01/2027
+
+    Colour      XS    S     M     L     XL    Total
+    Terracotta  150   300   450   300   150   1350
+    Olive       100   250   350   250   100   1050
+    Black       200   400   600   400   200   1800
+
+    Total quantity: 4,200 pcs
+    Total amount: EUR 30,240.00

@@ -26,3 +26,8 @@ extraction:
       quantity: 2000
       sizes: {"2-3Y": 400, "4-5Y": 600, "6-7Y": 600, "8-9Y": 400}
 expected_review_fields: []
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'feasible: Feasible: 45% of free capacity used, 40 days of slack.'

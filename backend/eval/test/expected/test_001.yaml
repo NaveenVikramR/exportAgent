@@ -1,0 +1,48 @@
+id: test_001
+classification:
+  category: new_po
+  intents:
+  - new_po
+  has_po_data: true
+extraction:
+  buyer: Casa Lumen S.L.
+  po_number: CL-7731
+  style: CL-DR-410
+  currency: EUR
+  unit_price: '7.20'
+  total_quantity: 4200
+  delivery_date: '2027-01-15'
+  incoterms: FOB
+  port: Chennai
+  destination_country: Spain
+  line_items:
+  - colour: Terracotta
+    quantity: 1350
+    sizes:
+      XS: 150
+      S: 300
+      M: 450
+      L: 300
+      XL: 150
+  - colour: Olive
+    quantity: 1050
+    sizes:
+      XS: 100
+      S: 250
+      M: 350
+      L: 250
+      XL: 100
+  - colour: Black
+    quantity: 1800
+    sizes:
+      XS: 200
+      S: 400
+      M: 600
+      L: 400
+      XL: 200
+expected_review_fields: []
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'feasible: Feasible: 12% of free capacity used, 54 days of slack.'

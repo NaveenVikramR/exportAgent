@@ -1,0 +1,40 @@
+id: test_028
+classification:
+  category: new_po
+  intents:
+  - new_po
+  has_po_data: true
+extraction:
+  buyer: Fjordline Apparel AS
+  po_number: FJ-3305
+  style: FJ-WL-15
+  currency: EUR
+  unit_price: '11.40'
+  total_quantity: 1900
+  delivery_date: '2027-01-08'
+  incoterms: FOB
+  port: Tuticorin
+  destination_country: Norway
+  line_items:
+  - colour: Charcoal
+    quantity: 1050
+    sizes:
+      XS: 100
+      S: 250
+      M: 350
+      L: 250
+      XL: 100
+  - colour: Slate Blue
+    quantity: 850
+    sizes:
+      XS: 80
+      S: 200
+      M: 300
+      L: 200
+      XL: 70
+expected_review_fields: []
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'feasible: Feasible: 19% of free capacity used, 43 days of slack.'

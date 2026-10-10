@@ -1,0 +1,30 @@
+id: test_021
+title: Revision changes the Incoterm (FOB to CIF) and the price
+sender: Niamh Byrne <niamh@copperleaf.example>
+subject: CPL-2044 rev 2 - now CIF Dublin
+received_at: '2026-10-27'
+body: |
+  Hi Karthik,
+
+  As agreed on our call, we're moving CPL-2044 to CIF Dublin at EUR 4.35. Revised PO attached; quantities and the ex-factory date are unchanged.
+
+  Thanks,
+  Niamh
+attachments:
+- filename: CPL-2044_rev2.pdf
+  content_type: application/pdf
+  text: |
+    COPPERLEAF LTD
+    PO NUMBER: CPL-2044 (REV 2)
+    REVISION DATE: 27/10/2026
+    STYLE: CPL-LS-330 Unisex long sleeve tee, 100% cotton
+    UNIT PRICE: EUR 4.35
+    INCOTERM: CIF Dublin
+    SHIP TO: Copperleaf DC, Dublin, Ireland
+    EX-FACTORY: 20/01/2027
+
+    COLOUR    S     M      L      XL    TOTAL
+    Black     400   900    900    300   2500
+    Stone     400   900    900    300   2500
+
+    TOTAL QTY 5,000

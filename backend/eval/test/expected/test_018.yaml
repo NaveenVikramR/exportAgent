@@ -1,0 +1,45 @@
+id: test_018
+classification:
+  category: new_po
+  intents:
+  - new_po
+  has_po_data: true
+extraction:
+  buyer: Van der Berg Mode B.V.
+  po_number: VDB-6610
+  style: VDB-SW-221
+  currency: EUR
+  unit_price: '9.80'
+  total_quantity: 4200
+  delivery_date: '2027-02-12'
+  incoterms: FOB
+  port: Chennai
+  destination_country: Netherlands
+  line_items:
+  - colour: Ecru
+    quantity: 1500
+    sizes:
+      S: 250
+      M: 500
+      L: 500
+      XL: 250
+  - colour: Navy
+    quantity: 1500
+    sizes:
+      S: 250
+      M: 500
+      L: 500
+      XL: 250
+  - colour: Rust
+    quantity: 1200
+    sizes:
+      S: 200
+      M: 400
+      L: 400
+      XL: 200
+expected_review_fields: []
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'feasible: Feasible: 16% of free capacity used, 76 days of slack.'

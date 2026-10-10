@@ -1,0 +1,30 @@
+id: test_024
+title: Australian PO with numeric sizes, AUD, CIF
+sender: Mia Thompson <mia@southerncross.example>
+subject: PO SCA-9014
+received_at: '2026-10-03'
+body: |
+  G'day Karthik,
+
+  PO SCA-9014 attached for the linen-blend tank. Please confirm.
+
+  Cheers,
+  Mia Thompson
+  Southern Cross Apparel Pty Ltd
+attachments:
+- filename: SCA-9014.pdf
+  content_type: application/pdf
+  text: |
+    SOUTHERN CROSS APPAREL PTY LTD
+    PURCHASE ORDER SCA-9014   03/10/2026
+    Style: SCA-TK-61 Women's linen-blend tank
+    Price: AUD 6.20 per unit, CIF Melbourne
+    Delivery address: Melbourne, Australia
+    Required ex-factory: 18/12/2026
+
+    Colour/Size  8     10    12    14    Total
+    White        300   500   500   200   1500
+    Black        300   500   500   200   1500
+    Sage         200   300   300   200   1000
+
+    Total units 4,000 | Value AUD 24,800.00

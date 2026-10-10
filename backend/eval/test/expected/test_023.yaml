@@ -1,0 +1,32 @@
+id: test_023
+classification:
+  category: new_po
+  intents:
+  - new_po
+  has_po_data: true
+extraction:
+  buyer: Nordic Kids ApS
+  po_number: NK-118
+  style: NK-BB-05
+  currency: DKK
+  unit_price: '38.50'
+  total_quantity: 3600
+  delivery_date: '2027-03-01'
+  incoterms: null
+  port: null
+  destination_country: null
+  line_items:
+  - colour: Off-white
+    quantity: 2000
+  - colour: Dusty Blue
+    quantity: 1600
+expected_review_fields:
+- incoterms
+- port
+skip_fields:
+- destination_country
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: [schedule]
+risk_note: 'infeasible: 3,600 pcs needed but only 2,414 pcs of free capacity remain before 2027-03-01 after other orders (1,186 pcs short).'

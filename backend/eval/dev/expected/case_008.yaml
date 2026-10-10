@@ -6,3 +6,8 @@ classification:
 # No purchase order data, so no extraction is expected.
 extraction: null
 expected_review_fields: []
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'no order'

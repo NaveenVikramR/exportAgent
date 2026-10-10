@@ -1,0 +1,30 @@
+id: test_022
+title: Kids' hoodie with hood drawcord for France (compliance-relevant)
+sender: Camille Laurent <c.laurent@lumiere-enfant.example>
+subject: Bon de commande LE-5502
+received_at: '2026-10-24'
+body: |
+  Bonjour Karthik,
+
+  Please find our order LE-5502 for the kids' zip hoodie, with the corrections from the fit session.
+
+  Cordialement,
+  Camille Laurent
+  Lumière Enfant SARL
+attachments:
+- filename: LE-5502.pdf
+  content_type: application/pdf
+  text: |
+    LUMIÈRE ENFANT SARL
+    Bon de commande / Purchase order LE-5502 - 24/10/2026
+    Modèle / Style: LE-HD-44 Kids' zip hoodie with hood drawcord, 100% cotton fleece
+    Prix / Unit price: EUR 7.90
+    Incoterm: FOB Chennai
+    Livraison / Ship to: Lyon, France
+    Ex-factory: 10/02/2027
+
+    Coloris / Colour   4A    6A    8A    10A   Total
+    Rose               300   400   400   300   1400
+    Marine             400   500   500   400   1800
+
+    Total: 3 200 pièces

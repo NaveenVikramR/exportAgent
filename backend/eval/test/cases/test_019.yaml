@@ -1,0 +1,14 @@
+id: test_019
+title: Revision cancels a colour by email (contract value down more than 10%)
+sender: Sanne de Vries <sanne@vdbmode.example>
+subject: VDB-6610 - cancel Rust
+received_at: '2026-10-23'
+body: |
+  Hi Karthik,
+
+  Unfortunately we have to cancel the Rust colour on VDB-6610. Please continue with Ecru 1,500 and Navy 1,500 as ordered, 3,000 pcs in total. Everything else is unchanged.
+
+  Groet,
+  Sanne de Vries
+  Van der Berg Mode B.V.
+attachments: []

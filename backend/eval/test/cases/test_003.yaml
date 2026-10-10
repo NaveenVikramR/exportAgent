@@ -1,0 +1,34 @@
+id: test_003
+title: Transposed size table (sizes as rows), GBP, CIF
+sender: James Whitaker <j.whitaker@northgateretail.example>
+subject: PO NR-55120 polo shirts
+received_at: '2026-10-05'
+body: |
+  Hi Karthik,
+
+  PO NR-55120 attached for the pique polo. Please confirm.
+
+  Regards,
+  James Whitaker
+  Northgate Retail Ltd
+attachments:
+- filename: NR-55120.pdf
+  content_type: application/pdf
+  text: |
+    NORTHGATE RETAIL LTD
+    PURCHASE ORDER: NR-55120      Date: 05/10/2026
+    Supplier: Sri Velan Knits
+    Style: NR-PO-882  Men's pique polo, 100% cotton
+    Unit price: GBP 5.15
+    Incoterms: CIF Southampton
+    Deliver to: Northgate DC, Daventry, United Kingdom
+    Ex-factory date: 20/12/2026
+
+    Size   | Navy | White | Bottle Green
+    S      | 300  | 200   | 150
+    M      | 600  | 400   | 300
+    L      | 600  | 400   | 300
+    XL     | 300  | 200   | 150
+    Total  | 1800 | 1200  | 900
+
+    Order total: 3,900 pcs / GBP 20,085.00

@@ -20,3 +20,8 @@ expected_review_fields: []
 # Used from Milestone 3 (change detection); the old value comes from the thread itself.
 expected_changes:
   - {field: delivery_date, old: "2026-11-24", new: "2026-11-10"}
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'The thread says fabric is in-house, so 10 Nov is feasible: no schedule risk.'

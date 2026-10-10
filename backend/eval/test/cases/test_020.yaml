@@ -1,0 +1,31 @@
+id: test_020
+title: Clean new PO, EUR, FOB Tuticorin
+sender: Niamh Byrne <niamh@copperleaf.example>
+subject: PO CPL-2044
+received_at: '2026-10-06'
+body: |
+  Hi Karthik,
+
+  Please see PO CPL-2044 attached for the unisex long sleeve tee.
+
+  Thanks a million,
+  Niamh Byrne
+  Copperleaf Ltd, Dublin
+attachments:
+- filename: CPL-2044.pdf
+  content_type: application/pdf
+  text: |
+    COPPERLEAF LTD
+    PO NUMBER: CPL-2044
+    PO DATE: 06/10/2026
+    STYLE: CPL-LS-330 Unisex long sleeve tee, 100% cotton
+    UNIT PRICE: EUR 4.10
+    INCOTERM: FOB Tuticorin
+    SHIP TO: Copperleaf DC, Dublin, Ireland
+    EX-FACTORY: 20/01/2027
+
+    COLOUR    S     M      L      XL    TOTAL
+    Black     400   900    900    300   2500
+    Stone     400   900    900    300   2500
+
+    TOTAL QTY 5,000

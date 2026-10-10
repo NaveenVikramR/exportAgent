@@ -1,0 +1,30 @@
+id: test_013
+title: 'Order that cannot be made in time: fabric lead time (dd.mm.yyyy dates)'
+sender: Omar Haddad <omar@desertbloom.example>
+subject: New PO DB-2026-077
+received_at: '2026-10-20'
+body: |
+  Dear Karthik,
+
+  Please find our new PO DB-2026-077 for basic tees. We need the goods in Dubai for the January promotion.
+
+  Regards,
+  Omar Haddad
+  Desert Bloom Trading LLC
+attachments:
+- filename: DB-2026-077.pdf
+  content_type: application/pdf
+  text: |
+    DESERT BLOOM TRADING LLC
+    P.O. No: DB-2026-077    Date: 20.10.2026
+    Style: DB-TS-900 Men's basic crew T-shirt, 100% cotton, 140 GSM
+    Price: USD 2.10 per piece   CFR Jebel Ali
+    Delivery (ex-factory): 10.12.2026
+    Destination: Dubai, United Arab Emirates
+
+    Colour  S      M      L      XL     XXL    Total
+    White   125    250    250    250    125    1000
+    Black   125    250    250    250    125    1000
+    Grey    125    250    250    250    125    1000
+
+    TOTAL 3,000 pcs   USD 6,300.00

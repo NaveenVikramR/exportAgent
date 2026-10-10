@@ -1,0 +1,20 @@
+id: test_015
+title: Forwarded kids' sleepwear order with a US-format date, too little time
+sender: Mike Alvarez <malvarez@hudsonpike.example>
+subject: 'Fwd: kids pajama order HP-41022'
+received_at: '2026-10-22'
+body: |
+  Karthik, see below from our kids team - please book it.
+  Mike
+
+  ---------- Forwarded message ----------
+  From: Jenna Cole <jcole@hudsonpike.example>
+  Date: Wed, Oct 21, 2026
+  Subject: kids pajama order
+
+  Mike - we're placing PO HP-41022 for the kids' pajama set HP-PJ-77 (2-piece, 100% cotton knit) for our US stores:
+  Navy Stars 1,500 sets and Pink Hearts 1,500 sets, 3,000 sets total, $6.75 per set FOB Chennai.
+  We need ex-factory 12/04/2026 to make the holiday floor set.
+  Jenna Cole
+  Hudson & Pike LLC
+attachments: []

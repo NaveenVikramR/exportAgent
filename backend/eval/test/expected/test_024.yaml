@@ -1,0 +1,45 @@
+id: test_024
+classification:
+  category: new_po
+  intents:
+  - new_po
+  has_po_data: true
+extraction:
+  buyer: Southern Cross Apparel Pty Ltd
+  po_number: SCA-9014
+  style: SCA-TK-61
+  currency: AUD
+  unit_price: '6.20'
+  total_quantity: 4000
+  delivery_date: '2026-12-18'
+  incoterms: CIF
+  port: Melbourne
+  destination_country: Australia
+  line_items:
+  - colour: White
+    quantity: 1500
+    sizes:
+      '8': 300
+      '10': 500
+      '12': 500
+      '14': 200
+  - colour: Black
+    quantity: 1500
+    sizes:
+      '8': 300
+      '10': 500
+      '12': 500
+      '14': 200
+  - colour: Sage
+    quantity: 1000
+    sizes:
+      '8': 200
+      '10': 300
+      '12': 300
+      '14': 200
+expected_review_fields: []
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'feasible: Feasible: 21% of free capacity used, 24 days of slack.'

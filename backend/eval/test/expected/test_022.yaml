@@ -1,0 +1,38 @@
+id: test_022
+classification:
+  category: new_po
+  intents:
+  - new_po
+  has_po_data: true
+extraction:
+  buyer: Lumière Enfant SARL
+  po_number: LE-5502
+  style: LE-HD-44
+  currency: EUR
+  unit_price: '7.90'
+  total_quantity: 3200
+  delivery_date: '2027-02-10'
+  incoterms: FOB
+  port: Chennai
+  destination_country: France
+  line_items:
+  - colour: Rose
+    quantity: 1400
+    sizes:
+      4A: 300
+      6A: 400
+      8A: 400
+      10A: 300
+  - colour: Marine
+    quantity: 1800
+    sizes:
+      4A: 400
+      6A: 500
+      8A: 500
+      10A: 400
+expected_review_fields: []
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: [schedule]
+risk_note: 'infeasible: 3,200 pcs needed but only 1,985 pcs of free capacity remain before 2027-02-10 after other orders (1,215 pcs short).'

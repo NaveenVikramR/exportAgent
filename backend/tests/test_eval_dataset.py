@@ -9,7 +9,7 @@ from app.schemas.extraction import SCALAR_FIELDS, EmailCategory
 from eval.dataset import load_cases, load_expected
 from eval.scoring import values_match
 
-CASES = load_cases()
+CASES = load_cases("dev") + load_cases("test")
 CATEGORIES = {category.value for category in EmailCategory}
 
 
@@ -65,3 +65,12 @@ def test_label_is_well_formed(case):
 )
 def test_values_match(name, expected, actual, match):
     assert values_match(name, expected, actual) is match
+
+
+@pytest.mark.parametrize("case", CASES, ids=lambda case: case.id)
+def test_risk_label_uses_known_groups(case):
+    expected = load_expected(case.id)
+
+    assert set(expected["expected_high_risk"]) <= {"schedule", "value"}
+    if expected["extraction"] is None:
+        assert expected["expected_high_risk"] == []

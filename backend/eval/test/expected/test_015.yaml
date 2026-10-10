@@ -1,0 +1,28 @@
+id: test_015
+classification:
+  category: new_po
+  intents:
+  - new_po
+  has_po_data: true
+extraction:
+  buyer: Hudson & Pike LLC
+  po_number: HP-41022
+  style: HP-PJ-77
+  currency: USD
+  unit_price: '6.75'
+  total_quantity: 3000
+  delivery_date: '2026-12-04'
+  incoterms: FOB
+  port: Chennai
+  destination_country: United States
+  line_items:
+  - colour: Navy Stars
+    quantity: 1500
+  - colour: Pink Hearts
+    quantity: 1500
+expected_review_fields: []
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: [schedule]
+risk_note: 'infeasible: Only 1 production days after the 42-day fabric lead time; the minimum is 10.'

@@ -1,0 +1,35 @@
+id: test_002
+title: 'Revision A: one colour increased with a new size curve'
+sender: Marta Ruiz <marta.ruiz@casalumen.example>
+subject: CL-7731 revisión A / revision A
+received_at: '2026-10-14'
+body: |
+  Hola Karthik,
+
+  Sales are strong on black, so we have revised CL-7731. Revision A is attached; everything else is unchanged.
+
+  Gracias,
+  Marta Ruiz
+  Casa Lumen S.L.
+attachments:
+- filename: PO_CL-7731_RevA.pdf
+  content_type: application/pdf
+  text: |
+    CASA LUMEN S.L.
+    Calle del Mar 21, 46011 Valencia, Spain
+
+    ORDER No.: CL-7731 Revision A
+    Revision date: 14/10/2026
+    Style: CL-DR-410 - Women's jersey midi dress, 95% viscose 5% elastane
+    Price: EUR 7.20 / pc
+    Terms: FOB Chennai
+    Destination: Valencia, Spain
+    Ex-factory: 15/01/2027
+
+    Colour      XS    S     M     L     XL    Total
+    Terracotta  150   300   450   300   150   1350
+    Olive       100   250   350   250   100   1050
+    Black       260   520   800   560   260   2400
+
+    Total quantity: 4,800 pcs
+    Total amount: EUR 34,560.00

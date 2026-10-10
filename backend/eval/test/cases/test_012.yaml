@@ -1,0 +1,31 @@
+id: test_012
+title: 'Revision: price reduced and size curve rebalanced, same total (JPY)'
+sender: Yuki Tanaka <tanaka@sakuralane.example>
+subject: SL-26-118 Rev.1
+received_at: '2026-10-26'
+body: |
+  Dear Karthik-san,
+
+  Following our price negotiation, please find SL-26-118 Rev.1. The unit price is now JPY 495, and we rebalanced the sizes towards M. The total quantity is unchanged.
+
+  Best regards,
+  Yuki Tanaka
+  Sakura Lane K.K.
+attachments:
+- filename: SL-26-118_Rev1.pdf
+  content_type: application/pdf
+  text: |
+    SAKURA LANE K.K.
+    Purchase Order No. SL-26-118  Rev.1
+    Revision date: 2026-10-26
+    Style: SL-LW-07  Women's lounge top, 100% organic cotton waffle
+    Unit price: JPY 495
+    Trade term: FOB Tuticorin
+    Final destination: Yokohama, Japan
+    Ex-factory: 2027-01-29
+
+    Colour   S     M      L     Total
+    Ecru     500   1000   500   2000
+    Sage     300   700    400   1400
+
+    Total: 3,400 pcs   Amount: JPY 1,683,000

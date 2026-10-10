@@ -1,0 +1,31 @@
+id: test_008
+title: Japanese buyer, JPY prices without decimals
+sender: Yuki Tanaka <tanaka@sakuralane.example>
+subject: Purchase order SL-26-118 (loungewear)
+received_at: '2026-10-12'
+body: |
+  Dear Karthik-san,
+
+  Please find our purchase order SL-26-118 for the waffle lounge top. We look forward to your confirmation.
+
+  Best regards,
+  Yuki Tanaka
+  Sakura Lane K.K., Tokyo
+attachments:
+- filename: SL-26-118.pdf
+  content_type: application/pdf
+  text: |
+    SAKURA LANE K.K.
+    Purchase Order No. SL-26-118
+    Issue date: 2026-10-12
+    Style: SL-LW-07  Women's lounge top, 100% organic cotton waffle
+    Unit price: JPY 520
+    Trade term: FOB Tuticorin
+    Final destination: Yokohama, Japan
+    Ex-factory: 2027-01-29
+
+    Colour   S     M     L     Total
+    Ecru     600   900   500   2000
+    Sage     400   600   400   1400
+
+    Total: 3,400 pcs   Amount: JPY 1,768,000

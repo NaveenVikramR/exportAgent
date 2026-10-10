@@ -1,0 +1,14 @@
+id: test_009
+title: 'No PO data: bill of lading and packing list request'
+sender: Priya Shah <p.shah@northgateretail.example>
+subject: NR-54900 shipping documents
+received_at: '2026-10-13'
+body: |
+  Hello,
+
+  Our customs broker needs the bill of lading copy and the packing list for NR-54900, which left Chennai last week. Could you send both today?
+
+  Thanks,
+  Priya Shah
+  Logistics, Northgate Retail Ltd
+attachments: []

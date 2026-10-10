@@ -1,0 +1,45 @@
+id: test_003
+classification:
+  category: new_po
+  intents:
+  - new_po
+  has_po_data: true
+extraction:
+  buyer: Northgate Retail Ltd
+  po_number: NR-55120
+  style: NR-PO-882
+  currency: GBP
+  unit_price: '5.15'
+  total_quantity: 3900
+  delivery_date: '2026-12-20'
+  incoterms: CIF
+  port: Southampton
+  destination_country: United Kingdom
+  line_items:
+  - colour: Navy
+    quantity: 1800
+    sizes:
+      S: 300
+      M: 600
+      L: 600
+      XL: 300
+  - colour: White
+    quantity: 1200
+    sizes:
+      S: 200
+      M: 400
+      L: 400
+      XL: 200
+  - colour: Bottle Green
+    quantity: 900
+    sizes:
+      S: 150
+      M: 300
+      L: 300
+      XL: 150
+expected_review_fields: []
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'feasible: Feasible: 41% of free capacity used, 20 days of slack.'

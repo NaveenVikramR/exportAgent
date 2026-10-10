@@ -1,0 +1,28 @@
+id: test_016
+classification:
+  category: delivery_change
+  intents:
+  - delivery_change
+  has_po_data: true
+extraction:
+  buyer: Alpenrose Textil GmbH
+  po_number: AR-31007
+  style: null
+  currency: null
+  unit_price: null
+  total_quantity: null
+  delivery_date: '2027-02-26'
+  incoterms: null
+  port: null
+  destination_country: null
+  line_items: []
+expected_review_fields: []
+expected_changes:
+- field: delivery_date
+  old: '2027-02-05'
+  new: '2027-02-26'
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'tight: Feasible but tight: 94% of free capacity used, 4 days of slack.'

@@ -20,3 +20,8 @@ extraction:
     - {colour: Lemon, quantity: 1000}
     - {colour: Sky Blue, quantity: 800}
 expected_review_fields: [po_number]
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'no order'

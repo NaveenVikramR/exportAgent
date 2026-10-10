@@ -1,0 +1,14 @@
+id: test_027
+title: 'No PO data: letter of credit amendment'
+sender: Omar Haddad <omar@desertbloom.example>
+subject: LC amendment for DB-2026-077
+received_at: '2026-11-03'
+body: |
+  Dear Karthik,
+
+  Our bank has amended LC No. 0457-26 for DB-2026-077 to extend the expiry date to 31 March 2027. Please check with your bank that the amendment has arrived.
+
+  Regards,
+  Omar Haddad
+  Desert Bloom Trading LLC
+attachments: []

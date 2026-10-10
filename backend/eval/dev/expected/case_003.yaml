@@ -20,3 +20,8 @@ extraction:
     - {colour: Marine, quantity: 2500}
     - {colour: Rouge, quantity: 1500}
 expected_review_fields: []
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'feasible: Feasible: 34% of free capacity used, 60 days of slack.'

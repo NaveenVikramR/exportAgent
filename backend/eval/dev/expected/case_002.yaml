@@ -31,3 +31,8 @@ expected_changes:
   - {field: total_quantity, old: 12000, new: 13500}
   - {field: delivery_date, old: "2026-12-15", new: "2026-11-30"}
   - {field: "line_items.Navy.quantity", old: 4500, new: 6000}
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: [schedule, value]
+risk_note: 'infeasible: 13,500 pcs needed but only 9,314 pcs of free capacity remain before 2026-11-30 after other orders (4,186 pcs short). | value +12.5% (7275.00)'

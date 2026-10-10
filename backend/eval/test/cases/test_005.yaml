@@ -1,0 +1,23 @@
+id: test_005
+title: New order in the body plus a lab dip approval and a payment question, CAD
+sender: Chloé Tremblay <chloe@maplemoss.example>
+subject: New PO MM-2290, lab dip approval, deposit
+received_at: '2026-10-07'
+body: |
+  Hi Karthik,
+
+  Three things:
+
+  1. New order MM-2290, style MM-CR-115 kids' crew sweatshirt, 80/20 cotton-poly fleece:
+     Heather Grey 1,200 pcs and Navy 1,000 pcs, total 2,200 pcs.
+     CAD 6.85 per piece, FOB Tuticorin, ex-factory 10 January 2027, shipping to Montreal, Canada.
+     Size split to follow.
+
+  2. The lab dip for Navy (ref LD-N2) is approved, please go ahead with bulk dyeing.
+
+  3. Our accounts team says the deposit for MM-2210 was sent on 2 October. Can you confirm you received it?
+
+  Merci,
+  Chloé Tremblay
+  Maple & Moss Inc., Montreal
+attachments: []

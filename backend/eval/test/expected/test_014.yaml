@@ -1,0 +1,38 @@
+id: test_014
+classification:
+  category: new_po
+  intents:
+  - new_po
+  has_po_data: true
+extraction:
+  buyer: Alpenrose Textil GmbH
+  po_number: AR-31007
+  style: AR-HN-12
+  currency: EUR
+  unit_price: '8.40'
+  total_quantity: 2100
+  delivery_date: '2027-02-05'
+  incoterms: FOB
+  port: Tuticorin
+  destination_country: Austria
+  line_items:
+  - colour: Charcoal
+    quantity: 1200
+    sizes:
+      S: 200
+      M: 400
+      L: 400
+      XL: 200
+  - colour: Oatmeal
+    quantity: 900
+    sizes:
+      S: 150
+      M: 300
+      L: 300
+      XL: 150
+expected_review_fields: []
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'tight: Feasible but tight: 90% of free capacity used, 6 days of slack.'

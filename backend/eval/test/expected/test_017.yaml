@@ -1,0 +1,39 @@
+id: test_017
+classification:
+  category: po_revision
+  intents:
+  - po_revision
+  has_po_data: true
+extraction:
+  buyer: Maple & Moss Inc.
+  po_number: MM-2290
+  style: MM-CR-115
+  currency: CAD
+  unit_price: '6.85'
+  total_quantity: 3000
+  delivery_date: '2027-01-10'
+  incoterms: FOB
+  port: Tuticorin
+  destination_country: null
+  line_items:
+  - colour: Heather Grey
+    quantity: 1200
+  - colour: Navy
+    quantity: 1000
+  - colour: Forest
+    quantity: 800
+expected_review_fields: []
+skip_fields:
+- destination_country
+expected_changes:
+- field: total_quantity
+  old: 2200
+  new: 3000
+- field: line_items.Forest
+  old: null
+  new: 800
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: [schedule, value]
+risk_note: 'infeasible: 3,000 pcs needed but only 1,914 pcs of free capacity remain before 2027-01-10 after other orders (1,086 pcs short). | value +36.4% (5480.00)'

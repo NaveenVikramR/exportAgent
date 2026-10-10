@@ -1,0 +1,58 @@
+id: test_012
+classification:
+  category: po_revision
+  intents:
+  - po_revision
+  has_po_data: true
+extraction:
+  buyer: Sakura Lane K.K.
+  po_number: SL-26-118
+  style: SL-LW-07
+  currency: JPY
+  unit_price: '495'
+  total_quantity: 3400
+  delivery_date: '2027-01-29'
+  incoterms: FOB
+  port: Tuticorin
+  destination_country: Japan
+  line_items:
+  - colour: Ecru
+    quantity: 2000
+    sizes:
+      S: 500
+      M: 1000
+      L: 500
+  - colour: Sage
+    quantity: 1400
+    sizes:
+      S: 300
+      M: 700
+      L: 400
+expected_review_fields: []
+expected_changes:
+- field: unit_price
+  old: '520'
+  new: '495'
+- field: line_items.Ecru.sizes
+  old:
+    S: 600
+    M: 900
+    L: 500
+  new:
+    S: 500
+    M: 1000
+    L: 500
+- field: line_items.Sage.sizes
+  old:
+    S: 400
+    M: 600
+    L: 400
+  new:
+    S: 300
+    M: 700
+    L: 400
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: [schedule]
+risk_note: "Value -4.8% (JPY 85,000, about USD 570) is not a high-value change. The policy's absolute threshold of 5,000 in the order currency would call it high: a known policy flaw, not the label."

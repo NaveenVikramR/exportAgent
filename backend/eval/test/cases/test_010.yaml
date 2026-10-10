@@ -1,0 +1,18 @@
+id: test_010
+title: 'No PO data: fit comments and a new sample request'
+sender: Camille Laurent <c.laurent@lumiere-enfant.example>
+subject: LE-HD-44 fit comments
+received_at: '2026-10-15'
+body: |
+  Bonjour Karthik,
+
+  Thank you for the fit samples of the kids' hoodie LE-HD-44. Comments from today's fitting:
+  - the hood is 1.5 cm too deep in size 8A
+  - please lengthen the sleeves by 1 cm in all sizes
+
+  Please send a second fit sample in 6A and 8A with these corrections.
+
+  Cordialement,
+  Camille Laurent
+  Lumière Enfant SARL
+attachments: []

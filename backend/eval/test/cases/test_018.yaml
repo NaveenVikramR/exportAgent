@@ -1,0 +1,32 @@
+id: test_018
+title: Dutch/English PO with European number format
+sender: Sanne de Vries <sanne@vdbmode.example>
+subject: PO VDB-6610
+received_at: '2026-10-02'
+body: |
+  Hi Karthik,
+
+  Attached our purchase order VDB-6610 for the organic sweatshirt. Looking forward to your confirmation.
+
+  Met vriendelijke groet,
+  Sanne de Vries
+  Van der Berg Mode B.V.
+attachments:
+- filename: VDB-6610.pdf
+  content_type: application/pdf
+  text: |
+    VAN DER BERG MODE B.V.
+    Inkooporder / Purchase order: VDB-6610
+    Datum: 02-10-2026
+    Artikel / Style: VDB-SW-221 Women's crew sweatshirt, organic cotton fleece
+    Prijs / Price: EUR 9,80
+    Levering / Terms: FOB Chennai
+    Afleveradres / Ship to: Tilburg, Netherlands
+    Ex-factory: 12-02-2027
+
+    Kleur/Colour   S     M     L     XL    Totaal
+    Ecru           250   500   500   250   1500
+    Navy           250   500   500   250   1500
+    Rust           200   400   400   200   1200
+
+    Totaal: 4.200 st.   EUR 41.160,00

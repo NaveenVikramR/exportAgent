@@ -1,0 +1,36 @@
+id: test_008
+classification:
+  category: new_po
+  intents:
+  - new_po
+  has_po_data: true
+extraction:
+  buyer: Sakura Lane K.K.
+  po_number: SL-26-118
+  style: SL-LW-07
+  currency: JPY
+  unit_price: '520'
+  total_quantity: 3400
+  delivery_date: '2027-01-29'
+  incoterms: FOB
+  port: Tuticorin
+  destination_country: Japan
+  line_items:
+  - colour: Ecru
+    quantity: 2000
+    sizes:
+      S: 600
+      M: 900
+      L: 500
+  - colour: Sage
+    quantity: 1400
+    sizes:
+      S: 400
+      M: 600
+      L: 400
+expected_review_fields: []
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'feasible: Feasible: 72% of free capacity used, 18 days of slack.'

@@ -1,0 +1,14 @@
+id: test_011
+title: 'No PO data: shipment status question'
+sender: Omar Haddad <omar@desertbloom.example>
+subject: Where is DB-1140?
+received_at: '2026-10-16'
+body: |
+  Dear Karthik,
+
+  Can you tell me where our container for DB-1140 is? Has it sailed, and what is the ETA at Jebel Ali?
+
+  Regards,
+  Omar Haddad
+  Desert Bloom Trading LLC
+attachments: []

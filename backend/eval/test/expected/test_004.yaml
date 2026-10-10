@@ -1,0 +1,28 @@
+id: test_004
+classification:
+  category: delivery_change
+  intents:
+  - delivery_change
+  has_po_data: true
+extraction:
+  buyer: Northgate Retail Ltd
+  po_number: NR-55120
+  style: null
+  currency: null
+  unit_price: null
+  total_quantity: null
+  delivery_date: '2026-11-27'
+  incoterms: null
+  port: null
+  destination_country: null
+  line_items: []
+expected_review_fields: []
+expected_changes:
+- field: delivery_date
+  old: '2026-12-20'
+  new: '2026-11-27'
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: [schedule]
+risk_note: 'infeasible: Only 0 production days after the 42-day fabric lead time; the minimum is 10.'

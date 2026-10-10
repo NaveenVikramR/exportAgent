@@ -1,0 +1,54 @@
+id: test_025
+classification:
+  category: po_revision
+  intents:
+  - po_revision
+  has_po_data: true
+extraction:
+  buyer: Southern Cross Apparel Pty Ltd
+  po_number: SCA-9014
+  style: null
+  currency: null
+  unit_price: null
+  total_quantity: null
+  delivery_date: '2026-12-04'
+  incoterms: null
+  port: null
+  destination_country: null
+  line_items:
+  - colour: Black
+    quantity: 2000
+    sizes:
+      '8': 400
+      '10': 650
+      '12': 650
+      '14': 300
+expected_review_fields: []
+skip_fields:
+- total_quantity
+expected_changes:
+- field: delivery_date
+  old: '2026-12-18'
+  new: '2026-12-04'
+- field: total_quantity
+  old: 4000
+  new: 4500
+- field: line_items.Black.quantity
+  old: 1500
+  new: 2000
+- field: line_items.Black.sizes
+  old:
+    '8': 300
+    '10': 500
+    '12': 500
+    '14': 200
+  new:
+    '8': 400
+    '10': 650
+    '12': 650
+    '14': 300
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: [schedule, value]
+risk_note: 'infeasible: Only 0 production days after the 42-day fabric lead time; the minimum is 10. | value +12.5% (3100.00)'

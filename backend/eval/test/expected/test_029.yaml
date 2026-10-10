@@ -1,0 +1,31 @@
+id: test_029
+classification:
+  category: po_revision
+  intents:
+  - po_revision
+  has_po_data: true
+extraction:
+  buyer: Fjordline Apparel AS
+  po_number: FJ-3305
+  style: null
+  currency: EUR
+  unit_price: '11.85'
+  total_quantity: null
+  delivery_date: '2026-12-10'
+  incoterms: null
+  port: null
+  destination_country: null
+  line_items: []
+expected_review_fields: []
+expected_changes:
+- field: unit_price
+  old: '11.40'
+  new: '11.85'
+- field: delivery_date
+  old: '2027-01-08'
+  new: '2026-12-10'
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: [schedule]
+risk_note: 'infeasible: Only 0 production days after the 42-day fabric lead time; the minimum is 10. | value +3.9% (855.00)'

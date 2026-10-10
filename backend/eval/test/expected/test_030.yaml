@@ -1,0 +1,64 @@
+id: test_030
+classification:
+  category: po_revision
+  intents:
+  - po_revision
+  has_po_data: true
+extraction:
+  buyer: Desert Bloom Trading LLC
+  po_number: DB-2026-077
+  style: DB-TS-900
+  currency: USD
+  unit_price: '2.10'
+  total_quantity: 2400
+  delivery_date: '2027-02-15'
+  incoterms: CFR
+  port: Jebel Ali
+  destination_country: United Arab Emirates
+  line_items:
+  - colour: White
+    quantity: 800
+    sizes:
+      S: 100
+      M: 200
+      L: 200
+      XL: 200
+      XXL: 100
+  - colour: Black
+    quantity: 800
+    sizes:
+      S: 100
+      M: 200
+      L: 200
+      XL: 200
+      XXL: 100
+  - colour: Grey
+    quantity: 800
+    sizes:
+      S: 100
+      M: 200
+      L: 200
+      XL: 200
+      XXL: 100
+expected_review_fields: []
+expected_changes:
+- field: total_quantity
+  old: 3000
+  new: 2400
+- field: delivery_date
+  old: '2026-12-10'
+  new: '2027-02-15'
+- field: line_items.White.quantity
+  old: 1000
+  new: 800
+- field: line_items.Black.quantity
+  old: 1000
+  new: 800
+- field: line_items.Grey.quantity
+  old: 1000
+  new: 800
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: [schedule, value]
+risk_note: 'infeasible: 2,400 pcs needed but only 0 pcs of free capacity remain before 2027-02-15 after other orders (2,400 pcs short). | value -20.0% (-1260.00)'

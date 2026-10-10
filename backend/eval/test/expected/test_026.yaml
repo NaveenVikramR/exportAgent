@@ -1,0 +1,39 @@
+id: test_026
+classification:
+  category: new_po
+  intents:
+  - new_po
+  has_po_data: true
+extraction:
+  buyer: Copperleaf Ltd
+  po_number: CPL-2044
+  style: CPL-LS-330
+  currency: EUR
+  unit_price: '4.10'
+  total_quantity: 5000
+  delivery_date: '2027-01-20'
+  incoterms: FOB
+  port: Tuticorin
+  destination_country: Ireland
+  line_items:
+  - colour: Black
+    quantity: 2500
+    sizes:
+      S: 400
+      M: 900
+      L: 900
+      XL: 300
+  - colour: Stone
+    quantity: 2500
+    sizes:
+      S: 400
+      M: 900
+      L: 900
+      XL: 300
+expected_review_fields: []
+expected_changes: []
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'feasible: Feasible: 63% of free capacity used, 21 days of slack.'

@@ -1,0 +1,21 @@
+id: test_004
+title: Reply thread pulls the ex-factory date forward three weeks
+sender: James Whitaker <j.whitaker@northgateretail.example>
+subject: 'RE: NR-55120 ex-factory'
+received_at: '2026-10-19'
+body: |
+  Hi Karthik,
+
+  Our launch has moved up. We now need NR-55120 ex-factory 27/11/2026 instead of 20/12/2026. Price and quantities stay as they are. Can you do it?
+
+  James Whitaker
+  Northgate Retail Ltd
+
+  -----Original Message-----
+  From: Karthik <merch@srivelanknits.example>
+  Sent: 12/10/2026
+  Subject: NR-55120 ex-factory
+
+  Dear James, confirming NR-55120 is planned for ex-factory 20/12/2026. Fabric knitting starts next week.
+  Regards, Karthik
+attachments: []

@@ -1,0 +1,17 @@
+id: test_014
+title: PO in the email body with sizes written inline, EUR
+sender: Lena Gruber <l.gruber@alpenrose-textil.example>
+subject: Bestellung / PO AR-31007
+received_at: '2026-10-21'
+body: |
+  Grüß Gott Karthik,
+
+  Please book PO AR-31007 for style AR-HN-12 (men's henley, 100% cotton slub):
+  - Charcoal: S-200 / M-400 / L-400 / XL-200 = 1,200 pcs
+  - Oatmeal: S-150 / M-300 / L-300 / XL-150 = 900 pcs
+  Total 2,100 pcs at EUR 8.40, FOB Tuticorin, ex-factory 05.02.2027, destination Innsbruck, Austria.
+
+  Mit freundlichen Grüßen
+  Lena Gruber
+  Alpenrose Textil GmbH
+attachments: []

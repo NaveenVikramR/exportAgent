@@ -1,0 +1,48 @@
+id: test_013
+classification:
+  category: new_po
+  intents:
+  - new_po
+  has_po_data: true
+extraction:
+  buyer: Desert Bloom Trading LLC
+  po_number: DB-2026-077
+  style: DB-TS-900
+  currency: USD
+  unit_price: '2.10'
+  total_quantity: 3000
+  delivery_date: '2026-12-10'
+  incoterms: CFR
+  port: Jebel Ali
+  destination_country: United Arab Emirates
+  line_items:
+  - colour: White
+    quantity: 1000
+    sizes:
+      S: 125
+      M: 250
+      L: 250
+      XL: 250
+      XXL: 125
+  - colour: Black
+    quantity: 1000
+    sizes:
+      S: 125
+      M: 250
+      L: 250
+      XL: 250
+      XXL: 125
+  - colour: Grey
+    quantity: 1000
+    sizes:
+      S: 125
+      M: 250
+      L: 250
+      XL: 250
+      XXL: 125
+expected_review_fields: []
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: [schedule]
+risk_note: 'infeasible: Only 9 production days after the 42-day fabric lead time; the minimum is 10.'
