@@ -69,22 +69,42 @@ def test_pulled_forward_revision_is_flagged_high_with_evidence(settings, session
         run = run_agent(session, email, _mock_router(settings, session_factory), search=fake_search)
 
         assert run.status == "completed"
-        assert run.rounds <= MAX_ROUNDS
-        tools = [step.name for step in run.steps if step.kind == "tool"]
-        assert tools[:1] == ["find_order"]
-        assert {"diff_po_versions", "check_delivery_feasibility", "check_compliance"} <= set(tools)
+        prefetched = [(s.name, s.evidence_id) for s in run.steps if s.kind == "tool" and s.round == 0]
+        assert prefetched == [
+            ("find_order", "E1"), ("diff_po_versions", "E2"), ("check_delivery_feasibility", "E3"),
+            ("check_delivery_feasibility", "E4"), ("propose_delivery_options", "E5"),
+        ]
+        current, previous = (s for s in run.steps if s.name == "check_delivery_feasibility")
+        assert current.output["verdict"] == "infeasible" and current.output["other_orders_load"] == 8400
+        assert previous.output["delivery_date"] == "2026-12-15" and previous.output["verdict"] == "feasible"
+        # In the loop the planner only had the optional tools.
+        assert [s.name for s in run.steps if s.kind == "tool" and s.round > 0] == ["check_compliance"]
 
         flags = run.result["flags"]
-        assert flags[0]["severity"] == "high"
-        assert flags[0]["category"] == "capacity"
-        assert flags[0]["verified"] is True
-        feasibility = next(s for s in run.steps if s.name == "check_delivery_feasibility")
-        assert flags[0]["evidence"] == [feasibility.evidence_id]
-        assert feasibility.output["verdict"] == "infeasible"
-        assert feasibility.output["other_orders_load"] == 8400
+        capacity = next(f for f in flags if f["category"] == "capacity")
+        assert (capacity["severity"], capacity["evidence"], capacity["verified"]) == ("high", ["E3"], True)
+        value = next(f for f in flags if f["category"] == "price")
+        assert (value["severity"], value["source"], value["evidence"]) == ("high", "rule", ["E2"])
+        assert "+12.5%" in value["reason"]
         assert any(f["category"] == "delivery" for f in flags)
-        compliance = next(f for f in flags if f["category"] == "compliance")
-        assert "https://example.eu/textile-labels" in compliance["evidence"]
+        # Background compliance results are info, not a flag.
+        assert not any(f["category"] == "compliance" for f in flags)
+        assert "https://example.eu/textile-labels" in run.result["info_checked"][0]["evidence"]
+
+
+def test_delivery_options_find_the_earliest_feasible_date_and_a_split(settings, session_factory, demo):
+    with session_factory() as session:
+        run = run_agent(session, session.get(Email, demo), _mock_router(settings, session_factory), search=fake_search)
+        options = next(s for s in run.steps if s.name == "propose_delivery_options").output
+
+    assert options["options_needed"] is True
+    assert options["requested_date"] == "2026-11-30" and options["quantity"] == 13500
+    earliest = options["earliest_feasible_date_full_quantity"]
+    assert "2026-11-30" < earliest <= "2026-12-31"
+    split = options["partial_shipment"]
+    # 9,314 pcs of capacity remain by 30 Nov, rounded down to 9,300
+    assert (split["quantity_on_requested_date"], split["balance_quantity"]) == (9300, 4200)
+    assert split["balance_date"] == earliest
 
 
 def test_every_model_call_is_logged_against_the_run(settings, session_factory, demo):
@@ -97,12 +117,45 @@ def test_every_model_call_is_logged_against_the_run(settings, session_factory, d
         assert {s.call_id for s in llm_steps} == {c.id for c in calls}
 
 
-def _scripted_run(settings, session_factory, email_id, replies, default=None):
+def _scripted_run(settings, session_factory, email_id, replies, default=None, prefetch=False):
     client = ScriptedClient(replies, default=default)
     router = LLMRouter(settings, client=client, session_factory=session_factory)
     with session_factory() as session:
-        run = run_agent(session, session.get(Email, email_id), router, search=fake_search)
+        run = run_agent(session, session.get(Email, email_id), router, search=fake_search, prefetch=prefetch)
         return run, client, list(run.steps)
+
+
+def test_with_prefetch_ultra_can_answer_in_one_call(settings, session_factory, demo):
+    final = reply(json.dumps({"summary": "Revision is infeasible.", "flags": [
+        {"severity": "high", "category": "capacity", "reason": "4,186 pcs short by 30 Nov.", "evidence": ["E3"]},
+    ]}))
+
+    run, client, steps = _scripted_run(settings, session_factory, demo, [final], prefetch=True)
+
+    assert len(client.requests) == 1
+    request = client.requests[0]
+    assert {t["function"]["name"] for t in request["tools"]} == {
+        "check_compliance", "lookup_buyer", "check_delivery_feasibility"
+    }
+    observation = json.loads(request["messages"][1]["content"])
+    assert [item["tool"] for item in observation["prefetched_evidence"]][:3] == [
+        "find_order", "diff_po_versions", "check_delivery_feasibility"
+    ]
+    assert run.result["flags"][0]["evidence"] == ["E3"]
+
+
+def test_with_prefetch_the_order_tools_are_not_offered_again(settings, session_factory, demo):
+    replies = [
+        reply(tool_calls=[("find_order", {"po_number": "NW-45120"}), ("diff_po_versions", {"order_id": 1, "from_version": 1, "to_version": 2})]),
+        reply(json.dumps({"summary": "Done.", "flags": []})),
+    ]
+
+    run, _, steps = _scripted_run(settings, session_factory, demo, replies, prefetch=True)
+
+    loop_steps = [s for s in steps if s.kind == "tool" and s.round == 1]
+    # find_order with the same arguments is a repeat of E1; the diff was pre-fetched too
+    assert loop_steps[0].output["duplicate_of"] == "E1"
+    assert loop_steps[1].output["duplicate_of"] == "E2"
 
 
 def test_hard_cap_of_eight_tool_rounds(settings, session_factory, demo):
@@ -126,15 +179,16 @@ def test_invented_evidence_is_dropped_and_missing_high_risk_is_added(settings, s
     replies = [
         reply(tool_calls=[("check_delivery_feasibility", {"order_id": order_id})]),
         reply(json.dumps({"summary": "Looks fine.", "flags": [
-            {"severity": "low", "category": "buyer", "reason": "Long-standing buyer.",
+            {"severity": "low", "category": "quantity", "reason": "Quantity looks fine.",
              "evidence": ["E9", "https://made-up.example"]},
         ]})),
     ]
 
     run, _, _ = _scripted_run(settings, session_factory, demo, replies)
 
-    buyer_flag = next(f for f in run.result["flags"] if f["category"] == "buyer")
-    assert buyer_flag["evidence"] == [] and buyer_flag["verified"] is False
+    assert not any(f["category"] == "quantity" for f in run.result["flags"])
+    demoted = run.result["info_checked"][0]
+    assert demoted["evidence"] == [] and "no verifiable evidence" in demoted["note"]
     rule_flag = run.result["flags"][0]
     assert (rule_flag["severity"], rule_flag["source"], rule_flag["evidence"]) == ("high", "rule", ["E1"])
 

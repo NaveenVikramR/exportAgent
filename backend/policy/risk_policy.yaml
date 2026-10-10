@@ -1,0 +1,25 @@
+# Risk flag policy, enforced in Python after the agent's report (app/services/risk_policy.py).
+# The model proposes flags; these rules decide what stays a flag and how severe it is.
+
+severity:
+  # High is reserved for findings that cost money or a delivery date:
+  #  - the current plan is infeasible (capacity or lead time), or
+  #  - the contract value changed by more than either threshold below.
+  high_contract_value_change_pct: 10
+  high_contract_value_change_abs: 5000   # in the order currency
+  # Medium: needs a decision or confirmation before replying (tight capacity, a date pulled
+  # forward that is still feasible, a smaller value change, missing order data).
+  # Low: minor, worth knowing.
+
+flags:
+  # A compliance flag must name a concrete rule that applies to this shipment and cite a source URL.
+  compliance_requires_rule_and_url: true
+  # A buyer flag needs an adverse finding (e.g. insolvency, sanctions, fraud reports) with a source URL.
+  buyer_requires_adverse_finding_and_url: true
+  # Anything that does not meet these bars is listed under "Info checked" instead of as a flag.
+
+delivery_options:
+  # How far past the requested date to search for the earliest feasible date
+  search_days: 120
+  # Partial shipments are rounded down to this many pieces
+  partial_round_to: 100

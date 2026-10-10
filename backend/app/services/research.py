@@ -19,9 +19,13 @@ def cached_search(
     *,
     max_results: int = 4,
     search: Callable[..., tavily_client.SearchResponse] = tavily_client.search,
+    key: str | None = None,
 ) -> dict[str, Any]:
-    """{"query", "answer", "sources": [{"title", "url", "snippet"}], "cached"}. Raises TavilyError."""
-    key = hashlib.sha256(f"{max_results}|{query}".encode("utf-8")).hexdigest()
+    """{"query", "answer", "sources": [{"title", "url", "snippet"}], "cached"}. Raises TavilyError.
+
+    `key` overrides the cache key (callers pass a normalised, dated key); default is the query.
+    """
+    key = hashlib.sha256(f"{max_results}|{key or query}".encode("utf-8")).hexdigest()
     row = session.get(SearchCache, key)
     if row is not None:
         return {**row.response, "cached": True}

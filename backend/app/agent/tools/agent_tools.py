@@ -20,6 +20,7 @@ from app.services import tavily_client
 from app.services.orders import find_order as find_order_by_po
 from app.services.profiles import FactoryProfile
 from app.services.research import cached_search
+from app.services.risk_policy import contract_value_change, load_policy
 
 
 @dataclass
@@ -98,6 +99,16 @@ TOOL_SPECS: list[dict[str, Any]] = [
 ]
 
 
+_SPECS_BY_NAME = {spec["function"]["name"]: spec for spec in TOOL_SPECS}
+# With pre-fetch, Python has already looked up the order, diffed it and checked feasibility;
+# Ultra keeps the optional web lookups and a what-if feasibility check (e.g. fabric already in-house).
+LOOP_TOOL_SPECS: list[dict[str, Any]] = [
+    _SPECS_BY_NAME["check_compliance"],
+    _SPECS_BY_NAME["lookup_buyer"],
+    _SPECS_BY_NAME["check_delivery_feasibility"],
+]
+
+
 def _order_or_error(ctx: ToolContext, order_id: Any) -> Order:
     order = ctx.session.get(Order, int(order_id)) if str(order_id).isdigit() else None
     if order is None:
@@ -157,6 +168,7 @@ def _diff(ctx: ToolContext, order_id: Any, from_version: int, to_version: int) -
         "to_version": to_version,
         "changes": [change.model_dump(mode="json") for change in changes],
         "alerts": sorted({c.alert for c in changes if c.alert}),
+        "contract_value": contract_value_change(by_number[from_version].data, by_number[to_version].data),
     }
     summary = f"v{from_version} → v{to_version}: {len(changes)} changes" + (
         f" ({', '.join(result['alerts'])})" if result["alerts"] else ""
@@ -164,8 +176,8 @@ def _diff(ctx: ToolContext, order_id: Any, from_version: int, to_version: int) -
     return result, summary
 
 
-def _other_orders_load(ctx: ToolContext, order: Order, delivery: date) -> tuple[int, list[dict]]:
-    """Other orders known on the as-of date and due by `delivery`: they compete for the same capacity."""
+def _competing_orders(ctx: ToolContext, order: Order) -> list[dict]:
+    """Other orders known on the as-of date, with a due date and quantity."""
     known_by = datetime.combine(ctx.as_of + timedelta(days=1), time(), tzinfo=UTC)
     order_ids = set(
         ctx.session.scalars(
@@ -174,14 +186,23 @@ def _other_orders_load(ctx: ToolContext, order: Order, delivery: date) -> tuple[
             )
         )
     )
-    load, contributing = 0, []
+    competing = []
     for other in ctx.session.scalars(select(Order).where(Order.id.in_(order_ids))):
         data = other.versions[-1].data if other.versions else {}
         due, qty = data.get("delivery_date"), data.get("total_quantity")
-        if due and qty and ctx.as_of < date.fromisoformat(due) <= delivery:
-            load += int(qty)
-            contributing.append({"po_number": other.po_number, "delivery_date": due, "quantity": qty})
-    return load, contributing
+        if due and qty:
+            competing.append({"po_number": other.po_number, "delivery_date": due, "quantity": int(qty)})
+    return competing
+
+
+def _load_by(ctx: ToolContext, competing: list[dict], delivery: date) -> tuple[int, list[dict]]:
+    """Orders due after the as-of date and by `delivery` compete for the same capacity."""
+    due = [o for o in competing if ctx.as_of < date.fromisoformat(o["delivery_date"]) <= delivery]
+    return sum(o["quantity"] for o in due), due
+
+
+def _other_orders_load(ctx: ToolContext, order: Order, delivery: date) -> tuple[int, list[dict]]:
+    return _load_by(ctx, _competing_orders(ctx, order), delivery)
 
 
 def _feasibility(
@@ -214,32 +235,91 @@ def _feasibility(
     return result, f"{result['verdict'].upper()} for {qty:,} pcs by {target.isoformat()}: {result['reason']}"
 
 
-def _search_tool(ctx: ToolContext, name: str, query: str) -> tuple[dict, str]:
+def _delivery_options(ctx: ToolContext, order_id: Any) -> tuple[dict, str]:
+    """When the current plan is infeasible: the earliest feasible date, and what could ship on time."""
+    order = _order_or_error(ctx, order_id)
+    current = order.versions[-1].data
+    if not (current.get("delivery_date") and current.get("total_quantity")):
+        raise ValueError("The order needs a delivery date and quantity.")
+    requested, qty = date.fromisoformat(current["delivery_date"]), int(current["total_quantity"])
+    policy = load_policy().delivery_options
+    competing = _competing_orders(ctx, order)
+
+    def plan(target: date, quantity: int):
+        load, _ = _load_by(ctx, competing, target)
+        return check_feasibility(quantity=quantity, delivery_date=target, as_of=ctx.as_of,
+                                 profile=ctx.profile, other_orders_load=load)
+
+    on_time = plan(requested, qty)
+    result: dict[str, Any] = {"order_id": order.id, "requested_date": requested.isoformat(),
+                              "quantity": qty, "current_verdict": on_time.verdict}
+    if on_time.verdict != "infeasible":
+        return result | {"options_needed": False}, f"No alternative needed: {on_time.verdict} as requested."
+
+    earliest = next(
+        (requested + timedelta(days=d) for d in range(1, policy.search_days + 1)
+         if plan(requested + timedelta(days=d), qty).verdict != "infeasible"),
+        None,
+    )
+    step = policy.partial_round_to
+    partial = max(on_time.capacity_left_for_order, 0) // step * step
+    result |= {
+        "options_needed": True,
+        "earliest_feasible_date_full_quantity": earliest.isoformat() if earliest else None,
+        "partial_shipment": (
+            {"quantity_on_requested_date": partial, "requested_date": requested.isoformat(),
+             "balance_quantity": qty - partial, "balance_date": earliest.isoformat() if earliest else None}
+            if partial > 0 else None
+        ),
+    }
+    summary = f"Full {qty:,} pcs feasible from {result['earliest_feasible_date_full_quantity'] or 'no date found'}"
+    if partial > 0:
+        summary += f"; or {partial:,} pcs by {requested.isoformat()} and {qty - partial:,} pcs later"
+    return result, summary
+
+
+def _normalise(text: str) -> str:
+    text = text.casefold().replace("'", "").replace("’", "")
+    return " ".join("".join(ch if ch.isalnum() else " " for ch in text).split())
+
+
+_LEGAL_SUFFIXES = {"gmbh", "ltd", "inc", "sas", "llc", "bv", "pty", "co", "limited", "plc", "ag", "sa"}
+
+
+def _search_tool(ctx: ToolContext, name: str, query: str, key: str) -> tuple[dict, str]:
     ctx.calls[name] = ctx.calls.get(name, 0) + 1
     if ctx.calls[name] > _MAX_SEARCHES_PER_TOOL:
         raise ValueError(f"{name} already used {_MAX_SEARCHES_PER_TOOL} times in this run.")
-    result = cached_search(ctx.session, query, search=ctx.search)
+    # Cached per normalised key and per day, so near-identical calls do not search again.
+    day = datetime.now(UTC).date().isoformat()
+    result = cached_search(ctx.session, query, search=ctx.search, key=f"{key}|{day}")
     summary = f"{len(result['sources'])} sources" + (" (cached)" if result.get("cached") else "") + f" for: {query}"
     return result, summary
 
 
 def _compliance(ctx: ToolContext, destination_country: str, product: str) -> tuple[dict, str]:
     query = f"{product} import requirements {destination_country}: labelling, fibre composition, care labels, chemical restrictions"
-    return _search_tool(ctx, "check_compliance", query)
+    return _search_tool(ctx, "check_compliance", query,
+                        key=f"compliance|{_normalise(destination_country)}|{_normalise(product)}")
 
 
 def _buyer(ctx: ToolContext, company_name: str, country: str | None = None) -> tuple[dict, str]:
-    query = f"{company_name} {country or ''} apparel company profile".strip()
-    return _search_tool(ctx, "lookup_buyer", query)
+    query = " ".join(part for part in (company_name, country, "apparel company news") if part)
+    name = " ".join(w for w in _normalise(company_name).split() if w not in _LEGAL_SUFFIXES)
+    return _search_tool(ctx, "lookup_buyer", query, key=f"buyer|{name}")
 
 
 _IMPLEMENTATIONS: dict[str, Callable[..., tuple[dict, str]]] = {
     "find_order": _find_order,
     "diff_po_versions": _diff,
     "check_delivery_feasibility": _feasibility,
+    "propose_delivery_options": _delivery_options,
     "check_compliance": _compliance,
     "lookup_buyer": _buyer,
 }
+
+
+TOOL_NAMES = frozenset(_IMPLEMENTATIONS)
 
 
 def run_tool(ctx: ToolContext, name: str, arguments: str) -> tuple[dict, dict, str]:

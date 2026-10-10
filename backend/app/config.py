@@ -50,6 +50,9 @@ class Settings(BaseSettings):
 
     tavily_api_key: str | None = None
 
+    # Run the deterministic order checks in Python before the agent loop (see app/agent/loop.py)
+    agent_prefetch: bool = True
+
     # Factory/country profile new orders are processed under (profiles arrive in a later milestone)
     factory_profile: str = "india_tiruppur"
 
