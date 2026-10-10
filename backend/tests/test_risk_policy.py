@@ -59,9 +59,10 @@ def test_high_needs_a_matching_finding():
 
     data = _by_category(report, "data_quality")
     assert (data.severity, data.severity_adjusted_from) == ("medium", "high")
-    # A low flag on an infeasible plan stays low; the rule adds the high finding next to it.
-    capacity = [(f.severity, f.source) for f in report.flags if f.category == "capacity"]
-    assert sorted(capacity) == [("high", "rule"), ("low", "model")]
+    # The model's low flag on an infeasible plan is not upgraded; the rule adds the high finding,
+    # and merging folds the model's wording into it.
+    capacity = _by_category(report, "capacity")
+    assert (capacity.severity, capacity.reason, capacity.related) == ("high", "4,186 pcs short.", ["Capacity issue."])
     assert _by_category(report, "delivery").severity == "medium"
 
 
@@ -109,3 +110,29 @@ def test_search_cache_key_is_normalised(session_factory):
 
     assert len(calls) == 2
     assert second["cached"] is True and buyer_again["cached"] is True
+
+
+def test_flags_are_merged_to_one_per_category():
+    report = _apply(
+        _flag(severity="medium", category="delivery", reason="Pulled forward 14 days.", evidence=["E2"]),
+        _flag(severity="high", category="delivery", reason="New date infeasible.", evidence=["E1"]),
+        _flag(severity="low", category="delivery", reason="Old date also tight.", evidence=["E1", "E4"]),
+        _flag(severity="medium", category="compliance", reason="Fibre labels.", rule="EU 1007/2011", evidence=["E3", URL]),
+        _flag(severity="medium", category="compliance", reason="Care labels.", rule="DIN EN ISO 3758", evidence=[URL]),
+    )
+
+    categories = [f.category for f in report.flags]
+    assert len(categories) == len(set(categories))
+    delivery = _by_category(report, "delivery")
+    assert (delivery.severity, delivery.reason) == ("high", "New date infeasible.")
+    assert delivery.evidence == ["E1", "E2", "E4"]
+    assert delivery.related == ["Pulled forward 14 days.", "Old date also tight."]
+    compliance = _by_category(report, "compliance")
+    assert compliance.related == ["Care labels."] and compliance.evidence == ["E3", URL]
+
+
+def test_merged_flag_keeps_the_models_wording_over_a_rule():
+    report = _apply(_flag(severity="high", category="capacity", reason="Short by 4,186 pcs.", evidence=["E1"]))
+
+    [capacity] = [f for f in report.flags if f.category == "capacity"]
+    assert (capacity.reason, capacity.source) == ("Short by 4,186 pcs.", "model")

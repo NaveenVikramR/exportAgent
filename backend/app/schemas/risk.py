@@ -27,6 +27,8 @@ class RiskFlag(BaseModel):
     source: Literal["model", "rule"] = "model"
     # set when the severity rubric changed the model's severity
     severity_adjusted_from: Severity | None = None
+    # reasons of other findings in the same category, merged into this flag
+    related: list[str] = Field(default_factory=list)
 
     @field_validator("reason")
     @classmethod

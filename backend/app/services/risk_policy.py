@@ -5,7 +5,8 @@ The model proposes flags; Python decides what remains a flag, and how severe:
 - a compliance flag needs a concrete rule and a source URL;
 - a buyer flag needs an adverse finding and a source URL;
 - high is only for an infeasible plan or a contract value change above the threshold;
-- anything that falls short moves to "Info checked".
+- anything that falls short moves to "Info checked";
+- finally, flags are merged to one per category.
 """
 
 from decimal import Decimal, InvalidOperation
@@ -148,5 +149,30 @@ def apply_policy(report: RiskReport, evidence: dict[str, dict], policy: RiskPoli
                 reason=change["detail"] if change else "Delivery date pulled forward in the latest PO version.",
             ))
 
-    flags.sort(key=lambda f: -_RANK[f.severity])
-    return RiskReport(summary=report.summary, flags=flags, info_checked=info)
+    return RiskReport(summary=report.summary, flags=merge_flags(flags), info_checked=info)
+
+
+def merge_flags(flags: list[RiskFlag]) -> list[RiskFlag]:
+    """One flag per category: the most severe finding leads, the others become related notes.
+
+    Evidence is combined; a merged flag counts as from the model if any of its findings was.
+    """
+    groups: dict[str, list[RiskFlag]] = {}
+    for flag in flags:
+        groups.setdefault(flag.category, []).append(flag)
+    merged = []
+    for group in groups.values():
+        # Most severe first; among equals, the model's own wording before a rule's.
+        group.sort(key=lambda f: (-_RANK[f.severity], f.source == "rule"))
+        lead = group[0].model_copy(deep=True)
+        for other in group[1:]:
+            lead.evidence += [item for item in other.evidence if item not in lead.evidence]
+            if other.reason != lead.reason and other.reason not in lead.related:
+                lead.related.append(other.reason)
+            lead.rule = lead.rule or other.rule
+            lead.adverse_finding = lead.adverse_finding or other.adverse_finding
+        lead.verified = any(f.verified for f in group)
+        lead.source = "model" if any(f.source == "model" for f in group) else "rule"
+        merged.append(lead)
+    merged.sort(key=lambda f: -_RANK[f.severity])
+    return merged
