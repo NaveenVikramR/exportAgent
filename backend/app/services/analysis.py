@@ -8,7 +8,6 @@ from sqlalchemy.orm import Session
 from app.agent.tools.classify import classify_email
 from app.agent.tools.extract import extract_po_fields
 from app.agent.tools.stated_changes import extract_stated_changes
-from app.config import get_settings
 from app.llm.router import LLMError, LLMRouter, SpendCapExceeded
 from app.models import Email
 from app.schemas.extraction import Classification, EmailCategory, ReviewedExtraction
@@ -62,10 +61,15 @@ def analyse_text(router: LLMRouter, text: str) -> Analysis:
     classification = classify_email(router, text)
     if not classification.has_po_data:
         return Analysis(classification=classification, extraction=None)
-    threshold = get_settings().review_confidence_threshold
+    settings = router.settings
+    threshold = settings.review_confidence_threshold
     extraction = extract_po_fields(router, text)
     reviewed = review_extraction(extraction, text, classification.category, threshold)
-    final = escalate(router, reviewed, text, classification.category, threshold)
+    final = (
+        escalate(router, reviewed, text, classification.category, threshold)
+        if settings.escalation_enabled
+        else reviewed
+    )
     stated = (
         extract_stated_changes(router, text)
         if classification.category in _CHANGE_CATEGORIES
@@ -79,8 +83,11 @@ def analyse_text(router: LLMRouter, text: str) -> Analysis:
     )
 
 
-def analyse_email(session: Session, email: Email, router: LLMRouter) -> Email:
-    """Run the analysis and store it. A failed run never discards an earlier result."""
+def analyse_email(session: Session, email: Email, router: LLMRouter) -> Analysis | None:
+    """Run the analysis and store it on the email. A failed run never discards an earlier result.
+
+    Returns the analysis, or None when it failed (the error is stored on the email).
+    """
     try:
         analysis = analyse_text(router, email_text(email))
     except SpendCapExceeded:
@@ -91,7 +98,7 @@ def analyse_email(session: Session, email: Email, router: LLMRouter) -> Email:
         if email.classification is None:
             email.status = "needs_review"
         session.commit()
-        return email
+        return None
 
     email.classification = analysis.classification.model_dump(mode="json")
     email.extraction = analysis.extraction.model_dump(mode="json") if analysis.extraction else None
@@ -101,4 +108,4 @@ def analyse_email(session: Session, email: Email, router: LLMRouter) -> Email:
     needs_review = bool(analysis.extraction and analysis.extraction.review)
     email.status = "needs_review" if needs_review else "analysed"
     session.commit()
-    return email
+    return analysis

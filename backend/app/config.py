@@ -50,6 +50,8 @@ class Settings(BaseSettings):
 
     tavily_api_key: str | None = None
 
+    # Re-extract fields that fail a Python check with the stronger model (off = Nano-only baseline)
+    escalation_enabled: bool = True
     # Run the deterministic order checks in Python before the agent loop (see app/agent/loop.py)
     agent_prefetch: bool = True
 
