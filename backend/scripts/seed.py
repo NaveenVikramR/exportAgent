@@ -1,8 +1,9 @@
 """Loads the demo emails into the inbox. Safe to re-run: existing emails are left alone.
 
-Usage (from backend/):  python -m scripts.seed [--analyse] [--agent]
+Usage (from backend/):  python -m scripts.seed [--analyse] [--agent] [--drafts]
 --analyse also runs classification and extraction, so results are stored up front.
 --agent then runs the risk agent on every email linked to an order.
+--drafts then drafts a reply (and an internal note for orders) for every analysed email.
 """
 
 import argparse
@@ -16,6 +17,7 @@ from app.db import SessionLocal
 from app.llm.router import SpendCapExceeded, get_router
 from app.models import AgentRun, Email, EmailAttachment
 from app.services.analysis import analyse_email
+from app.services.drafting import DraftingError, generate_drafts
 from eval.dataset import load_cases
 
 
@@ -26,10 +28,22 @@ def _assess(session, email: Email, router) -> None:
     print(f"  agent: {run.status}, {run.rounds} rounds, {found}" + (f" ({run.error})" if run.error else ""))
 
 
+def _draft(session, email: Email, router) -> None:
+    try:
+        drafts = generate_drafts(session, email, router)
+    except DraftingError as exc:
+        print(f"  drafts: skipped ({exc})")
+        return
+    for draft in drafts:
+        violations = len((draft.fact_check or {}).get("violations", []))
+        print(f"  draft {draft.kind}: {len(draft.body.split())} words, {violations} fact-check violations")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--analyse", action="store_true")
     parser.add_argument("--agent", action="store_true")
+    parser.add_argument("--drafts", action="store_true")
     args = parser.parse_args()
 
     added = 0
@@ -73,6 +87,8 @@ def main() -> int:
                     # Assess each email as it arrives, so it sees the order as it was then.
                     if args.agent and email.order_id is not None:
                         _assess(session, email, router)
+                    if args.drafts and (args.agent or email.order_id is None):
+                        _draft(session, email, router)
                 except SpendCapExceeded as exc:
                     print(f"Stopped: {exc}")
                     return 1

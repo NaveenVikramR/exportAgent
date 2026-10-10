@@ -194,11 +194,19 @@ class Draft(Base):
     run_id: Mapped[int | None] = mapped_column(ForeignKey("agent_runs.id"))
     # buyer_reply | internal_note
     kind: Mapped[str] = mapped_column(String(20))
+    subject: Mapped[str | None] = mapped_column(String(500))
     body: Mapped[str] = mapped_column(Text)
     edited_body: Mapped[str | None] = mapped_column(Text)
-    # pending | approved | rejected | sent
+    # pending | sent (approved; no real email leaves the system) | rejected | superseded
     status: Mapped[str] = mapped_column(String(20), default="pending", index=True)
+    # every date, quantity and price in the text checked against the source data
+    fact_check: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
+    # the router's log row for the drafting call (model, tokens, cost)
+    call_id: Mapped[int | None] = mapped_column(ForeignKey("llm_calls.id", name="fk_drafts_call_id_llm_calls"))
+    reviewed_by: Mapped[str | None] = mapped_column(String(100))
     reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    reject_reason: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
 

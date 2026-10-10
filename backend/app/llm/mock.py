@@ -14,6 +14,7 @@ from typing import Any
 
 from app.llm.prompts.common import EMAIL_CLOSE, EMAIL_OPEN
 from app.llm.mock_agent import mock_plan
+from app.llm.mock_drafts import mock_note, mock_reply
 from app.llm.tasks import TaskType
 
 _MONTHS = {m: i for i, m in enumerate(
@@ -52,6 +53,10 @@ def mock_completion(
     """{"content": str | None, "tool_calls": [{"id", "name", "arguments"}]}"""
     if task in (TaskType.PLANNING, TaskType.RISK_REASONING):
         return mock_plan(messages, tools)
+    if task is TaskType.DRAFT_REPLY:
+        return {"content": mock_reply(messages)}
+    if task is TaskType.DRAFT_INTERNAL_NOTE:
+        return {"content": mock_note(messages)}
     text = _email_text(messages)
     if task is TaskType.CLASSIFY:
         return {"content": json.dumps(_classify(text))}

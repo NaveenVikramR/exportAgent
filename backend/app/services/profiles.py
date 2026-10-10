@@ -28,6 +28,8 @@ class Thresholds(BaseModel):
 class FactoryProfile(BaseModel):
     id: str
     factory: str
+    contact_name: str
+    contact_role: str
     city: str
     country: str
     export_currency: str

@@ -2,6 +2,9 @@
 # Capacity figures are illustrative for a ~150-person knitwear unit.
 id: india_tiruppur
 factory: Sri Velan Knits
+# signs buyer replies
+contact_name: Karthik
+contact_role: Merchandiser
 city: Tiruppur
 country: India
 export_currency: USD
