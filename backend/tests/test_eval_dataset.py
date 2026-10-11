@@ -72,6 +72,8 @@ def test_values_match(name, expected, actual, match):
 def test_risk_label_uses_known_groups(case):
     expected = load_expected(case.id)
 
-    assert set(expected["expected_high_risk"]) <= {"schedule", "value"}
+    # Optional in TEST v2 labels (eval.label_risk derives it); absent means none.
+    high = expected.get("expected_high_risk", [])
+    assert set(high) <= {"schedule", "value"}
     if expected["extraction"] is None:
-        assert expected["expected_high_risk"] == []
+        assert high == []
