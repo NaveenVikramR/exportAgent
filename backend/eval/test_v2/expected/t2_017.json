@@ -1,0 +1,59 @@
+{
+  "id": "t2_017",
+  "classification": {
+    "category": "new_po",
+    "intents": [
+      "new_po"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Pinecrest Kids Co.",
+    "po_number": "PKC-6083",
+    "style": "PK-TS-55",
+    "currency": "USD",
+    "unit_price": "2.95",
+    "total_quantity": 2000,
+    "delivery_date": "2027-01-20",
+    "incoterms": "FOB",
+    "port": "Tuticorin",
+    "destination_country": "Canada",
+    "line_items": [
+      {
+        "colour": "Sky Blue Dino",
+        "quantity": 800,
+        "sizes": {
+          "2T": 200,
+          "3T": 200,
+          "4T": 200,
+          "5T": 200
+        }
+      },
+      {
+        "colour": "Lime Rocket",
+        "quantity": 800,
+        "sizes": {
+          "2T": 200,
+          "3T": 200,
+          "4T": 200,
+          "5T": 200
+        }
+      },
+      {
+        "colour": "Berry Pop",
+        "quantity": 400,
+        "sizes": {
+          "2T": 100,
+          "3T": 100,
+          "4T": 100,
+          "5T": 100
+        }
+      }
+    ]
+  },
+  "expected_review_fields": [],
+  "expected_changes": [],
+  "expected_high_risk": [],
+  "risk_note": "63 days to ex-factory, 21 production days after fabric: tight but feasible.",
+  "note": "Colour names must stay whole ('Sky Blue Dino', not 'Sky Blue')."
+}

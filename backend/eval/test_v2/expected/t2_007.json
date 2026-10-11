@@ -1,0 +1,50 @@
+{
+  "id": "t2_007",
+  "classification": {
+    "category": "new_po",
+    "intents": [
+      "new_po"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Casa Verdemar S.L.",
+    "po_number": "CV-5521",
+    "style": "CV-RP-02",
+    "currency": "EUR",
+    "unit_price": "4.25",
+    "total_quantity": 1200,
+    "delivery_date": null,
+    "incoterms": null,
+    "port": null,
+    "destination_country": "Spain",
+    "line_items": [
+      {
+        "colour": "Lemon Sorbet",
+        "quantity": 600,
+        "sizes": {
+          "0-3M": 150,
+          "3-6M": 300,
+          "6-12M": 150
+        }
+      },
+      {
+        "colour": "Mint Cloud",
+        "quantity": 600,
+        "sizes": {
+          "0-3M": 150,
+          "3-6M": 300,
+          "6-12M": 150
+        }
+      }
+    ]
+  },
+  "expected_review_fields": [
+    "delivery_date",
+    "incoterms",
+    "port"
+  ],
+  "expected_changes": [],
+  "expected_high_risk": [],
+  "note": "The question about the earliest date is part of booking the order, so intents is just new_po. No date, so no schedule risk can be assessed."
+}

@@ -1,0 +1,9 @@
+{
+  "id": "t2_020",
+  "title": "Request for draft shipping documents (no order data)",
+  "sender": "Haruka Mori <h.mori@kumo-textile.example>",
+  "subject": "Draft invoice and packing list – KT-0612",
+  "received_at": "2026-11-24",
+  "body": "Dear Karthik-san,\n\nFor our customs pre-registration, could you send a draft commercial invoice and packing list for KT-0612 by the end of next week? Carton dimensions and gross weights are especially important for us.\n\nBest regards,\nHaruka Mori\nKumo Textile Co., Ltd.",
+  "attachments": []
+}

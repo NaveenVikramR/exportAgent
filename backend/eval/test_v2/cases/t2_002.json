@@ -1,0 +1,15 @@
+{
+  "id": "t2_002",
+  "title": "German PO, sizes as rows, decimal comma price, dotted thousands, dd.mm.yyyy",
+  "sender": "Jonas Albrecht <j.albrecht@kraehenfeld-mode.example>",
+  "subject": "Bestellung KF-77310 / Artikel KF-LG-09",
+  "received_at": "2026-10-20",
+  "body": "Hello Karthik,\n\nattached our order KF-77310 for the leggings KF-LG-09. Please check and confirm.\n\nMit freundlichen Grüßen\nJonas Albrecht\nEinkauf\nKrähenfeld Mode GmbH, Hamburg",
+  "attachments": [
+    {
+      "filename": "Bestellung_KF-77310.pdf",
+      "content_type": "application/pdf",
+      "text": "KRÄHENFELD MODE GMBH\nBESTELLUNG\nBestell-Nr.: KF-77310\nArtikel: KF-LG-09   Damen-Leggings, Baumwolle/Elasthan\nPreis: EUR 6,40 / Stück\nLieferbedingung: FOB Chennai\nLiefertermin ab Werk: 12.02.2027\nBestimmungsland: Deutschland\n\nGröße | Tannengrün | Nachtblau\nXS    |    150     |    100\nS     |    300     |    250\nM     |    450     |    350\nL     |    300     |    200\nXL    |    300     |    100\nSumme |  1.500     |  1.000\n\nGesamtmenge: 2.500 Stück"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "id": "t2_008",
+  "classification": {
+    "category": "new_po",
+    "intents": [
+      "new_po"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Northgate Sportswear LLC",
+    "po_number": "NGS-90214",
+    "style": "NG-JG-40",
+    "currency": "USD",
+    "unit_price": "6.10",
+    "total_quantity": 3000,
+    "delivery_date": "2026-12-14",
+    "incoterms": "FOB",
+    "port": "Chennai",
+    "destination_country": "United States",
+    "line_items": [
+      {
+        "colour": "Graphite Heather",
+        "quantity": 1500,
+        "sizes": {
+          "S": 300,
+          "M": 500,
+          "L": 500,
+          "XL": 200
+        }
+      },
+      {
+        "colour": "Midnight Navy",
+        "quantity": 1500,
+        "sizes": {
+          "S": 300,
+          "M": 500,
+          "L": 500,
+          "XL": 200
+        }
+      }
+    ]
+  },
+  "expected_review_fields": [],
+  "expected_changes": [],
+  "expected_high_risk": [
+    "schedule"
+  ],
+  "risk_note": "45 days to ex-factory; 42 days of fabric leaves 3 production days (< 10).",
+  "note": "Date moved later in t2_016; quantities revised in t2_024."
+}

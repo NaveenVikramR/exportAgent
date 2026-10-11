@@ -1,0 +1,12 @@
+{
+  "id": "t2_020",
+  "classification": {
+    "category": "shipment_docs",
+    "intents": [
+      "shipment_docs"
+    ],
+    "has_po_data": false
+  },
+  "extraction": null,
+  "expected_review_fields": []
+}

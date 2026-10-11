@@ -1,0 +1,9 @@
+{
+  "id": "t2_008",
+  "title": "Urgent order whose ex-factory leaves no time after the fabric lead time",
+  "sender": "Derek Shaw <derek.shaw@northgate-sportswear.example>",
+  "subject": "Urgent PO NGS-90214 joggers",
+  "received_at": "2026-10-30",
+  "body": "Karthik,\n\nWe have an urgent replenishment. PO NGS-90214, style NG-JG-40 fleece jogger, USD 6.10, FOB Chennai, ex-factory Dec 14, 2026, ship to Columbus, OH, USA.\n\nGraphite Heather - S 300 | M 500 | L 500 | XL 200\nMidnight Navy - S 300 | M 500 | L 500 | XL 200\n\n3,000 pcs total. Can you make it?\n\nDerek Shaw\nNorthgate Sportswear LLC",
+  "attachments": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "t2_013",
+  "title": "Delivery pulled forward in a reply thread with the old date quoted below; dd/mm",
+  "sender": "Liam O'Brien <liam.obrien@southerncross-outfitters.example>",
+  "subject": "Re: PO SCO-1145 - raglan tee SC-RG-03",
+  "received_at": "2026-11-10",
+  "body": "Hi Karthik,\n\nOur launch has moved up. Can we bring the ex-factory forward to 15/02/2027? Everything else stays the same.\n\nCheers,\nLiam\n\nOn Mon, 26 Oct 2026, Liam O'Brien <liam.obrien@southerncross-outfitters.example> wrote:\n> G'day Karthik,\n>\n> Order below, PO SCO-1145.\n>\n> Style: SC-RG-03 raglan tee\n> Colours: Eucalyptus Green 1,000 pcs, Bush Sand 1,000 pcs\n> Size ratio S:M:L:XL = 1:2:2:1 for both colours\n> Price: AUD 5.60\n> CFR Melbourne\n> Ex-factory 01/03/2027\n> Destination: Australia",
+  "attachments": []
+}

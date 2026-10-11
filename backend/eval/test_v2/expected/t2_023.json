@@ -1,0 +1,40 @@
+{
+  "id": "t2_023",
+  "classification": {
+    "category": "delivery_change",
+    "intents": [
+      "delivery_change",
+      "payment",
+      "sample_or_approval"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Lindqvist & Berg AB",
+    "po_number": "LB-3308",
+    "style": null,
+    "currency": null,
+    "unit_price": null,
+    "total_quantity": null,
+    "delivery_date": "2027-02-19",
+    "incoterms": null,
+    "port": null,
+    "destination_country": null,
+    "line_items": []
+  },
+  "expected_review_fields": [],
+  "revises": "t2_014",
+  "expected_changes": [
+    {
+      "field": "delivery_date",
+      "old": "2027-02-05",
+      "new": "2027-02-19"
+    }
+  ],
+  "true_state": {
+    "total_quantity": 2400,
+    "currency": "EUR",
+    "unit_price": "3.75"
+  },
+  "expected_high_risk": []
+}

@@ -1,0 +1,48 @@
+{
+  "id": "t2_026",
+  "classification": {
+    "category": "new_po",
+    "intents": [
+      "new_po"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Brightwater Apparel Inc.",
+    "po_number": "BWA-51002",
+    "style": "BW-TS-204",
+    "currency": "USD",
+    "unit_price": "3.85",
+    "total_quantity": 3600,
+    "delivery_date": "2027-03-26",
+    "incoterms": "FOB",
+    "port": "Tuticorin",
+    "destination_country": "United States",
+    "line_items": [
+      {
+        "colour": "Heather Charcoal",
+        "quantity": 2400,
+        "sizes": {
+          "S": 400,
+          "M": 800,
+          "L": 800,
+          "XL": 400
+        }
+      },
+      {
+        "colour": "Sunwashed Coral",
+        "quantity": 1200,
+        "sizes": {
+          "S": 200,
+          "M": 400,
+          "L": 400,
+          "XL": 200
+        }
+      }
+    ]
+  },
+  "expected_review_fields": [],
+  "expected_changes": [],
+  "expected_high_risk": [],
+  "note": "A new order, not a revision of BWA-50817, even though style, colours and quantities match that order's current state. The PO number differs."
+}

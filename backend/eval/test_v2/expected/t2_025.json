@@ -1,0 +1,41 @@
+{
+  "id": "t2_025",
+  "classification": {
+    "category": "delivery_change",
+    "intents": [
+      "delivery_change"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Pinecrest Kids Co.",
+    "po_number": "PKC-6083",
+    "style": null,
+    "currency": null,
+    "unit_price": null,
+    "total_quantity": null,
+    "delivery_date": "2027-01-04",
+    "incoterms": null,
+    "port": null,
+    "destination_country": null,
+    "line_items": []
+  },
+  "expected_review_fields": [],
+  "revises": "t2_017",
+  "expected_changes": [
+    {
+      "field": "delivery_date",
+      "old": "2027-01-20",
+      "new": "2027-01-04"
+    }
+  ],
+  "true_state": {
+    "total_quantity": 2000,
+    "currency": "USD",
+    "unit_price": "2.95"
+  },
+  "fabric_ready": true,
+  "expected_high_risk": [],
+  "risk_note": "31 days to ex-factory. Infeasible if fabric still needed 42 days; feasible because fabric is in-house (31 days, about 17,700 pcs of free capacity vs 2,000).",
+  "note": "Pull-forward that a naive check would flag high."
+}

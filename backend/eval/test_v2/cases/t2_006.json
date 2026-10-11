@@ -1,0 +1,15 @@
+{
+  "id": "t2_006",
+  "title": "Price in email contradicts the attachment; space thousands; dd/mm date",
+  "sender": "Elin Lindqvist <elin@lindqvist-berg.example>",
+  "subject": "PO LB-3308",
+  "received_at": "2026-10-27",
+  "body": "Hej Karthik,\n\nAttached PO LB-3308 for the LB-TS-11 tee at EUR 3.75 as agreed on our call. Please confirm.\n\nBest,\nElin Lindqvist\nLindqvist & Berg AB, Gothenburg",
+  "attachments": [
+    {
+      "filename": "LB-3308.pdf",
+      "content_type": "application/pdf",
+      "text": "LINDQVIST & BERG AB\nPURCHASE ORDER LB-3308\nStyle: LB-TS-11 organic cotton tee\nUnit price: EUR 3,95\nFOB Tuticorin\nEx-factory: 05/02/2027\nConsignee: Lindqvist & Berg AB, Gothenburg, Sweden\n\nColour        S    M    L    XL   Total\nFjord Blue    300  400  300  200  1 200\nBirch White   300  400  300  200  1 200\n\nTotal                             2 400 pcs"
+    }
+  ]
+}

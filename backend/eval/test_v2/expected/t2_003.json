@@ -1,0 +1,50 @@
+{
+  "id": "t2_003",
+  "classification": {
+    "category": "new_po",
+    "intents": [
+      "new_po"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Marigold & Finch Ltd",
+    "po_number": null,
+    "style": "MF-PL-77",
+    "currency": "GBP",
+    "unit_price": "7.20",
+    "total_quantity": 1200,
+    "delivery_date": "2027-03-05",
+    "incoterms": "CIF",
+    "port": "Felixstowe",
+    "destination_country": "United Kingdom",
+    "line_items": [
+      {
+        "colour": "Deep Teal",
+        "quantity": 720,
+        "sizes": {
+          "S": 120,
+          "M": 240,
+          "L": 240,
+          "XL": 120
+        }
+      },
+      {
+        "colour": "Oat Marl",
+        "quantity": 480,
+        "sizes": {
+          "S": 80,
+          "M": 160,
+          "L": 160,
+          "XL": 80
+        }
+      }
+    ]
+  },
+  "expected_review_fields": [
+    "po_number"
+  ],
+  "expected_changes": [],
+  "expected_high_risk": [],
+  "note": "Order data with no PO number: still has_po_data. The PO number arrives in t2_011."
+}

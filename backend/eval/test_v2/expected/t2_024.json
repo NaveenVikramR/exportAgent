@@ -1,0 +1,84 @@
+{
+  "id": "t2_024",
+  "classification": {
+    "category": "po_revision",
+    "intents": [
+      "po_revision"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Northgate Sportswear LLC",
+    "po_number": "NGS-90214",
+    "style": "NG-JG-40",
+    "currency": "USD",
+    "unit_price": "6.10",
+    "total_quantity": 4000,
+    "delivery_date": "2027-02-12",
+    "incoterms": "FOB",
+    "port": "Chennai",
+    "destination_country": "United States",
+    "line_items": [
+      {
+        "colour": "Graphite Heather",
+        "quantity": 2200,
+        "sizes": {
+          "S": 400,
+          "M": 700,
+          "L": 700,
+          "XL": 400
+        }
+      },
+      {
+        "colour": "Midnight Navy",
+        "quantity": 1800,
+        "sizes": {
+          "S": 360,
+          "M": 600,
+          "L": 600,
+          "XL": 240
+        }
+      }
+    ]
+  },
+  "expected_review_fields": [],
+  "revises": "t2_016",
+  "expected_po_revision": "2",
+  "expected_changes": [
+    {
+      "field": "total_quantity",
+      "old": 3000,
+      "new": 4000
+    },
+    {
+      "field": "line_items.Graphite Heather.quantity",
+      "old": 1500,
+      "new": 2200
+    },
+    {
+      "field": "line_items.Graphite Heather.sizes",
+      "old": {
+        "S": 300,
+        "M": 500,
+        "L": 500,
+        "XL": 200
+      },
+      "new": {
+        "S": 400,
+        "M": 700,
+        "L": 700,
+        "XL": 400
+      }
+    },
+    {
+      "field": "line_items.Midnight Navy.quantity",
+      "old": 1500,
+      "new": 1800
+    }
+  ],
+  "expected_high_risk": [
+    "value"
+  ],
+  "risk_note": "Value USD 18,300 -> 24,400 (+33%, USD 6,100). 72 days to ex-factory, 30 production days after fabric; the book due in that window is about 12,000 pcs, within capacity on any reading of the window.",
+  "note": "Midnight Navy keeps its 6:10:10:4 ratio (only quantity changes); Graphite Heather's ratio changes."
+}

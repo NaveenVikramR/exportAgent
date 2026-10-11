@@ -1,0 +1,9 @@
+{
+  "id": "t2_029",
+  "title": "Delivery pulled forward to less than the fabric lead time, Japanese yyyy/mm/dd date",
+  "sender": "Haruka Mori <h.mori@kumo-textile.example>",
+  "subject": "KT-0612 earlier shipment request",
+  "received_at": "2026-12-16",
+  "body": "Dear Karthik-san,\n\nOur Tokyo store opening has moved earlier. Could you bring the ex-factory date for KT-0612 forward to 2027/01/15? Quantities and price stay as in Amendment 1.\n\nWe understand this is a big request, so please tell us honestly if it is possible.\n\nBest regards,\nHaruka Mori\nKumo Textile Co., Ltd.",
+  "attachments": []
+}

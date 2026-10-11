@@ -1,0 +1,49 @@
+{
+  "id": "t2_011",
+  "classification": {
+    "category": "new_po",
+    "intents": [
+      "new_po"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Marigold & Finch Ltd",
+    "po_number": "MF/26/0419",
+    "style": "MF-PL-77",
+    "currency": "GBP",
+    "unit_price": "7.20",
+    "total_quantity": 1200,
+    "delivery_date": "2027-03-05",
+    "incoterms": "CIF",
+    "port": "Felixstowe",
+    "destination_country": "United Kingdom",
+    "line_items": [
+      {
+        "colour": "Deep Teal",
+        "quantity": 720,
+        "sizes": {
+          "S": 120,
+          "M": 240,
+          "L": 240,
+          "XL": 120
+        }
+      },
+      {
+        "colour": "Oat Marl",
+        "quantity": 480,
+        "sizes": {
+          "S": 80,
+          "M": 160,
+          "L": 160,
+          "XL": 80
+        }
+      }
+    ]
+  },
+  "expected_review_fields": [],
+  "revises": "t2_003",
+  "expected_changes": [],
+  "expected_high_risk": [],
+  "note": "Formal PO for an order agreed earlier = new_po per the spec. Must attach to t2_003's order, not create a new one. A PO number arriving is not a change."
+}

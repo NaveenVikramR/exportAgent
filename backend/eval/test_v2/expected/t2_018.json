@@ -1,0 +1,62 @@
+{
+  "id": "t2_018",
+  "classification": {
+    "category": "po_revision",
+    "intents": [
+      "po_revision"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Brightwater Apparel Inc.",
+    "po_number": "BWA-50817",
+    "style": null,
+    "currency": null,
+    "unit_price": null,
+    "total_quantity": 3600,
+    "delivery_date": null,
+    "incoterms": null,
+    "port": null,
+    "destination_country": null,
+    "line_items": [
+      {
+        "colour": "Sunwashed Coral",
+        "quantity": 1200,
+        "sizes": {
+          "S": 300,
+          "M": 300,
+          "L": 400,
+          "XL": 200
+        }
+      }
+    ]
+  },
+  "partial_line_items": true,
+  "expected_review_fields": [],
+  "revises": "t2_009",
+  "expected_po_revision": "B",
+  "expected_changes": [
+    {
+      "field": "line_items.Sunwashed Coral.sizes",
+      "old": {
+        "S": 200,
+        "M": 400,
+        "L": 400,
+        "XL": 200
+      },
+      "new": {
+        "S": 300,
+        "M": 300,
+        "L": 400,
+        "XL": 200
+      }
+    }
+  ],
+  "true_state": {
+    "currency": "USD",
+    "unit_price": "3.85",
+    "delivery_date": "2027-01-22"
+  },
+  "expected_high_risk": [],
+  "note": "Only the size ratio changes: no quantity or value change."
+}

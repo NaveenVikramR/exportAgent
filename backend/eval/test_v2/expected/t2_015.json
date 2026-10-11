@@ -1,0 +1,58 @@
+{
+  "id": "t2_015",
+  "classification": {
+    "category": "po_revision",
+    "intents": [
+      "po_revision",
+      "order_query"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Casa Verdemar S.L.",
+    "po_number": "CV-5521",
+    "style": null,
+    "currency": null,
+    "unit_price": null,
+    "total_quantity": 1800,
+    "delivery_date": null,
+    "incoterms": null,
+    "port": null,
+    "destination_country": null,
+    "line_items": [
+      {
+        "colour": "Peach Fizz",
+        "quantity": 600,
+        "sizes": {
+          "0-3M": 150,
+          "3-6M": 300,
+          "6-12M": 150
+        }
+      }
+    ]
+  },
+  "partial_line_items": true,
+  "expected_review_fields": [],
+  "revises": "t2_007",
+  "expected_changes": [
+    {
+      "field": "total_quantity",
+      "old": 1200,
+      "new": 1800
+    },
+    {
+      "field": "line_items.Peach Fizz",
+      "old": null,
+      "new": 600
+    }
+  ],
+  "true_state": {
+    "currency": "EUR",
+    "unit_price": "4.25"
+  },
+  "expected_high_risk": [
+    "value"
+  ],
+  "risk_note": "Value EUR 5,100 -> 7,650 (+50%). The order still has no ex-factory date, so no schedule finding.",
+  "note": "Fields still missing on the order are not listed in expected_review_fields, because this is a revision."
+}

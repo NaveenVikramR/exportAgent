@@ -1,0 +1,15 @@
+{
+  "id": "t2_004",
+  "title": "JPY order with the line items in a CSV attachment",
+  "sender": "Haruka Mori <h.mori@kumo-textile.example>",
+  "subject": "PO KT-0612 hoodie order",
+  "received_at": "2026-10-23",
+  "body": "Dear Karthik-san,\n\nPlease find our PO KT-0612 for hoodie KT-HD-15 attached as CSV.\nUnit price JPY 1,180, FOB Chennai, ex-factory 2027/02/26, destination Japan (Yokohama).\n\nBest regards,\nHaruka Mori\nKumo Textile Co., Ltd.",
+  "attachments": [
+    {
+      "filename": "KT-0612.csv",
+      "content_type": "text/csv",
+      "text": "po_no,style,colour,size,qty,unit_price_jpy\nKT-0612,KT-HD-15,Sumi Black,S,200,1180\nKT-0612,KT-HD-15,Sumi Black,M,400,1180\nKT-0612,KT-HD-15,Sumi Black,L,300,1180\nKT-0612,KT-HD-15,Sakura Pink,S,300,1180\nKT-0612,KT-HD-15,Sakura Pink,M,300,1180\nKT-0612,KT-HD-15,Sakura Pink,L,100,1180\n"
+    }
+  ]
+}

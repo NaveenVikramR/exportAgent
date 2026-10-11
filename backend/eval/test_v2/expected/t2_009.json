@@ -1,0 +1,64 @@
+{
+  "id": "t2_009",
+  "classification": {
+    "category": "po_revision",
+    "intents": [
+      "po_revision"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Brightwater Apparel Inc.",
+    "po_number": "BWA-50817",
+    "style": "BW-TS-204",
+    "currency": "USD",
+    "unit_price": "3.85",
+    "total_quantity": 3600,
+    "delivery_date": "2027-01-22",
+    "incoterms": "FOB",
+    "port": "Tuticorin",
+    "destination_country": "United States",
+    "line_items": [
+      {
+        "colour": "Heather Charcoal",
+        "quantity": 2400,
+        "sizes": {
+          "S": 400,
+          "M": 800,
+          "L": 800,
+          "XL": 400
+        }
+      },
+      {
+        "colour": "Sunwashed Coral",
+        "quantity": 1200,
+        "sizes": {
+          "S": 200,
+          "M": 400,
+          "L": 400,
+          "XL": 200
+        }
+      }
+    ]
+  },
+  "expected_review_fields": [],
+  "revises": "t2_001",
+  "expected_po_revision": "A",
+  "expected_changes": [
+    {
+      "field": "total_quantity",
+      "old": 3000,
+      "new": 3600
+    },
+    {
+      "field": "line_items.Heather Charcoal.quantity",
+      "old": 1800,
+      "new": 2400
+    }
+  ],
+  "expected_high_risk": [
+    "value"
+  ],
+  "risk_note": "Value USD 11,550 -> 13,860 (+20%).",
+  "note": "Heather Charcoal keeps its 1:2:2:1 ratio, so no sizes change."
+}

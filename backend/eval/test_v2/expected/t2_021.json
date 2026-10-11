@@ -1,0 +1,14 @@
+{
+  "id": "t2_021",
+  "classification": {
+    "category": "sample_or_approval",
+    "intents": [
+      "sample_or_approval",
+      "order_query"
+    ],
+    "has_po_data": false
+  },
+  "extraction": null,
+  "expected_review_fields": [],
+  "note": "Colour names and a size appear, but there is no order data."
+}

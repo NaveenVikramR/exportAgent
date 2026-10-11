@@ -1,0 +1,9 @@
+{
+  "id": "t2_016",
+  "title": "Delivery moved later in a reply, US mm/dd date that is ambiguous (02/12/2027)",
+  "sender": "Derek Shaw <derek.shaw@northgate-sportswear.example>",
+  "subject": "RE: Urgent PO NGS-90214 joggers",
+  "received_at": "2026-11-16",
+  "body": "Karthik,\n\nThanks for flagging the fabric lead time. Our DC can take it later – new ex-factory 02/12/2027. Same quantities and price.\n\nDerek\nNorthgate Sportswear LLC\n\n-----Original Message-----\nFrom: Karthik <karthik@srivelanknits.example>\nSent: Monday, November 2, 2026\nTo: Derek Shaw\nSubject: RE: Urgent PO NGS-90214 joggers\n\n> Derek, with 42 days needed for fabric we cannot meet Dec 14, 2026. The earliest realistic ex-factory is early February.",
+  "attachments": []
+}

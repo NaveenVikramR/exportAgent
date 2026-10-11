@@ -1,0 +1,51 @@
+{
+  "id": "t2_010",
+  "classification": {
+    "category": "po_revision",
+    "intents": [
+      "po_revision"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Krähenfeld Mode GmbH",
+    "po_number": "KF-77310",
+    "style": null,
+    "currency": null,
+    "unit_price": null,
+    "total_quantity": 2300,
+    "delivery_date": null,
+    "incoterms": null,
+    "port": null,
+    "destination_country": null,
+    "line_items": [
+      {
+        "colour": "Nachtblau",
+        "quantity": 800
+      }
+    ]
+  },
+  "partial_line_items": true,
+  "expected_review_fields": [],
+  "revises": "t2_002",
+  "expected_changes": [
+    {
+      "field": "total_quantity",
+      "old": 2500,
+      "new": 2300
+    },
+    {
+      "field": "line_items.Nachtblau.quantity",
+      "old": 1000,
+      "new": 800
+    }
+  ],
+  "true_state": {
+    "currency": "EUR",
+    "unit_price": "6.40",
+    "delivery_date": "2027-02-12"
+  },
+  "expected_high_risk": [],
+  "risk_note": "Value EUR 16,000 -> 14,720 (-8%, about EUR 1,280): below both value thresholds.",
+  "note": "The order is referenced only by its number. Per-size quantities aren't given (same proportion), so no sizes and no ratio change."
+}

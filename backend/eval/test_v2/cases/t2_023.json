@@ -1,0 +1,9 @@
+{
+  "id": "t2_023",
+  "title": "Three requests in one email: delivery moved later, payment terms, PP samples",
+  "sender": "Elin Lindqvist <elin@lindqvist-berg.example>",
+  "subject": "LB-3308: ex-factory, payment, PP samples",
+  "received_at": "2026-11-30",
+  "body": "Hej Karthik,\n\nThree things for LB-3308:\n\n1. Our warehouse is full in early February, so please move the ex-factory to 19 February 2027.\n2. Payment will be by LC at sight; our bank will issue it this week.\n3. Please courier 2 PP samples per colour before bulk cutting.\n\nBest,\nElin\nLindqvist & Berg AB",
+  "attachments": []
+}

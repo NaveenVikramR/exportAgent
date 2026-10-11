@@ -1,0 +1,9 @@
+{
+  "id": "t2_014",
+  "title": "Forwarded email: price correction plus a lab-dip approval",
+  "sender": "Suresh <suresh@srivelanknits.example>",
+  "subject": "Fwd: LB-3308 price + lab dip",
+  "received_at": "2026-11-12",
+  "body": "Karthik, see below from Elin – please update the order. – Suresh\n\n---------- Forwarded message ---------\nFrom: Elin Lindqvist <elin@lindqvist-berg.example>\nDate: Wed, 11 Nov 2026\nSubject: LB-3308 price + lab dip\nTo: Suresh <suresh@srivelanknits.example>\n\nHi Suresh,\n\nThe PDF we sent for LB-3308 had the wrong price: it should be EUR 3,75 per piece, as agreed. Please correct it on your side.\n\nAlso, the lab dip for Fjord Blue is approved (option B).\n\nBest,\nElin\nLindqvist & Berg AB",
+  "attachments": []
+}

@@ -1,0 +1,64 @@
+{
+  "id": "t2_028",
+  "classification": {
+    "category": "new_po",
+    "intents": [
+      "new_po"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Meridian Value Stores Inc.",
+    "po_number": "MVS-300457",
+    "style": "MV-TS-01",
+    "currency": "USD",
+    "unit_price": "2.40",
+    "total_quantity": 54000,
+    "delivery_date": "2027-04-02",
+    "incoterms": "FOB",
+    "port": "Chennai",
+    "destination_country": "United States",
+    "line_items": [
+      {
+        "colour": "White",
+        "quantity": 18000,
+        "sizes": {
+          "S": 3000,
+          "M": 5000,
+          "L": 5000,
+          "XL": 3500,
+          "XXL": 1500
+        }
+      },
+      {
+        "colour": "Black",
+        "quantity": 18000,
+        "sizes": {
+          "S": 3000,
+          "M": 5000,
+          "L": 5000,
+          "XL": 3500,
+          "XXL": 1500
+        }
+      },
+      {
+        "colour": "Heather Grey",
+        "quantity": 18000,
+        "sizes": {
+          "S": 3000,
+          "M": 5000,
+          "L": 5000,
+          "XL": 3500,
+          "XXL": 1500
+        }
+      }
+    ]
+  },
+  "expected_review_fields": [],
+  "expected_changes": [],
+  "expected_high_risk": [
+    "schedule"
+  ],
+  "risk_note": "109 days to ex-factory. After 42 days of fabric, 67 days at 4,000 pcs/week is about 38,300 pcs, below 54,000 on its own. Counting the whole window from the email date (about 62,300 pcs) it is still infeasible once the ~21,000 pcs of other orders due before 2 April are added. Its own date (2 April) is later than every other order's, so it doesn't change any earlier case's label.",
+  "note": "'04/02/2027' from a US buyer is 2 April (the email body says April 2)."
+}

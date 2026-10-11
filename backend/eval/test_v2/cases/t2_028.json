@@ -1,0 +1,15 @@
+{
+  "id": "t2_028",
+  "title": "Very large programme order that exceeds free sewing capacity before ex-factory",
+  "sender": "Carla Mendes <carla.mendes@meridian-value.example>",
+  "subject": "PO MVS-300457 – basic tee programme",
+  "received_at": "2026-12-14",
+  "body": "Hello Karthik,\n\nWe'd like to place our first basics programme with you. PO MVS-300457 is attached: MV-TS-01 basic crew tee in three colours, 54,000 pcs in total, USD 2.40, FOB Chennai, ex-factory April 2, 2027, shipping to our DC in Dallas, TX.\n\nPlease confirm you can take the full volume on this date.\n\nBest,\nCarla Mendes\nMeridian Value Stores Inc.",
+  "attachments": [
+    {
+      "filename": "MVS-300457.pdf",
+      "content_type": "application/pdf",
+      "text": "MERIDIAN VALUE STORES INC.\nPURCHASE ORDER MVS-300457\nItem: MV-TS-01 Basic crew tee\nPrice: USD 2.40 each | FOB Chennai | Ex-factory 04/02/2027\nDestination: Dallas, TX, United States\n\nColour        | S     | M     | L     | XL    | XXL   | Total\nWhite         | 3000  | 5000  | 5000  | 3500  | 1500  | 18000\nBlack         | 3000  | 5000  | 5000  | 3500  | 1500  | 18000\nHeather Grey  | 3000  | 5000  | 5000  | 3500  | 1500  | 18000\n\nTotal quantity: 54000 pcs"
+    }
+  ]
+}

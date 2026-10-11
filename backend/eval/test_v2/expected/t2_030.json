@@ -1,0 +1,13 @@
+{
+  "id": "t2_030",
+  "classification": {
+    "category": "other",
+    "intents": [
+      "other"
+    ],
+    "has_po_data": false
+  },
+  "extraction": null,
+  "expected_review_fields": [],
+  "note": "A supplier quoting to the factory. It has prices, quantities, colours and a delivery time, but it is not a buyer order and must not create one."
+}

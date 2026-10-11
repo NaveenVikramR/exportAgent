@@ -1,0 +1,9 @@
+{
+  "id": "t2_007",
+  "title": "New order missing ex-factory date, Incoterm and port; dotted thousands",
+  "sender": "Lucía Ferrer <lucia.ferrer@casaverdemar.example>",
+  "subject": "Pedido CV-5521",
+  "received_at": "2026-10-28",
+  "body": "Hola Karthik,\n\nPlease book our order CV-5521, style CV-RP-02 baby romper, EUR 4.25 per piece, for Spain.\n\nLemon Sorbet: 0-3M 150, 3-6M 300, 6-12M 150\nMint Cloud: 0-3M 150, 3-6M 300, 6-12M 150\n\nTotal 1.200 pcs. Please tell us your earliest possible ex-factory date and which port you would ship from.\n\nGracias,\nLucía Ferrer\nCasa Verdemar S.L., Valencia",
+  "attachments": []
+}

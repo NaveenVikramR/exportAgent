@@ -1,0 +1,15 @@
+{
+  "id": "t2_019",
+  "title": "Payment remittance referencing a PO (no order data)",
+  "sender": "Accounts Payable <ap@marigoldfinch.example>",
+  "subject": "Remittance – MF/26/0419 advance",
+  "received_at": "2026-11-23",
+  "body": "Dear Karthik,\n\nPlease note that we have remitted the 30% advance of GBP 2,592.00 for PO MF/26/0419 today. The remittance advice is attached.\n\nKind regards,\nAccounts Payable\nMarigold & Finch Ltd",
+  "attachments": [
+    {
+      "filename": "Remittance_MF-26-0419.pdf",
+      "content_type": "application/pdf",
+      "text": "REMITTANCE ADVICE\nPayer: Marigold & Finch Ltd\nBeneficiary: Sri Velan Knits, Tiruppur\nReference: PO MF/26/0419 – 30% advance\nAmount: GBP 2,592.00\nValue date: 23/11/2026"
+    }
+  ]
+}

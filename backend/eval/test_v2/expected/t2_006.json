@@ -1,0 +1,50 @@
+{
+  "id": "t2_006",
+  "classification": {
+    "category": "new_po",
+    "intents": [
+      "new_po"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Lindqvist & Berg AB",
+    "po_number": "LB-3308",
+    "style": "LB-TS-11",
+    "currency": "EUR",
+    "unit_price": "3.95",
+    "total_quantity": 2400,
+    "delivery_date": "2027-02-05",
+    "incoterms": "FOB",
+    "port": "Tuticorin",
+    "destination_country": "Sweden",
+    "line_items": [
+      {
+        "colour": "Fjord Blue",
+        "quantity": 1200,
+        "sizes": {
+          "S": 300,
+          "M": 400,
+          "L": 300,
+          "XL": 200
+        }
+      },
+      {
+        "colour": "Birch White",
+        "quantity": 1200,
+        "sizes": {
+          "S": 300,
+          "M": 400,
+          "L": 300,
+          "XL": 200
+        }
+      }
+    ]
+  },
+  "expected_review_fields": [
+    "unit_price"
+  ],
+  "expected_changes": [],
+  "expected_high_risk": [],
+  "note": "Email says EUR 3.75, attachment says EUR 3,95: label the attachment value and flag unit_price. The buyer settles it at 3.75 in t2_014. 05/02/2027 from a Swedish buyer is 5 February."
+}

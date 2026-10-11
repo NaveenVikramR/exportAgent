@@ -1,0 +1,50 @@
+{
+  "id": "t2_013",
+  "classification": {
+    "category": "delivery_change",
+    "intents": [
+      "delivery_change"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": null,
+    "po_number": "SCO-1145",
+    "style": null,
+    "currency": null,
+    "unit_price": null,
+    "total_quantity": null,
+    "delivery_date": "2027-02-15",
+    "incoterms": null,
+    "port": null,
+    "destination_country": null,
+    "line_items": []
+  },
+  "skip_fields": [
+    "buyer",
+    "style",
+    "currency",
+    "unit_price",
+    "total_quantity",
+    "incoterms",
+    "port",
+    "destination_country"
+  ],
+  "expected_review_fields": [],
+  "revises": "t2_005",
+  "expected_changes": [
+    {
+      "field": "delivery_date",
+      "old": "2027-03-01",
+      "new": "2027-02-15"
+    }
+  ],
+  "true_state": {
+    "total_quantity": 2000,
+    "currency": "AUD",
+    "unit_price": "5.60"
+  },
+  "expected_high_risk": [],
+  "risk_note": "97 days to ex-factory; 55 production days after fabric. Feasible.",
+  "note": "Only the date is restated; the rest sits in the quoted thread, so those fields are skipped. The company name appears only in the quote's email domain."
+}

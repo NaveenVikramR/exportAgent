@@ -1,0 +1,15 @@
+{
+  "id": "t2_012",
+  "title": "JPY price amendment ('Amendment 1'); small change in USD terms",
+  "sender": "Haruka Mori <h.mori@kumo-textile.example>",
+  "subject": "KT-0612 Amendment 1 (price)",
+  "received_at": "2026-11-09",
+  "body": "Dear Karthik-san,\n\nAfter our cotton price review we accept your request: the unit price for KT-0612 is revised to JPY 1,240. Amendment 1 is attached. All other terms are unchanged.\n\nBest regards,\nHaruka Mori\nKumo Textile Co., Ltd.",
+  "attachments": [
+    {
+      "filename": "KT-0612_Amendment1.pdf",
+      "content_type": "application/pdf",
+      "text": "KUMO TEXTILE CO., LTD.\nPURCHASE ORDER AMENDMENT\nPO No.: KT-0612 Amendment 1\nStyle: KT-HD-15\nUnit price: JPY 1,240 (previously JPY 1,180)\nAll other terms and quantities unchanged."
+    }
+  ]
+}

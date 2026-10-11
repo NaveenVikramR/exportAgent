@@ -1,0 +1,41 @@
+{
+  "id": "t2_029",
+  "classification": {
+    "category": "delivery_change",
+    "intents": [
+      "delivery_change"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Kumo Textile Co., Ltd.",
+    "po_number": "KT-0612",
+    "style": null,
+    "currency": null,
+    "unit_price": null,
+    "total_quantity": null,
+    "delivery_date": "2027-01-15",
+    "incoterms": null,
+    "port": null,
+    "destination_country": null,
+    "line_items": []
+  },
+  "expected_review_fields": [],
+  "revises": "t2_012",
+  "expected_changes": [
+    {
+      "field": "delivery_date",
+      "old": "2027-02-26",
+      "new": "2027-01-15"
+    }
+  ],
+  "true_state": {
+    "total_quantity": 1600,
+    "currency": "JPY",
+    "unit_price": "1240"
+  },
+  "expected_high_risk": [
+    "schedule"
+  ],
+  "risk_note": "30 days to ex-factory, less than the 42-day fabric lead time; the thread says nothing about fabric being in-house."
+}

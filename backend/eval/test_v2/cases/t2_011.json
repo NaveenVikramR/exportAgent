@@ -1,0 +1,15 @@
+{
+  "id": "t2_011",
+  "title": "Formal PO number arrives for the earlier booking; nothing else changes",
+  "sender": "Priya Lal <priya.lal@marigoldfinch.example>",
+  "subject": "PO MF/26/0419 – MF-PL-77 polo (your booking of 22 Oct)",
+  "received_at": "2026-11-06",
+  "body": "Hi Karthik,\n\nAs promised, attached is the formal PO MF/26/0419 for the MF-PL-77 polo we booked on 22 October. No changes to the booking.\n\nBest,\nPriya Lal\nMarigold & Finch Ltd",
+  "attachments": [
+    {
+      "filename": "MF-26-0419.pdf",
+      "content_type": "application/pdf",
+      "text": "MARIGOLD & FINCH LTD\nPURCHASE ORDER MF/26/0419\nStyle: MF-PL-77 Piqué polo\nGBP 7.20 per pc    CIF Felixstowe\nEx-factory: 05/03/2027\nDeliver to: Marigold & Finch DC, Leeds, United Kingdom\n\n            S     M     L     XL    Total\nDeep Teal   120   240   240   120   720\nOat Marl    80    160   160   80    480\n\nTotal 1,200 pcs"
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": "t2_027",
+  "classification": {
+    "category": "po_revision",
+    "intents": [
+      "po_revision"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Brightwater Apparel Inc.",
+    "po_number": null,
+    "style": "BW-TS-204",
+    "currency": null,
+    "unit_price": null,
+    "total_quantity": 2400,
+    "delivery_date": null,
+    "incoterms": null,
+    "port": null,
+    "destination_country": null,
+    "line_items": [
+      {
+        "colour": "Heather Charcoal",
+        "quantity": 2400
+      }
+    ]
+  },
+  "expected_review_fields": [
+    "po_number"
+  ],
+  "revises": "t2_026",
+  "expected_match_question": true,
+  "expected_changes": [
+    {
+      "field": "total_quantity",
+      "old": 3600,
+      "new": 2400
+    },
+    {
+      "field": "line_items.Sunwashed Coral",
+      "old": 1200,
+      "new": null
+    }
+  ],
+  "true_state": {
+    "currency": "USD",
+    "unit_price": "3.85",
+    "delivery_date": "2027-03-26"
+  },
+  "expected_high_risk": [
+    "value"
+  ],
+  "risk_note": "Value USD 13,860 -> 9,240 (-33%).",
+  "note": "Both BWA-50817 and BWA-51002 are style BW-TS-204 with Heather Charcoal 2,400 + Sunwashed Coral 1,200, so a careful person must ask which order. The label's answer is BWA-51002 (the buyer is trimming the Spring 2 range). The full remaining line list is stated, so this is not a partial update."
+}

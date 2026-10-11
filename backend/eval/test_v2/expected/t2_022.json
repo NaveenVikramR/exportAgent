@@ -1,0 +1,13 @@
+{
+  "id": "t2_022",
+  "classification": {
+    "category": "order_query",
+    "intents": [
+      "order_query"
+    ],
+    "has_po_data": false
+  },
+  "extraction": null,
+  "expected_review_fields": [],
+  "note": "Repeats the already-agreed date '15/02'; this is not a change."
+}

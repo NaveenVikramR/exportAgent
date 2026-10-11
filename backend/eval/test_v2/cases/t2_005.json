@@ -1,0 +1,9 @@
+{
+  "id": "t2_005",
+  "title": "Ratio-only sizes (no per-size quantities), AUD, Australian dd/mm date, CFR",
+  "sender": "Liam O'Brien <liam.obrien@southerncross-outfitters.example>",
+  "subject": "PO SCO-1145 - raglan tee SC-RG-03",
+  "received_at": "2026-10-26",
+  "body": "G'day Karthik,\n\nOrder below, PO SCO-1145.\n\nStyle: SC-RG-03 raglan tee\nColours: Eucalyptus Green 1,000 pcs, Bush Sand 1,000 pcs\nSize ratio S:M:L:XL = 1:2:2:1 for both colours\nPrice: AUD 5.60\nCFR Melbourne\nEx-factory 01/03/2027\nDestination: Australia\n\nCheers,\nLiam O'Brien\nSouthern Cross Outfitters Pty Ltd",
+  "attachments": []
+}

@@ -1,0 +1,50 @@
+{
+  "id": "t2_002",
+  "classification": {
+    "category": "new_po",
+    "intents": [
+      "new_po"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Krähenfeld Mode GmbH",
+    "po_number": "KF-77310",
+    "style": "KF-LG-09",
+    "currency": "EUR",
+    "unit_price": "6.40",
+    "total_quantity": 2500,
+    "delivery_date": "2027-02-12",
+    "incoterms": "FOB",
+    "port": "Chennai",
+    "destination_country": "Germany",
+    "line_items": [
+      {
+        "colour": "Tannengrün",
+        "quantity": 1500,
+        "sizes": {
+          "XS": 150,
+          "S": 300,
+          "M": 450,
+          "L": 300,
+          "XL": 300
+        }
+      },
+      {
+        "colour": "Nachtblau",
+        "quantity": 1000,
+        "sizes": {
+          "XS": 100,
+          "S": 250,
+          "M": 350,
+          "L": 200,
+          "XL": 100
+        }
+      }
+    ]
+  },
+  "expected_review_fields": [],
+  "expected_changes": [],
+  "expected_high_risk": [],
+  "note": "Colour names kept in German. 'Bestell-Nr.' is the PO number; 'Artikel' is the style. Revised body-only in t2_010."
+}

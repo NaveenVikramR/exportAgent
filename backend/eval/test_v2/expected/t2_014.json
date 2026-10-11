@@ -1,0 +1,40 @@
+{
+  "id": "t2_014",
+  "classification": {
+    "category": "po_revision",
+    "intents": [
+      "po_revision",
+      "sample_or_approval"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Lindqvist & Berg AB",
+    "po_number": "LB-3308",
+    "style": null,
+    "currency": "EUR",
+    "unit_price": "3.75",
+    "total_quantity": null,
+    "delivery_date": null,
+    "incoterms": null,
+    "port": null,
+    "destination_country": null,
+    "line_items": []
+  },
+  "expected_review_fields": [],
+  "revises": "t2_006",
+  "expected_changes": [
+    {
+      "field": "unit_price",
+      "old": "3.95",
+      "new": "3.75"
+    }
+  ],
+  "true_state": {
+    "total_quantity": 2400,
+    "delivery_date": "2027-02-05"
+  },
+  "expected_high_risk": [],
+  "risk_note": "Value EUR 9,480 -> 9,000 (-5%, EUR 480). Not high.",
+  "note": "The buyer is the original sender inside the forward, not Suresh (the factory's own colleague)."
+}

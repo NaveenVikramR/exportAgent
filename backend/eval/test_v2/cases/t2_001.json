@@ -1,0 +1,15 @@
+{
+  "id": "t2_001",
+  "title": "Clean new PO as PDF, sizes as columns, US mm/dd dates",
+  "sender": "Megan Holt <megan.holt@brightwater-apparel.example>",
+  "subject": "New PO BWA-50817 – BW-TS-204 crew tee",
+  "received_at": "2026-10-19",
+  "body": "Hi Karthik,\n\nPlease find attached our PO BWA-50817 for the BW-TS-204 crew neck tee in two colors. Please confirm receipt and the ex-factory date.\n\nThanks,\nMegan Holt\nSourcing Manager\nBrightwater Apparel Inc.\nPortland, OR",
+  "attachments": [
+    {
+      "filename": "BWA-50817.pdf",
+      "content_type": "application/pdf",
+      "text": "BRIGHTWATER APPAREL INC.\nPURCHASE ORDER\nPO No: BWA-50817            Date: 10/19/2026\nStyle: BW-TS-204   Men's crew neck tee, 160 GSM\nUnit price: USD 3.85 / pc\nTerms: FOB Tuticorin\nEx-factory: 01/22/2027\nShip to: Brightwater DC, Seattle, WA, USA\n\nColor               S     M     L     XL    Total\nHeather Charcoal    300   600   600   300   1,800\nSunwashed Coral     200   400   400   200   1,200\n\nTOTAL QTY: 3,000 pcs\nTOTAL VALUE: USD 11,550.00"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "id": "t2_012",
+  "classification": {
+    "category": "po_revision",
+    "intents": [
+      "po_revision"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Kumo Textile Co., Ltd.",
+    "po_number": "KT-0612",
+    "style": "KT-HD-15",
+    "currency": "JPY",
+    "unit_price": "1240",
+    "total_quantity": null,
+    "delivery_date": null,
+    "incoterms": null,
+    "port": null,
+    "destination_country": null,
+    "line_items": []
+  },
+  "expected_review_fields": [],
+  "revises": "t2_004",
+  "expected_po_revision": "1",
+  "expected_changes": [
+    {
+      "field": "unit_price",
+      "old": "1180",
+      "new": "1240"
+    }
+  ],
+  "true_state": {
+    "total_quantity": 1600,
+    "delivery_date": "2027-02-26"
+  },
+  "expected_high_risk": [],
+  "risk_note": "Value JPY 1,888,000 -> 1,984,000: +5.1%, JPY 96,000 (about USD 640). Not high.",
+  "note": "The old price is also printed ('previously JPY 1,180'); the new price is 1240."
+}

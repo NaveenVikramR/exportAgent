@@ -1,0 +1,40 @@
+{
+  "id": "t2_016",
+  "classification": {
+    "category": "delivery_change",
+    "intents": [
+      "delivery_change"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Northgate Sportswear LLC",
+    "po_number": "NGS-90214",
+    "style": null,
+    "currency": null,
+    "unit_price": null,
+    "total_quantity": null,
+    "delivery_date": "2027-02-12",
+    "incoterms": null,
+    "port": null,
+    "destination_country": null,
+    "line_items": []
+  },
+  "expected_review_fields": [],
+  "revises": "t2_008",
+  "expected_changes": [
+    {
+      "field": "delivery_date",
+      "old": "2026-12-14",
+      "new": "2027-02-12"
+    }
+  ],
+  "true_state": {
+    "total_quantity": 3000,
+    "currency": "USD",
+    "unit_price": "6.10"
+  },
+  "expected_high_risk": [],
+  "risk_note": "88 days to ex-factory, 46 production days after fabric. Feasible.",
+  "note": "US buyer, mm/dd: 02/12/2027 is 12 February (the quoted thread says 'early February'), not 2 December."
+}

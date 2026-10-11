@@ -1,0 +1,15 @@
+{
+  "id": "t2_024",
+  "title": "Full PO 'REVISION 2': both colours up, one size ratio changes, +33% value",
+  "sender": "Derek Shaw <derek.shaw@northgate-sportswear.example>",
+  "subject": "NGS-90214 Revision 2",
+  "received_at": "2026-12-02",
+  "body": "Karthik,\n\nRevision 2 attached – we're increasing both colors. Ex-factory stays 02/12/2027.\n\nDerek\nNorthgate Sportswear LLC",
+  "attachments": [
+    {
+      "filename": "NGS-90214_Rev2.pdf",
+      "content_type": "application/pdf",
+      "text": "NORTHGATE SPORTSWEAR LLC\nPURCHASE ORDER NGS-90214   REVISION 2\nStyle: NG-JG-40   Fleece jogger\nUnit price: USD 6.10\nFOB Chennai\nEx-factory: 02/12/2027\nShip to: Columbus, OH, USA\n\nColor              S     M     L     XL    Total\nGraphite Heather   400   700   700   400   2,200\nMidnight Navy      360   600   600   240   1,800\n\nTotal                                      4,000"
+    }
+  ]
+}

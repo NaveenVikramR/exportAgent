@@ -1,0 +1,15 @@
+{
+  "id": "t2_009",
+  "title": "Full revised PO 'Rev A', one colour up with the same size ratio, +20% value",
+  "sender": "Megan Holt <megan.holt@brightwater-apparel.example>",
+  "subject": "BWA-50817 Rev A – qty increase",
+  "received_at": "2026-11-03",
+  "body": "Hi Karthik,\n\nSell-through on Heather Charcoal is strong, so we've revised the PO. Rev A attached: Heather Charcoal goes up, everything else stays the same.\n\nThanks,\nMegan\nBrightwater Apparel Inc.",
+  "attachments": [
+    {
+      "filename": "BWA-50817_RevA.pdf",
+      "content_type": "application/pdf",
+      "text": "BRIGHTWATER APPAREL INC.\nPURCHASE ORDER\nPO No: BWA-50817 Rev A       Date: 11/03/2026\nStyle: BW-TS-204   Men's crew neck tee, 160 GSM\nUnit price: USD 3.85 / pc\nTerms: FOB Tuticorin\nEx-factory: 01/22/2027\nShip to: Brightwater DC, Seattle, WA, USA\n\nColor               S     M     L     XL    Total\nHeather Charcoal    400   800   800   400   2,400\nSunwashed Coral     200   400   400   200   1,200\n\nTOTAL QTY: 3,600 pcs\nTOTAL VALUE: USD 13,860.00"
+    }
+  ]
+}

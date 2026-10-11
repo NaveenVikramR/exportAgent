@@ -1,0 +1,15 @@
+{
+  "id": "t2_026",
+  "title": "Repeat order: same buyer, same style and colours as an open order, different PO and date",
+  "sender": "Megan Holt <megan.holt@brightwater-apparel.example>",
+  "subject": "New PO BWA-51002 – BW-TS-204 repeat (Spring 2)",
+  "received_at": "2026-12-09",
+  "body": "Hi Karthik,\n\nThe BW-TS-204 tee did so well that we're placing a repeat for our Spring 2 drop. PO BWA-51002 attached – same tee, same colors, later date.\n\nThanks,\nMegan\nBrightwater Apparel Inc.",
+  "attachments": [
+    {
+      "filename": "BWA-51002.pdf",
+      "content_type": "application/pdf",
+      "text": "BRIGHTWATER APPAREL INC.\nPURCHASE ORDER\nPO No: BWA-51002            Date: 12/09/2026\nStyle: BW-TS-204   Men's crew neck tee, 160 GSM\nUnit price: USD 3.85 / pc\nTerms: FOB Tuticorin\nEx-factory: 03/26/2027\nShip to: Brightwater DC, Seattle, WA, USA\n\nColor               S     M     L     XL    Total\nHeather Charcoal    400   800   800   400   2,400\nSunwashed Coral     200   400   400   200   1,200\n\nTOTAL QTY: 3,600 pcs\nTOTAL VALUE: USD 13,860.00"
+    }
+  ]
+}

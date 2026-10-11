@@ -1,0 +1,36 @@
+{
+  "id": "t2_005",
+  "classification": {
+    "category": "new_po",
+    "intents": [
+      "new_po"
+    ],
+    "has_po_data": true
+  },
+  "extraction": {
+    "buyer": "Southern Cross Outfitters Pty Ltd",
+    "po_number": "SCO-1145",
+    "style": "SC-RG-03",
+    "currency": "AUD",
+    "unit_price": "5.60",
+    "total_quantity": 2000,
+    "delivery_date": "2027-03-01",
+    "incoterms": "CFR",
+    "port": "Melbourne",
+    "destination_country": "Australia",
+    "line_items": [
+      {
+        "colour": "Eucalyptus Green",
+        "quantity": 1000
+      },
+      {
+        "colour": "Bush Sand",
+        "quantity": 1000
+      }
+    ]
+  },
+  "expected_review_fields": [],
+  "expected_changes": [],
+  "expected_high_risk": [],
+  "note": "Only a ratio is given, so no 'sizes' maps. 01/03/2027 from an Australian buyer is 1 March 2027. Date moved by t2_013."
+}

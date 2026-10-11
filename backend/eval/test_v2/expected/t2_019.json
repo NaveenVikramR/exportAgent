@@ -1,0 +1,13 @@
+{
+  "id": "t2_019",
+  "classification": {
+    "category": "payment",
+    "intents": [
+      "payment"
+    ],
+    "has_po_data": false
+  },
+  "extraction": null,
+  "expected_review_fields": [],
+  "note": "Mentions a PO and an amount, but carries no order data. The amount is a payment, not an order value."
+}
