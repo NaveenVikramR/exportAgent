@@ -69,13 +69,13 @@ def draft_out(session: Session, draft: Draft) -> DraftOut:
             offer = {
                 "action": "generate_documents",
                 "order_id": order.id,
-                "message": f"Reply approved. Generate the Commercial Invoice and Packing List for PO {order.po_number}?",
+                "message": f"Reply approved. Generate the Commercial Invoice and Packing List for PO {order.po_number or '(number pending)'}?",
             }
         elif order.status == "awaiting_buyer":
             offer = {
                 "action": "record_buyer_decision",
                 "order_id": order.id,
-                "message": (f"Reply approved. PO {order.po_number} now awaits the buyer's choice between the proposed "
+                "message": (f"Reply approved. PO {order.po_number or '(number pending)'} now awaits the buyer's choice between the proposed "
                             "plans; record it on the order page when they answer."),
             }
     return DraftOut(

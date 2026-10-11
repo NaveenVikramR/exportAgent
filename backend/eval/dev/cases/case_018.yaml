@@ -1,0 +1,37 @@
+id: case_018
+title: German PO with a "Farbe" size table and decimal-comma prices (EUR)
+sender: "Katrin Vogel <k.vogel@brunnhof-sport.example>"
+subject: "Bestellung BS-26-0442"
+received_at: "2026-10-07"
+body: |
+  Dear Karthik,
+
+  please find attached our order BS-26-0442 for the training tops we sampled in September.
+  Please confirm within the week.
+
+  Best regards,
+  Katrin Vogel
+  Einkauf, Brunnhof Sport GmbH
+attachments:
+  - filename: BS-26-0442.pdf
+    content_type: application/pdf
+    text: |
+      BRUNNHOF SPORT GMBH
+      Gewerbestraße 12, 83022 Rosenheim, Deutschland
+
+      BESTELLUNG Nr.: BS-26-0442
+      Datum: 07.10.2026
+      Lieferant: Sri Velan Knits, Tiruppur, Indien
+
+      Artikel: BS-TR-12 Trainingsshirt, 100% Polyester, recycelt
+      Einzelpreis: EUR 9,80
+      Lieferbedingung: FOB Tuticorin
+      Lieferadresse: Lager Rosenheim, Deutschland
+      Liefertermin ab Werk: 15.02.2027
+
+      Farbe        S     M     L     XL    Gesamt
+      Tannengrün   200   400   400   200   1.200
+      Anthrazit    200   400   400   200   1.200
+
+      Gesamtmenge: 2.400 Stück
+      Gesamtwert: EUR 23.520,00

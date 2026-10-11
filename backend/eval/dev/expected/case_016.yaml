@@ -1,0 +1,32 @@
+id: case_016
+classification:
+  category: po_revision
+  intents: [po_revision]
+  has_po_data: true
+extraction:
+  buyer: Orchard Row Ltd
+  po_number: null
+  style: OR-SW-40
+  currency: null
+  unit_price: null
+  total_quantity: null
+  delivery_date: null
+  incoterms: null
+  port: null
+  destination_country: null
+  line_items:
+    - {colour: Heather Marl, quantity: 300}
+# Buyer and style match but no PO number or date: the app should ask a person, who says yes.
+expected_review_fields: []
+revises: case_015
+expected_match_question: true
+# Heather Marl 300 added to 1,800 pcs
+true_state: {total_quantity: 2100}
+expected_changes:
+  - {field: total_quantity, old: 1800, new: 2100}
+  - {field: "line_items.Heather Marl", old: null, new: 300}
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: [value]
+risk_note: 'tight: Feasible but tight: 98% of free capacity used, 2 days of slack. | value +16.7% (2670.00)'

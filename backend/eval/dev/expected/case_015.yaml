@@ -1,0 +1,29 @@
+id: case_015
+classification:
+  # The formal PO for an order already booked by email.
+  category: new_po
+  intents: [new_po]
+  has_po_data: true
+extraction:
+  buyer: Orchard Row Ltd
+  po_number: OR-5521
+  style: OR-SW-40
+  currency: GBP
+  unit_price: "8.90"
+  total_quantity: 1800
+  delivery_date: "2027-03-05"
+  incoterms: FOB
+  port: Chennai
+  destination_country: United Kingdom
+  line_items:
+    - {colour: Oatmeal Marl, quantity: 900, sizes: {S: 100, M: 200, L: 300, XL: 200, XXL: 100}}
+    - {colour: Forest Green, quantity: 900, sizes: {S: 100, M: 200, L: 300, XL: 200, XXL: 100}}
+expected_review_fields: []
+# Same order as case_014 (buyer, style and ex-factory date match); it now gets its PO number.
+revises: case_014
+expected_changes: []
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'tight: Feasible but tight: 95% of free capacity used, 5 days of slack.'

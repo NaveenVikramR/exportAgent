@@ -1,0 +1,22 @@
+id: case_014
+title: Order agreed by email, PO number to follow (GBP)
+sender: "Tom Ashby <tom.ashby@orchardrow.example>"
+subject: "Sweatshirt order as discussed"
+received_at: "2026-10-02"
+body: |
+  Hi Karthik,
+
+  Good to speak this morning. As agreed, please book the crew-neck sweatshirts:
+
+  Style OR-SW-40, brushed back fleece 300 gsm
+  Oatmeal Marl 900 pcs, Forest Green 900 pcs - 1,800 pcs in total
+  Sizes S-XXL, ratio 1:2:3:2:1
+  GBP 8.90 per piece, FOB Chennai
+  Ex-factory 5 March 2027, for our stores in the UK
+
+  Our buying system is being migrated, so the PO number will follow - please go ahead with fabric booking.
+
+  Cheers,
+  Tom Ashby
+  Orchard Row Ltd, Bristol
+attachments: []

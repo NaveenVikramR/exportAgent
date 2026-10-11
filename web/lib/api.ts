@@ -249,7 +249,8 @@ export type POVersion = {
 export type OrderSummary = {
   id: number;
   buyer: string;
-  po_number: string;
+  // null until the buyer sends a PO number
+  po_number: string | null;
   style: string | null;
   status: string;
   profile: string;
@@ -260,6 +261,17 @@ export type OrderSummary = {
 };
 
 export type OrderDetail = OrderSummary & { versions: POVersion[] };
+
+// An email whose order could not be matched with confidence.
+export type MatchQuestion = {
+  email_id: number;
+  question: string;
+  score: number;
+  reasons: string[];
+  candidate_order_id: number;
+  subject: string;
+  sender: string;
+};
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_URL}/api${path}`, { cache: "no-store", ...init });
@@ -317,6 +329,13 @@ export const api = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ reviewer, reason }),
+    }),
+  matchQuestions: () => get<MatchQuestion[]>("/match-questions"),
+  answerMatch: (emailId: number, sameOrder: boolean, decidedBy: string) =>
+    request<{ order_id: number | null; version: number | null }>(`/emails/${emailId}/match`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ same_order: sameOrder, decided_by: decidedBy }),
     }),
   analyse: (id: string, force: boolean) =>
     request<EmailDetail>(`/emails/${id}/analyse?force=${force}`, { method: "POST" }),

@@ -1,6 +1,7 @@
 from datetime import date
 from decimal import Decimal
 from enum import StrEnum
+import re
 from typing import Any, Generic, TypeVar
 
 from pydantic import BaseModel, Field, field_validator, model_validator
@@ -43,11 +44,41 @@ class Extracted(BaseModel, Generic[T]):
     evidence: str | None = None
 
 
+_DECIMAL_COMMA = re.compile(r"^\d{1,3}(?:\.\d{3})+,\d+$|^\d+,\d{1,2}$")
+_GROUPED_INT = re.compile(r"^\d{1,3}(?:[.,\s\u00a0\u202f]\d{3})+$")
+
+
+def _amount(value: Any) -> Any:
+    """'9,80' -> '9.80', '41.160,00' -> '41160.00' (European decimal comma)."""
+    if isinstance(value, str):
+        text = value.strip().replace("\u00a0", "").replace(" ", "")
+        if _DECIMAL_COMMA.match(text):
+            return text.replace(".", "").replace(",", ".")
+    return value
+
+
+def _count(value: Any) -> Any:
+    """'4.200' or '4 200' or '4,200' -> 4200."""
+    if isinstance(value, str) and _GROUPED_INT.match(value.strip()):
+        return re.sub(r"\D", "", value)
+    return value
+
+
 class LineItem(BaseModel):
     colour: str | None = None
     sizes: dict[str, int] = Field(default_factory=dict)
     quantity: int | None = None
     unit_price: Decimal | None = None
+
+    @field_validator("unit_price", mode="before")
+    @classmethod
+    def _unit_price(cls, value: Any) -> Any:
+        return _amount(value)
+
+    @field_validator("quantity", mode="before")
+    @classmethod
+    def _quantity(cls, value: Any) -> Any:
+        return _count(value)
 
 
 class POExtraction(BaseModel):
@@ -62,6 +93,16 @@ class POExtraction(BaseModel):
     port: Extracted[str] = Field(default_factory=Extracted[str])
     destination_country: Extracted[str] = Field(default_factory=Extracted[str])
     line_items: list[LineItem] = Field(default_factory=list)
+    # revision split off the PO number by app/services/normalise.py ("CL-7731 Rev A" -> "A")
+    po_revision: str | None = None
+
+    @field_validator("unit_price", "total_quantity", mode="before")
+    @classmethod
+    def _numbers(cls, field: Any, info) -> Any:
+        if isinstance(field, dict) and "value" in field:
+            convert = _amount if info.field_name == "unit_price" else _count
+            return {**field, "value": convert(field["value"])}
+        return field
 
     @field_validator("currency", "incoterms")
     @classmethod
@@ -122,3 +163,7 @@ class ReviewedExtraction(BaseModel):
     fields: POExtraction
     review: list[ReviewFlag] = Field(default_factory=list)
     escalations: list[Escalation] = Field(default_factory=list)
+    # fields the email did not restate, taken from the order's previous version
+    inherited: list[str] = Field(default_factory=list)
+    # deterministic clean-ups applied (revision suffix split off, colour name restored, ...)
+    notes: list[str] = Field(default_factory=list)

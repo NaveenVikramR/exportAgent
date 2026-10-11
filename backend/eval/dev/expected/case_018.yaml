@@ -1,0 +1,28 @@
+id: case_018
+classification:
+  category: new_po
+  intents: [new_po]
+  has_po_data: true
+extraction:
+  buyer: Brunnhof Sport GmbH
+  po_number: BS-26-0442
+  style: BS-TR-12
+  currency: EUR
+  # "EUR 9,80" (decimal comma); quantities use a dot for thousands ("2.400")
+  unit_price: "9.80"
+  total_quantity: 2400
+  delivery_date: "2027-02-15"
+  incoterms: FOB
+  port: Tuticorin
+  destination_country: Germany
+  line_items:
+    - {colour: Tannengrün, quantity: 1200, sizes: {S: 200, M: 400, L: 400, XL: 200}}
+    - {colour: Anthrazit, quantity: 1200, sizes: {S: 200, M: 400, L: 400, XL: 200}}
+expected_review_fields: []
+# The "Farbe" size table should send the line items to Super.
+expected_escalation: true
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'tight: Feasible but tight: 96% of free capacity used, 3 days of slack.'

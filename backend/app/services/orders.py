@@ -1,6 +1,14 @@
-"""The order store. Every PO version is kept; nothing is overwritten."""
+"""The order store. Every PO version is kept; nothing is overwritten.
 
-from sqlalchemy import func, select
+An email is matched to an order with a scored match (app/services/order_matching.py):
+confident matches are applied, uncertain ones are put to a person ("Is this a revision
+of PO X?"), and an order can exist before its PO number is known.
+"""
+
+from dataclasses import dataclass
+from typing import Any
+
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.agent.tools.diff_po_versions import (
@@ -10,20 +18,21 @@ from app.agent.tools.diff_po_versions import (
 )
 from app.config import get_settings
 from app.models import Email, Order, POVersion
-from app.schemas.extraction import POExtraction
+from app.schemas.extraction import POExtraction, ReviewedExtraction
 from app.schemas.orders import StatedChange
+from app.services.order_matching import MatchResult, match_order, po_key
+from app.services.review import inherit_from_previous
 
 
 def normalise_po_number(po_number: str) -> str:
-    return "".join(po_number.split()).casefold()
+    """The comparable form of a PO number (revision suffix, spacing and case ignored)."""
+    return po_key(po_number) or ""
 
 
 def find_order(session: Session, po_number: str) -> Order | None:
-    """PO numbers are the matching key; spacing and case are ignored."""
-    key = normalise_po_number(po_number)
-    return session.scalar(
-        select(Order).where(func.lower(func.replace(Order.po_number, " ", "")) == key)
-    )
+    """The order with this PO number; a revision suffix, spacing and case are ignored."""
+    key = po_key(po_number)
+    return next((o for o in session.scalars(select(Order)) if key and po_key(o.po_number) == key), None)
 
 
 def _add_version(
@@ -51,42 +60,88 @@ def _add_version(
     return version
 
 
-def record_po_version(
+@dataclass
+class RecordResult:
+    version: POVersion | None = None
+    order: Order | None = None
+    # the order's data before this email (None for a new order)
+    previous: dict | None = None
+    match: MatchResult | None = None
+    # True when a person has to confirm which order this is
+    asked: bool = False
+
+
+def _new_order(session: Session, update: dict) -> Order:
+    order = Order(
+        buyer=update.get("buyer") or "Unknown buyer",
+        po_number=update.get("po_number"),
+        style=update.get("style"),
+        profile=get_settings().factory_profile,
+        current_version=0,
+    )
+    session.add(order)
+    return order
+
+
+def record_email_po(
     session: Session,
     email: Email,
     extraction: POExtraction,
     stated_changes: list[StatedChange],
-) -> POVersion | None:
-    """Match the email to an order by PO number and append versions (see plan_versions).
+    text: str,
+    *,
+    force_order: Order | None = None,
+    force_new: bool = False,
+) -> RecordResult:
+    """Match the email to an order and append versions (see plan_versions).
 
-    Returns the email's version, or None when there is no PO number to match on
-    or nothing changed. The same email never adds a second version, so
-    re-running analysis is safe.
+    - confident match: versions are added to that order;
+    - uncertain match: nothing is recorded; the question is stored on the email for a person;
+    - no match: a new order (with or without a PO number) is created.
+    The same email never adds a second version, so re-running analysis is safe.
     """
-    po_number = extraction.po_number.value
-    if not po_number:
-        return None
-
     existing = session.scalar(select(POVersion).where(POVersion.email_id == email.id))
     if existing is not None:
         email.order_id = existing.order_id
-        return existing
+        return RecordResult(version=existing, order=existing.order)
 
     update = snapshot_from_extraction(extraction)
-    confidence = confidence_from_extraction(extraction)
-    order = find_order(session, po_number)
-    if order is None:
-        order = Order(
-            buyer=update.get("buyer") or "Unknown buyer",
-            po_number=po_number,
-            style=update.get("style"),
-            profile=get_settings().factory_profile,
-            current_version=0,
-        )
-        session.add(order)
+    if extraction.po_revision:
+        update["po_revision"] = extraction.po_revision
+    match = None
+    if force_order is not None:
+        order = force_order
+    elif force_new:
+        order = _new_order(session, update)
+    else:
+        match = match_order(session, update, text)
+        if match.decision == "ask":
+            email.match = {
+                "candidate_order_id": match.best.order.id,
+                "candidate_po_number": match.best.order.po_number,
+                "candidate_buyer": match.best.order.buyer,
+                "score": match.best.score,
+                "reasons": match.best.reasons,
+                "stated_changes": [c.model_dump(mode="json") for c in stated_changes],
+                "status": "pending",
+            }
+            return RecordResult(match=match, asked=True)
+        order = match.order if match.decision == "match" else _new_order(session, update)
+
+    style = update.get("style")
+    if not update.get("po_number") and order.po_number and style and po_key(style) == po_key(order.po_number):
+        # The email names the order by its PO number without saying "PO"; it was read as the style.
+        update["po_number"], update["style"] = order.po_number, None
+        extraction.po_number, extraction.style = extraction.style, extraction.po_number
+    if order.po_number is None and update.get("po_number"):
+        # The PO number arrived after the order: record it.
+        order.po_number = update["po_number"]
     email.order = order
 
     previous = order.versions[-1].data if order.versions else None
+    if previous is not None and not previous.get("po_number") and order.po_number:
+        # A PO number that arrived with no other change is on the order, not in a version yet.
+        previous = {**previous, "po_number": order.po_number}
     version = None
     planned_versions = plan_versions(previous, update, stated_changes)
     if planned_versions:
@@ -97,9 +152,55 @@ def record_po_version(
             session,
             order,
             data=planned.data,
-            confidence=confidence if planned.from_email else None,
+            confidence=confidence_from_extraction(extraction) if planned.from_email else None,
             changes=planned.changes,
             email_id=email.id if planned.from_email else None,
             basis=planned.basis,
         )
-    return version
+    return RecordResult(version=version, order=order, previous=previous, match=match)
+
+
+def record_po_version(
+    session: Session,
+    email: Email,
+    extraction: POExtraction,
+    stated_changes: list[StatedChange],
+    text: str = "",
+) -> POVersion | None:
+    """record_email_po, returning only the email's version."""
+    return record_email_po(session, email, extraction, stated_changes, text).version
+
+
+def resolve_match(session: Session, email: Email, same_order: bool, decided_by: str) -> RecordResult:
+    """A person answered "Is this a revision of PO X?"; record the email accordingly."""
+    pending = email.match or {}
+    if pending.get("status") != "pending":
+        raise ValueError("This email has no open order-match question.")
+    extraction = POExtraction.model_validate((email.extraction or {}).get("fields") or {})
+    stated = [StatedChange.model_validate(c) for c in pending.get("stated_changes", [])]
+    order = session.get(Order, pending["candidate_order_id"]) if same_order else None
+    result = record_email_po(session, email, extraction, stated, "", force_order=order, force_new=not same_order)
+    if result.previous and email.extraction:
+        # Fields the email did not restate come from the order, as for a confident match.
+        reviewed = ReviewedExtraction.model_validate(email.extraction)
+        inherit_from_previous(reviewed, result.previous)
+        email.extraction = reviewed.model_dump(mode="json")
+        if not reviewed.review:
+            email.status = "analysed"
+    email.match = {**pending, "status": "answered", "same_order": same_order, "decided_by": decided_by}
+    session.commit()
+    return result
+
+
+def match_question(email: Email) -> dict[str, Any] | None:
+    pending = email.match or {}
+    if pending.get("status") != "pending":
+        return None
+    po = pending.get("candidate_po_number") or "(PO number pending)"
+    return {
+        "email_id": email.id,
+        "question": f"Is this email about the existing order PO {po} from {pending.get('candidate_buyer')}?",
+        "score": pending.get("score"),
+        "reasons": pending.get("reasons", []),
+        "candidate_order_id": pending.get("candidate_order_id"),
+    }

@@ -9,6 +9,12 @@ Variants:
              drafts, Ultra assesses risk
   nano_only  baseline: every task on Nano, no escalation
   ultra_all  baseline: every task on Ultra
+  super_risk baseline: routed, but risk planning and reasoning on Super instead of Ultra
+
+Order matching runs in the scratch database exactly as in the app. When the app asks a
+person "Is this the same order?", the label answers (yes when the case `revises` another, or
+its labelled PO number belongs to an earlier case);
+the questions are counted.
 
 Usage (from backend/):
   python -m eval.run_eval --split test --variant routed --run 1 [--no-drafts]
@@ -31,16 +37,18 @@ from sqlalchemy import create_engine, func, select
 from sqlalchemy.orm import sessionmaker
 
 from app.agent.loop import run_agent
-from app.agent.tools.diff_po_versions import plan_versions, snapshot_from_extraction
 from app.config import get_settings
 from app.db import Base, SessionLocal
 from app.llm.router import LLMError, LLMRouter
-from app.llm.tasks import Tier
-from app.models import Email, EmailAttachment, LLMCall, SearchCache
-from app.services.analysis import Analysis, analyse_email
+from app.llm.tasks import TaskType, Tier
+from app.models import Email, EmailAttachment, LLMCall, POVersion, SearchCache
+from app.schemas.orders import Change
+from app.services.analysis import analyse_email
 from app.services.drafting import DraftingError, generate_drafts
-from app.services.orders import normalise_po_number
-from eval.dataset import EVAL_DIR, Case, load_cases, load_expected
+from app.services.order_matching import po_key
+from app.services.orders import resolve_match
+from app.services.review import inherit_from_previous
+from eval.dataset import EVAL_DIR, SPLITS, Case, load_cases, load_expected
 from eval.scoring import score_case, score_changes
 
 RUNS_DIR = EVAL_DIR / "runs"
@@ -48,20 +56,29 @@ VARIANTS = {
     "routed": {},
     "nano_only": {"llm_force_tier": Tier.NANO, "escalation_enabled": False},
     "ultra_all": {"llm_force_tier": Tier.ULTRA},
+    "super_risk": {"llm_task_tier_overrides": {TaskType.PLANNING: Tier.SUPER, TaskType.RISK_REASONING: Tier.SUPER}},
+}
+# Pipeline stage of each task, for the per-stage cost table.
+STAGES = {
+    TaskType.CLASSIFY: "extraction", TaskType.EXTRACT: "extraction", TaskType.EXTRACT_ESCALATION: "extraction",
+    TaskType.CHANGE_DETECTION: "extraction", TaskType.PLANNING: "risk", TaskType.RISK_REASONING: "risk",
+    TaskType.DRAFT_REPLY: "drafting", TaskType.DRAFT_INTERNAL_NOTE: "drafting",
 }
 # Which risk group a high flag of each category counts towards.
 _HIGH_GROUPS = {"delivery": "schedule", "capacity": "schedule", "price": "value", "quantity": "value"}
 
 
-def predict_changes(store: dict[str, dict], analysis: Analysis) -> list:
-    """The same versioning the order store applies, kept in memory."""
-    if not analysis.extraction or not analysis.extraction.fields.po_number.value:
+def recorded_changes(session, email: Email, after_version_id: int) -> list:
+    """The changes in the versions the order store added for this email."""
+    if email.order_id is None:
         return []
-    key = normalise_po_number(analysis.extraction.fields.po_number.value)
-    planned = plan_versions(store.get(key), snapshot_from_extraction(analysis.extraction.fields), analysis.stated_changes)
-    if planned:
-        store[key] = planned[-1].data
-    return [change for version in planned for change in version.changes]
+    versions = session.scalars(select(POVersion).where(
+        POVersion.order_id == email.order_id, POVersion.id > after_version_id).order_by(POVersion.id))
+    return [Change.model_validate(change) for version in versions for change in version.changes or []]
+
+
+def _max_version_id(session) -> int:
+    return session.scalar(select(func.coalesce(func.max(POVersion.id), 0)))
 
 
 def high_groups(flags: list[dict]) -> list[str]:
@@ -81,10 +98,10 @@ def _max_id(session) -> int:
     return session.scalar(select(func.coalesce(func.max(LLMCall.id), 0)))
 
 
-def _usage(calls: list[LLMCall]) -> dict[str, dict]:
+def _usage(calls: list[LLMCall], key=lambda call: call.tier) -> dict[str, dict]:
     usage: dict[str, dict] = {}
     for call in calls:
-        tier = usage.setdefault(call.tier, {"calls": 0, "cost": Decimal(0), "latency_ms": 0,
+        tier = usage.setdefault(key(call), {"calls": 0, "cost": Decimal(0), "latency_ms": 0,
                                            "input_tokens": 0, "output_tokens": 0, "failed": 0})
         tier["calls"] += 1
         tier["cost"] += call.cost_usd
@@ -93,6 +110,31 @@ def _usage(calls: list[LLMCall]) -> dict[str, dict]:
         tier["output_tokens"] += call.output_tokens
         tier["failed"] += 0 if call.success else 1
     return usage
+
+
+def label_parent(expected: dict, case_of_po: dict[str, str], case_id: str) -> str | None:
+    """The earlier case about the same order, by the label: `revises`, or the same labelled PO."""
+    po = (expected.get("extraction") or {}).get("po_number")
+    parent = expected.get("revises") or (case_of_po.get(po_key(po)) if po else None)
+    if po:
+        case_of_po.setdefault(po_key(po), case_id)
+    return parent
+
+
+def _match_record(expected: dict, email: Email, question: dict | None, parent: str | None,
+                  order_of_case: dict[str, int], case_id: str) -> dict[str, Any] | None:
+    """Was the email put on the right order (an existing one, or a new one)?"""
+    if expected.get("extraction") is None:
+        return None
+    if parent:
+        ok = email.order_id is not None and email.order_id == order_of_case.get(parent)
+    else:
+        ok = email.order_id is not None and email.order_id not in order_of_case.values()
+    if email.order_id is not None:
+        order_of_case[case_id] = email.order_id
+    return {"expected": f"same order as {parent}" if parent else "new order",
+            "ok": ok, "asked": question is not None,
+            "score": question.get("score") if question else None}
 
 
 def run_pass(cases: list[Case], variant: str, *, drafts: bool, cache: bool) -> dict[str, Any]:
@@ -112,13 +154,16 @@ def run_pass(cases: list[Case], variant: str, *, drafts: bool, cache: bool) -> d
         scratch.commit()
 
     router = LLMRouter(settings, session_factory=Scratch, cache_session_factory=SessionLocal)
-    store: dict[str, dict] = {}
+    order_of_case: dict[str, int] = {}
+    case_of_po: dict[str, str] = {}
     records = []
     with Scratch() as session:
         for case in sorted(cases, key=lambda c: (c.received_at, c.id)):
             expected = load_expected(case.id)
             record: dict[str, Any] = {"case_id": case.id}
+            parent = label_parent(expected, case_of_po, case.id)
             first_call = _max_id(session)
+            first_version = _max_version_id(session)
             started = time.perf_counter()
             email = Email(
                 external_id=case.id, sender=case.sender, subject=case.subject, body=case.body,
@@ -132,11 +177,21 @@ def run_pass(cases: list[Case], variant: str, *, drafts: bool, cache: bool) -> d
                 analysis = analyse_email(session, email, router)
                 if analysis is None:
                     raise LLMError(email.analysis_error or "analysis failed")
+                question = dict(email.match) if (email.match or {}).get("status") == "pending" else None
+                if question:
+                    # The label plays the person answering "Is this the same order?".
+                    resolved = resolve_match(session, email, parent is not None, "eval oracle")
+                    if resolved.previous and analysis.extraction:
+                        inherit_from_previous(analysis.extraction, resolved.previous)
+                record["match"] = _match_record(expected, email, question, parent, order_of_case, case.id)
                 nano_only = replace(analysis, extraction=analysis.extraction_before_escalation)
                 record["score"] = asdict(score_case(case.id, expected, analysis))
                 record["score_before_escalation"] = asdict(score_case(case.id, expected, nano_only))
                 record["changes"] = asdict(score_changes(
-                    case.id, expected.get("expected_changes") or [], predict_changes(store, analysis)))
+                    case.id, expected.get("expected_changes") or [], recorded_changes(session, email, first_version)))
+                if "expected_po_revision" in expected:
+                    record["po_revision"] = {"expected": str(expected["expected_po_revision"]),
+                                             "extracted": analysis.extraction.fields.po_revision if analysis.extraction else None}
                 record["has_extraction"] = analysis.extraction is not None
                 record["escalations"] = [e.model_dump(mode="json") for e in analysis.extraction.escalations] \
                     if analysis.extraction else []
@@ -168,7 +223,9 @@ def run_pass(cases: list[Case], variant: str, *, drafts: bool, cache: bool) -> d
             except LLMError as exc:
                 record["error"] = str(exc)[:500]
             record["seconds"] = round(time.perf_counter() - started, 2)
-            record["usage"] = _usage(_calls(session, first_call, _max_id(session)))
+            calls = _calls(session, first_call, _max_id(session))
+            record["usage"] = _usage(calls)
+            record["stage_usage"] = _usage(calls, key=lambda call: STAGES.get(call.task_type, "other"))
             records.append(record)
             cost = sum((u["cost"] for u in record["usage"].values()), Decimal(0))
             print(f"{case.id}: {record['seconds']:.1f}s ${cost:.4f}" + (f" ERROR {record['error'][:80]}" if "error" in record else ""),
@@ -185,7 +242,7 @@ def run_pass(cases: list[Case], variant: str, *, drafts: bool, cache: bool) -> d
 def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     parser = argparse.ArgumentParser()
-    parser.add_argument("--split", choices=["dev", "test"], required=True)
+    parser.add_argument("--split", choices=list(SPLITS), required=True)
     parser.add_argument("--variant", choices=sorted(VARIANTS), default="routed")
     parser.add_argument("--run", type=int, default=1)
     parser.add_argument("--no-drafts", action="store_true")

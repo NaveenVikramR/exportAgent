@@ -13,6 +13,7 @@ from fractions import Fraction
 from typing import Any
 
 from app.schemas.extraction import SCALAR_FIELDS, POExtraction
+from app.services.order_matching import same_buyer
 from app.schemas.orders import DELIVERY_PULLED_FORWARD, Change, ChangeKind, StatedChange
 
 Snapshot = dict[str, Any]
@@ -51,9 +52,55 @@ def merge_snapshots(previous: Snapshot, update: Snapshot) -> Snapshot:
     for name in SCALAR_FIELDS:
         if update.get(name) is not None:
             merged[name] = update[name]
-    if update.get("line_items"):
-        merged["line_items"] = deepcopy(update["line_items"])
+    if update.get("po_revision"):
+        merged["po_revision"] = update["po_revision"]
+    items =[item for item in update.get("line_items") or [] if item.get("colour") or item.get("quantity")]
+    if items:
+        previous_items = merged.get("line_items") or []
+        if is_full_line_list(update, items, previous_items):
+            merged["line_items"] = deepcopy(items)
+        else:
+            merged["line_items"] = _merge_line_items(previous_items, items)
+            # The email changed some colours but did not restate the order total (a total equal to the
+            # added colours is the quantity added, not the order's): recompute it.
+            restated = update.get("total_quantity") is not None and not _only_new_colours(previous_items, items)
+            if not restated and all(i.get("quantity") for i in merged["line_items"]):
+                merged["total_quantity"] = sum(int(i["quantity"]) for i in merged["line_items"])
     return merged
+
+
+def is_full_line_list(update: Snapshot, items: list[dict], previous: list[dict] | None = None) -> bool:
+    """Does the update list every colour? Yes when its colours add up to its stated total.
+
+    "Increase Black to 2,000; White and Sage stay" names one colour and no total: a partial update.
+    "Ecru 1,500 and Navy 1,500, 3,000 in total" is the full list, so a colour left out is removed.
+    "Add Heather Marl, 300 pcs" names only colours the order does not have: an addition, even
+    when 300 is read as the total.
+    """
+    if previous and _only_new_colours(previous, items):
+        return False
+    total = update.get("total_quantity")
+    quantities = [item.get("quantity") for item in items]
+    return total is not None and all(quantities) and sum(int(q) for q in quantities) == int(total)
+
+
+def _only_new_colours(previous: list[dict], items: list[dict]) -> bool:
+    known = {(item.get("colour") or "").casefold() for item in previous}
+    return bool(known) and not any((item.get("colour") or "").casefold() in known for item in items)
+
+
+def _merge_line_items(previous: list[dict], changed: list[dict]) -> list[dict]:
+    """Colours named in the update replace their previous line; the others carry over."""
+    by_colour = {(item.get("colour") or "").casefold(): deepcopy(item) for item in previous}
+    for item in changed:
+        key = (item.get("colour") or "").casefold()
+        old = by_colour.get(key, {})
+        new = deepcopy(item)
+        # Sizes not restated stay only if the colour's quantity did not change.
+        if not new.get("sizes") and old.get("sizes") and old.get("quantity") == new.get("quantity"):
+            new["sizes"] = old["sizes"]
+        by_colour[key] = {**old, **{k: v for k, v in new.items() if v not in (None, {}, [])}, "sizes": new.get("sizes") or {}}
+    return list(by_colour.values())
 
 
 def _coerce(field: str, value: Any) -> Any:
@@ -88,6 +135,9 @@ def _same(field: str, old: Any, new: Any) -> bool:
             return Decimal(str(old)) == Decimal(str(new))
         except InvalidOperation:
             return False
+    if field == "buyer" and same_buyer(old, new):
+        # "Tidewater Lane" and "TIDEWATER LANE INC." are the same buyer
+        return True
     if isinstance(old, str) and isinstance(new, str):
         return old.strip().casefold() == new.strip().casefold()
     return old == new

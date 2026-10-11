@@ -9,7 +9,7 @@ from app.schemas.extraction import SCALAR_FIELDS, EmailCategory
 from eval.dataset import load_cases, load_expected
 from eval.scoring import values_match
 
-CASES = load_cases("dev") + load_cases("test")
+CASES = load_cases("dev") + load_cases("test") + load_cases("test_v2")
 CATEGORIES = {category.value for category in EmailCategory}
 
 
@@ -44,7 +44,8 @@ def test_label_is_well_formed(case):
     for item in extraction["line_items"]:
         if item.get("sizes"):
             assert sum(item["sizes"].values()) == item["quantity"]
-    if extraction["line_items"] and extraction["total_quantity"]:
+    # A partial update names only the colours that change, next to the order's new total.
+    if extraction["line_items"] and extraction["total_quantity"] and not expected.get("partial_line_items"):
         assert sum(item["quantity"] for item in extraction["line_items"]) == extraction["total_quantity"]
 
 

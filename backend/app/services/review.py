@@ -40,6 +40,16 @@ def _evidence_states(name: str, value: str, evidence: str) -> bool:
     return name == "currency" and any(symbol in quote for symbol in _CURRENCY_SYMBOLS.get(value.upper(), ()))
 
 
+def inherit_from_previous(reviewed: ReviewedExtraction, previous: dict) -> None:
+    """A field the email did not restate keeps the order's previous value: it is not missing."""
+    inherited = [
+        flag.field for flag in reviewed.review
+        if flag.reason == "missing" and flag.field in SCALAR_FIELDS and previous.get(flag.field) is not None
+    ]
+    reviewed.review = [f for f in reviewed.review if not (f.reason == "missing" and f.field in inherited)]
+    reviewed.inherited = sorted(set(reviewed.inherited) | set(inherited))
+
+
 def review_extraction(
     extraction: POExtraction,
     source_text: str,

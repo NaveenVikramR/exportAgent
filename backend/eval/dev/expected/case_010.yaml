@@ -23,5 +23,5 @@ expected_review_fields: [po_number]
 
 # High-risk findings expected under the severity rubric: schedule = the current plan is
 # infeasible; value = contract value changed above the threshold.
-expected_high_risk: []
-risk_note: 'no order'
+expected_high_risk: [schedule]
+risk_note: 'Orders without a PO number are now stored and assessed (this step); the factory has no free capacity left before 18 Dec, so the plan is infeasible.'

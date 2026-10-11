@@ -28,14 +28,26 @@ _FLAG_REASONS = {
 }
 
 
+# Header words for "colour" and "size" in the languages buyers write POs in.
+_COLOUR_WORDS = r"colou?rs?|coloris|couleurs?|colores|farben?|kleur(?:en)?|colori|renk"
+_SIZE_WORDS = r"sizes?|tailles?|tallas?|gr(?:ö|oe)(?:ss|ß)en?|maten|taglie"
+_HEADER_WORD = re.compile(rf"^(?:{_COLOUR_WORDS}|{_SIZE_WORDS})$", re.IGNORECASE)
+
+
 def has_size_table(text: str) -> bool:
-    """A header row like "Colour  S  M  L  Total" followed by a row of quantities."""
+    """A table header (colour or size column first, in any of several languages) followed by a row of quantities.
+
+    Covers "Colour  S  M  L  Total", "Kleur/Colour ...", "Coloris / Colour 4A 6A", "Farbe S M L Gesamt",
+    and tables with sizes as rows ("Size | Navy | White").
+    """
     lines = [line for line in text.splitlines() if line.strip()]
     for header, row in zip(lines, lines[1:]):
-        tokens = header.split()
         # A table header is a list of column names, not a sentence like "Colours and quantities: ..."
-        if len(tokens) >= 4 and ":" not in header and re.fullmatch(r"colou?rs?", tokens[0], re.IGNORECASE):
-            if len(re.findall(r"\d[\d,]*", row)) >= 3:
+        if ":" in header:
+            continue
+        tokens = [t for t in re.split(r"[\s|/,;]+", header) if t]
+        if len(tokens) >= 3 and any(_HEADER_WORD.match(t) for t in tokens[:3]):
+            if len(re.findall(r"\d[\d,.]*", row)) >= 2:
                 return True
     return False
 

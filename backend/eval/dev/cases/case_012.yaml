@@ -1,0 +1,35 @@
+id: case_012
+title: Revision with a suffix in the PO number ("TL-8812 Rev A"), one colour up
+sender: "Dana Whitlock <dana.whitlock@tidewaterlane.example>"
+subject: "TL-8812 Rev A"
+received_at: "2026-10-06"
+body: |
+  Hi Karthik,
+
+  Attached is TL-8812 Rev A. Ocean Stripe has been selling through faster in the test stores,
+  so we are taking it up to 1,200 pcs. Everything else stays the same.
+
+  Best,
+  Dana
+attachments:
+  - filename: TL-8812_RevA.pdf
+    content_type: application/pdf
+    text: |
+      TIDEWATER LANE INC.
+      PURCHASE ORDER   PO No: TL-8812 Rev A
+      Revision date: 10/06/2026
+      Vendor: Sri Velan Knits, Tiruppur
+
+      Style: TL-HD-07  Unisex fleece hoodie
+      Unit price: USD 7.20
+      Terms: FOB Tuticorin
+      Ship to: Tidewater Lane DC, Savannah GA, USA
+      Ex-factory date: February 20, 2027
+
+      Colour          S     M     L     XL    Total
+      Ocean Stripe    225   375   375   225   1200
+      Coral Dot       100   200   200   100   600
+      Sand Heather    100   200   200   100   600
+
+      Total quantity: 2,400 pcs
+      Total value: USD 17,280.00

@@ -1,0 +1,27 @@
+id: case_019
+classification:
+  category: new_po
+  intents: [new_po]
+  has_po_data: true
+extraction:
+  buyer: Marisma Moda S.A.
+  po_number: MRS/26/0417
+  style: MRS-T-205
+  currency: EUR
+  unit_price: "5.45"
+  total_quantity: 2600
+  delivery_date: "2027-02-26"
+  incoterms: FOB
+  port: Chennai
+  destination_country: Spain
+  # Sizes are rows and colours are columns in the PO.
+  line_items:
+    - {colour: Azul Marino, quantity: 1500, sizes: {S: 300, M: 500, L: 500, XL: 200}}
+    - {colour: Blanco Roto, quantity: 1100, sizes: {S: 200, M: 400, L: 400, XL: 100}}
+expected_review_fields: []
+expected_escalation: true
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'tight: Feasible but tight: 95% of free capacity used, 5 days of slack.'

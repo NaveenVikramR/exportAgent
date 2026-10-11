@@ -1,0 +1,15 @@
+id: case_016
+title: Add a colour to an order without quoting its PO number (uncertain match)
+sender: "Tom Ashby <tom.ashby@orchardrow.example>"
+subject: "One more colour"
+received_at: "2026-10-14"
+body: |
+  Hi Karthik,
+
+  Our merchandiser wants a third colour on the OR-SW-40 sweatshirts: please add Heather Marl,
+  300 pcs, same size ratio and same price.
+
+  Thanks,
+  Tom Ashby
+  Orchard Row Ltd
+attachments: []

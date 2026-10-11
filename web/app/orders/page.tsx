@@ -52,7 +52,7 @@ export default function Orders() {
                 <tr key={order.id} className="border-t border-zinc-100 hover:bg-zinc-50">
                   <td className="px-4 py-2.5 font-medium">
                     <Link href={`/orders/${order.id}`} className="hover:underline">
-                      {order.po_number}
+                      {order.po_number ?? <span className="italic text-zinc-500">PO pending</span>}
                     </Link>
                   </td>
                   <td className="px-4 py-2.5">{order.buyer}</td>

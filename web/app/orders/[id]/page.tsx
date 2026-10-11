@@ -151,7 +151,7 @@ export default function OrderPage() {
         <>
           <header className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <h1 className="text-xl font-semibold">PO {order.po_number}</h1>
+              <h1 className="text-xl font-semibold">{order.po_number ? `PO ${order.po_number}` : "PO number pending"}</h1>
               <p className="text-sm text-zinc-600">
                 {order.buyer} · version {order.current_version} · <OrderStatusBadge status={order.status} />
               </p>

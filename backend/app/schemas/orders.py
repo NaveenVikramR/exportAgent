@@ -57,7 +57,8 @@ class OrderSummary(BaseModel):
 
     id: int
     buyer: str
-    po_number: str
+    # None until the buyer sends a PO number
+    po_number: str | None
     style: str | None
     status: str
     profile: str

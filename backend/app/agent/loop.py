@@ -55,7 +55,8 @@ def build_observation(email: Email, order: Order | None) -> dict[str, Any]:
             ],
         },
         "extracted": {
-            name: value.get("value") for name, value in fields.items() if name != "line_items"
+            name: value.get("value") if isinstance(value, dict) else value
+            for name, value in fields.items() if name != "line_items"
         },
         "line_items": fields.get("line_items", []),
         "fields_needing_review": [
@@ -99,7 +100,8 @@ def _parse_report(text: str | None) -> RiskReport:
 
 def prefetch_calls(order: Order) -> list[tuple[str, dict[str, Any]]]:
     """The deterministic checks every order gets, before the model is involved."""
-    calls: list[tuple[str, dict[str, Any]]] = [("find_order", {"po_number": order.po_number})]
+    lookup = {"po_number": order.po_number} if order.po_number else {"order_id": order.id}
+    calls: list[tuple[str, dict[str, Any]]] = [("find_order", lookup)]
     versions = order.versions
     current = versions[-1].data
     if len(versions) >= 2:

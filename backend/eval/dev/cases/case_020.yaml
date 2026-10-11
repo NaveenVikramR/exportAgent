@@ -1,0 +1,36 @@
+id: case_020
+title: New PO priced in JPY
+sender: "Aiko Mori <a.mori@hinokiworks.example>"
+subject: "PO HW-26-0193 / indigo tees"
+received_at: "2026-10-03"
+body: |
+  Dear Karthik-san,
+
+  Thank you for the samples. Please find our purchase order HW-26-0193 attached.
+
+  Best regards,
+  Aiko Mori
+  Hinoki Works Co., Ltd., Osaka
+attachments:
+  - filename: HW-26-0193.pdf
+    content_type: application/pdf
+    text: |
+      HINOKI WORKS CO., LTD.
+      2-5-1 Minamisenba, Chuo-ku, Osaka, Japan
+
+      PURCHASE ORDER No. HW-26-0193
+      Date: 2026/10/03
+      Supplier: Sri Velan Knits
+
+      Style: HW-TE-88 Garment-dyed tee, 100% cotton slub
+      Unit price: JPY 610
+      Terms: FOB Chennai
+      Destination: Osaka, Japan
+      Ex-factory: 2027/03/12
+
+      Colour         S     M     L     XL    Total
+      Indigo Fade    300   500   500   200   1500
+      Kinari White   300   500   500   200   1500
+
+      Total quantity: 3,000 pcs
+      Amount: JPY 1,830,000

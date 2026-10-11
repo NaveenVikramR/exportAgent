@@ -26,7 +26,8 @@ _RANK = {"low": 0, "medium": 1, "high": 2}
 
 class SeverityPolicy(BaseModel):
     high_contract_value_change_pct: float
-    high_contract_value_change_abs: float
+    high_contract_value_change_abs_usd: float
+    usd_rates: dict[str, float] = {}
 
 
 class FlagPolicy(BaseModel):
@@ -73,10 +74,13 @@ def contract_value_change(old: dict[str, Any], new: dict[str, Any]) -> dict[str,
 
 
 def is_high_value_change(change: dict[str, Any], policy: RiskPolicy) -> bool:
-    return (
-        abs(change["change_pct"]) > policy.severity.high_contract_value_change_pct
-        or abs(Decimal(change["change"])) > Decimal(str(policy.severity.high_contract_value_change_abs))
-    )
+    """Above the percentage threshold, or above the absolute threshold once converted to USD."""
+    if abs(change["change_pct"]) > policy.severity.high_contract_value_change_pct:
+        return True
+    rate = policy.severity.usd_rates.get((change.get("currency") or "USD").upper())
+    if rate is None:
+        return False
+    return abs(Decimal(change["change"])) * Decimal(str(rate)) > Decimal(str(policy.severity.high_contract_value_change_abs_usd))
 
 
 def _urls(evidence: dict[str, dict]) -> set[str]:

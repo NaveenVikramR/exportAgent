@@ -1,0 +1,34 @@
+id: case_015
+title: The PO number for an order booked without one arrives
+sender: "Tom Ashby <tom.ashby@orchardrow.example>"
+subject: "PO for the sweatshirts"
+received_at: "2026-10-12"
+body: |
+  Hi Karthik,
+
+  Our system is back up - the official purchase order for the crew-neck sweatshirts is attached.
+  No changes from what we agreed on the phone.
+
+  Tom
+attachments:
+  - filename: OR-5521.pdf
+    content_type: application/pdf
+    text: |
+      ORCHARD ROW LTD
+      14 Quay Street, Bristol BS1 4DB, United Kingdom
+
+      PURCHASE ORDER OR-5521
+      Order date: 12/10/2026
+      Supplier: Sri Velan Knits
+
+      Style: OR-SW-40 Crew-neck sweatshirt, brushed back fleece 300 gsm
+      Price: GBP 8.90 / pc
+      Incoterm: FOB Chennai
+      Destination: Bristol, United Kingdom
+      Ex-factory: 05/03/2027
+
+      Colour          S     M     L     XL    XXL   Total
+      Oatmeal Marl    100   200   300   200   100   900
+      Forest Green    100   200   300   200   100   900
+
+      Total: 1,800 pcs    Value: GBP 16,020.00

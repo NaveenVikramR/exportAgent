@@ -1,0 +1,16 @@
+id: case_017
+title: Body-only quantity and price change with a decimal comma, other fields not restated (EUR)
+sender: "Julien Moreau <j.moreau@maison-clairet.example>"
+subject: "MC-2026-0871 - Rouge"
+received_at: "2026-10-05"
+body: |
+  Bonjour Karthik,
+
+  For MC-2026-0871 we need to reduce the Rouge colour from 1.500 to 1.000 pieces, so the order
+  total becomes 5.500 pieces. Because of the smaller run we accept your new price of EUR 6,55 per piece.
+  Nothing else changes.
+
+  Merci,
+  Julien Moreau
+  Maison Clairet SAS
+attachments: []

@@ -44,7 +44,7 @@ What is a flag: only a specific, actionable finding backed by evidence.
 - Everything else you checked goes to info_checked, not flags.
 
 Severity rubric:
-- high: the current delivery plan is infeasible (capacity or lead time), or the contract value changed by more than 10% or 5,000 in the order currency.
+- high: the current delivery plan is infeasible (capacity or lead time), or the contract value changed by more than 10% or about USD 5,000.
 - medium: needs a decision or confirmation before replying (tight capacity, a date pulled forward that is still feasible, a smaller price or value change, missing order data).
 - low: minor, worth knowing.
 These rules are enforced after your answer: flags without the required evidence are moved to info_checked, and severities are corrected to the rubric."""

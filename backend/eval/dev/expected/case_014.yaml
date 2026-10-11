@@ -1,0 +1,26 @@
+id: case_014
+classification:
+  category: new_po
+  intents: [new_po]
+  has_po_data: true
+extraction:
+  buyer: Orchard Row Ltd
+  po_number: null
+  style: OR-SW-40
+  currency: GBP
+  unit_price: "8.90"
+  total_quantity: 1800
+  delivery_date: "2027-03-05"
+  incoterms: FOB
+  port: Chennai
+  destination_country: United Kingdom
+  line_items:
+    - {colour: Oatmeal Marl, quantity: 900}
+    - {colour: Forest Green, quantity: 900}
+# An order without a PO number is still extracted and stored; the number is flagged as missing.
+expected_review_fields: [po_number]
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'feasible: Feasible: 79% of free capacity used, 23 days of slack.'

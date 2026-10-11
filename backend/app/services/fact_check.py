@@ -23,7 +23,8 @@ _NUMERIC = re.compile(r"\b(\d{1,2})/(\d{1,2})/(\d{4})\b")  # day first, as expor
 _DAY_MONTH = re.compile(rf"\b{_DAY}\s+(?:of\s+)?{_MONTH}{_YEAR}\b", re.IGNORECASE)
 _MONTH_DAY = re.compile(rf"\b{_MONTH}\s+{_DAY}{_YEAR}\b", re.IGNORECASE)
 
-_AMOUNT = r"(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)"
+# European decimal comma first ("9,80", "41.160,00"), then "65,475.00" / "4.85" / "120".
+_AMOUNT = r"(\d{1,3}(?:\.\d{3})+,\d{2}(?!\d)|\d+,\d{2}(?![\d,])|\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)"
 # An optional k/m suffix scales the amount ("$5k" is 5,000).
 _MONEY = re.compile(rf"(?:USD|EUR|GBP|AUD|INR|US\$|A\$|\$|€|£)\s?{_AMOUNT}([km])?\b", re.IGNORECASE)
 _SCALE = {"k": 1000, "m": 1_000_000}
@@ -32,12 +33,17 @@ _PLAIN_AMOUNT = re.compile(r"(?<![\d.,])(\d{1,3}(?:,\d{3})+\.\d{2})(?![\d])")
 _UNIT_PRICE = re.compile(r"\b(\d+\.\d{2})\s*(?:per piece|per pc|/pc|/piece|each)\b", re.IGNORECASE)
 _QUANTITY = re.compile(r"\b(\d{1,3}(?:,\d{3})+|\d+)\s*(?:pcs|pieces|pc|units|garments)\b", re.IGNORECASE)
 _BIG_NUMBER = re.compile(r"(?<![\d.,])(\d{1,3}(?:,\d{3})+)(?![\d.,]*\d)")
-_ANY_NUMBER = re.compile(r"\d[\d,]*(?:\.\d+)?")
+_ANY_NUMBER = re.compile(r"\d{1,3}(?:\.\d{3})+,\d{2}(?!\d)|\d+,\d{2}(?![\d,])|\d[\d,]*(?:\.\d+)?")
 
 DateKey = tuple[int | None, int, int]
 
 
+_DECIMAL_COMMA = re.compile(r"^\d{1,3}(?:\.\d{3})+,\d{2}$|^\d+,\d{2}$")
+
+
 def _number(text: str) -> Decimal | None:
+    if _DECIMAL_COMMA.match(text):
+        text = text.replace(".", "").replace(",", ".")
     try:
         return Decimal(text.replace(",", "")).normalize()
     except InvalidOperation:

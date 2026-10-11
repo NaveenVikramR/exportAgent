@@ -24,5 +24,7 @@ expected_changes:
 
 # High-risk findings expected under the severity rubric: schedule = the current plan is
 # infeasible; value = contract value changed above the threshold.
-expected_high_risk: []
-risk_note: 'tight: Feasible but tight: 94% of free capacity used, 4 days of slack.'
+expected_high_risk: [schedule]
+# Corrected after Milestone 7: the order without a PO number in test_006 is a real booking and uses
+# capacity too; the M7 label left it out (the app could not store such orders then).
+risk_note: 'infeasible: 2,100 pcs needed but only 742 pcs of free capacity remain before 2027-02-26 after other orders (1,358 pcs short).'

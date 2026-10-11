@@ -1,0 +1,29 @@
+id: case_013
+classification:
+  category: delivery_change
+  intents: [delivery_change]
+  has_po_data: true
+extraction:
+  buyer: null
+  po_number: TL-8812
+  style: null
+  currency: null
+  unit_price: null
+  total_quantity: null
+  delivery_date: "2027-02-06"
+  incoterms: null
+  port: null
+  destination_country: null
+  line_items: []
+# The email is signed "Dana" only; a buyer read from the domain is not scored.
+skip_fields: [buyer]
+# Fields not restated are inherited from the order, not flagged as missing.
+expected_review_fields: []
+revises: case_012
+expected_changes:
+  - {field: delivery_date, old: "2027-02-20", new: "2027-02-06"}
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: [schedule]
+risk_note: 'infeasible: 2,400 pcs needed but only 0 pcs of free capacity remain before 2027-02-06 after other orders (2,400 pcs short).'

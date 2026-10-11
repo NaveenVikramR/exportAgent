@@ -12,9 +12,10 @@ from app.llm.router import LLMError, LLMRouter, SpendCapExceeded
 from app.models import Email
 from app.schemas.extraction import Classification, EmailCategory, ReviewedExtraction
 from app.schemas.orders import StatedChange
-from app.services.orders import record_po_version
+from app.services.orders import record_email_po
 from app.services.escalation import escalate
-from app.services.review import review_extraction
+from app.services.normalise import normalise_extraction
+from app.services.review import inherit_from_previous, review_extraction
 
 
 @dataclass(frozen=True)
@@ -57,19 +58,29 @@ def email_text(email: Email) -> str:
     )
 
 
+# Categories that always concern an order's data, whatever the model said about has_po_data.
+_ORDER_CATEGORIES = {EmailCategory.NEW_PO, EmailCategory.PO_REVISION, EmailCategory.DELIVERY_CHANGE}
+
+
 def analyse_text(router: LLMRouter, text: str) -> Analysis:
     classification = classify_email(router, text)
+    if classification.category in _ORDER_CATEGORIES:
+        # e.g. "our PO number will follow": still an order, so extract it.
+        classification.has_po_data = True
     if not classification.has_po_data:
         return Analysis(classification=classification, extraction=None)
     settings = router.settings
     threshold = settings.review_confidence_threshold
     extraction = extract_po_fields(router, text)
+    notes = normalise_extraction(extraction, text)
     reviewed = review_extraction(extraction, text, classification.category, threshold)
     final = (
         escalate(router, reviewed, text, classification.category, threshold)
         if settings.escalation_enabled
         else reviewed
     )
+    # Escalated fields (e.g. a re-read PO number or line items) get the same clean-up.
+    final.notes = list(dict.fromkeys(notes + normalise_extraction(final.fields, text)))
     stated = (
         extract_stated_changes(router, text)
         if classification.category in _CHANGE_CATEGORIES
@@ -101,11 +112,17 @@ def analyse_email(session: Session, email: Email, router: LLMRouter) -> Analysis
         return None
 
     email.classification = analysis.classification.model_dump(mode="json")
-    email.extraction = analysis.extraction.model_dump(mode="json") if analysis.extraction else None
     email.analysis_error = None
+    asked = False
     if analysis.extraction:
-        record_po_version(session, email, analysis.extraction.fields, analysis.stated_changes)
-    needs_review = bool(analysis.extraction and analysis.extraction.review)
+        recorded = record_email_po(
+            session, email, analysis.extraction.fields, analysis.stated_changes, email_text(email)
+        )
+        asked = recorded.asked
+        if recorded.previous:
+            inherit_from_previous(analysis.extraction, recorded.previous)
+    email.extraction = analysis.extraction.model_dump(mode="json") if analysis.extraction else None
+    needs_review = asked or bool(analysis.extraction and analysis.extraction.review)
     email.status = "needs_review" if needs_review else "analysed"
     session.commit()
     return analysis

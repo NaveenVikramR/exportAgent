@@ -1,0 +1,34 @@
+id: case_021
+title: Small JPY price revision ("Revision 1"), large in yen but small in USD
+sender: "Aiko Mori <a.mori@hinokiworks.example>"
+subject: "HW-26-0193 Revision 1"
+received_at: "2026-10-16"
+body: |
+  Dear Karthik-san,
+
+  As discussed, the unit price is revised to JPY 590 (from JPY 610). Please see HW-26-0193 Revision 1 attached.
+  All other terms are unchanged.
+
+  Best regards,
+  Aiko Mori
+attachments:
+  - filename: HW-26-0193_R1.pdf
+    content_type: application/pdf
+    text: |
+      HINOKI WORKS CO., LTD.
+      PURCHASE ORDER No. HW-26-0193 Revision 1
+      Date: 2026/10/16
+      Supplier: Sri Velan Knits
+
+      Style: HW-TE-88 Garment-dyed tee, 100% cotton slub
+      Unit price: JPY 590
+      Terms: FOB Chennai
+      Destination: Osaka, Japan
+      Ex-factory: 2027/03/12
+
+      Colour         S     M     L     XL    Total
+      Indigo Fade    300   500   500   200   1500
+      Kinari White   300   500   500   200   1500
+
+      Total quantity: 3,000 pcs
+      Amount: JPY 1,770,000

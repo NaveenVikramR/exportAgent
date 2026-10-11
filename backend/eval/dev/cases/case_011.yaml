@@ -1,0 +1,38 @@
+id: case_011
+title: New PO with multi-word colour names (USD, FOB)
+sender: "Dana Whitlock <dana.whitlock@tidewaterlane.example>"
+subject: "New PO TL-8812 - fleece hoodies"
+received_at: "2026-10-01"
+body: |
+  Hi Karthik,
+
+  Please find our new purchase order TL-8812 attached for the TL-HD-07 fleece hoodie.
+  Please confirm receipt and the ex-factory date.
+
+  Thanks,
+  Dana Whitlock
+  Sourcing Manager, Tidewater Lane Inc., Charleston SC
+attachments:
+  - filename: TL-8812.pdf
+    content_type: application/pdf
+    text: |
+      TIDEWATER LANE INC.
+      410 Meeting Street, Charleston, SC 29401, USA
+
+      PURCHASE ORDER   PO No: TL-8812
+      Date: 10/01/2026
+      Vendor: Sri Velan Knits, Tiruppur
+
+      Style: TL-HD-07  Unisex fleece hoodie, 80% cotton 20% polyester, 280 gsm
+      Unit price: USD 7.20
+      Terms: FOB Tuticorin
+      Ship to: Tidewater Lane DC, Savannah GA, USA
+      Ex-factory date: February 20, 2027
+
+      Colour          S     M     L     XL    Total
+      Ocean Stripe    150   250   250   150   800
+      Coral Dot       100   200   200   100   600
+      Sand Heather    100   200   200   100   600
+
+      Total quantity: 2,000 pcs
+      Total value: USD 14,400.00

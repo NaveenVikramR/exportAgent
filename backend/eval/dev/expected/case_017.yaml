@@ -1,0 +1,33 @@
+id: case_017
+classification:
+  category: po_revision
+  intents: [po_revision]
+  has_po_data: true
+extraction:
+  buyer: Maison Clairet SAS
+  po_number: MC-2026-0871
+  style: null
+  currency: EUR
+  # "EUR 6,55" (decimal comma)
+  unit_price: "6.55"
+  total_quantity: 5500
+  delivery_date: null
+  incoterms: null
+  port: null
+  destination_country: null
+  line_items:
+    - {colour: Rouge, quantity: 1000}
+# Only Rouge is restated; the order total covers all three colours.
+partial_line_items: true
+# Style, date and terms are not restated: inherited from case_003, not flagged.
+expected_review_fields: []
+revises: case_003
+expected_changes:
+  - {field: total_quantity, old: 6000, new: 5500}
+  - {field: unit_price, old: "6.40", new: "6.55"}
+  - {field: "line_items.Rouge.quantity", old: 1500, new: 1000}
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: [schedule]
+risk_note: 'infeasible: 5,500 pcs needed but only 0 pcs of free capacity remain before 2027-01-20 after other orders (5,500 pcs short). | value -6.2% (-2375.00)'

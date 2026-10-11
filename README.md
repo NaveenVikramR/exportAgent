@@ -4,7 +4,7 @@ An AI export desk for small and mid-size apparel and textile exporters. A buyer 
 
 Built for the Nebius x NVIDIA Global AI Hackathon (track: Best Apps and Agents).
 
-> Status: Milestone 7 of 8 (evaluation). Sections marked _to be filled_ are completed as the build progresses.
+> Status: Milestone 7 of 8 (evaluation, with the fixes it found). Sections marked _to be filled_ are completed as the build progresses.
 
 ## How we use NVIDIA Nemotron + Nebius Token Factory
 
@@ -143,28 +143,49 @@ docker compose up --build        # web on :3000, API on :8000
 
 ## Evaluation
 
-Synthetic buyer emails modelled on real export paperwork, with hand-written expected outputs, in two splits: **DEV** ([backend/eval/dev/](backend/eval/dev/), 10 cases the system was built against) and a held-out **TEST** set ([backend/eval/test/](backend/eval/test/), 30 cases written and committed before any run on them, never used to tune prompts). Labels cover classification, every field, line items, review flags, expected changes and expected high-risk findings.
+Synthetic buyer emails modelled on real export paperwork, with hand-written expected outputs:
+- **DEV**: [backend/eval/dev/](backend/eval/dev/), 21 cases; fixes are made only against these.
+- **TEST v1**: [backend/eval/test/](backend/eval/test/), 30 cases. It was held out until Milestone 7 and its failures were analysed there, so it now counts as seen.
+- **TEST v2**: to be written outside this codebase from [backend/eval/TEST_V2_SPEC.md](backend/eval/TEST_V2_SPEC.md), as the next held-out set.
+
+Labels cover classification, every field, line items, review flags, which order each email belongs to, expected changes and expected high-risk findings.
 
 Every extracted field carries a confidence and the source quote it came from. Plain-Python rules then lower the confidence and flag the field for human review when the quote is not in the email, the quantities do not add up, or a required field is missing ([backend/app/services/review.py](backend/app/services/review.py)).
 
-Each email that carries a PO is matched to its order by PO number and stored as a new version; earlier versions are never overwritten. [`diff_po_versions`](backend/app/agent/tools/diff_po_versions.py) is plain Python and reports quantity, price, delivery date, size ratio, colour and Incoterm changes with old and new values. Size breakdowns are compared as ratios, so scaling a colour up is a quantity change, not a ratio change. A delivery date moved earlier is flagged as **delivery pulled forward**, the most expensive change for an exporter. When a reply thread quotes the old value of an order we have not seen (for example "the 24 November date below no longer works"), the earlier version is rebuilt from the quote so the change is still visible.
+Each email that carries order data is matched to its order with a scored match ([backend/app/services/order_matching.py](backend/app/services/order_matching.py)):
+- same PO number, with revision suffixes such as "Rev A" or "Amendment 1" stripped;
+- the order's PO number mentioned anywhere in the email;
+- same style, same buyer, and ex-factory date within 45 days.
 
-The full pipeline ran 3× on DEV and 3× on TEST, live on Nemotron with the cache off; full tables, baselines and failure analysis in **[backend/eval/REPORT.md](backend/eval/REPORT.md)**. Highlights, mean over 3 runs:
+Confident matches are applied. Uncertain ones go to the Approvals page as a question ("Is this email about the existing order PO X?") instead of creating a duplicate order. An order can exist before its PO number arrives.
 
-| Metric | DEV | TEST |
-|---|---|---|
-| Field extraction accuracy | 97.8% | 91.9% |
-| Line-item accuracy | 88.9% | 88.7% |
-| Change detection recall / precision | 100% / 100% | 28.2% / 63.1% |
-| High-risk flags precision / recall | 100% / 100% | 78.0% / 66.7% |
-| Drafts with no fact-check violations | 100% | 98.7% |
-| Cost per email (all models, incl. drafts) | $0.0169 | $0.0157 |
+Each match is stored as a new version; earlier versions are never overwritten. Fields an email does not restate are inherited from the order, not flagged as missing.
 
-The held-out set exposed real weaknesses that DEV did not: revision suffixes kept in PO numbers ("CL-7731 Revision A") break order matching, which is most of the low change-detection recall on TEST. They are documented in the report, not tuned away on the TEST set.
+[`diff_po_versions`](backend/app/agent/tools/diff_po_versions.py) is plain Python. It reports quantity, price, delivery date, size ratio, colour and Incoterm changes with old and new values. A partial update ("add Heather Marl, 300 pcs") changes only the colours it names.
+
+A delivery date moved earlier is flagged as **delivery pulled forward**, the most expensive change for an exporter. When a reply thread quotes the old value of an order we have not seen, the earlier version is rebuilt from the quote, so the change is still visible.
+
+The full pipeline runs live on Nemotron with the cache off. Full tables, baselines, the change log and failure analysis are in **[backend/eval/REPORT.md](backend/eval/REPORT.md)**.
+
+TEST v1 exposed weaknesses DEV did not have: revision suffixes in PO numbers, orders named without the word "PO", orders without a PO number, review flags on body-only revisions, non-English size tables, shortened colour names, decimal commas, and a value threshold in yen. Each became a new DEV case and a plain-Python fix. No TEST email was used to tune.
+
+| Metric | DEV (21 cases, 3 runs) | TEST v1 after fixes (seen, 1 run) | TEST v1 at M7 (held out, 3 runs) |
+|---|---|---|---|
+| Field extraction accuracy | 98.8% | 98.0% | 91.9% |
+| Line-item accuracy | 94.7% | 100% | 88.7% |
+| Emails put on the right order | 100% | 100% | – |
+| Change detection recall / precision | 98.0% / 94.7% | 92.3% / 80.0% | 28.2% / 63.1% |
+| High-risk flags precision / recall | 100% / 100% | 100% / 100% | 78.0% / 66.7% |
+| Review flags precision / recall | 57.9% / 100% | 71.4% / 83.3% | 8.5% / 33.3% |
+| Drafts with no fact-check violations | 99.2% | 98.2% | 98.7% |
+| Cost per email (all models, incl. drafts) | $0.0188 | $0.0212 | $0.0157 |
+
+The risk agent scores the same with **Super instead of Ultra** (all high-risk findings, no false positive, on DEV and TEST v1), at about a quarter of the risk-stage cost. Most of the reasoning that sets severity is in Python tools and policy, so the model mostly plans checks and summarises. Per-stage costs and the comparison are in the report.
 
 ```bash
-python -m eval.run_eval --split test --variant routed --run 1   # one pass; also nano_only, ultra_all
-python -m eval.report                                             # builds eval/REPORT.md from eval/runs/
+python -m eval.run_eval --split dev --variant routed --run 1    # one pass; also nano_only, ultra_all, super_risk
+python -m eval.report                                            # builds eval/REPORT.md from eval/runs/
+python -m eval.label_risk --split test_v2 --write                 # derives expected high risks from labels
 ```
 
 ## What we'd improve

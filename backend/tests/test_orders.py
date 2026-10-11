@@ -123,9 +123,11 @@ def test_thread_quote_rebuilds_the_earlier_version(session):
     assert version.changes[0]["alert"] == DELIVERY_PULLED_FORWARD
 
 
-def test_no_po_number_creates_no_order(session):
-    assert record_po_version(session, _email(session), _extraction(po_number=None), []) is None
-    assert session.query(Order).count() == 0
+def test_no_po_number_creates_an_order_with_the_po_pending(session):
+    version = record_po_version(session, _email(session), _extraction(po_number=None), [])
+
+    order = session.query(Order).one()
+    assert order.po_number is None and version.version == 1
 
 
 # --- End to end through the API, in mock mode ---------------------------------------------

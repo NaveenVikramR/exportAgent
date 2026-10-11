@@ -1,0 +1,29 @@
+id: case_021
+classification:
+  category: po_revision
+  intents: [po_revision]
+  has_po_data: true
+extraction:
+  buyer: Hinoki Works Co., Ltd.
+  po_number: HW-26-0193
+  style: HW-TE-88
+  currency: JPY
+  unit_price: "590"
+  total_quantity: 3000
+  delivery_date: "2027-03-12"
+  incoterms: FOB
+  port: Chennai
+  destination_country: Japan
+  line_items:
+    - {colour: Indigo Fade, quantity: 1500, sizes: {S: 300, M: 500, L: 500, XL: 200}}
+    - {colour: Kinari White, quantity: 1500, sizes: {S: 300, M: 500, L: 500, XL: 200}}
+expected_review_fields: []
+revises: case_020
+expected_po_revision: "1"
+expected_changes:
+  - {field: unit_price, old: "610", new: "590"}
+
+# High-risk findings expected under the severity rubric: schedule = the current plan is
+# infeasible; value = contract value changed above the threshold.
+expected_high_risk: []
+risk_note: 'Value -3.3% (JPY 60,000, about USD 400): not a high-value change once converted to USD.'

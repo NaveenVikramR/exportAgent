@@ -31,6 +31,8 @@ class Email(Base):
     # {"fields": POExtraction, "review": [ReviewFlag]}; null when the email carries no PO data
     extraction: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
     analysis_error: Mapped[str | None] = mapped_column(Text)
+    # an uncertain order match waiting for a person: candidate order, score, reasons, answer
+    match: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
     order_id: Mapped[int | None] = mapped_column(ForeignKey("orders.id"), index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
@@ -58,7 +60,8 @@ class Order(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     buyer: Mapped[str] = mapped_column(String(200), index=True)
-    po_number: Mapped[str] = mapped_column(String(100), index=True)
+    # None until the buyer sends a PO number ("PO number will follow")
+    po_number: Mapped[str | None] = mapped_column(String(100), index=True)
     style: Mapped[str | None] = mapped_column(String(200))
     # open | at_risk | confirmed | shipped | cancelled
     status: Mapped[str] = mapped_column(String(20), default="open")

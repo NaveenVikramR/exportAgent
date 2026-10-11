@@ -50,10 +50,11 @@ def _spec(name: str, description: str, properties: dict[str, Any], required: lis
 TOOL_SPECS: list[dict[str, Any]] = [
     _spec(
         "find_order",
-        "Look up an order by PO number: buyer, every stored version with its delivery date, "
-        "quantity and price, the alerts on each version, and how many earlier orders the buyer has.",
-        {"po_number": {"type": "string"}},
-        ["po_number"],
+        "Look up an order by PO number (or by order_id when the PO number is not known yet): buyer, every "
+        "stored version with its delivery date, quantity and price, the alerts on each version, and how "
+        "many earlier orders the buyer has.",
+        {"po_number": {"type": "string"}, "order_id": {"type": "integer"}},
+        [],
     ),
     _spec(
         "diff_po_versions",
@@ -116,10 +117,12 @@ def _order_or_error(ctx: ToolContext, order_id: Any) -> Order:
     return order
 
 
-def _find_order(ctx: ToolContext, po_number: str) -> tuple[dict, str]:
-    order = find_order_by_po(ctx.session, po_number)
+def _find_order(ctx: ToolContext, po_number: str | None = None, order_id: int | None = None) -> tuple[dict, str]:
+    order = ctx.session.get(Order, int(order_id)) if order_id else (
+        find_order_by_po(ctx.session, po_number) if po_number else None
+    )
     if order is None:
-        return {"found": False, "po_number": po_number}, f"No order found for PO {po_number}."
+        return {"found": False, "po_number": po_number}, f"No order found for PO {po_number or order_id}."
     earlier = ctx.session.scalars(
         select(Order).where(Order.buyer == order.buyer, Order.id != order.id)
     ).all()
@@ -149,7 +152,7 @@ def _find_order(ctx: ToolContext, po_number: str) -> tuple[dict, str]:
         "earlier_orders_from_buyer": len(earlier),
     }
     summary = (
-        f"PO {order.po_number}: v{order.current_version}, {latest['total_quantity'] or '?'} pcs, "
+        f"PO {order.po_number or '(pending)'}: v{order.current_version}, {latest['total_quantity'] or '?'} pcs, "
         f"delivery {latest['delivery_date'] or '?'}"
         + (f", alerts {', '.join(latest['alerts'])}" if latest["alerts"] else "")
     )

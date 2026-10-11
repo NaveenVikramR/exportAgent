@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { DraftCard, ReviewerField, useReviewer } from "@/components/draft-card";
+import { MatchQuestions } from "@/components/match-questions";
 import { api, type Draft } from "@/lib/api";
 
 const TABS = [
@@ -42,6 +43,8 @@ export default function Approvals() {
         </div>
         <ReviewerField name={reviewer} onChange={setReviewer} />
       </header>
+
+      <MatchQuestions reviewer={reviewer} />
 
       <nav className="flex gap-1 border-b border-zinc-200">
         {TABS.map((item) => (

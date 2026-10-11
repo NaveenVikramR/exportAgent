@@ -1,56 +1,108 @@
 ## How the sets were built
 
-- **DEV (10 cases)** are the cases ExportAgent was built against; they are also the demo inbox. Prompts and policy may be changed using DEV only.
-- **TEST (30 cases)** were written for this milestone and committed (commit `10e1b46`) before any run on them: 15 new fictional buyers in 12 countries and 7 currencies (EUR, GBP, USD, CAD, JPY, AUD, DKK); clean POs, revisions with attachments, revisions written only in the email body, reply threads, three-request emails, missing PO numbers and prices, a price contradicting the attached PO, size tables in six layouts (standard, sizes as rows, inline "S-200 / M-400", CSV, numeric sizes, Dutch with European number format), US-format and dd.mm.yyyy dates, feasible, tight and infeasible plans, and compliance-relevant products (kids' sleepwear for the US, a hood drawcord for the EU).
-- **Labels** are hand-written: classification, every field, line items, review flags and expected changes. **Expected high risks** follow the severity rubric applied to the *true* order state in arrival order: *schedule* when the current plan is infeasible under the factory profile, *value* when the contract value changes by more than the threshold. That uses the same capacity model as the app, so this measures whether extraction, order matching and the agent get to the right finding, not whether the capacity model is right.
-- Two dataset changes were made before any TEST run, both about realism, not results: the Desert Bloom order was cut from 40,000 to 3,000 pieces (one order should not saturate a 150-person factory and make every later order infeasible), and the Hudson & Pike tank order from 6,000 to 3,000.
+- **DEV (21 cases).**
+  - case_001–010 are the cases ExportAgent was built against, and the demo inbox.
+  - case_011–021 were added in this step, one or more for each failure pattern TEST v1 exposed. They are new emails with new fictional buyers (Tidewater Lane, Orchard Row, Brunnhof Sport, Marisma Moda, Hinoki Works), plus follow-ups to Maison Clairet (case_003) and Kestrel Kids (case_010). Nothing was copied from TEST.
+  - Fixes are made and checked on DEV only.
+- **TEST v1 (30 cases)** was held out until Milestone 7 (written and committed before any run, commit `10e1b46`). Its failures were analysed in the Milestone 7 report, so it is now **seen**. It is re-run here once to show the effect of the fixes, not as a held-out score.
+- **TEST v2** will be written outside this codebase, from [TEST_V2_SPEC.md](TEST_V2_SPEC.md), and will be the next held-out measurement.
+- **Labels** are hand-written: classification, every field, line items, review flags, the order each email belongs to, expected changes.
+  - **Expected high risks** come from the severity rubric applied to the *true* order state in arrival order: *schedule* when the current plan is infeasible under the factory profile, *value* when the contract value changes by 10% or more, or by about USD 5,000.
+  - They are now derived by [label_risk.py](label_risk.py) from the labels alone, never from app output.
 
-## Changes made during this milestone
+## Changes in this step
 
-| When | Change | Found on |
+Every change below was made against DEV cases. None was tuned on a TEST v1 email. TEST v1 failures from Milestone 7 only named the pattern; each fix was then written and checked against the new DEV case listed.
+
+| # | Change | Kind | Pattern (from M7) | DEV case |
+|---|---|---|---|---|
+| 1 | PO numbers are split into a base and a revision: "TL-8812 Rev A", "-R2", "(REV 2)", "Amendment 1", "Revision 1". The base matches the order and the revision is stored with the version (`app/services/normalise.py`). | Python | Revision suffix kept in the PO number, so a duplicate order was created and changes never diffed | 012, 021 |
+| 2 | Scored order matching (`app/services/order_matching.py`): same PO base +0.6 (a different PO number is a different order), PO number mentioned anywhere in the email +0.5, same style +0.3, different style −0.3, same buyer (legal suffixes ignored) +0.25, ex-factory within 45 days +0.15. A score of 0.6 or more is a match, below 0.35 a new order. | Python | Body-only emails name the order without "PO"; orders without a PO number | 013, 015, 016 |
+| 3 | **Uncertain matches go to a person.** Scores from 0.35 to 0.6 store a question on the email. The Approvals page asks "Is this email about the existing order PO X from buyer Y?" with Yes/No (`GET /api/match-questions`, `POST /api/emails/{id}/match`). Nothing is recorded until someone answers, so no duplicate order is created. In the eval, the label answers. | Python + UI | Duplicate orders | 016 |
+| 4 | Orders can exist without a PO number. The number is filled in when it arrives, and documents print it as TO BE CONFIRMED until then. An email classified as an order is always extracted, even if the classifier said "no PO data". | Python | Order without a PO number classified as "no PO data" | 014, 015 |
+| 5 | **Field inheritance:** for an email about an existing order, a field the email does not restate is inherited from the order and not flagged "missing". It is listed under `inherited` on the extraction. | Python | Review flags over-firing on body-only revisions | 013, 016, 017 |
+| 6 | Partial line-item updates: if the named colours add up to the stated total, it is the full list (a colour left out is removed); otherwise only the named colours change and the total is recomputed. A list of only colours the order does not have is an addition. | Python | Partial updates (TEST v1 test_019, test_025 pattern) | 016, 017 |
+| 7 | The size-table detector accepts colour and size header words in English, French, Spanish, German, Dutch, Italian and Turkish, and sizes-as-rows tables. A detected table for which Nano returned no per-size quantities escalates the line items to Super. | Python | Non-English size table never escalated | 018, 019 |
+| 8 | Colour names are restored from the email when Nano shortens them ("Ocean" → "Ocean Stripe"), matched by the same quantity next to the longer name. | Python | Shortened colour names | 011 |
+| 9 | Decimal commas and dot or space thousands ("9,80", "1.500", "23.520,00", "1 500") parse in extraction and in the draft fact check. | Python | Decimal-comma price read as a different number | 017, 018, 019 |
+| 10 | The value threshold is currency-aware: 10%, or about USD 5,000 converted with approximate rates in `policy/risk_policy.yaml`. A currency with no rate uses the percentage only. | Policy | JPY 85,000 (about USD 570) called a high-value change | 021 |
+| 11 | *After the first DEV pass:* when the email gives no PO number but its "style" is the matched order's PO number, it is moved to the PO number. The matching score no longer penalises such a style as a different style (that comparison had used two different key formats, a bug). | Python | Order reference read as the style | 013 |
+| 12 | *After the first DEV pass:* country short forms map to one name ("USA" → "United States", "UK" → "United Kingdom", …), so "UK" vs "United Kingdom" is no longer a change between versions. Buyer name variants ("TIDEWATER LANE" vs "Tidewater Lane Inc.") are not a change either. | Python | False changes between versions | 011–015 |
+
+The only prompt edit: the planner's rubric line now says "about USD 5,000" instead of "5,000 in the order currency", to match change 10. The policy, not the prompt, enforces the severity. The first DEV pass with the new cases (before changes 11 and 12) is kept in `eval/runs/pre_fix/` and is not in the tables.
+
+### Label changes
+
+- **case_010** (DEV): expected high risk `[]` → `[schedule]`. Its order has no PO number, and such orders are now stored and assessed. With the other orders known by 28 Sep, the factory has no free capacity left before 18 Dec.
+- **test_016** (TEST v1): `[]` → `[schedule]`, for the same reason. The order without a PO number in test_006 is a real booking and uses capacity; the M7 label left it out because the app could not store such orders. This is a correction of the label rule, applied to every case, not to a result.
+- The risk labelling script moved from a scratch file into the repo ([label_risk.py](label_risk.py)). On DEV and TEST v1 it reproduces every committed label (after the two corrections above).
+
+## Evaluation harness changes
+
+- Change detection is now scored on the versions the order store actually recorded for each email, after matching. Before, an in-memory replay keyed by the raw PO number was used.
+- Order matching is scored per email (right order: existing or new), with the questions put to a person counted. On TEST v1, whose labels have no `revises` key, the parent case is the earlier case with the same labelled PO number.
+- Usage is recorded per stage (extraction, risk, drafting) and per model.
+- New `super_risk` variant: risk planning and reasoning on Super instead of Ultra.
+- The dataset loader reads JSON or YAML and a `test_v2` split.
+
+### Fixed after the runs
+
+| # | Change | DEV case |
 |---|---|---|
-| Before any TEST run | Planner prompt: read quoted messages from our own team; if anyone says fabric is in-house, run the feasibility check with `fabric_ready=true`. Policy: a fabric-ready check supersedes the pre-fetched one. | DEV case_007 (Ultra had stopped noticing "fabric is in-house" in the quoted thread) |
-| Before any TEST run | Internal policy thresholds removed from drafting facts (Fix 2). | Milestone 6 review |
-| After TEST runs | **None.** The failures below are reported, not fixed: fixing them now would tune the system to this TEST set. | – |
+| 13 | When a PO number arrives with no other change (case_015), no new version is written, so the latest version still had no PO number. A later email answered via the match question then got a false "PO number missing" flag (case_016, all three runs). The order's PO number is now part of the previous state used for inheritance. Covered by a unit test; the passes above predate it. Rerunning DEV 3× would cost about $1.20, against this step's $5 cap. | 016 |
 
-## What fails and why
+## Reading the results
 
-1. **PO numbers copied with their revision suffix (test_002, test_017, test_021, test_030).** The extraction prompt says to copy identifiers "exactly as written", so the model returns "CL-7731 Revision A", "CPL-2044 (REV 2)", "MM-2290 rev 1". The revision does not match its order, a duplicate order is created, and the change is never diffed. It is also why the value changes in test_002 and test_030 are missed (the other two missed high-risk findings), and most of why change-detection recall is 28% on TEST against 100% on DEV, and Ultra-for-everything does no better (30.8%): it is a specification problem, not a model-size problem. It also has knock-on effects: the duplicate orders add phantom load to the capacity check, which is why test_014 (tight but feasible) and test_019 (feasible) get a false *schedule* high. Proposed fix: strip revision suffixes when matching orders, and say so in the prompt; then add DEV cases for it.
-2. **Order reference put in the style field (test_004, test_016, test_025).** Body-only change emails ("we now need NR-55120 ex-factory 27/11") never say "PO", and Nano puts the reference in `style`. With no PO number nothing is matched, so the pulled-forward dates in test_004 and test_025, both infeasible, are not flagged: three of the roughly five high-risk findings missed per run. Proposed fix: fall back to matching known PO numbers anywhere in the email.
-3. **An order without a PO number is classified as "no PO data" (test_006, every run).** "Our PO number will come from the new ERP next week" leads the classifier to say there is no order, so nothing is extracted. DEV case_010 is the same situation and passes; the TEST wording is enough to tip it.
-4. **Review flags over-fire on body-only revisions (test_019, test_025, test_029).** The review rule requires every field for a `po_revision`, but a revision written in the email body only restates what changed; the rest carries over from the stored order. Those emails get five to seven "missing" flags each, which is why review precision is 8.5% on TEST. Proposed fix: for revisions, require only the PO number and the fields the email changes.
-5. **Layout and language gaps.**
-   - test_022: the size-table detector only recognises a header starting with "Colour", so a French "Coloris / Colour" table that Nano skipped never triggers escalation; its sizes are missing in all runs.
-   - test_015: Nano shortens colour names ("Navy Stars" to "Navy").
-   - test_018: the fact check reads the Dutch PO's "EUR 9,80" (decimal comma) as "EUR 9", a false violation in two of three runs.
-   - test_012: the value threshold of 5,000 "in the order currency" calls a JPY 85,000 (about USD 570) price cut a high-value change. The label says it is not; this is a policy flaw.
+- **Order matching** put every email on the right order in all three DEV passes and on TEST v1: 20/20 DEV emails with order data per pass, 26/26 on TEST v1.
+  - One question per DEV pass went to a person: case_016 ("add Heather Marl to the OR-SW-40 sweatshirts"), with buyer and style matching but no PO number or date, score 0.55.
+  - TEST v1 needed no question.
+  - Revision suffixes ("Rev A", "Revision 1") were read correctly in every pass.
+- **Change detection on TEST v1** went from 28% to 92% recall, and precision from 63% to 80%. **High-risk flags** went from 78% / 67% to 100% / 100% (17 of 17, no false positive). These are the effects of changes 1, 2, 5 and 6. **TEST v1 is seen**, so read this as "the patterns found in M7 are fixed", not as a held-out score; TEST v2 is the next held-out measurement.
+- **Review flags on TEST v1:** precision went from 8.5% to 71%, mostly from field inheritance (change 5). On DEV, precision is 58%. The false flags were:
+  - case_016 `po_number`, 3 runs: fixed afterwards (change 13);
+  - case_007, 2 of 3 runs: classified as a revision of an order that is not stored, so every field is required and there is nothing to inherit;
+  - quantity-mismatch flags on case_010, 017 and 019, where Nano did misread a quantity, so the flag is arguably right and the label is strict.
+- **DEV is harder than at M7.** The new cases cover the patterns that failed, so DEV and M7 numbers are not like for like. Line-item accuracy on DEV is 94.7%; the misses are Nano reading wrong colour quantities (case_010, case_017).
 
-## Reading the baselines
+## Super instead of Ultra for the risk agent
 
-- **Ultra for everything is the most accurate** on TEST: field accuracy 95.3% against 91.9% routed, line items 100% against 88.7%. It costs $0.0155 per email against $0.0131 routed (extraction and risk, no drafts), about 18% more. Most of the routed setup's saving is small because Ultra's risk assessment dominates the cost either way. The accuracy gap, though, sits almost entirely in the cases above (shortened colour names, missed size tables, the no-PO classification), which better rules could fix without paying Ultra prices for extraction.
-- **Nano only** is about 7× cheaper ($0.0018) and only about 1 pp behind routed on fields. It matches routed on high-risk flags because pre-fetch does the heavy lifting in Python. But it is the slowest at 34 s per email: as risk planner, Nano with thinking on writes long reasoning.
-- **Latency is not like for like** in that table: routed includes drafting (about 10.8 s of Super time per email); without it routed is about 17 s per email. Ultra for everything is fastest (10 s) because it has no drafting and Ultra answers quickly with thinking off for extraction.
-- Baselines ran once each; the routed min–max ranges show run-to-run differences of 1–3 pp on most metrics, so smaller gaps are not meaningful.
+- High-risk flags are identical:
+  - DEV: 8 of 8 in every pass, no false positive.
+  - TEST v1: 17 of 17 with Ultra and with Super.
+- Super's risk stage costs about a quarter as much: $0.0038 against $0.0158 per assessed email on DEV, and $0.0036 against $0.0205 on TEST v1. Its model time is similar.
+- The reason is the pre-fetch design. The schedule and value findings come from Python tools run before the model (feasibility, diff, value change), and the policy fixes severities after it. The model mainly decides which further checks to run and writes the summary.
+- Ultra's extra reasoning does not change the high flags on these sets. It may still matter for the medium and low flags (compliance, buyer checks), which are not scored here.
+- **Recommendation:** make Super the default for risk. That would bring the routed setup from about $0.019 to about $0.007 per email on DEV. One pass per split; confirm on TEST v2 before switching.
+
+## Cost by stage
+
+- Risk is the largest stage in the routed setup: about 80% of the cost per email. Extraction (Nano, plus Super for escalated fields) is about 2% and drafting (Super) about 18%.
+- Ultra for everything costs 1.6× routed on DEV, mostly in drafting and extraction. It is the most accurate on line items (100%), but routed is within 1 pp on fields and level on risk.
+- Nano only is the cheapest ($0.0036 per email) but the weakest:
+  - line items 82%, change recall 77%, 90% of drafts with no fact-check violation;
+  - the slowest, at 82 s of model time per email: Nano with thinking on writes long plans for the risk agent.
+
+## What still fails (reported, not fixed)
+
+On DEV (fixable on DEV in the next step):
+- case_017: Nano reads Rouge as the order total (5,500 instead of 1,000), so the colour change is wrong. The quantity check flags it for review.
+- case_010: Nano mixes up the colour quantities in an informal message.
+- case_018: the German label "Artikel" is not read as the style.
+- case_019: "confirm the ex-factory date" in a new Spanish PO is classified as a revision.
+
+On TEST v1 (reported only; TEST v1 is seen but is still not used for fixes):
+- test_019: a colour cancelled by email is recorded as a quantity change rather than a removal.
+- test_025: a partial update's stated total is read as one colour's quantity.
+- test_004, test_017 and test_021 show false changes from fields the email does not state:
+  - test_004: a destination country inferred from the thread, and an item without a colour;
+  - test_017: the destination country;
+  - test_021: the style.
+- test_007: the email-vs-attachment price contradiction is not flagged.
+- test_026: the classification is wrong.
 
 ## Caveats
 
-- The TEST emails and labels were written by the same assistant that built the system, so they may share its blind spots. Your manual check of the labels below is the guard against that.
-- 30 cases: one case moves a percentage by about 3 points, and some metrics rest on few items (16 labelled high-risk findings, 26 labelled changes).
-- "All intents" is scored as an exact set, and intent labels are partly a judgement call; DEV's 70% reflects that more than model error.
-
-## TEST labels to verify by hand
-
-These ten carry the trickiest judgement calls; please check them first.
-
-| Case | What to check |
-|---|---|
-| test_004 | Reply thread: the new date is 27/11/2026 (pulled forward from 20/12/2026); expected *schedule* high. |
-| test_006 | No PO number or price yet: labelled `new_po` with PO data; review fields po_number, unit_price, currency. |
-| test_007 | Email says $3.40, attached PO says 3.60: label takes the PO (3.60) and expects unit_price to be flagged. |
-| test_012 | JPY price cut: expected high is *schedule* only (the policy's value rule is overridden; see failure 5). |
-| test_014 | Inline sizes; feasible but tight (90% of free capacity): no high risk expected. |
-| test_017 | Colour added by email: expected changes (total 2,200 to 3,000, Forest added) and *schedule* + *value*. |
-| test_019 | Colour cancelled by email: labelled `po_revision`; expected *value* high only (plan becomes tight, not infeasible). |
-| test_022 | French size table; feasibility by capacity: expected *schedule* high. |
-| test_025 | Partial update (one colour and the date): true total 4,500; expected changes and *schedule* + *value*. |
-| test_029 | Price +3.9% (not high) and date pulled forward: expected *schedule* high only. |
+- DEV cases 011–021 and the TEST v1 labels were written by the same assistant that built the system. TEST v2, written outside the codebase, is the guard against shared blind spots.
+- TEST v1 ran once after the fixes. The DEV min–max ranges show run-to-run variation of 1–5 pp on most metrics.
+- Baselines (Nano only, Ultra for everything, Super for risk) ran once each.
+- "All intents" is scored as an exact set, and intent labels are partly a judgement call.

@@ -1,0 +1,15 @@
+id: case_013
+title: Body-only date change that names the order but never says "PO"
+sender: "Dana Whitlock <dana.whitlock@tidewaterlane.example>"
+subject: "TL-8812 hoodies - ex-factory"
+received_at: "2026-10-09"
+body: |
+  Hi Karthik,
+
+  Quick one on TL-8812: our Savannah DC has given us an earlier receiving slot, so could you
+  bring the ex-factory forward to 6 February 2027? Quantities and price stay as per Rev A.
+
+  Let me know if that works.
+
+  Dana
+attachments: []

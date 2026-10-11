@@ -1,0 +1,39 @@
+id: case_019
+title: Spanish PO with sizes as rows and colours as columns (EUR, decimal comma)
+sender: "Lucía Ferrer <lferrer@marismamoda.example>"
+subject: "Pedido MRS/26/0417 - camisetas"
+received_at: "2026-10-08"
+body: |
+  Hola Karthik,
+
+  Adjunto el pedido MRS/26/0417 de la camiseta MRS-T-205. Por favor, confirma la fecha de salida.
+
+  Un saludo,
+  Lucía Ferrer
+  Compras, Marisma Moda S.A., Valencia
+attachments:
+  - filename: MRS-26-0417.pdf
+    content_type: application/pdf
+    text: |
+      MARISMA MODA S.A.
+      Avenida del Puerto 88, 46023 Valencia, España
+
+      PEDIDO DE COMPRA Nº: MRS/26/0417
+      Fecha: 08/10/2026
+      Proveedor: Sri Velan Knits
+
+      Modelo: MRS-T-205 Camiseta manga corta, algodón orgánico 160 g
+      Precio unitario: EUR 5,45
+      Condiciones: FOB Chennai
+      Destino: Valencia, España
+      Fecha de salida de fábrica: 26/02/2027
+
+      Talla | Azul Marino | Blanco Roto
+      S     | 300         | 200
+      M     | 500         | 400
+      L     | 500         | 400
+      XL    | 200         | 100
+      Total | 1.500       | 1.100
+
+      Cantidad total: 2.600 unidades
+      Importe total: EUR 14.170,00
