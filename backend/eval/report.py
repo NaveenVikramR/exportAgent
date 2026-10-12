@@ -292,8 +292,8 @@ def _test_v2(per: dict, col, runs, emails, spend: float, groups: dict) -> list[s
     lines = [
         "## TEST v2 (held out)",
         "",
-        f"{emails('test_v2')} cases: t2_001–t2_025 written independently from [TEST_V2_SPEC.md](TEST_V2_SPEC.md), "
-        "t2_026–t2_030 by the project author; the build assistant validated structure only. Committed before "
+        f"{emails('test_v2')} cases (t2_001–t2_030), all written by a separate assistant session from "
+        "[TEST_V2_SPEC.md](TEST_V2_SPEC.md) alone; the build assistant validated structure only. Committed before "
         "any run (commit `24f19ae`). Routed setup run "
         f"{runs('test_v2', 'routed')}×, Super for risk {runs('test_v2', 'super_risk')}×, end to end with the cache "
         "off and drafts on. No code or prompt was changed after the set was seen. "

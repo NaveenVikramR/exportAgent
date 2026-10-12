@@ -189,7 +189,7 @@ TEST v1 exposed weaknesses DEV did not have: revision suffixes in PO numbers, or
 
 They are reported, not fixed.
 
-> **About TEST v2.** Cases t2_001–t2_025 were written independently from [TEST_V2_SPEC.md](backend/eval/TEST_V2_SPEC.md); t2_026–t2_030 were written by the project author. The build assistant validated their structure only (file pairs, schema, sums, and that risk labels agree with `eval/label_risk.py`), and no code or prompt was changed after seeing the set.
+> **About TEST v2.** All 30 cases (t2_001–t2_030) were written by a separate assistant session from [TEST_V2_SPEC.md](backend/eval/TEST_V2_SPEC.md) alone. The build assistant validated their structure only (file pairs, schema, sums, and that risk labels agree with `eval/label_risk.py`), and no code or prompt was changed after seeing the set.
 
 The risk agent scores the same with **Super instead of Ultra** on all three sets (every expected high-risk finding; on TEST v2 one false positive against Ultra's one to two per run), at a quarter to a fifth of the risk-stage cost. Most of the reasoning that sets severity is in Python tools and policy, so the model mostly plans checks and summarises. Per-stage costs and the comparison are in the report.
 

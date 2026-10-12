@@ -5,7 +5,7 @@
   - case_011–021 were added in this step, one or more for each failure pattern TEST v1 exposed. They are new emails with new fictional buyers (Tidewater Lane, Orchard Row, Brunnhof Sport, Marisma Moda, Hinoki Works), plus follow-ups to Maison Clairet (case_003) and Kestrel Kids (case_010). Nothing was copied from TEST.
   - Fixes are made and checked on DEV only.
 - **TEST v1 (30 cases)** was held out until Milestone 7 (written and committed before any run, commit `10e1b46`). Its failures were analysed in the Milestone 7 report, so it is now **seen**. It is re-run here once to show the effect of the fixes, not as a held-out score.
-- **TEST v2** will be written outside this codebase, from [TEST_V2_SPEC.md](TEST_V2_SPEC.md), and will be the next held-out measurement.
+- **TEST v2 (30 cases)** was written by a separate assistant session from [TEST_V2_SPEC.md](TEST_V2_SPEC.md) alone, frozen in commit `24f19ae` before any run, and is the held-out measurement.
 - **Labels** are hand-written: classification, every field, line items, review flags, the order each email belongs to, expected changes.
   - **Expected high risks** come from the severity rubric applied to the *true* order state in arrival order: *schedule* when the current plan is infeasible under the factory profile, *value* when the contract value changes by 10% or more, or by about USD 5,000.
   - They are now derived by [label_risk.py](label_risk.py) from the labels alone, never from app output.
@@ -102,14 +102,14 @@ On TEST v1 (reported only; TEST v1 is seen but is still not used for fixes):
 
 ## Caveats
 
-- DEV cases 011–021 and the TEST v1 labels were written by the same assistant that built the system. TEST v2, written outside the codebase, is the guard against shared blind spots.
+- DEV cases 011–021 and the TEST v1 labels were written by the same assistant that built the system. TEST v2, written by a separate session from the spec alone, is the guard against shared blind spots.
 - TEST v1 ran once after the fixes. The DEV min–max ranges show run-to-run variation of 1–5 pp on most metrics.
 - Baselines (Nano only, Ultra for everything, Super for risk) ran once each.
 - "All intents" is scored as an exact set, and intent labels are partly a judgement call.
 
 ## TEST v2: what the held-out set shows
 
-TEST v2 was written outside this codebase and committed before any run. The build assistant checked only its structure: file pairs, schema, sums, and that the committed risk labels agree with `label_risk.py` (they all do). No code, prompt or label was changed after the results. Everything below is reported, not fixed.
+All 30 TEST v2 cases were written by a separate assistant session from TEST_V2_SPEC.md alone, and committed before any run. The build assistant checked only its structure: file pairs, schema, sums, and that the committed risk labels agree with `label_risk.py` (they all do). No code, prompt or label was changed after the results. Everything below is reported, not fixed.
 
 **Headline.** On TEST v2, compared with TEST v1 after the fixes:
 - Every expected high risk was found, in all three runs (recall 100%). Precision is lower (80%), because of the false positives below.
