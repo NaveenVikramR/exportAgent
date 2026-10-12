@@ -106,3 +106,32 @@ On TEST v1 (reported only; TEST v1 is seen but is still not used for fixes):
 - TEST v1 ran once after the fixes. The DEV min–max ranges show run-to-run variation of 1–5 pp on most metrics.
 - Baselines (Nano only, Ultra for everything, Super for risk) ran once each.
 - "All intents" is scored as an exact set, and intent labels are partly a judgement call.
+
+## TEST v2: what the held-out set shows
+
+TEST v2 was written outside this codebase and committed before any run. The build assistant checked only its structure: file pairs, schema, sums, and that the committed risk labels agree with `label_risk.py` (they all do). No code, prompt or label was changed after the results. Everything below is reported, not fixed.
+
+**Headline.** On TEST v2, compared with TEST v1 after the fixes:
+- Every expected high risk was found, in all three runs (recall 100%). Precision is lower (80%), because of the false positives below.
+- Order matching was right in 98.7% of order emails.
+- The weaker areas are change detection (77% recall, 56% precision), line items (83%), classification (88% main category) and review flags (45% precision, 72% recall).
+- Some of this is variety DEV did not cover (see "What fails"), so it is the first honest measure of how the fixes generalise.
+
+**What fails, by pattern (cases, runs out of 3):**
+
+1. **Ambiguous numeric dates read the wrong way round** (t2_013, t2_016, t2_024; 3/3 each). For example, 12/02/2027 is read as 2 December instead of 12 February. Either the delivery date or the change on it is wrong, which accounts for most of the missed and unexpected `delivery_date` changes. The extraction has no rule for using the buyer's country or the other dates in the same email to settle the format.
+2. **An order question read as a date change** (t2_022, 3/3). A status question that mentions dates is classified as `delivery_change` with PO data. The date then becomes a new version of the order, and the risk agent raises a *schedule* high on it in every run. That is one false high-risk flag per run; the others are t2_014 (*value*, 1 run) and t2_027 (*schedule*, in the run with the wrong match, pattern 7). Similarly, t2_019 and t2_030 (no order data) are said to carry PO data in all runs.
+3. **Revision suffixes the splitter does not know** (t2_018 "Rev B", t2_024; 3/3). The revision is not read from the PO number: in t2_018 it lands in `style` or stays on the PO; in t2_024 it is missed. PO-revision accuracy is 50%.
+4. **Colour-level change wording** (t2_010, t2_027; 3/3):
+   - "Nachtblau to 1,600" yields a colour named "Nachtblau to".
+   - A colour the label treats as removed is reported as a quantity change.
+   - Both are the TEST v1 test_019 pattern, which was not covered by a DEV case.
+5. **Style picks up extra text** (t2_017: "PK-TS-55 kids graphic tee", 3/3). A body-only follow-up also puts the PO number into `style` when the order has a different style (t2_014, t2_023, t2_025; 1–2/3). Change 11 only fixes this when the order is the one matched.
+6. **One malformed classification reply** (t2_015). Nano returned an intent outside the allowed list twice, so the email failed in 1 of 3 routed runs and in the Super pass. The failure is visible, not silent, but nothing retries with a stronger model.
+7. **Wrong match question answered "yes"** (t2_027, 1 of 3 runs). The question named a different order from the one the email was about, and the eval's label-oracle answered "yes" to it. In the app a person would see the PO and buyer named in the question and answer "no". This is a limitation of the oracle, but it also shows that a question naming the wrong order is possible.
+8. **Review flags:**
+   - `total_quantity` mismatch flags where the email's per-colour numbers do not add up the way the label reads them (t2_003, t2_008, t2_018).
+   - Four extra flags on t2_015 (delivery date, Incoterm, port, total) in both runs where it was processed; not investigated, to keep TEST v2 unseen for fixes.
+   - Flags the label expects but the system missed: `po_number` on t2_027 (3/3) and `unit_price` on t2_006 (2/3).
+
+**Super instead of Ultra for risk, on TEST v2:** the same recall (100%) and fewer false positives (precision 85.7% vs 80.1%), at $0.0036 vs $0.0196 per assessed email. That is one Super pass against three Ultra passes, and t2_015 failed in the Super pass, so it had one fewer expected finding. Super's one false positive is t2_022, which Ultra also flags in every run: a misclassified email feeding the agent (pattern 2), not a reasoning error. This is now the third set where Super matches Ultra on high-risk findings.

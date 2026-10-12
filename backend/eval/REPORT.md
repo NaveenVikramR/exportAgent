@@ -1,40 +1,123 @@
 # ExportAgent evaluation report
 
-DEV (21 cases) run 3× with the routed setup, end to end with the response cache off: classification and extraction, escalation, order matching and change detection, the risk agent, and drafts with the fact check. Values are mean (min–max) across runs. TEST v1 (30 cases) was run 1× after the fixes in this step. **TEST v1 is now seen**: its failures (Milestone 7) led to new DEV cases, and the fixes were made and checked on DEV only, but TEST v1 numbers below are no longer a held-out measurement. TEST v2 will be.
+DEV (21 cases) run 3× with the routed setup, end to end with the response cache off: classification and extraction, escalation, order matching and change detection, the risk agent, and drafts with the fact check. Values are mean (min–max) across runs. TEST v1 (30 cases) was run 1× after the fixes in this step. **TEST v1 is now seen**: its failures (Milestone 7) led to new DEV cases, and the fixes were made and checked on DEV only, but TEST v1 numbers below are no longer a held-out measurement; TEST v2 (above) is.
 
-Model spend in the runs of this step: **$3.19** (including $0.41 for a DEV pass before the last fixes, kept in `runs/pre_fix/`, not in the tables).
+Model spend in the DEV and TEST v1 runs after the fixes: **$3.19** (including $0.41 for a DEV pass before the last fixes, kept in `runs/pre_fix/`, not in the tables).
+
+## TEST v2 (held out)
+
+30 cases: t2_001–t2_025 written independently from [TEST_V2_SPEC.md](TEST_V2_SPEC.md), t2_026–t2_030 by the project author; the build assistant validated structure only. Committed before any run (commit `24f19ae`). Routed setup run 3×, Super for risk 1×, end to end with the cache off and drafts on. No code or prompt was changed after the set was seen. Model spend on TEST v2: **$2.12**.
+
+| Metric | Routed (ours) | Super for risk |
+|---|---|---|
+| Classification: main category | 87.6% (86.2%–90.0%) | 82.8% |
+| Classification: all intents (exact set) | 74.2% (73.3%–75.9%) | 69.0% |
+| Classification: has PO data | 89.9% (89.7%–90.0%) | 89.7% |
+| Field extraction accuracy (after escalation) | 96.5% (96.1%–97.1%) | 97.0% |
+| Line-item accuracy (colour, quantity, sizes) | 83.2% (82.4%–84.8%) | 78.8% |
+| Human-review flags: recall | 72.2% (66.7%–83.3%) | 83.3% |
+| Human-review flags: precision | 45.1% (36.4%–62.5%) | 62.5% |
+| Order matching: email put on the right order | 98.7% (96.0%–100.0%) | 100.0% |
+| Order matching: questions put to a person | 1.7 (1.0–2.0) | 2.0 |
+| PO revision read from the PO number | 50.0% (50.0%–50.0%) | 50.0% |
+| Change detection: recall | 77.4% (72.2%–80.0%) | 72.2% |
+| Change detection: precision | 56.4% (46.4%–69.6%) | 59.1% |
+| High-risk flags: precision | 80.1% (75.0%–87.5%) | 85.7% |
+| High-risk flags: recall | 100.0% (100.0%–100.0%) | 100.0% |
+| Drafts written | 57 (56–58) | 56 |
+| Draft values fact-checked | 336 (327–352) | 299 |
+| Draft fact-check violations | 1.7 (1.0–2.0) | 2.0 |
+| Drafts with no violations | 97.1% (96.6%–98.2%) | 98.2% |
+| Escalation rate (emails with an escalated field) | 30.1% (25.9%–35.7%) | 29.6% |
+| Emails handled by Nano alone | 69.9% (64.3%–74.1%) | 70.4% |
+| Escalations resolved by Super | 83.8% (77.8%–88.9%) | 91.7% |
+| Escalation gain: field accuracy | +2.8 pp (+1.7 pp–+4.1 pp) | +2.2 pp |
+| Escalation gain: line-item accuracy | +5.0 pp (+2.9 pp–+6.1 pp) | +6.1 pp |
+| Ultra calls per assessed email | 2.8 (2.7–3.0) | 0.0 |
+| Cost per email (all models) | $0.0215 ($0.0207–$0.0229) | $0.0063 |
+| Latency per email (wall clock, end to end) | 32.6 s (31.1 s–33.8 s) | 26.5 s |
+| Emails that failed to process | 0.3 (0.0–1.0) | 1.0 |
+
+### TEST v2 cost per email by stage
+
+| Stage | Routed (ours) | Super for risk |
+|---|---|---|
+| Extraction | $0.0004 ($0.0004–$0.0005) | $0.0004 |
+| Risk | $0.0181 ($0.0173–$0.0194) | $0.0032 |
+| Drafting | $0.0030 ($0.0029–$0.0031) | $0.0027 |
+| **Total** | $0.0215 ($0.0207–$0.0229) | $0.0063 |
+| Model time: extraction | 4.7 s (4.2 s–5.0 s) | 4.7 s |
+| Model time: risk | 10.3 s (9.9 s–10.6 s) | 7.2 s |
+| Model time: drafting | 13.5 s (13.2 s–13.8 s) | 13.1 s |
+
+## TEST v2 per case (routed)
+
+Field and line-item accuracy averaged over the runs; order matching and high-risk groups per run.
+
+| Case | Fields | Line items | Right order | Changes found | Expected high | Predicted high per run | Draft violations |
+|---|---|---|---|---|---|---|---|
+| t2_001 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
+| t2_002 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 1 |
+| t2_003 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
+| t2_004 | 100.0% | 33.3% | yes / yes / yes | – | – | – / – / – | 0 |
+| t2_005 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
+| t2_006 | 96.7% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
+| t2_007 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 1 |
+| t2_008 | 100.0% | 100.0% | yes / yes / yes | – | schedule | schedule / schedule / schedule | 0 |
+| t2_009 | 100.0% | 100.0% | yes / yes / yes | 6/6 | value | value / value / value | 0 |
+| t2_010 | 100.0% | 0.0% | yes / yes / yes | 3/6 | – | – / – / – | 0 |
+| t2_011 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
+| t2_012 | 100.0% | – | yes / yes / yes | 3/3 | – | – / – / – | 0 |
+| t2_013 | 50.0% | – | yes / yes / yes | 0/3 | – | – / – / – | 0 |
+| t2_014 | 93.3% | – | yes / yes / yes | 3/3 | – | – / value / – | 0 |
+| t2_015 | 100.0% | 100.0% | yes / yes | 4/4 | value | value / value | 1 |
+| t2_016 | 90.0% | – | yes / yes / yes | 0/3 | – | – / – / – | 0 |
+| t2_017 | 90.0% | 0.0% | yes / yes / yes | – | – | – / – / – | 0 |
+| t2_018 | 86.7% | 66.7% | yes / yes (asked) / yes (asked) | 2/3 | – | – / – / – | 0 |
+| t2_019 | – | – | – | – | – | – / – / – | 1 |
+| t2_020 | – | – | – | – | – | – / – / – | 0 |
+| t2_021 | – | – | – | – | – | – / – / – | 0 |
+| t2_022 | – | – | – | – | – | schedule / schedule / schedule | 0 |
+| t2_023 | 86.7% | – | yes / yes / yes | 3/3 | – | – / – / – | 0 |
+| t2_024 | 90.0% | 100.0% | yes / yes / yes | 12/12 | value | value / value / value | 0 |
+| t2_025 | 93.3% | – | yes / yes / yes | 3/3 | – | – / – / – | 0 |
+| t2_026 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
+| t2_027 | 100.0% | 100.0% | yes (asked) / yes (asked) / no (asked) | 3/6 | value | value / value / schedule, value | 0 |
+| t2_028 | 100.0% | 100.0% | yes / yes / yes | – | schedule | schedule / schedule / schedule | 0 |
+| t2_029 | 100.0% | – | yes / yes / yes | 3/3 | schedule | schedule / schedule / schedule | 0 |
+| t2_030 | – | – | – | – | – | – / – / – | 1 |
 
 ## Results: routed setup
 
-| Metric | DEV now | DEV at M7 (10 cases) | TEST v1 now (seen) | TEST v1 at M7 (held out) |
-|---|---|---|---|---|
-| Classification: main category | 93.7% (90.5%–100.0%) | 96.7% (90.0%–100.0%) | 96.7% | 95.6% (93.3%–96.7%) |
-| Classification: all intents (exact set) | 84.1% (81.0%–85.7%) | 70.0% (60.0%–80.0%) | 96.7% | 92.2% (90.0%–93.3%) |
-| Classification: has PO data | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% | 94.4% (93.3%–96.7%) |
-| Field extraction accuracy (after escalation) | 98.8% (98.5%–99.5%) | 97.8% (96.6%–98.9%) | 98.0% | 91.9% (91.4%–92.6%) |
-| Line-item accuracy (colour, quantity, sizes) | 94.7% (90.9%–100.0%) | 88.9% (87.5%–91.7%) | 100.0% | 88.7% (88.7%–88.7%) |
-| Human-review flags: recall | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 83.3% | 33.3% (33.3%–33.3%) |
-| Human-review flags: precision | 57.9% (50.0%–66.7%) | 100.0% (100.0%–100.0%) | 71.4% | 8.5% (8.3%–8.7%) |
-| Order matching: email put on the right order | 100.0% (100.0%–100.0%) | n/a | 100.0% | n/a |
-| Order matching: questions put to a person | 1.0 (1.0–1.0) | n/a | 0.0 | n/a |
-| PO revision read from the PO number | 100.0% (100.0%–100.0%) | n/a | n/a | n/a |
-| Change detection: recall | 98.0% (94.1%–100.0%) | 100.0% (100.0%–100.0%) | 92.3% | 28.2% (23.1%–34.6%) |
-| Change detection: precision | 94.7% (84.2%–100.0%) | 100.0% (100.0%–100.0%) | 80.0% | 63.1% (50.0%–70.0%) |
-| High-risk flags: precision | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% | 78.0% (76.9%–78.6%) |
-| High-risk flags: recall | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% | 66.7% (62.5%–68.8%) |
-| Drafts written | 41 (41–41) | 18 (18–18) | 56 | 52 (52–52) |
-| Draft values fact-checked | 277 (263–285) | 129 (123–141) | 399 | 313 (299–327) |
-| Draft fact-check violations | 0.3 (0.0–1.0) | 0.0 (0.0–0.0) | 1.0 | 0.7 (0.0–1.0) |
-| Drafts with no violations | 99.2% (97.6%–100.0%) | 100.0% (100.0%–100.0%) | 98.2% | 98.7% (98.1%–100.0%) |
-| Escalation rate (emails with an escalated field) | 36.7% (35.0%–40.0%) | 33.3% (33.3%–33.3%) | 34.6% | 23.3% (20.8%–25.0%) |
-| Emails handled by Nano alone | 63.3% (60.0%–65.0%) | 66.7% (66.7%–66.7%) | 65.4% | 76.7% (75.0%–79.2%) |
-| Escalations resolved by Super | 91.9% (85.7%–100.0%) | 100.0% (100.0%–100.0%) | 90.0% | 100.0% (100.0%–100.0%) |
-| Escalation gain: field accuracy | +3.4 pp (+3.0 pp–+4.0 pp) | +3.0 pp (+2.2 pp–+3.4 pp) | +2.7 pp | +1.3 pp (+0.8 pp–+2.0 pp) |
-| Escalation gain: line-item accuracy | +11.4 pp (+9.1 pp–+13.6 pp) | +12.5 pp (+12.5 pp–+12.5 pp) | +7.5 pp | +5.0 pp (+1.9 pp–+9.4 pp) |
-| Ultra calls per assessed email | 2.3 (2.2–2.4) | 2.4 (2.1–2.8) | 2.8 | 2.6 (2.3–2.8) |
-| Cost per email (all models) | $0.0188 ($0.0187–$0.0190) | $0.0169 ($0.0145–$0.0191) | $0.0212 | $0.0157 ($0.0144–$0.0165) |
-| Latency per email (wall clock, end to end) | 31.6 s (29.1 s–35.4 s) | 24.2 s (20.8 s–25.9 s) | 32.1 s | 28.0 s (26.8 s–28.8 s) |
-| Emails that failed to process | 0 (0–0) | 0 (0–0) | 0 | 0 (0–0) |
+| Metric | DEV now | DEV at M7 (10 cases) | TEST v1 now (seen) | TEST v1 at M7 (held out) | TEST v2 (held out) |
+|---|---|---|---|---|---|
+| Classification: main category | 93.7% (90.5%–100.0%) | 96.7% (90.0%–100.0%) | 96.7% | 95.6% (93.3%–96.7%) | 87.6% (86.2%–90.0%) |
+| Classification: all intents (exact set) | 84.1% (81.0%–85.7%) | 70.0% (60.0%–80.0%) | 96.7% | 92.2% (90.0%–93.3%) | 74.2% (73.3%–75.9%) |
+| Classification: has PO data | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% | 94.4% (93.3%–96.7%) | 89.9% (89.7%–90.0%) |
+| Field extraction accuracy (after escalation) | 98.8% (98.5%–99.5%) | 97.8% (96.6%–98.9%) | 98.0% | 91.9% (91.4%–92.6%) | 96.5% (96.1%–97.1%) |
+| Line-item accuracy (colour, quantity, sizes) | 94.7% (90.9%–100.0%) | 88.9% (87.5%–91.7%) | 100.0% | 88.7% (88.7%–88.7%) | 83.2% (82.4%–84.8%) |
+| Human-review flags: recall | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 83.3% | 33.3% (33.3%–33.3%) | 72.2% (66.7%–83.3%) |
+| Human-review flags: precision | 57.9% (50.0%–66.7%) | 100.0% (100.0%–100.0%) | 71.4% | 8.5% (8.3%–8.7%) | 45.1% (36.4%–62.5%) |
+| Order matching: email put on the right order | 100.0% (100.0%–100.0%) | n/a | 100.0% | n/a | 98.7% (96.0%–100.0%) |
+| Order matching: questions put to a person | 1.0 (1.0–1.0) | n/a | 0.0 | n/a | 1.7 (1.0–2.0) |
+| PO revision read from the PO number | 100.0% (100.0%–100.0%) | n/a | n/a | n/a | 50.0% (50.0%–50.0%) |
+| Change detection: recall | 98.0% (94.1%–100.0%) | 100.0% (100.0%–100.0%) | 92.3% | 28.2% (23.1%–34.6%) | 77.4% (72.2%–80.0%) |
+| Change detection: precision | 94.7% (84.2%–100.0%) | 100.0% (100.0%–100.0%) | 80.0% | 63.1% (50.0%–70.0%) | 56.4% (46.4%–69.6%) |
+| High-risk flags: precision | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% | 78.0% (76.9%–78.6%) | 80.1% (75.0%–87.5%) |
+| High-risk flags: recall | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% | 66.7% (62.5%–68.8%) | 100.0% (100.0%–100.0%) |
+| Drafts written | 41 (41–41) | 18 (18–18) | 56 | 52 (52–52) | 57 (56–58) |
+| Draft values fact-checked | 277 (263–285) | 129 (123–141) | 399 | 313 (299–327) | 336 (327–352) |
+| Draft fact-check violations | 0.3 (0.0–1.0) | 0.0 (0.0–0.0) | 1.0 | 0.7 (0.0–1.0) | 1.7 (1.0–2.0) |
+| Drafts with no violations | 99.2% (97.6%–100.0%) | 100.0% (100.0%–100.0%) | 98.2% | 98.7% (98.1%–100.0%) | 97.1% (96.6%–98.2%) |
+| Escalation rate (emails with an escalated field) | 36.7% (35.0%–40.0%) | 33.3% (33.3%–33.3%) | 34.6% | 23.3% (20.8%–25.0%) | 30.1% (25.9%–35.7%) |
+| Emails handled by Nano alone | 63.3% (60.0%–65.0%) | 66.7% (66.7%–66.7%) | 65.4% | 76.7% (75.0%–79.2%) | 69.9% (64.3%–74.1%) |
+| Escalations resolved by Super | 91.9% (85.7%–100.0%) | 100.0% (100.0%–100.0%) | 90.0% | 100.0% (100.0%–100.0%) | 83.8% (77.8%–88.9%) |
+| Escalation gain: field accuracy | +3.4 pp (+3.0 pp–+4.0 pp) | +3.0 pp (+2.2 pp–+3.4 pp) | +2.7 pp | +1.3 pp (+0.8 pp–+2.0 pp) | +2.8 pp (+1.7 pp–+4.1 pp) |
+| Escalation gain: line-item accuracy | +11.4 pp (+9.1 pp–+13.6 pp) | +12.5 pp (+12.5 pp–+12.5 pp) | +7.5 pp | +5.0 pp (+1.9 pp–+9.4 pp) | +5.0 pp (+2.9 pp–+6.1 pp) |
+| Ultra calls per assessed email | 2.3 (2.2–2.4) | 2.4 (2.1–2.8) | 2.8 | 2.6 (2.3–2.8) | 2.8 (2.7–3.0) |
+| Cost per email (all models) | $0.0188 ($0.0187–$0.0190) | $0.0169 ($0.0145–$0.0191) | $0.0212 | $0.0157 ($0.0144–$0.0165) | $0.0215 ($0.0207–$0.0229) |
+| Latency per email (wall clock, end to end) | 31.6 s (29.1 s–35.4 s) | 24.2 s (20.8 s–25.9 s) | 32.1 s | 28.0 s (26.8 s–28.8 s) | 32.6 s (31.1 s–33.8 s) |
+| Emails that failed to process | 0.0 (0.0–0.0) | 0.0 (0.0–0.0) | 0.0 | 0.0 (0.0–0.0) | 0.3 (0.0–1.0) |
 
 ## Cost per email by pipeline stage (DEV, with drafts)
 
@@ -61,17 +144,17 @@ Quality of the same DEV passes:
 
 ## Risk agent: Super instead of Ultra
 
-Same pipeline, same pre-fetch and tools; only the planning and risk-reasoning calls move from Ultra to Super. One Super pass per split; the Ultra column is the routed passes of this step.
+Same pipeline, same pre-fetch and tools; only the planning and risk-reasoning calls move from Ultra to Super. One Super pass per split; the Ultra columns are the routed passes.
 
-| Metric | DEV: Ultra | DEV: Super | TEST v1: Ultra | TEST v1: Super |
-|---|---|---|---|---|
-| High-risk flags: precision | 100.0% (100.0%–100.0%) | 100.0% | 100.0% | 100.0% |
-| High-risk flags: recall | 100.0% (100.0%–100.0%) | 100.0% | 100.0% | 100.0% |
-| High-risk flags: true / false positives / missed | 8/0/0 / 8/0/0 / 8/0/0 | 8/0/0 | 17/0/0 | 17/0/0 |
-| Risk-stage calls per assessed email | 2.3 (2.2–2.4) | 2.4 | 2.8 | 2.3 |
-| Risk-stage cost per assessed email | $0.0158 ($0.0156–$0.0161) | $0.0038 | $0.0205 | $0.0036 |
-| Risk-stage model time per assessed email | 9.0 s (8.1 s–9.9 s) | 9.8 s | 12.3 s | 6.3 s |
-| Emails assessed | 20 (20–20) | 20 | 26 | 26 |
+| Metric | DEV: Ultra | DEV: Super | TEST v1: Ultra | TEST v1: Super | TEST v2: Ultra | TEST v2: Super |
+|---|---|---|---|---|---|---|
+| High-risk flags: precision | 100.0% (100.0%–100.0%) | 100.0% | 100.0% | 100.0% | 80.1% (75.0%–87.5%) | 85.7% |
+| High-risk flags: recall | 100.0% (100.0%–100.0%) | 100.0% | 100.0% | 100.0% | 100.0% (100.0%–100.0%) | 100.0% |
+| High-risk flags: true / false positives / missed | 8/0/0 / 8/0/0 / 8/0/0 | 8/0/0 | 17/0/0 | 17/0/0 | 7/1/0 / 6/2/0 / 7/2/0 | 6/1/0 |
+| Risk-stage calls per assessed email | 2.3 (2.2–2.4) | 2.4 | 2.8 | 2.3 | 2.8 (2.7–3.0) | 2.4 |
+| Risk-stage cost per assessed email | $0.0158 ($0.0156–$0.0161) | $0.0038 | $0.0205 | $0.0036 | $0.0196 ($0.0185–$0.0208) | $0.0036 |
+| Risk-stage model time per assessed email | 9.0 s (8.1 s–9.9 s) | 9.8 s | 12.3 s | 6.3 s | 11.1 s (10.6 s–11.5 s) | 8.0 s |
+| Emails assessed | 20 (20–20) | 20 | 26 | 26 | 28 (27–28) | 27 |
 
 ## Cost and latency by model (routed, per email)
 
@@ -201,7 +284,7 @@ The only prompt edit: the planner's rubric line now says "about USD 5,000" inste
 
 ## Reading the results
 
-- **Order matching** put every email on the right order in all three DEV passes and on TEST v1: 20/20 DEV emails with order data per pass, 27/27 on TEST v1.
+- **Order matching** put every email on the right order in all three DEV passes and on TEST v1: 20/20 DEV emails with order data per pass, 26/26 on TEST v1.
   - One question per DEV pass went to a person: case_016 ("add Heather Marl to the OR-SW-40 sweatshirts"), with buyer and style matching but no PO number or date, score 0.55.
   - TEST v1 needed no question.
   - Revision suffixes ("Rev A", "Revision 1") were read correctly in every pass.
@@ -254,3 +337,32 @@ On TEST v1 (reported only; TEST v1 is seen but is still not used for fixes):
 - TEST v1 ran once after the fixes. The DEV min–max ranges show run-to-run variation of 1–5 pp on most metrics.
 - Baselines (Nano only, Ultra for everything, Super for risk) ran once each.
 - "All intents" is scored as an exact set, and intent labels are partly a judgement call.
+
+## TEST v2: what the held-out set shows
+
+TEST v2 was written outside this codebase and committed before any run. The build assistant checked only its structure: file pairs, schema, sums, and that the committed risk labels agree with `label_risk.py` (they all do). No code, prompt or label was changed after the results. Everything below is reported, not fixed.
+
+**Headline.** On TEST v2, compared with TEST v1 after the fixes:
+- Every expected high risk was found, in all three runs (recall 100%). Precision is lower (80%), because of the false positives below.
+- Order matching was right in 98.7% of order emails.
+- The weaker areas are change detection (77% recall, 56% precision), line items (83%), classification (88% main category) and review flags (45% precision, 72% recall).
+- Some of this is variety DEV did not cover (see "What fails"), so it is the first honest measure of how the fixes generalise.
+
+**What fails, by pattern (cases, runs out of 3):**
+
+1. **Ambiguous numeric dates read the wrong way round** (t2_013, t2_016, t2_024; 3/3 each). For example, 12/02/2027 is read as 2 December instead of 12 February. Either the delivery date or the change on it is wrong, which accounts for most of the missed and unexpected `delivery_date` changes. The extraction has no rule for using the buyer's country or the other dates in the same email to settle the format.
+2. **An order question read as a date change** (t2_022, 3/3). A status question that mentions dates is classified as `delivery_change` with PO data. The date then becomes a new version of the order, and the risk agent raises a *schedule* high on it in every run. That is one false high-risk flag per run; the others are t2_014 (*value*, 1 run) and t2_027 (*schedule*, in the run with the wrong match, pattern 7). Similarly, t2_019 and t2_030 (no order data) are said to carry PO data in all runs.
+3. **Revision suffixes the splitter does not know** (t2_018 "Rev B", t2_024; 3/3). The revision is not read from the PO number: in t2_018 it lands in `style` or stays on the PO; in t2_024 it is missed. PO-revision accuracy is 50%.
+4. **Colour-level change wording** (t2_010, t2_027; 3/3):
+   - "Nachtblau to 1,600" yields a colour named "Nachtblau to".
+   - A colour the label treats as removed is reported as a quantity change.
+   - Both are the TEST v1 test_019 pattern, which was not covered by a DEV case.
+5. **Style picks up extra text** (t2_017: "PK-TS-55 kids graphic tee", 3/3). A body-only follow-up also puts the PO number into `style` when the order has a different style (t2_014, t2_023, t2_025; 1–2/3). Change 11 only fixes this when the order is the one matched.
+6. **One malformed classification reply** (t2_015). Nano returned an intent outside the allowed list twice, so the email failed in 1 of 3 routed runs and in the Super pass. The failure is visible, not silent, but nothing retries with a stronger model.
+7. **Wrong match question answered "yes"** (t2_027, 1 of 3 runs). The question named a different order from the one the email was about, and the eval's label-oracle answered "yes" to it. In the app a person would see the PO and buyer named in the question and answer "no". This is a limitation of the oracle, but it also shows that a question naming the wrong order is possible.
+8. **Review flags:**
+   - `total_quantity` mismatch flags where the email's per-colour numbers do not add up the way the label reads them (t2_003, t2_008, t2_018).
+   - Four extra flags on t2_015 (delivery date, Incoterm, port, total) in both runs where it was processed; not investigated, to keep TEST v2 unseen for fixes.
+   - Flags the label expects but the system missed: `po_number` on t2_027 (3/3) and `unit_price` on t2_006 (2/3).
+
+**Super instead of Ultra for risk, on TEST v2:** the same recall (100%) and fewer false positives (precision 85.7% vs 80.1%), at $0.0036 vs $0.0196 per assessed email. That is one Super pass against three Ultra passes, and t2_015 failed in the Super pass, so it had one fewer expected finding. Super's one false positive is t2_022, which Ultra also flags in every run: a misclassified email feeding the agent (pattern 2), not a reasoning error. This is now the third set where Super matches Ultra on high-risk findings.

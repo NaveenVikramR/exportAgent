@@ -146,7 +146,7 @@ docker compose up --build        # web on :3000, API on :8000
 Synthetic buyer emails modelled on real export paperwork, with hand-written expected outputs:
 - **DEV**: [backend/eval/dev/](backend/eval/dev/), 21 cases; fixes are made only against these.
 - **TEST v1**: [backend/eval/test/](backend/eval/test/), 30 cases. It was held out until Milestone 7 and its failures were analysed there, so it now counts as seen.
-- **TEST v2**: to be written outside this codebase from [backend/eval/TEST_V2_SPEC.md](backend/eval/TEST_V2_SPEC.md), as the next held-out set.
+- **TEST v2**: [backend/eval/test_v2/](backend/eval/test_v2/), 30 held-out cases, frozen in commit `24f19ae` before any run.
 
 Labels cover classification, every field, line items, review flags, which order each email belongs to, expected changes and expected high-risk findings.
 
@@ -169,18 +169,29 @@ The full pipeline runs live on Nemotron with the cache off. Full tables, baselin
 
 TEST v1 exposed weaknesses DEV did not have: revision suffixes in PO numbers, orders named without the word "PO", orders without a PO number, review flags on body-only revisions, non-English size tables, shortened colour names, decimal commas, and a value threshold in yen. Each became a new DEV case and a plain-Python fix. No TEST email was used to tune.
 
-| Metric | DEV (21 cases, 3 runs) | TEST v1 after fixes (seen, 1 run) | TEST v1 at M7 (held out, 3 runs) |
-|---|---|---|---|
-| Field extraction accuracy | 98.8% | 98.0% | 91.9% |
-| Line-item accuracy | 94.7% | 100% | 88.7% |
-| Emails put on the right order | 100% | 100% | – |
-| Change detection recall / precision | 98.0% / 94.7% | 92.3% / 80.0% | 28.2% / 63.1% |
-| High-risk flags precision / recall | 100% / 100% | 100% / 100% | 78.0% / 66.7% |
-| Review flags precision / recall | 57.9% / 100% | 71.4% / 83.3% | 8.5% / 33.3% |
-| Drafts with no fact-check violations | 99.2% | 98.2% | 98.7% |
-| Cost per email (all models, incl. drafts) | $0.0188 | $0.0212 | $0.0157 |
+| Metric | **TEST v2 (held out, 3 runs)** | DEV (21 cases, 3 runs) | TEST v1 after fixes (seen, 1 run) | TEST v1 at M7 (held out, 3 runs) |
+|---|---|---|---|---|
+| Classification: main category | 87.6% | 93.7% | 96.7% | 95.6% |
+| Field extraction accuracy | 96.5% | 98.8% | 98.0% | 91.9% |
+| Line-item accuracy | 83.2% | 94.7% | 100% | 88.7% |
+| Emails put on the right order | 98.7% | 100% | 100% | – |
+| Change detection recall / precision | 77.4% / 56.4% | 98.0% / 94.7% | 92.3% / 80.0% | 28.2% / 63.1% |
+| High-risk flags precision / recall | 80.1% / 100% | 100% / 100% | 100% / 100% | 78.0% / 66.7% |
+| Review flags precision / recall | 45.1% / 72.2% | 57.9% / 100% | 71.4% / 83.3% | 8.5% / 33.3% |
+| Drafts with no fact-check violations | 97.1% | 99.2% | 98.2% | 98.7% |
+| Cost per email (all models, incl. drafts) | $0.0215 | $0.0188 | $0.0212 | $0.0157 |
 
-The risk agent scores the same with **Super instead of Ultra** (all high-risk findings, no false positive, on DEV and TEST v1), at about a quarter of the risk-stage cost. Most of the reasoning that sets severity is in Python tools and policy, so the model mostly plans checks and summarises. Per-stage costs and the comparison are in the report.
+**TEST v2 is the honest number.** Its main weaknesses are listed in the report:
+- ambiguous numeric dates read the wrong way round;
+- a status question misread as a date change, which produces a false schedule risk;
+- revision suffixes the PO-number splitter does not know;
+- colour-level change wording.
+
+They are reported, not fixed.
+
+> **About TEST v2.** Cases t2_001–t2_025 were written independently from [TEST_V2_SPEC.md](backend/eval/TEST_V2_SPEC.md); t2_026–t2_030 were written by the project author. The build assistant validated their structure only (file pairs, schema, sums, and that risk labels agree with `eval/label_risk.py`), and no code or prompt was changed after seeing the set.
+
+The risk agent scores the same with **Super instead of Ultra** on all three sets (every expected high-risk finding; on TEST v2 one false positive against Ultra's one to two per run), at a quarter to a fifth of the risk-stage cost. Most of the reasoning that sets severity is in Python tools and policy, so the model mostly plans checks and summarises. Per-stage costs and the comparison are in the report.
 
 ```bash
 python -m eval.run_eval --split dev --variant routed --run 1    # one pass; also nano_only, ultra_all, super_risk

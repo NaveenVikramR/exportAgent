@@ -176,7 +176,7 @@ MAIN_ROWS = [
     ("Ultra calls per assessed email", "ultra_calls_per_assessed", "f1"),
     ("Cost per email (all models)", "cost_per_email", "usd"),
     ("Latency per email (wall clock, end to end)", "seconds_per_email", "s"),
-    ("Emails that failed to process", "errors", "n"),
+    ("Emails that failed to process", "errors", "f1"),
 ]
 VARIANT_NAMES = {"routed": "Routed (ours)", "nano_only": "Nano only", "ultra_all": "Ultra for everything",
                  "super_risk": "Super for risk"}
@@ -195,8 +195,9 @@ def build() -> str:
     def emails(split: str) -> int:
         return per[(split, "routed")][0]["emails"] if per.get((split, "routed")) else 0
 
-    current = {key: ms for key, ms in per.items() if "@" not in key[0]}
+    current = {key: ms for key, ms in per.items() if "@" not in key[0] and key[0] != "test_v2"}
     spend = sum(m["total_cost"] for ms in current.values() for m in ms)
+    v2_spend = sum(m["total_cost"] for key, ms in per.items() if key[0] == "test_v2" for m in ms)
     pre_fix = sum(metrics(json.loads(p.read_text(encoding="utf-8")))["total_cost"]
                   for p in sorted((RUNS_DIR / "pre_fix").glob("*.json")))
     lines = [
@@ -207,12 +208,16 @@ def build() -> str:
         "the risk agent, and drafts with the fact check. Values are mean (min–max) across runs. "
         f"TEST v1 ({emails('test')} cases) was run {runs('test', 'routed')}× after the fixes in this step. "
         "**TEST v1 is now seen**: its failures (Milestone 7) led to new DEV cases, and the fixes were made and "
-        "checked on DEV only, but TEST v1 numbers below are no longer a held-out measurement. TEST v2 will be.",
+        "checked on DEV only, but TEST v1 numbers below are no longer a held-out measurement; TEST v2 (above) is.",
         "",
-        f"Model spend in the runs of this step: **${spend + pre_fix:.2f}**"
+        f"Model spend in the DEV and TEST v1 runs after the fixes: **${spend + pre_fix:.2f}**"
         + (f" (including ${pre_fix:.2f} for a DEV pass before the last fixes, kept in `runs/pre_fix/`, not in the tables)."
            if pre_fix else "."),
         "",
+    ]
+    if per.get(("test_v2", "routed")):
+        lines += _test_v2(per, col, runs, emails, v2_spend, groups)
+    lines += [
         "## Results: routed setup",
         "",
     ]
@@ -282,6 +287,42 @@ def build() -> str:
     return "\n".join(lines) + "\n"
 
 
+def _test_v2(per: dict, col, runs, emails, spend: float, groups: dict) -> list[str]:
+    """The held-out TEST v2 results, first in the report."""
+    lines = [
+        "## TEST v2 (held out)",
+        "",
+        f"{emails('test_v2')} cases: t2_001–t2_025 written independently from [TEST_V2_SPEC.md](TEST_V2_SPEC.md), "
+        "t2_026–t2_030 by the project author; the build assistant validated structure only. Committed before "
+        "any run (commit `24f19ae`). Routed setup run "
+        f"{runs('test_v2', 'routed')}×, Super for risk {runs('test_v2', 'super_risk')}×, end to end with the cache "
+        "off and drafts on. No code or prompt was changed after the set was seen. "
+        f"Model spend on TEST v2: **${spend:.2f}**.",
+        "",
+        "| Metric | Routed (ours) | Super for risk |",
+        "|---|---|---|",
+    ]
+    for label, key, kind in MAIN_ROWS:
+        lines.append(f"| {label} | {col('test_v2', 'routed', key, kind)} | {col('test_v2', 'super_risk', key, kind)} |")
+    lines += [
+        "",
+        "### TEST v2 cost per email by stage",
+        "",
+        "| Stage | Routed (ours) | Super for risk |",
+        "|---|---|---|",
+    ]
+    for stage in STAGES:
+        lines.append(f"| {stage.capitalize()} | {col('test_v2', 'routed', f'{stage}_cost_per_email', 'usd')} "
+                     f"| {col('test_v2', 'super_risk', f'{stage}_cost_per_email', 'usd')} |")
+    lines.append(f"| **Total** | {col('test_v2', 'routed', 'cost_per_email', 'usd')} "
+                 f"| {col('test_v2', 'super_risk', 'cost_per_email', 'usd')} |")
+    for stage in STAGES:
+        lines.append(f"| Model time: {stage} | {col('test_v2', 'routed', f'{stage}_seconds_per_email', 's')} "
+                     f"| {col('test_v2', 'super_risk', f'{stage}_seconds_per_email', 's')} |")
+    lines += _per_case("TEST v2 per case (routed)", groups.get(("test_v2", "routed"), []))
+    return lines + [""]
+
+
 def _super_vs_ultra(per: dict, col) -> list[str]:
     rows = [
         ("High-risk flags: precision", "high_precision", "pct"),
@@ -297,10 +338,10 @@ def _super_vs_ultra(per: dict, col) -> list[str]:
         "## Risk agent: Super instead of Ultra",
         "",
         "Same pipeline, same pre-fetch and tools; only the planning and risk-reasoning calls move from Ultra to "
-        "Super. One Super pass per split; the Ultra column is the routed passes of this step.",
+        "Super. One Super pass per split; the Ultra columns are the routed passes.",
         "",
-        "| Metric | DEV: Ultra | DEV: Super | TEST v1: Ultra | TEST v1: Super |",
-        "|---|---|---|---|---|",
+        "| Metric | DEV: Ultra | DEV: Super | TEST v1: Ultra | TEST v1: Super | TEST v2: Ultra | TEST v2: Super |",
+        "|---|---|---|---|---|---|---|",
     ]
 
     def counts(split: str, variant: str) -> str:
@@ -309,9 +350,9 @@ def _super_vs_ultra(per: dict, col) -> list[str]:
 
     for label, key, kind in rows:
         if key is None:
-            cells = [counts(s, v) for s in ("dev", "test") for v in ("routed", "super_risk")]
+            cells = [counts(s, v) for s in ("dev", "test", "test_v2") for v in ("routed", "super_risk")]
         else:
-            cells = [col(s, v, key, kind) for s in ("dev", "test") for v in ("routed", "super_risk")]
+            cells = [col(s, v, key, kind) for s in ("dev", "test", "test_v2") for v in ("routed", "super_risk")]
         lines.append(f"| {label} | " + " | ".join(cells) + " |")
     return lines
 
