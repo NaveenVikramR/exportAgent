@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CATEGORY_LABELS, CategoryBadge, StatusBadge } from "@/components/badges";
 import { DraftCard, ReviewerField, useReviewer } from "@/components/draft-card";
 import { AgentTrace, RiskFlags } from "@/components/risk-panel";
+import { Button, Card, ErrorBox, Loading, Notice, Page, Spinner } from "@/components/ui";
 import { api, type AgentRun, type Draft, type EmailDetail, type Extraction, type ScalarField } from "@/lib/api";
 
 const FIELD_LABELS: [ScalarField, string][] = [
@@ -41,15 +42,6 @@ const ESCALATION_OUTCOMES: Record<string, string> = {
   failed: "no usable answer",
   skipped_spend_cap: "skipped, daily spend cap reached",
 };
-
-function Card({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section className="rounded-lg border border-zinc-200 bg-white p-5">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500">{title}</h2>
-      {children}
-    </section>
-  );
-}
 
 function Confidence({ value }: { value: number }) {
   const colour = value >= 0.7 ? "bg-emerald-500" : value >= 0.4 ? "bg-amber-500" : "bg-red-500";
@@ -155,6 +147,8 @@ export default function EmailPage() {
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [drafting, setDrafting] = useState(false);
   const [reviewer, setReviewer] = useReviewer();
+  const [pipeline, setPipeline] = useState<string | null>(null);
+  const started = useRef(false);
 
   useEffect(() => {
     api
@@ -172,13 +166,15 @@ export default function EmailPage() {
       .catch(() => setDrafts([]));
   }, [id]);
 
-  async function writeDrafts(force: boolean) {
+  async function writeDrafts(force: boolean): Promise<boolean> {
     setDrafting(true);
     setError(null);
     try {
       setDrafts(await api.writeDrafts(id, force));
+      return true;
     } catch (err) {
       setError((err as Error).message);
+      return false;
     } finally {
       setDrafting(false);
     }
@@ -191,40 +187,80 @@ export default function EmailPage() {
     }
   }
 
-  async function assess(force: boolean) {
+  // The agent runs in the background; its steps are polled so the trace fills in as it works.
+  async function assess(force: boolean): Promise<AgentRun | null> {
     setAssessing(true);
     setError(null);
     try {
-      setRun(await api.assess(id, force));
+      let current = await api.assessInBackground(id, force);
+      setRun(current);
+      while (current.status === "running") {
+        await new Promise((resolve) => setTimeout(resolve, 1200));
+        current = await api.agentRun(id);
+        setRun(current);
+      }
+      return current;
     } catch (err) {
       setError((err as Error).message);
+      return null;
     } finally {
       setAssessing(false);
     }
   }
 
-  async function analyse(force: boolean) {
+  async function analyse(force: boolean): Promise<EmailDetail | null> {
     setRunning(true);
     setError(null);
     try {
-      setEmail(await api.analyse(id, force));
+      const analysed = await api.analyse(id, force);
+      setEmail(analysed);
+      return analysed;
     } catch (err) {
       setError((err as Error).message);
+      return null;
     } finally {
       setRunning(false);
     }
   }
 
+  // Everything a buyer email needs, in order: analysis, risk (if it is about an order), drafts.
+  const runAll = useCallback(async () => {
+    setPipeline("Reading the email: classification and extraction (Nemotron Nano)…");
+    const analysed = await analyse(false);
+    if (!analysed) return setPipeline(null);
+    if (analysed.order_id !== null) {
+      setPipeline("Checking the risk: Python checks first, then Nemotron Super (Ultra if needed)…");
+      if (!(await assess(false))) return setPipeline(null);
+    }
+    setPipeline("Drafting the reply (Nemotron Super) and fact-checking it…");
+    await writeDrafts(false);
+    setPipeline(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  useEffect(() => {
+    if (!email || started.current) return;
+    if (new URLSearchParams(window.location.search).get("run") === "1" && email.classification === null) {
+      started.current = true;
+      setTimeout(runAll, 0);
+    }
+  }, [email, runAll]);
+
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-6 py-10">
-      <Link href="/" className="text-sm text-zinc-600 hover:text-zinc-900">
+    <Page>
+      <Link href="/inbox" className="text-sm text-zinc-500 hover:text-zinc-900">
         ← Inbox
       </Link>
 
-      {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">{error}</div>
+      {error && <ErrorBox>{error}</ErrorBox>}
+      {!email && !error && <Loading />}
+      {pipeline && (
+        <Notice>
+          <span className="flex items-center gap-2">
+            <Spinner /> {pipeline}
+          </span>
+        </Notice>
       )}
-      {!email && !error && <p className="text-sm text-zinc-500">Loading…</p>}
 
       {email && (
         <>
@@ -240,13 +276,15 @@ export default function EmailPage() {
             </div>
             <div className="flex shrink-0 items-center gap-2">
               <StatusBadge status={email.status} />
-              <button
-                onClick={() => analyse(email.classification !== null)}
-                disabled={running}
-                className="rounded bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50"
-              >
-                {running ? "Analysing…" : email.classification ? "Re-run analysis" : "Analyse"}
-              </button>
+              {email.classification === null ? (
+                <Button onClick={runAll} busy={pipeline !== null}>
+                  Run everything
+                </Button>
+              ) : (
+                <Button variant="secondary" onClick={() => analyse(true)} busy={running} disabled={pipeline !== null}>
+                  {running ? "Analysing…" : "Re-run analysis"}
+                </Button>
+              )}
             </div>
           </header>
 
@@ -275,6 +313,70 @@ export default function EmailPage() {
                 </span>
               </div>
               <p className="mt-2 text-sm">{email.classification.summary}</p>
+            </Card>
+          )}
+
+          {email.order_id && (
+            <Card title="Risk assessment">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                <p className="text-sm text-zinc-600">
+                  Nemotron Super plans the checks (Ultra when the run is escalated); Python tools do the maths. Every flag cites its evidence.
+                </p>
+                <Button
+                  variant={run ? "secondary" : "primary"}
+                  onClick={() => assess(run !== null)}
+                  busy={assessing}
+                  disabled={pipeline !== null && !assessing}
+                >
+                  {assessing ? "Assessing…" : run ? "Re-run assessment" : "Assess risk"}
+                </Button>
+              </div>
+              {run?.notice && (
+                <p className="mb-3 rounded border border-sky-200 bg-sky-50 px-3 py-2 text-sm text-sky-900">{run.notice}</p>
+              )}
+              {run?.error && (
+                <p className="mb-3 rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+                  The assessment did not complete: {run.error}
+                </p>
+              )}
+              {run?.status === "running" && (
+                <div className="mb-3 flex flex-col gap-2">
+                  <p className="flex items-center gap-2 text-sm text-zinc-600">
+                    <Spinner /> Working: {run.steps.length} {run.steps.length === 1 ? "step" : "steps"} so far
+                  </p>
+                  {run.steps.length > 0 && <AgentTrace run={run} />}
+                </div>
+              )}
+              {run && run.status !== "running" && <RiskFlags run={run} />}
+            </Card>
+          )}
+          {email.classification && (
+            <Card title="Drafts">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                <p className="text-sm text-zinc-600">
+                  Nemotron Super drafts from the order data and risk findings only. Nothing is sent automatically.
+                </p>
+                <div className="flex flex-wrap items-center gap-3">
+                  <ReviewerField name={reviewer} onChange={setReviewer} />
+                  <Button
+                    variant={drafts.length ? "secondary" : "primary"}
+                    onClick={() => writeDrafts(drafts.some((d) => d.status === "pending"))}
+                    busy={drafting}
+                    disabled={(email.order_id !== null && (run === null || run.status === "running")) || (pipeline !== null && !drafting)}
+                    title={email.order_id !== null && run === null ? "Assess the risk first" : undefined}
+                  >
+                    {drafting ? "Drafting…" : drafts.some((d) => d.status === "pending") ? "Redraft" : "Draft reply"}
+                  </Button>
+                </div>
+              </div>
+              {email.order_id !== null && run === null && (
+                <p className="text-sm text-zinc-500">Assess the risk first, so the reply is grounded in it.</p>
+              )}
+              <div className="flex flex-col gap-3">
+                {drafts.map((draft) => (
+                  <DraftCard key={draft.id} draft={draft} reviewer={reviewer} onChange={replaceDraft} />
+                ))}
+              </div>
             </Card>
           )}
 
@@ -313,61 +415,7 @@ export default function EmailPage() {
               )}
             </Card>
           )}
-          {email.order_id && (
-            <Card title="Risk assessment">
-              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-                <p className="text-sm text-zinc-600">
-                  Nemotron Super plans the checks (Ultra when the run is escalated); Python tools do the maths. Every flag cites its evidence.
-                </p>
-                <button
-                  onClick={() => assess(run !== null)}
-                  disabled={assessing}
-                  className="rounded bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50"
-                >
-                  {assessing ? "Assessing… (up to a minute)" : run ? "Re-run assessment" : "Assess risk"}
-                </button>
-              </div>
-              {run?.notice && (
-                <p className="mb-3 rounded border border-sky-200 bg-sky-50 px-3 py-2 text-sm text-sky-900">{run.notice}</p>
-              )}
-              {run?.error && (
-                <p className="mb-3 rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
-                  The assessment did not complete: {run.error}
-                </p>
-              )}
-              {run && <RiskFlags run={run} />}
-            </Card>
-          )}
-          {email.classification && (
-            <Card title="Drafts">
-              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-                <p className="text-sm text-zinc-600">
-                  Nemotron Super drafts from the order data and risk findings only. Nothing is sent automatically.
-                </p>
-                <div className="flex flex-wrap items-center gap-3">
-                  <ReviewerField name={reviewer} onChange={setReviewer} />
-                  <button
-                    onClick={() => writeDrafts(drafts.some((d) => d.status === "pending"))}
-                    disabled={drafting || (email.order_id !== null && run === null)}
-                    title={email.order_id !== null && run === null ? "Assess the risk first" : undefined}
-                    className="rounded bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50"
-                  >
-                    {drafting ? "Drafting…" : drafts.some((d) => d.status === "pending") ? "Redraft" : "Draft reply"}
-                  </button>
-                </div>
-              </div>
-              {email.order_id !== null && run === null && (
-                <p className="text-sm text-zinc-500">Assess the risk first, so the reply is grounded in it.</p>
-              )}
-              <div className="flex flex-col gap-3">
-                {drafts.map((draft) => (
-                  <DraftCard key={draft.id} draft={draft} reviewer={reviewer} onChange={replaceDraft} />
-                ))}
-              </div>
-            </Card>
-          )}
-
-          {run && run.steps.length > 0 && (
+          {run && run.status !== "running" && run.steps.length > 0 && (
             <Card title="Agent trace">
               <AgentTrace run={run} />
             </Card>
@@ -387,6 +435,6 @@ export default function EmailPage() {
           ))}
         </>
       )}
-    </main>
+    </Page>
   );
 }

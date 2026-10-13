@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { ALERT_LABELS, AlertBadge } from "@/components/badges";
 import { BuyerDecision, OrderStatusBadge } from "@/components/buyer-decision";
 import { GenerateDocuments } from "@/components/documents-panel";
+import { ProfileSwitch } from "@/components/profile-switch";
+import { ErrorBox, Loading, Page } from "@/components/ui";
 import { api, type Change, type ExportDocument, type OrderDetail, type POVersion, type ScalarField } from "@/lib/api";
 
 const FIELDS: [ScalarField, string][] = [
@@ -137,15 +139,13 @@ export default function OrderPage() {
   const sizes = current ? Array.from(new Set(current.line_items.flatMap((item) => Object.keys(item.sizes)))) : [];
 
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-6 py-10">
-      <Link href="/orders" className="text-sm text-zinc-600 hover:text-zinc-900">
+    <Page>
+      <Link href="/orders" className="text-sm text-zinc-500 hover:text-zinc-900">
         ← Orders
       </Link>
 
-      {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">{error}</div>
-      )}
-      {!order && !error && <p className="text-sm text-zinc-500">Loading…</p>}
+      {error && <ErrorBox>{error}</ErrorBox>}
+      {!order && !error && <Loading />}
 
       {order && current && (
         <>
@@ -248,6 +248,8 @@ export default function OrderPage() {
             )}
           </section>
 
+          <ProfileSwitch key={order.profile} orderId={order.id} active={order.profile} onSwitched={reload} />
+
           <section className="rounded-lg border border-zinc-200 bg-white p-5">
             <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-zinc-500">Version history</h2>
             <ol className="flex flex-col gap-6 border-l border-zinc-200 pl-0">
@@ -258,6 +260,6 @@ export default function OrderPage() {
           </section>
         </>
       )}
-    </main>
+    </Page>
   );
 }

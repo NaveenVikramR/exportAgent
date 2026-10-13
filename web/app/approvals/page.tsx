@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { DraftCard, ReviewerField, useReviewer } from "@/components/draft-card";
 import { MatchQuestions } from "@/components/match-questions";
+import { Empty, ErrorBox, Loading, Page } from "@/components/ui";
 import { api, type Draft } from "@/lib/api";
 
 const TABS = [
@@ -33,7 +34,7 @@ export default function Approvals() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-6 py-10">
+    <Page>
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">Approvals</h1>
@@ -63,14 +64,18 @@ export default function Approvals() {
         ))}
       </nav>
 
-      {error && <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">{error}</div>}
-      {!drafts && !error && <p className="text-sm text-zinc-500">Loading…</p>}
-      {drafts?.length === 0 && <p className="text-sm text-zinc-500">Nothing here.</p>}
+      {error && <ErrorBox>{error}</ErrorBox>}
+      {!drafts && !error && <Loading />}
+      {drafts?.length === 0 && (
+        <Empty title={tab === "pending" ? "Nothing waiting for approval" : "Nothing here yet"}>
+          {tab === "pending" ? "Drafts appear here when an email has been analysed and a reply drafted." : null}
+        </Empty>
+      )}
       <div className="flex flex-col gap-4">
         {drafts?.map((draft) => (
           <DraftCard key={draft.id} draft={draft} reviewer={reviewer} onChange={replace} showEmail />
         ))}
       </div>
-    </main>
+    </Page>
   );
 }

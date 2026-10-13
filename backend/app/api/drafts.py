@@ -119,6 +119,10 @@ def create_drafts(
     except DraftingError as exc:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
     except SpendCapExceeded as exc:
+        # Nothing was replaced (the transaction rolls back): keep showing the stored drafts.
+        session.rollback()
+        if pending:
+            return [draft_out(session, d) for d in pending]
         raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=str(exc)) from exc
     return [draft_out(session, d) for d in drafts]
 

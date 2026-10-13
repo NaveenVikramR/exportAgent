@@ -63,6 +63,13 @@ class Settings(BaseSettings):
     database_url: str = f"sqlite:///{(BACKEND_DIR / 'exportagent.db').as_posix()}"
     web_origin: str = "http://localhost:3000"
 
+    # Public demo: load backend/demo/snapshot.json into an empty database at start-up, and
+    # allow POST /api/demo/reset to restore it.
+    demo_seed_on_empty: bool = False
+    demo_reset_enabled: bool = False
+    # Largest PDF accepted on the "try your own email" page
+    upload_max_bytes: int = 5_000_000
+
     def model_for(self, tier: Tier) -> str:
         return getattr(self, f"nebius_model_{tier.value}")
 

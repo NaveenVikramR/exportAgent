@@ -1,5 +1,6 @@
 id: case_018
 title: German PO with a "Farbe" size table and decimal-comma prices (EUR)
+demo: true
 sender: "Katrin Vogel <k.vogel@brunnhof-sport.example>"
 subject: "Bestellung BS-26-0442"
 received_at: "2026-10-07"

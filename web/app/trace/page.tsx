@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Loading, Page } from "@/components/ui";
 import { api, type Health, type LLMCall, type Route, type TraceSummary } from "@/lib/api";
 
 type Data = {
@@ -55,9 +56,9 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-6 py-10">
+    <Page>
       <header>
-        <h1 className="text-2xl font-semibold">Agent trace</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Model calls</h1>
         <p className="text-sm text-zinc-600">
           Every LLM call goes through one router. This page shows where each task is routed and what
           each call cost.
@@ -71,7 +72,7 @@ export default function Home() {
         </div>
       )}
 
-      {!data && !error && <p className="text-sm text-zinc-500">Loading…</p>}
+      {!data && !error && <Loading />}
 
       {data && (
         <>
@@ -181,6 +182,6 @@ export default function Home() {
           </Card>
         </>
       )}
-    </main>
+    </Page>
   );
 }

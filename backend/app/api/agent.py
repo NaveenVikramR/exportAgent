@@ -1,3 +1,6 @@
+import threading
+import time
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -6,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from app.agent.loop import run_agent
 from app.api.rate_limit import rate_limit
-from app.db import get_session
+from app.db import SessionLocal, get_session
 from app.llm.router import LLMRouter, SpendCapExceeded, get_router
 from app.models import AgentRun, Email, LLMCall
 from app.schemas.risk import AgentRunOut, AgentStepOut
@@ -61,18 +64,53 @@ def latest(email_id: int, session: Session = Depends(get_session)) -> AgentRunOu
     return run_out(session, run)
 
 
+def _run_in_background(email_id: int, llm: LLMRouter) -> None:
+    with SessionLocal() as session:
+        email = session.get(Email, email_id)
+        try:
+            run_agent(session, email, llm)
+        except SpendCapExceeded:
+            pass  # the run is stored as failed with the reason
+
+
+def _started(session: Session, email_id: int, after_id: int, wait_seconds: float = 5.0) -> AgentRun | None:
+    """The run the background thread created (it commits the row first)."""
+    deadline = time.monotonic() + wait_seconds
+    while time.monotonic() < deadline:
+        session.expire_all()
+        run = _latest_run(session, email_id)
+        if run is not None and run.id > after_id:
+            return run
+        time.sleep(0.2)
+    return None
+
+
 @router.post("", response_model=AgentRunOut, dependencies=[Depends(rate_limit)])
 def assess(
     email_id: int,
     force: bool = False,
+    background: bool = False,
     session: Session = Depends(get_session),
     llm: LLMRouter = Depends(get_router),
 ) -> AgentRunOut:
-    """Run the risk agent. Returns the stored assessment unless `force` asks for a fresh run."""
+    """Run the risk agent. Returns the stored assessment unless `force` asks for a fresh run.
+
+    With `background`, returns as soon as the run has started; poll GET for its steps.
+    """
     email = _email_with_order(session, email_id)
     previous = _latest_run(session, email_id)
     if previous is not None and previous.status in ("completed", "needs_review") and not force:
         return run_out(session, previous, notice="Showing the stored risk assessment.")
+    started = previous.started_at if previous else None
+    if previous is not None and previous.status == "running" and started is not None \
+            and started.replace(tzinfo=started.tzinfo or UTC) > datetime.now(UTC) - timedelta(minutes=5):
+        return run_out(session, previous, notice="An assessment is already running.")
+    if background:
+        threading.Thread(target=_run_in_background, args=(email_id, llm), daemon=True).start()
+        run = _started(session, email_id, previous.id if previous else 0)
+        if run is None:
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="The assessment did not start.")
+        return run_out(session, run)
     try:
         run = run_agent(session, email, llm)
     except SpendCapExceeded as exc:

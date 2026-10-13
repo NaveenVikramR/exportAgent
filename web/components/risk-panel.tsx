@@ -65,8 +65,21 @@ function InfoChecked({ items }: { items: InfoItem[] }) {
 
 export function RiskFlags({ run }: { run: AgentRun }) {
   const flags = run.result?.flags ?? [];
+  const routing = run.result?.routing;
   return (
     <div className="flex flex-col gap-3">
+      {routing && (
+        <p className="text-xs text-zinc-500">
+          <span
+            className={`mr-2 rounded px-1.5 py-0.5 font-medium ${
+              routing.escalated ? "bg-fuchsia-100 text-fuchsia-800" : "bg-violet-100 text-violet-800"
+            }`}
+          >
+            Judged by Nemotron {routing.escalated ? "Ultra" : "Super"}
+          </span>
+          {routing.escalated ? `Escalated: ${routing.reasons.join("; ")}` : "No escalation trigger fired."}
+        </p>
+      )}
       {run.result?.summary && <p className="text-sm">{run.result.summary}</p>}
       {flags.length === 0 && <p className="text-sm text-zinc-500">No risks flagged.</p>}
       <ul className="flex flex-col gap-2">

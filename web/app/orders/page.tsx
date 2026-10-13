@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AlertBadge } from "@/components/badges";
+import { Empty, ErrorBox, Loading, Page } from "@/components/ui";
 import { api, type OrderSummary } from "@/lib/api";
 
 export default function Orders() {
@@ -17,7 +18,7 @@ export default function Orders() {
   }, []);
 
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-6 py-10">
+    <Page>
       <header>
         <h1 className="text-2xl font-semibold">Orders</h1>
         <p className="text-sm text-zinc-600">
@@ -25,15 +26,9 @@ export default function Orders() {
         </p>
       </header>
 
-      {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
-          Could not load orders: {error}
-        </div>
-      )}
-      {!orders && !error && <p className="text-sm text-zinc-500">Loading…</p>}
-      {orders?.length === 0 && (
-        <p className="text-sm text-zinc-500">No orders yet. Analyse an email that carries a PO.</p>
-      )}
+      {error && <ErrorBox>Could not load orders: {error}</ErrorBox>}
+      {!orders && !error && <Loading />}
+      {orders?.length === 0 && <Empty title="No orders yet">Analyse an email that carries a PO and its order appears here.</Empty>}
 
       {orders && orders.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-zinc-200 bg-white">
@@ -76,6 +71,6 @@ export default function Orders() {
           </table>
         </div>
       )}
-    </main>
+    </Page>
   );
 }

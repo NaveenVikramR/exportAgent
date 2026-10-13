@@ -1,6 +1,5 @@
 id: case_005
 title: GBP order with day-first dates and age sizes (CIF)
-demo: true
 sender: "Olivia Grant <olivia.grant@harrowfinch.example>"
 subject: "Purchase Order HF/PO/26/3391 - Kids' organic leggings"
 received_at: "2026-09-12"

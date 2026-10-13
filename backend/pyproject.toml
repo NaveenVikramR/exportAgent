@@ -16,6 +16,8 @@ dependencies = [
     "tavily-python>=0.5",
     "pyyaml>=6.0",
     "reportlab>=4.2",
+    "pypdf>=5.0",
+    "python-multipart>=0.0.9",
 ]
 
 [project.optional-dependencies]

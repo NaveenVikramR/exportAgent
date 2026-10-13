@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Link from "next/link";
+import { Nav } from "@/components/nav";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,8 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ExportAgent",
-  description: "AI export desk for apparel and textile exporters",
+  title: "ExportAgent: AI export desk for apparel exporters",
+  description:
+    "Reads buyer POs, catches risky changes, drafts the reply and the export documents. NVIDIA Nemotron on Nebius Token Factory.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -25,26 +26,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-zinc-50 text-zinc-900">
-        <nav className="border-b border-zinc-200 bg-white">
-          <div className="mx-auto flex w-full max-w-5xl items-center gap-6 px-6 py-3 text-sm">
-            <Link href="/" className="text-base font-semibold">
-              ExportAgent
-            </Link>
-            <Link href="/" className="text-zinc-600 hover:text-zinc-900">
-              Inbox
-            </Link>
-            <Link href="/orders" className="text-zinc-600 hover:text-zinc-900">
-              Orders
-            </Link>
-            <Link href="/approvals" className="text-zinc-600 hover:text-zinc-900">
-              Approvals
-            </Link>
-            <Link href="/trace" className="text-zinc-600 hover:text-zinc-900">
-              Agent trace
-            </Link>
+        <Nav />
+        <div className="flex-1">{children}</div>
+        <footer className="border-t border-zinc-200 bg-white">
+          <div className="mx-auto flex w-full max-w-6xl flex-wrap justify-between gap-2 px-6 py-4 text-xs text-zinc-500">
+            <span>ExportAgent · built for the Nebius × NVIDIA hackathon · MIT licence</span>
+            <span>NVIDIA Nemotron Nano / Super / Ultra on Nebius Token Factory · Tavily for web checks</span>
           </div>
-        </nav>
-        {children}
+        </footer>
       </body>
     </html>
   );

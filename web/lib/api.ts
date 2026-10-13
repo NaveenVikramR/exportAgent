@@ -194,7 +194,13 @@ export type AgentRun = {
   id: number;
   status: string;
   rounds: number;
-  result: { summary: string; flags: RiskFlag[]; info_checked: InfoItem[] } | null;
+  result: {
+    summary: string;
+    flags: RiskFlag[];
+    info_checked: InfoItem[];
+    // Super by default; Ultra when a trigger fired (see backend/app/agent/routing.py)
+    routing?: { tier: string; escalated: boolean; reasons: string[]; super_attempted: boolean };
+  } | null;
   error: string | null;
   started_at: string;
   finished_at: string | null;
@@ -273,6 +279,51 @@ export type MatchQuestion = {
   sender: string;
 };
 
+export type Dashboard = {
+  open_orders: number;
+  awaiting_buyer: number;
+  drafts_pending: number;
+  match_questions: number;
+  emails_to_review: number;
+  high_risks: { email_id: number; order_id: number | null; po_number: string | null; buyer: string | null; category: string; reason: string }[];
+  spend: { today_usd: string; cap_usd: string; calls_today: number; llm_mode: string };
+  recent_emails: EmailSummary[];
+  demo_email_id: number | null;
+  demo_reset_enabled: boolean;
+};
+
+export type ProfileInfo = {
+  id: string;
+  factory: string;
+  city: string;
+  country: string;
+  default_port: string;
+  pcs_per_week: number;
+  free_pcs_per_week: number;
+  fabric_days: number;
+};
+
+export type ProfileComparison = {
+  profile: ProfileInfo;
+  feasibility: {
+    verdict: string;
+    reason: string;
+    utilisation: number | null;
+    slack_days: number | null;
+    shortfall: number | null;
+  } | null;
+  invoice: {
+    exporter_name: string;
+    exporter_address: string;
+    invoice_title: string;
+    country_of_origin: string;
+    invoice_prefix: string;
+    port_of_loading: string;
+    registration: Record<string, string>;
+    declarations: string[];
+  };
+};
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_URL}/api${path}`, { cache: "no-store", ...init });
   if (!response.ok) {
@@ -292,6 +343,25 @@ export const api = {
   calls: (limit = 20) => get<LLMCall[]>(`/trace/calls?limit=${limit}`),
   summary: () => get<TraceSummary>("/trace/summary"),
   emails: () => get<EmailSummary[]>("/emails"),
+  dashboard: () => get<Dashboard>("/dashboard"),
+  createEmail: (body: { sender: string; subject: string; body: string }) =>
+    request<EmailDetail>("/emails", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }),
+  uploadEmail: (form: FormData) => request<EmailDetail>("/emails/upload", { method: "POST", body: form }),
+  assessInBackground: (id: string, force: boolean) =>
+    request<AgentRun>(`/emails/${id}/agent?force=${force}&background=true`, { method: "POST" }),
+  profiles: () => get<ProfileInfo[]>("/profiles"),
+  compareProfiles: (orderId: string) => get<ProfileComparison[]>(`/orders/${orderId}/profiles`),
+  setProfile: (orderId: number, profile: string) =>
+    request<{ profile: string }>(`/orders/${orderId}/profile`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ profile }),
+    }),
+  resetDemo: () => request<{ emails: number }>("/demo/reset", { method: "POST" }),
   email: (id: string) => get<EmailDetail>(`/emails/${id}`),
   orders: () => get<OrderSummary[]>("/orders"),
   agentRun: (id: string) => get<AgentRun>(`/emails/${id}/agent`),
