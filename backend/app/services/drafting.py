@@ -78,6 +78,11 @@ def build_facts(session: Session, email: Email) -> dict[str, Any]:
         ],
     }
 
+    from app.agent.loop import unconfirmed_date  # noqa: PLC0415 (avoids an import cycle)
+
+    written = unconfirmed_date(email, email.order)
+    if written:
+        facts["missing_information"].append(f"confirmation of the ex-factory date: as written it can mean {written}")
     order = email.order
     if order is not None and order.versions:
         current = order.versions[-1]
@@ -104,6 +109,8 @@ def build_facts(session: Session, email: Email) -> dict[str, Any]:
         ]
         for step in run.steps:
             output = step.output or {}
+            if written and step.name in ("check_delivery_feasibility", "propose_delivery_options"):
+                continue  # computed from a guessed date: nothing to offer until the buyer confirms it
             if step.name == "check_delivery_feasibility" and "verdict" in output:
                 plan = {key: output.get(key) for key in _PLAN_FIELDS}
                 facts.setdefault("delivery_check", {})["current_plan" if output.get("is_current_plan") else "other_plan"] = plan

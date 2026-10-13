@@ -1,0 +1,12 @@
+id: case_035
+classification:
+  category: order_query
+  intents: [order_query]
+  has_po_data: false
+# "12/03" is the order's current date (2027-03-12); read as 3 December it must still not
+# become a change.
+extraction: null
+expected_review_fields: []
+
+expected_high_risk: []
+risk_note: "no order"

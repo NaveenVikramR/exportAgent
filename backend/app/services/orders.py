@@ -6,6 +6,7 @@ of PO X?"), and an order can exist before its PO number is known.
 """
 
 from dataclasses import dataclass
+from datetime import date
 from typing import Any
 
 from sqlalchemy import select
@@ -20,7 +21,14 @@ from app.config import get_settings
 from app.models import Email, Order, POVersion
 from app.schemas.extraction import POExtraction, ReviewedExtraction
 from app.schemas.orders import StatedChange
-from app.services.normalise import removed_colours, split_letter_suffix
+from app.services.normalise import (
+    date_convention,
+    mentions_date,
+    removed_colours,
+    resolve_date,
+    same_day_and_month,
+    split_letter_suffix,
+)
 from app.services.order_matching import MatchResult, match_order, po_key
 from app.services.review import inherit_from_previous
 
@@ -146,6 +154,12 @@ def record_email_po(
         previous = {**previous, "po_number": order.po_number}
     if previous is not None and text:
         _mark_removed_colours(update, previous, text)
+        _resolve_with_order_country(extraction, update, previous, text)
+        if _keep_current_date(update, previous, text) and "delivery_date" in extraction.ambiguous_dates:
+            extraction.ambiguous_dates.remove("delivery_date")
+    if "delivery_date" in extraction.ambiguous_dates and update.get("delivery_date"):
+        # The guessed date is stored, marked unconfirmed until an email states it unambiguously.
+        update["date_unconfirmed"] = True
     version = None
     planned_versions = plan_versions(previous, update, stated_changes)
     if planned_versions:
@@ -172,6 +186,31 @@ def _read_letter_revision(session: Session, extraction: POExtraction) -> None:
     base, letter = split_letter_suffix(po)
     if letter and find_order(session, base) is not None:
         extraction.po_number.value, extraction.po_revision = base, letter
+
+
+def _resolve_with_order_country(extraction: POExtraction, update: dict, previous: dict, text: str) -> None:
+    """A follow-up rarely restates the destination: an ambiguous date in it is read with the
+    country the order already has."""
+    if "delivery_date" not in extraction.ambiguous_dates or not update.get("delivery_date"):
+        return
+    country = extraction.destination_country.value or previous.get("destination_country")
+    resolved, ambiguous = resolve_date(update["delivery_date"], text, date_convention(text, country))
+    if not ambiguous:
+        update["delivery_date"] = resolved
+        extraction.delivery_date.value = date.fromisoformat(resolved)
+        extraction.ambiguous_dates.remove("delivery_date")
+
+
+def _keep_current_date(update: dict, previous: dict, text: str) -> bool:
+    """An email that mentions the order's current date ("still on track for 15/02?") is not a date
+    change, even if the date was read with another year or with day and month swapped.
+    Returns True when the date was recognised as the current one."""
+    current, new = previous.get("delivery_date"), update.get("delivery_date")
+    if not (current and new and same_day_and_month(new, current) and mentions_date(text, current)):
+        return False
+    update["delivery_date"] = current
+    update.pop("date_unconfirmed", None)
+    return True
 
 
 def _mark_removed_colours(update: dict, previous: dict, text: str) -> None:

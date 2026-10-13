@@ -263,6 +263,49 @@ def resolve_date(iso: str, text: str, convention: str | None) -> tuple[str, bool
     return f"{year:04d}-{month:02d}-{day:02d}", False
 
 
+_PARTIAL_DATE = re.compile(r"(?<![\d./-])(\d{1,2})([./-])(\d{1,2})(?![./-]?\d)")
+_MONTHS = ("jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec")
+
+
+def same_day_and_month(a: str, b: str) -> bool:
+    """Two ISO dates that are readings of the same written date: equal day and month in either
+    order, the year possibly guessed differently (a date written as "15/02" or "03/04")."""
+    try:
+        _ya, ma, da = (int(x) for x in str(a).split("-"))
+        _yb, mb, db = (int(x) for x in str(b).split("-"))
+    except ValueError:
+        return False
+    return {ma, da} == {mb, db}
+
+
+def mentions_date(text: str, iso: str) -> bool:
+    """Does the email write this date in a form that can be read as it: day and month in either
+    order with or without a year ("15/02", "02/15/2027", "15.02.2027"), ISO, or "15 Feb"."""
+    try:
+        year, month, day = (int(x) for x in str(iso).split("-"))
+    except ValueError:
+        return False
+    if str(iso) in text:
+        return True
+    for first, second, written_year, year_first in _numeric_dates(text):
+        if {first, second} == {month, day} and (written_year == year or year_first and (first, second) == (month, day)):
+            return True
+    for match in _PARTIAL_DATE.finditer(text):
+        if {int(match.group(1)), int(match.group(3))} == {month, day}:
+            return True
+    name = _MONTHS[month - 1]
+    return re.search(rf"\b{day}(?:st|nd|rd|th)?\s+{name}|\b{name}[a-z]*\.?\s+{day}\b", text, re.IGNORECASE) is not None
+
+
+def date_readings(iso: str) -> list[str]:
+    """The date and, if its day and month can swap, the other reading."""
+    year, month, day = (int(x) for x in str(iso).split("-"))
+    readings = [f"{year:04d}-{month:02d}-{day:02d}"]
+    if day != month and day <= 12:
+        readings.append(f"{year:04d}-{day:02d}-{month:02d}")
+    return readings
+
+
 def resolve_delivery_date(extraction: POExtraction, text: str) -> list[str]:
     """Re-read an ambiguous numeric delivery date with the email's convention. Returns notes;
     one that stays ambiguous is listed in extraction.ambiguous_dates, which review flags."""

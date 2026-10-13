@@ -32,6 +32,7 @@ from app.models import AgentRun, AgentStep, Email, Order
 from app.schemas.risk import RiskReport
 from app.services import tavily_client
 from app.services.profiles import load_profile
+from app.services.normalise import date_readings
 from app.services.risk_policy import apply_policy
 
 MAX_ROUNDS = 8
@@ -124,6 +125,22 @@ def prefetch_calls(order: Order) -> list[tuple[str, dict[str, Any]]]:
                 "quantity": previous["total_quantity"],
             }))
     return calls
+
+
+def unconfirmed_date(email: Email, order: Order | None) -> str | None:
+    """The order's ex-factory date, written as in the email, when it reads both ways and nobody
+    has confirmed it; None otherwise."""
+    data = order.versions[-1].data if order is not None and order.versions else None
+    if data is not None:
+        unconfirmed = bool(data.get("date_unconfirmed"))
+    else:
+        unconfirmed = any(f.get("field") == "delivery_date" and f.get("reason") == "ambiguous_date"
+                          for f in (email.extraction or {}).get("review", []))
+    if not unconfirmed:
+        return None
+    data = data or {}
+    value = data.get("delivery_date") or ((email.extraction or {}).get("fields", {}).get("delivery_date") or {}).get("value")
+    return " or ".join(date_readings(value)) if value else "the ex-factory date"
 
 
 def email_text(email: Email) -> str:
@@ -272,8 +289,10 @@ def run_agent(
         add_step(round=0, kind="routing", name="escalate_to_ultra", input={"reasons": reasons},
                  output={"tier": "ultra"}, summary="Escalated to Ultra: " + "; ".join(reasons))
 
+    date_unconfirmed = unconfirmed_date(email, order)
     escalate = router.settings.risk_escalation_enabled and order is not None
-    reasons = routing.reasons_before(evidence, email_text(email)) if escalate else []
+    reasons = routing.reasons_before(evidence, email_text(email), date_unconfirmed=bool(date_unconfirmed)) \
+        if escalate else []
     super_attempted = False
     try:
         if reasons:
@@ -283,8 +302,9 @@ def run_agent(
             super_attempted = True
             report, error = assess(None, None)
             if escalate:
+                conflict = None if report is None or date_unconfirmed else routing.conflict_with_feasibility(report, evidence)
                 after = ([f"Super's report failed validation: {error[:200]}"] if report is None
-                         else [c] if (c := routing.conflict_with_feasibility(report, evidence)) else [])
+                         else [conflict] if conflict else [])
                 if after:
                     reasons = after
                     route_to_ultra(reasons)
@@ -302,7 +322,7 @@ def run_agent(
             raise
         return run
 
-    report = apply_policy(report, evidence)
+    report = apply_policy(report, evidence, date_unconfirmed=date_unconfirmed)
     tier_used = "ultra" if reasons else router.tier_for(TaskType.PLANNING).value
     run.result = report.model_dump(mode="json") | {
         "routing": routing.routing_record(tier_used, reasons, super_attempted)

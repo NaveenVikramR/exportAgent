@@ -20,6 +20,7 @@ _YEAR = r"(?:,?\s+(\d{4}))?"
 
 _ISO = re.compile(r"\b(\d{4})-(\d{2})-(\d{2})\b")
 _NUMERIC = re.compile(r"\b(\d{1,2})/(\d{1,2})/(\d{4})\b")  # day first, as export paperwork writes it
+_YEAR_FIRST = re.compile(r"\b(\d{4})[/.](\d{1,2})[/.](\d{1,2})\b")  # "2027/04/23", as Japanese POs write it
 _DAY_MONTH = re.compile(rf"\b{_DAY}\s+(?:of\s+)?{_MONTH}{_YEAR}\b", re.IGNORECASE)
 _MONTH_DAY = re.compile(rf"\b{_MONTH}\s+{_DAY}{_YEAR}\b", re.IGNORECASE)
 
@@ -57,6 +58,8 @@ def _dates(text: str) -> list[tuple[str, DateKey, tuple[int, int]]]:
         found.append((match.group(0), (int(match[1]), int(match[2]), int(match[3])), match.span()))
     for match in _NUMERIC.finditer(text):
         found.append((match.group(0), (int(match[3]), int(match[2]), int(match[1])), match.span()))
+    for match in _YEAR_FIRST.finditer(text):
+        found.append((match.group(0), (int(match[1]), int(match[2]), int(match[3])), match.span()))
     for match in _DAY_MONTH.finditer(text):
         year = int(match[3]) if match[3] else None
         found.append((match.group(0), (year, _MONTHS[match[2][:3].lower()], int(match[1])), match.span()))

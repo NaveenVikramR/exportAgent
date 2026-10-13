@@ -1,0 +1,16 @@
+id: case_033
+title: Order whose ex-factory date reads both ways ("02/01/2027"), one reading infeasible
+sender: "Grace Fortin <grace@mapleridgeapparel.example>"
+subject: "Fleece joggers - order MR-2290"
+received_at: "2026-11-03"
+body: |
+  Hi Karthik,
+
+  Please book order MR-2290: style MR-JG-5 fleece jogger, 3,500 pcs
+  (Heather Oat 1,750 / Pine 1,750), CAD 11.20 per piece, FOB Chennai, to our Toronto DC.
+  We need it to leave the factory by 02/01/2027.
+
+  Thanks,
+  Grace Fortin
+  Maple Ridge Apparel Ltd, Toronto
+attachments: []

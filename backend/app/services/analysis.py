@@ -151,6 +151,10 @@ def analyse_email(session: Session, email: Email, router: LLMRouter) -> Analysis
         asked = recorded.asked
         if recorded.previous:
             inherit_from_previous(analysis.extraction, recorded.previous)
+        # the order's country or current date settled a date that read both ways
+        resolved = {"delivery_date"} - set(analysis.extraction.fields.ambiguous_dates)
+        analysis.extraction.review = [f for f in analysis.extraction.review
+                                      if not (f.reason == "ambiguous_date" and f.field in resolved)]
     email.extraction = analysis.extraction.model_dump(mode="json") if analysis.extraction else None
     needs_review = asked or bool(analysis.extraction and analysis.extraction.review) \
         or bool(analysis.classification.unrecognised)

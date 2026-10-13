@@ -1,0 +1,27 @@
+id: case_033
+classification:
+  category: new_po
+  intents: [new_po]
+  has_po_data: true
+extraction:
+  buyer: Maple Ridge Apparel Ltd
+  po_number: MR-2290
+  style: MR-JG-5
+  currency: CAD
+  unit_price: "11.20"
+  total_quantity: 3500
+  # 2 January or 1 February 2027: Canada uses both orders and the email has no other date
+  delivery_date: null
+  incoterms: FOB
+  port: Chennai
+  destination_country: Canada
+  line_items:
+    - {colour: Heather Oat, quantity: 1750}
+    - {colour: Pine, quantity: 1750}
+skip_fields: [delivery_date]
+# The date is flagged for review; no high schedule risk from a guessed date (one medium
+# "confirm the ex-factory date" flag instead), and the reply asks the buyer to confirm it.
+expected_review_fields: [delivery_date]
+
+expected_high_risk: []
+risk_note: ""

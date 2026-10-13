@@ -1,6 +1,6 @@
 ## How the sets were built
 
-- **DEV (32 cases).** case_022–032 were added in the step after TEST v2 (see below).
+- **DEV (35 cases).** case_022–032 were added in the step after TEST v2, case_033–035 with the final two fixes (see below).
   - case_001–010 are the cases ExportAgent was built against, and the demo inbox.
   - case_011–021 were added in the previous step, one or more for each failure pattern TEST v1 exposed. They are new emails with new fictional buyers (Tidewater Lane, Orchard Row, Brunnhof Sport, Marisma Moda, Hinoki Works), plus follow-ups to Maison Clairet (case_003) and Kestrel Kids (case_010). Nothing was copied from TEST.
   - Fixes are made and checked on DEV only.
@@ -9,6 +9,25 @@
 - **Labels** are hand-written: classification, every field, line items, review flags, the order each email belongs to, expected changes.
   - **Expected high risks** come from the severity rubric applied to the *true* order state in arrival order: *schedule* when the current plan is infeasible under the factory profile, *value* when the contract value changes by 10% or more, or by about USD 5,000.
   - They are now derived by [label_risk.py](label_risk.py) from the labels alone, never from app output.
+
+## Final fixes before freezing the evaluation (DEV case_033–035)
+
+Two fixes, each with a new DEV case. TEST v2 was not run again. The evaluation is frozen after this.
+
+| # | Change | DEV cases |
+|---|---|---|
+| 22 | **A date that reads both ways never drives a high schedule finding.** The order version stores `date_unconfirmed` until an email states the date unambiguously. While it is set, the risk policy drops delivery and capacity findings drawn from the guessed date (they move to *Info checked*), adds one medium "Confirm ex-factory date with buyer" flag, and does not escalate to Ultra on the infeasible verdict. The reply asks the buyer to confirm the date, giving both readings, and offers no delivery options computed from the guess. A follow-up that does not restate the country is read with the order's country (found when DEV case_027 got a needless "confirm" flag on the first confirming pass). | 026, 032, 033 (027) |
+| 23 | **A status email that mentions the order's current date is no change.** This holds even when the email writes the date without a year ("15/02") and the model reads it with another year or with day and month swapped. The update keeps the order's date, so no version and no change. Limitation: a genuine move to exactly the day/month swap of the current date ("from 03/04 to 04/03") cannot be told apart and would be missed. | 034, 035 (027) |
+| 24 | The draft fact check reads year-first dates ("2027/04/23"), as Japanese POs write them (a false violation on case_031). | 031 |
+| 25 | Scoring: `skip_fields` drops a field's value from scoring, but keeps its review flag when the label expects one. Only DEV case_026 and case_033 are affected (the value is unknowable, the flag is the point). | 026, 033 |
+
+**Final DEV pass (35 cases, 1 run):**
+- High-risk precision and recall are 100%: the case_026 and case_032 false positives are gone. case_026, case_032 and case_033 each get the one medium confirm flag, and their replies ask the buyer to confirm.
+- case_027, case_034 and case_035 create no version and no change. case_035 was read as a date change and still changed nothing.
+- 21% of risk runs went to Ultra. Risk cost per assessed email is $0.0064; cost per email $0.0094.
+- The first confirming pass of these fixes (before the follow-up for case_027 and change 24) is kept in `runs/pre_fix/` and is not in the tables.
+
+**Draft fact check:** one remaining false violation. The case_034 reply writes "15 February" for the buyer's "15/02", and the checker does not read a date without a year as the order's date. The other violation (case_023 internal note, "500 pcs") is a real catch.
 
 ## This step: Super-default risk routing and DEV-driven fixes (DEV case_022–032)
 

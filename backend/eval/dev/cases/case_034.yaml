@@ -1,0 +1,14 @@
+id: case_034
+title: Status question that mentions the current ex-factory date without a year ("15/02")
+sender: "Katrin Vogel <k.vogel@brunnhof-sport.example>"
+subject: "BS-26-0442 status"
+received_at: "2026-11-04"
+body: |
+  Dear Karthik,
+
+  is BS-26-0442 still on track for 15/02? Please send us a short production update and photos
+  of the first bulk pieces when you have them.
+
+  Best regards,
+  Katrin Vogel
+attachments: []

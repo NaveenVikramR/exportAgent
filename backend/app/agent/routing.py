@@ -53,11 +53,12 @@ def current_plan(evidence: dict[str, dict]) -> dict | None:
     return next((r for r in evidence.values() if r.get("is_current_plan")), None)
 
 
-def reasons_before(evidence: dict[str, dict], email_text: str) -> list[str]:
-    """Triggers known before the model runs."""
+def reasons_before(evidence: dict[str, dict], email_text: str, *, date_unconfirmed: bool = False) -> list[str]:
+    """Triggers known before the model runs. An infeasible verdict on an unconfirmed (guessed)
+    date is not a reason: the date has to be confirmed first."""
     reasons = []
     plan = current_plan(evidence)
-    if plan and plan.get("verdict") == "infeasible":
+    if plan and plan.get("verdict") == "infeasible" and not date_unconfirmed:
         reasons.append("current plan infeasible: delivery options need weighing")
     if quote := _found(_MATERIAL_READY, email_text):
         reasons.append(f"thread says materials are available ('{quote}'): may change feasibility")

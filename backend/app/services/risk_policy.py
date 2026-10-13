@@ -104,8 +104,22 @@ def current_plan_checks(evidence: dict[str, dict]) -> dict[str, dict]:
     return current
 
 
-def apply_policy(report: RiskReport, evidence: dict[str, dict], policy: RiskPolicy | None = None) -> RiskReport:
+CONFIRM_DATE = "Confirm ex-factory date with buyer"
+
+
+def apply_policy(
+    report: RiskReport,
+    evidence: dict[str, dict],
+    policy: RiskPolicy | None = None,
+    *,
+    date_unconfirmed: str | None = None,
+) -> RiskReport:
+    """`date_unconfirmed`: the written date when the order's ex-factory date reads both ways.
+    Then no delivery or capacity finding is drawn from the guessed date; one medium flag asks
+    to confirm the date instead."""
     policy = policy or load_policy()
+    if date_unconfirmed:
+        return _with_unconfirmed_date(report, evidence, policy, date_unconfirmed)
     urls = _urls(evidence)
     current = current_plan_checks(evidence)
     infeasible = {eid for eid, r in current.items() if r["verdict"] == "infeasible"}
@@ -167,6 +181,27 @@ def apply_policy(report: RiskReport, evidence: dict[str, dict], policy: RiskPoli
             ))
 
     return RiskReport(summary=report.summary, flags=merge_flags(flags), info_checked=info)
+
+
+def _with_unconfirmed_date(report: RiskReport, evidence: dict[str, dict], policy: RiskPolicy, written: str) -> RiskReport:
+    schedule = {"delivery", "capacity"}
+    date_checks = {eid for eid, r in evidence.items() if "verdict" in r}
+    kept = RiskReport(summary=report.summary, info_checked=list(report.info_checked),
+                      flags=[f for f in report.flags if f.category not in schedule])
+    moved = [InfoItem(topic=f.category, finding=f.reason, evidence=f.evidence,
+                      note="Not a flag: it depends on an ex-factory date that is not confirmed.")
+             for f in report.flags if f.category in schedule]
+    # feasibility results describe the guessed date: they cannot back any finding
+    other = {eid: r for eid, r in evidence.items() if eid not in date_checks}
+    result = apply_policy(kept, other, policy)
+    anchor = next(iter(sorted(date_checks)), None) or next(iter(evidence), None)
+    confirm = RiskFlag(
+        severity="medium", category="delivery", source="rule", verified=anchor is not None,
+        evidence=[anchor] if anchor else [],
+        reason=f"{CONFIRM_DATE}: '{written}' reads two ways; feasibility is not assessed until the buyer confirms it.",
+    )
+    flags = [f for f in result.flags if f.category not in schedule] + [confirm]
+    return RiskReport(summary=result.summary, flags=merge_flags(flags), info_checked=result.info_checked + moved)
 
 
 def merge_flags(flags: list[RiskFlag]) -> list[RiskFlag]:

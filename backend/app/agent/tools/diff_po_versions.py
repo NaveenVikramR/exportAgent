@@ -54,6 +54,9 @@ def merge_snapshots(previous: Snapshot, update: Snapshot) -> Snapshot:
             merged[name] = update[name]
     if update.get("po_revision"):
         merged["po_revision"] = update["po_revision"]
+    if update.get("delivery_date") is not None:
+        # a stated date replaces the old one, and with it whether the date is confirmed
+        merged["date_unconfirmed"] = bool(update.get("date_unconfirmed"))
     items =[item for item in update.get("line_items") or [] if item.get("colour") or item.get("quantity")]
     if items:
         previous_items = merged.get("line_items") or []

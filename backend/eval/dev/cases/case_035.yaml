@@ -1,0 +1,13 @@
+id: case_035
+title: Shipping question that repeats the current date in day/month form ("12/03")
+sender: "Aiko Mori <a.mori@hinokiworks.example>"
+subject: "HW-26-0193 shipping"
+received_at: "2026-11-05"
+body: |
+  Dear Karthik-san,
+
+  For HW-26-0193: are we still shipping 12/03 as planned? Our forwarder needs to book space this week.
+
+  Best regards,
+  Aiko Mori
+attachments: []

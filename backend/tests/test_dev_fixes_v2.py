@@ -328,3 +328,97 @@ def test_restoring_a_colour_name_does_not_bring_back_the_wording_after_it():
     normalise_extraction(extraction, "Two changes: Heather Charcoal to 900 pcs, and drop Mustard Seed.")
 
     assert [i.colour for i in extraction.line_items] == ["Heather Charcoal"]
+
+
+# --- unconfirmed (ambiguous) dates never drive a high schedule finding ------------------------------
+
+
+def test_policy_turns_schedule_findings_on_a_guessed_date_into_one_confirm_flag():
+    from app.services.risk_policy import CONFIRM_DATE, apply_policy
+
+    evidence = {
+        "E1": {"is_current_plan": True, "verdict": "infeasible", "suggested_severity": "high", "reason": "short"},
+        "E2": {"contract_value": None},
+    }
+    report = RiskReport(summary="s", flags=[_flag("high"), _flag("low", "compliance")])
+
+    result = apply_policy(report, evidence, date_unconfirmed="2027-03-04 or 2027-04-03")
+
+    assert [(f.severity, f.category) for f in result.flags] == [("medium", "delivery")]
+    assert result.flags[0].reason.startswith(CONFIRM_DATE)
+    assert any("not confirmed" in item.note for item in result.info_checked)
+
+
+def test_without_an_unconfirmed_date_the_infeasible_plan_stays_high():
+    from app.services.risk_policy import apply_policy
+
+    evidence = {"E1": {"is_current_plan": True, "verdict": "infeasible", "suggested_severity": "high", "reason": "short"}}
+    assert apply_policy(RiskReport(summary="s"), evidence).flags[0].severity == "high"
+
+
+def test_infeasible_plan_on_a_guessed_date_does_not_escalate():
+    evidence = {"E1": {"is_current_plan": True, "verdict": "infeasible"}}
+    assert routing.reasons_before(evidence, "", date_unconfirmed=True) == []
+    assert routing.reasons_before(evidence, "") != []
+
+
+def test_an_ambiguous_date_is_carried_on_the_order_until_stated_clearly(session_factory):
+    with session_factory() as session:
+        first = _po(po_number="NB-3307", buyer="Northbay Outfitters Ltd", total_quantity=1200, delivery_date="2027-03-04")
+        first.ambiguous_dates = ["delivery_date"]
+        result = record_email_po(session, _email(session), first, [], "")
+        assert result.version.data["date_unconfirmed"] is True
+
+        price_only = _po(po_number="NB-3307", unit_price="8.80")
+        assert record_email_po(session, _email(session), price_only, [], "").version.data["date_unconfirmed"] is True
+
+        clear = _po(po_number="NB-3307", delivery_date="2027-04-03")
+        assert record_email_po(session, _email(session), clear, [], "Ship 3 April 2027.").version.data["date_unconfirmed"] is False
+
+
+# --- a status email that mentions the current date is no change ------------------------------------
+
+
+@pytest.mark.parametrize(("text", "extracted"), [
+    ("Is BS-26-0442 still on track for 15/02?", "2026-02-15"),     # partial date, year guessed wrong
+    ("Ship 12/03 as planned?", "2027-12-03"),                       # partial date, day and month swapped
+    ("Still 15.02.2027 on your side?", "2027-02-15"),               # the same date: no change anyway
+])
+def test_a_status_email_mentioning_the_current_date_is_no_change(session_factory, text, extracted):
+    current = "2027-02-15" if "15" in text else "2027-03-12"
+    with session_factory() as session:
+        record_email_po(session, _email(session), _po(po_number="BS-26-0442", total_quantity=2400, delivery_date=current), [], "")
+
+        result = record_email_po(session, _email(session), _po(po_number="BS-26-0442", delivery_date=extracted), [], text)
+
+        assert result.version is None or result.version.version == 1
+        assert session.query(Order).one().versions[-1].data["delivery_date"] == current
+
+
+def test_a_real_date_change_is_still_recorded(session_factory):
+    with session_factory() as session:
+        record_email_po(session, _email(session), _po(po_number="BS-26-0442", total_quantity=2400, delivery_date="2027-02-15"), [], "")
+
+        result = record_email_po(session, _email(session), _po(po_number="BS-26-0442", delivery_date="2027-02-01"), [],
+                                 "Please move ex-factory from 15/02 to 01/02.")
+
+        assert [c["field"] for c in result.version.changes] == ["delivery_date"]
+
+
+def test_ambiguous_date_in_a_follow_up_is_read_with_the_order_country(session_factory):
+    with session_factory() as session:
+        record_email_po(session, _email(session), _po(po_number="PCS-4410", total_quantity=1800,
+                        delivery_date="2027-04-05", destination_country="United States"), [], "")
+        follow_up = _po(po_number="PCS-4410", delivery_date="2027-05-04")
+        follow_up.ambiguous_dates = ["delivery_date"]
+
+        result = record_email_po(session, _email(session), follow_up, [], "the ship date stays 04/05/2027 on our side")
+
+        assert follow_up.ambiguous_dates == [] and result.version is None
+        assert session.query(Order).one().versions[-1].data.get("date_unconfirmed") in (None, False)
+
+
+def test_fact_check_reads_year_first_dates():
+    from app.services.fact_check import fact_check
+
+    assert fact_check("Balance by 23 Apr 2027.", {}, "the balance by 2027/04/23")["violations"] == []

@@ -77,11 +77,14 @@ def score_case(case_id: str, expected: dict[str, Any], analysis: Analysis) -> Ca
             continue
         score.line_items_correct += 1
 
-    score.review_expected = set(expected.get("expected_review_fields") or []) - skip
+    # skip_fields drops a value from scoring; its review flag still counts if the label expects one
+    review_expected = set(expected.get("expected_review_fields") or [])
+    skip_review = skip - review_expected
+    score.review_expected = review_expected - skip_review
     if analysis.extraction:
         score.review_flagged = {
             flag.field for flag in analysis.extraction.review if flag.field in SCALAR_FIELDS
-        } - skip
+        } - skip_review
     return score
 
 
