@@ -174,6 +174,8 @@ def test_hard_cap_of_eight_tool_rounds(settings, session_factory, demo):
 
 
 def test_invented_evidence_is_dropped_and_missing_high_risk_is_added(settings, session_factory, demo):
+    # The policy is under test here, not the escalation to Ultra that this conflict would trigger.
+    settings.risk_escalation_enabled = False
     with session_factory() as session:
         order_id = session.get(Email, demo).order_id
     replies = [

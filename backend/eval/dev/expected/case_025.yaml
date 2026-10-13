@@ -1,0 +1,23 @@
+id: case_025
+classification:
+  category: new_po
+  intents: [new_po]
+  has_po_data: true
+extraction:
+  buyer: Kumo Textiles K.K.
+  po_number: KT-26-118
+  style: KT-PL-4
+  currency: JPY
+  unit_price: "980"
+  total_quantity: 2000
+  delivery_date: "2027-04-09"
+  incoterms: FOB
+  port: Chennai
+  destination_country: Japan
+  line_items:
+    - {colour: Sumi Black, quantity: 1000, sizes: {S: 200, M: 300, L: 300, XL: 200}}
+    - {colour: Shiro, quantity: 1000, sizes: {S: 200, M: 300, L: 300, XL: 200}}
+expected_review_fields: []
+
+expected_high_risk: []
+risk_note: "tight: Feasible but tight: 88% of free capacity used, 15 days of slack."

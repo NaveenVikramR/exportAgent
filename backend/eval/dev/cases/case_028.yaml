@@ -1,0 +1,33 @@
+id: case_028
+title: German PO "REVISION 2" with a lower price (decimal comma)
+sender: "Jonas Brandt <j.brandt@haus-lindqvist.example>"
+subject: "Bestellung LH-55120 REVISION 2"
+received_at: "2026-10-27"
+body: |
+  Dear Karthik,
+
+  as agreed, the price is now EUR 6,95. Please find REVISION 2 of the order attached.
+
+  Best regards,
+  Jonas Brandt
+attachments:
+  - filename: LH-55120_REVISION_2.pdf
+    content_type: application/pdf
+    text: |
+      HAUS LINDQVIST GMBH
+      BESTELLUNG Nr.: LH-55120 REVISION 2
+      Datum: 27.10.2026
+      Lieferant: Sri Velan Knits
+
+      Artikelnummer: LH-SW-08  Sweatshirt
+      Einzelpreis: EUR 6,95
+      Lieferbedingung: FOB Tuticorin
+      Lieferadresse: Lager Hamburg, Deutschland
+      Liefertermin ab Werk: 02.04.2027
+
+      Farbe     S     M     L     XL    Gesamt
+      Salbei    100   200   200   100   600
+      Marine    150   300   300   150   900
+
+      Gesamtmenge: 1.500 Stück
+      Gesamtwert: EUR 10.425,00

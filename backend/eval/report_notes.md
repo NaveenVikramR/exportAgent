@@ -1,8 +1,8 @@
 ## How the sets were built
 
-- **DEV (21 cases).**
+- **DEV (32 cases).** case_022–032 were added in the step after TEST v2 (see below).
   - case_001–010 are the cases ExportAgent was built against, and the demo inbox.
-  - case_011–021 were added in this step, one or more for each failure pattern TEST v1 exposed. They are new emails with new fictional buyers (Tidewater Lane, Orchard Row, Brunnhof Sport, Marisma Moda, Hinoki Works), plus follow-ups to Maison Clairet (case_003) and Kestrel Kids (case_010). Nothing was copied from TEST.
+  - case_011–021 were added in the previous step, one or more for each failure pattern TEST v1 exposed. They are new emails with new fictional buyers (Tidewater Lane, Orchard Row, Brunnhof Sport, Marisma Moda, Hinoki Works), plus follow-ups to Maison Clairet (case_003) and Kestrel Kids (case_010). Nothing was copied from TEST.
   - Fixes are made and checked on DEV only.
 - **TEST v1 (30 cases)** was held out until Milestone 7 (written and committed before any run, commit `10e1b46`). Its failures were analysed in the Milestone 7 report, so it is now **seen**. It is re-run here once to show the effect of the fixes, not as a held-out score.
 - **TEST v2 (30 cases)** was written by a separate assistant session from [TEST_V2_SPEC.md](TEST_V2_SPEC.md) alone, frozen in commit `24f19ae` before any run, and is the held-out measurement.
@@ -10,7 +10,69 @@
   - **Expected high risks** come from the severity rubric applied to the *true* order state in arrival order: *schedule* when the current plan is infeasible under the factory profile, *value* when the contract value changes by 10% or more, or by about USD 5,000.
   - They are now derived by [label_risk.py](label_risk.py) from the labels alone, never from app output.
 
-## Changes in this step
+## This step: Super-default risk routing and DEV-driven fixes (DEV case_022–032)
+
+The held-out TEST v2 run showed the failure patterns listed under "TEST v2: what the held-out set shows" below. The fixes were specified from those patterns and written against **11 new DEV cases** (case_022–032). These have new fictional buyers (Pinecrest Supply, Haus Lindqvist, Wattle & Gum, Kumo Textiles, Northbay Outfitters), dates from 19 Oct to 2 Nov 2026, and no text from TEST v2. No TEST v2 file was changed. TEST v2 was re-run once afterwards and is reported as **seen**.
+
+| # | Change | Kind | DEV cases |
+|---|---|---|---|
+| 14 | **Risk routing.** Super is the default for risk planning and reasoning. A run goes to Ultra when (a) the current plan is infeasible, so delivery options need weighing; (b) the email or thread says materials are already available ("fabric is in-house", "trims in stock") or offers a partial or split shipment; (c) Super's raw flags conflict with the Python feasibility result (a high delivery or capacity flag on a feasible or tight plan, or none on an infeasible one); or (d) Super's report fails validation even after the retry. Triggers (a) and (b) are checked before the run; (c) and (d) re-run the whole assessment on Ultra. The reason is a "routing" step in the trace, `result.routing` on the run, and the `detail` of every Ultra call in the LLM log (`app/agent/routing.py`). | Python | 007 (fabric in-house), 031 (partial shipment), every infeasible plan |
+| 15 | **Ambiguous numeric dates.** When a date the model returned was written in the email as a numeric date whose day and month are both 12 or under (e.g. 03/04/2027), it is re-read with the email's convention. Evidence: dates in the same email that read only one way (10/19/2026, 20.10.2026), and the buyer's country (United States and Philippines month-first, Canada either, others day-first). Year-first and ISO dates are never touched. If the evidence is missing or contradictory, `delivery_date` is flagged `ambiguous_date` for review instead of guessed. The email's own stated old/new dates use the same convention. | Python | 022 (US), 023 (DE), 024 (AU), 025 (JP), 026 (CA, flagged) |
+| 16 | **A repeated date is no change.** Quoted "earlier" values equal to the new ones no longer create a second version for a new order. For an existing order, an unchanged date already produced no version; this is now tested. | Python | 027 |
+| 17 | **Revision-suffix normaliser.** Covers "Rev A", "rev. B", "REVISION 2", "Amendment 1", "Amendment No. 3", "Amdt 4", "R3", "(R3)", "v2", "_v2". A revision the model drops from the PO number is recovered from the text next to it. A PO with a revision read as the style becomes the PO. A bare letter ("WG-7781-A") is a revision only when the base PO is a known order and the full one is not. | Python | 028, 029, 031, 032 |
+| 18 | **Colour changes.** Wording kept with a colour name is removed ("Nachtblau to" → "Nachtblau", "increase Navy" → "Navy"). "Drop / cancel / remove <colour>", "<colour> is cancelled" and "<colour> to 0" record the colour as removed (not when negated: "do not cancel"). | Python | 030 |
+| 19 | **Classification enum.** The classify call sends the output JSON schema with the category enum, as `response_format` (checked live on Token Factory). Any category or intent outside the enum is mapped to "other", kept in `unrecognised`, flagged `unrecognised_intent`, and the email goes to review instead of failing. | Python + request schema | – (unit tests; no DEV email reproduces it) |
+| 20 | **Eval oracle for match questions.** The label answers "yes" only if the question names the order the label links the email to; otherwise "no". It used to answer "yes" to any question on an email with a linked order. | Eval harness | 016 |
+
+**Other changes:**
+- The trace UI labels model steps Super or Ultra from the model actually used, and shows the routing step.
+- The router takes an explicit per-call tier (`tier=`); a forced tier (the `nano_only` and `ultra_all` baselines) still wins.
+- New eval variant `ultra_risk` (risk always on Ultra, no escalation), for the routing comparison.
+- `super_risk` now means Super with escalation turned off.
+
+**Runs and reporting:**
+- Earlier runs were archived: the previous step's DEV and TEST v1 passes to `runs/before_routing/`, and the held-out TEST v2 passes to `runs/test_v2_heldout/`.
+- The held-out TEST v2 section of this report is regenerated from those same files and is byte-for-byte unchanged.
+- DEV labels: risk fields for case_022–032 were derived by `label_risk.py`; no existing label changed.
+
+### Fixed after this step's runs
+
+| # | Change | DEV case |
+|---|---|---|
+| 21 | Restoring a longer colour name from the email no longer re-attaches the wording after it. `restore_colour_names` turned the cleaned "Heather Charcoal" back into "Heather Charcoal to" (case_030, run 3), undoing change 18. Covered by a unit test; the passes above predate it. | 030 |
+
+### Reading this step's results
+
+**Risk routing (DEV, 3 runs):**
+- 27% of risk runs went to Ultra: 25 runs over the three passes. 22 of them had an infeasible plan (in case_007 the thread also says the fabric is in-house); the other 3 were the partial-shipment offer in case_031, once per pass.
+- The two after-the-run triggers, a conflict with feasibility and a failed validation, never fired on DEV or TEST v2.
+- High-risk recall stayed at 100%. Precision is 89.7%, down from 100% before this step on the 21 earlier cases. The false positives come from case_026 and case_032 (2 of 3 runs each), see below.
+- Risk cost per assessed email fell from $0.0158 (Ultra always, before this step) to $0.0093.
+- The same DEV run with Ultra always on for risk (one pass, no drafts) scored 76.9% precision and 90.9% recall at $0.0189. On these cases, Ultra everywhere is not better than Super with escalation.
+
+**What the new DEV cases show:**
+- **Dates:** the US, German, Australian and Japanese dates (case_022–025) were read correctly in every run.
+- **case_026 (Canadian date that reads both ways):** the model guessed 4 March in 2 of 3 runs. With that guess, the risk agent (on Ultra, since the plan looked infeasible) raised a *schedule* high on case_026 and its amendment case_032, against a label that expects none. **The ambiguity flag does not stop a guessed date from driving the risk assessment.** That is the next fix: when `delivery_date` is flagged ambiguous, assess feasibility for both readings or report the date as unknown.
+  - The `ambiguous_date` review flag itself is not measured on case_026. The label puts `delivery_date` in `skip_fields`, which also drops it from the review metric; a label-design slip, noted rather than changed after the run.
+- **Revision suffixes:** "REVISION 2", the bare "WG-7781-A", "Rev. 1" and "Amendment No. 1" were read in every run (PO revision accuracy 100%).
+- **Colours (case_030):** the dropped Mustard Seed was recorded as removed in every run. Nano returned no line items for "Heather Charcoal to 900 pcs" in 2 of 3 runs (that change was missed), and the third run hit the bug fixed as change 21.
+- **Repeated date (case_027):** classified correctly as a question in every run, so no order version was touched.
+
+**TEST v2 after the fixes (seen, 1 run) against the held-out runs:**
+- **Gains:**
+  - PO revisions 100% (was 50%).
+  - Change detection 85.0% / 63.0% (was 77.4% / 56.4%).
+  - High-risk precision 87.5% (was 80.1%), recall still 100%.
+  - No draft fact-check violations (was 1.7 per run).
+  - No failed emails (t2_015's malformed intent no longer fails; change 19).
+  - Cost per email $0.0095 (was $0.0215), with 18% of risk runs on Ultra.
+- **Regressions on this single run, and their causes:**
+  - **Intents (exact set) 63.3%, below the held-out range (73–76%).** Three new-PO emails (t2_003, t2_005, t2_007) were given extra intents (po_revision, delivery_change). This is the first run with the JSON schema in the request (change 19); DEV intents did not drop (85.4% vs 84.1%), so a single run cannot separate the schema from run-to-run variation. To watch.
+  - **Line items 76.5%, below the held-out range (82–85%).** In t2_003 and t2_004, Nano's line items were right, but Super's escalated re-read (a size-total mismatch) returned colours without quantities. That is the escalation path, unchanged in this step, varying between runs.
+  - **Review precision 35.7% (recall 83.3%).** Two emails (t2_006, t2_016) got the new `ambiguous_date` flag, which their labels do not expect. Whether those dates really read both ways from the email alone was not checked, to keep TEST v2 out of the fixing loop.
+- **Unchanged:** the order question read as a date change (t2_022) still produces a false *schedule* high. No fix in this step addressed classification of such emails.
+
+## Changes in the previous step (Milestone 7 patterns, DEV case_011–021)
 
 Every change below was made against DEV cases. None was tuned on a TEST v1 email. TEST v1 failures from Milestone 7 only named the pattern; each fix was then written and checked against the new DEV case listed.
 
@@ -45,7 +107,7 @@ The only prompt edit: the planner's rubric line now says "about USD 5,000" inste
 - New `super_risk` variant: risk planning and reasoning on Super instead of Ultra.
 - The dataset loader reads JSON or YAML and a `test_v2` split.
 
-### Fixed after the runs
+### Fixed after the previous step's runs
 
 | # | Change | DEV case |
 |---|---|---|

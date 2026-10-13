@@ -6,15 +6,17 @@ off by default, so repeated passes measure real model behaviour, cost and latenc
 
 Variants:
   routed     the production setup: Nano extracts, Super re-extracts failing fields and
-             drafts, Ultra assesses risk
+             drafts, Super assesses risk and escalates a run to Ultra on the triggers in
+             app/agent/routing.py
   nano_only  baseline: every task on Nano, no escalation
   ultra_all  baseline: every task on Ultra
-  super_risk baseline: routed, but risk planning and reasoning on Super instead of Ultra
+  super_risk baseline: risk on Super, never escalated
+  ultra_risk baseline: risk always on Ultra (the routing before Super became the default)
 
 Order matching runs in the scratch database exactly as in the app. When the app asks a
-person "Is this the same order?", the label answers (yes when the case `revises` another, or
-its labelled PO number belongs to an earlier case);
-the questions are counted.
+person "Is this the same order?", the label answers like a careful person would: yes only
+if the order the question names is the order the label links the email to (`revises`, or
+the earlier case with the same labelled PO number), otherwise no. The questions are counted.
 
 Usage (from backend/):
   python -m eval.run_eval --split test --variant routed --run 1 [--no-drafts]
@@ -56,7 +58,9 @@ VARIANTS = {
     "routed": {},
     "nano_only": {"llm_force_tier": Tier.NANO, "escalation_enabled": False},
     "ultra_all": {"llm_force_tier": Tier.ULTRA},
-    "super_risk": {"llm_task_tier_overrides": {TaskType.PLANNING: Tier.SUPER, TaskType.RISK_REASONING: Tier.SUPER}},
+    "super_risk": {"risk_escalation_enabled": False},
+    "ultra_risk": {"llm_task_tier_overrides": {TaskType.PLANNING: Tier.ULTRA, TaskType.RISK_REASONING: Tier.ULTRA},
+                   "risk_escalation_enabled": False},
 }
 # Pipeline stage of each task, for the per-stage cost table.
 STAGES = {
@@ -112,6 +116,11 @@ def _usage(calls: list[LLMCall], key=lambda call: call.tier) -> dict[str, dict]:
     return usage
 
 
+def oracle_answer(question: dict, parent: str | None, order_of_case: dict[str, int]) -> bool:
+    """Yes only if the question names the order the label links this email to."""
+    return parent is not None and question.get("candidate_order_id") == order_of_case.get(parent)
+
+
 def label_parent(expected: dict, case_of_po: dict[str, str], case_id: str) -> str | None:
     """The earlier case about the same order, by the label: `revises`, or the same labelled PO."""
     po = (expected.get("extraction") or {}).get("po_number")
@@ -134,6 +143,7 @@ def _match_record(expected: dict, email: Email, question: dict | None, parent: s
         order_of_case[case_id] = email.order_id
     return {"expected": f"same order as {parent}" if parent else "new order",
             "ok": ok, "asked": question is not None,
+            "oracle_answer": question.get("oracle_answer") if question else None,
             "score": question.get("score") if question else None}
 
 
@@ -180,7 +190,9 @@ def run_pass(cases: list[Case], variant: str, *, drafts: bool, cache: bool) -> d
                 question = dict(email.match) if (email.match or {}).get("status") == "pending" else None
                 if question:
                     # The label plays the person answering "Is this the same order?".
-                    resolved = resolve_match(session, email, parent is not None, "eval oracle")
+                    answer = oracle_answer(question, parent, order_of_case)
+                    question["oracle_answer"] = answer
+                    resolved = resolve_match(session, email, answer, "eval oracle")
                     if resolved.previous and analysis.extraction:
                         inherit_from_previous(analysis.extraction, resolved.previous)
                 record["match"] = _match_record(expected, email, question, parent, order_of_case, case.id)
@@ -207,6 +219,7 @@ def run_pass(cases: list[Case], variant: str, *, drafts: bool, cache: bool) -> d
                         "status": run.status, "rounds": run.rounds, "error": run.error,
                         "flags": flags, "info_checked": len((run.result or {}).get("info_checked", [])),
                         "tools": [f"{s.name}{' (0)' if s.round == 0 else ''}" for s in run.steps if s.kind == "tool"],
+                        "routing": (run.result or {}).get("routing"),
                     }
                     record["predicted_high"] = high_groups(flags)
 

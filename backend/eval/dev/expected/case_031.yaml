@@ -1,0 +1,31 @@
+id: case_031
+classification:
+  category: po_revision
+  intents: [po_revision]
+  has_po_data: true
+extraction:
+  buyer: Kumo Textiles K.K.
+  po_number: KT-26-118
+  style: KT-PL-4
+  currency: JPY
+  unit_price: "980"
+  total_quantity: 3000
+  delivery_date: "2027-04-09"
+  incoterms: FOB
+  port: Chennai
+  destination_country: Japan
+  line_items:
+    - {colour: Sumi Black, quantity: 1500, sizes: {S: 300, M: 450, L: 450, XL: 300}}
+    - {colour: Shiro, quantity: 1500, sizes: {S: 300, M: 450, L: 450, XL: 300}}
+expected_review_fields: []
+revises: case_025
+expected_po_revision: "1"
+# The partial-shipment offer could change feasibility: the risk agent should run on Ultra.
+expected_ultra_escalation: true
+expected_changes:
+  - {field: total_quantity, old: 2000, new: 3000}
+  - {field: "line_items.Sumi Black.quantity", old: 1000, new: 1500}
+  - {field: "line_items.Shiro.quantity", old: 1000, new: 1500}
+
+expected_high_risk: [value]
+risk_note: "tight: Feasible but tight: 95% of free capacity used, 5 days of slack. | value +50.0% (980000.00 JPY)"

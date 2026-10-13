@@ -1,0 +1,36 @@
+id: case_025
+title: Japanese PO with year-first dates (unambiguous)
+sender: "Haruto Sato <h.sato@kumo-textiles.example>"
+subject: "PO KT-26-118 polo shirts"
+received_at: "2026-10-22"
+body: |
+  Dear Karthik-san,
+
+  Please find our purchase order KT-26-118 attached.
+
+  Best regards,
+  Haruto Sato
+  Kumo Textiles K.K., Tokyo
+attachments:
+  - filename: KT-26-118.pdf
+    content_type: application/pdf
+    text: |
+      KUMO TEXTILES K.K.
+      3-2-1 Nihonbashi, Chuo-ku, Tokyo, Japan
+
+      PURCHASE ORDER No. KT-26-118
+      Date: 2026/10/22
+      Supplier: Sri Velan Knits
+
+      Style: KT-PL-4  Pique polo, 100% cotton
+      Unit price: JPY 980
+      Terms: FOB Chennai
+      Destination: Tokyo, Japan
+      Ex-factory: 2027/04/09
+
+      Colour       S     M     L     XL    Total
+      Sumi Black   200   300   300   200   1000
+      Shiro        200   300   300   200   1000
+
+      Total quantity: 2,000 pcs
+      Amount: JPY 1,960,000

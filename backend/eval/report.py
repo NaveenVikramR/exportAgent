@@ -53,6 +53,7 @@ def metrics(run: dict[str, Any]) -> dict[str, float | None]:
     review_hits = sum(len(set(s["review_expected"]) & set(s["review_flagged"])) for s in scores)
     review_flagged = sum(len(s["review_flagged"]) for s in scores)
     matches = [r["match"] for r in done if r.get("match")]
+    routed_runs = [r["agent"]["routing"] for r in done if r.get("agent", {}).get("routing")]
     revisions = [r["po_revision"] for r in done if r.get("po_revision")]
 
     def usage_total(group: str, name: str, key: str) -> float:
@@ -92,6 +93,8 @@ def metrics(run: dict[str, Any]) -> dict[str, float | None]:
         "risk_calls_per_assessed": _ratio(sum(r.get("stage_usage", {}).get("risk", {}).get("calls", 0) for r in assessed),
                                           len(assessed)),
         "assessed": len(assessed),
+        "ultra_escalation_rate": (_ratio(sum(bool(x["escalated"]) for x in routed_runs), len(routed_runs))
+                                  if routed_runs else None),
         "cost_per_email": _ratio(total_cost, n),
         "seconds_per_email": mean(r["seconds"] for r in records) if records else None,
         "total_cost": total_cost,
@@ -114,10 +117,18 @@ def metrics(run: dict[str, Any]) -> dict[str, float | None]:
     return out
 
 
+# Archived passes: (folder, split suffix). Current passes are in runs/ itself.
+ARCHIVES = (
+    ("m7", "@m7"),                     # Milestone 7
+    ("before_routing", "@prev"),       # the step before Super became the default for risk
+    ("test_v2_heldout", "@heldout"),   # TEST v2, run once while still held out
+)
+
+
 def _load() -> dict[tuple[str, str], list[dict]]:
-    """Runs grouped by (split, variant); Milestone 7 runs get the split '<split>@m7'."""
+    """Runs grouped by (split, variant); archived runs get the split '<split><suffix>'."""
     groups: dict[tuple[str, str], list[dict]] = defaultdict(list)
-    for folder, suffix in ((RUNS_DIR, ""), (RUNS_DIR / "m7", "@m7")):
+    for folder, suffix in ((RUNS_DIR, ""), *((RUNS_DIR / name, sfx) for name, sfx in ARCHIVES)):
         for path in sorted(folder.glob("*.json")):
             run = json.loads(path.read_text(encoding="utf-8"))
             if run.get("llm_mode") != "live" or run.get("cache"):
@@ -178,8 +189,13 @@ MAIN_ROWS = [
     ("Latency per email (wall clock, end to end)", "seconds_per_email", "s"),
     ("Emails that failed to process", "errors", "f1"),
 ]
+# Rows added with Super-default risk routing (not in the held-out TEST v2 table, which is kept as published).
+ROUTING_ROWS = [
+    ("Risk runs escalated to Ultra", "ultra_escalation_rate", "pct"),
+    ("Risk-stage cost per assessed email", "risk_cost_per_assessed", "usd"),
+]
 VARIANT_NAMES = {"routed": "Routed (ours)", "nano_only": "Nano only", "ultra_all": "Ultra for everything",
-                 "super_risk": "Super for risk"}
+                 "super_risk": "Super for risk", "ultra_risk": "Ultra for risk"}
 
 
 def build() -> str:
@@ -195,9 +211,9 @@ def build() -> str:
     def emails(split: str) -> int:
         return per[(split, "routed")][0]["emails"] if per.get((split, "routed")) else 0
 
-    current = {key: ms for key, ms in per.items() if "@" not in key[0] and key[0] != "test_v2"}
-    spend = sum(m["total_cost"] for ms in current.values() for m in ms)
-    v2_spend = sum(m["total_cost"] for key, ms in per.items() if key[0] == "test_v2" for m in ms)
+    def spend(match) -> float:
+        return sum(m["total_cost"] for key, ms in per.items() if match(key[0]) for m in ms)
+
     pre_fix = sum(metrics(json.loads(p.read_text(encoding="utf-8")))["total_cost"]
                   for p in sorted((RUNS_DIR / "pre_fix").glob("*.json")))
     lines = [
@@ -205,48 +221,58 @@ def build() -> str:
         "",
         f"DEV ({emails('dev')} cases) run {runs('dev', 'routed')}× with the routed setup, end to end with the "
         "response cache off: classification and extraction, escalation, order matching and change detection, "
-        "the risk agent, and drafts with the fact check. Values are mean (min–max) across runs. "
-        f"TEST v1 ({emails('test')} cases) was run {runs('test', 'routed')}× after the fixes in this step. "
-        "**TEST v1 is now seen**: its failures (Milestone 7) led to new DEV cases, and the fixes were made and "
-        "checked on DEV only, but TEST v1 numbers below are no longer a held-out measurement; TEST v2 (above) is.",
+        "the risk agent (Super by default, Ultra on escalation), and drafts with the fact check. Values are "
+        "mean (min–max) across runs. TEST v2 was run once while held out and once after the DEV-driven fixes "
+        "of this step; the held-out results below are kept exactly as first published. TEST v1 has been seen "
+        "since Milestone 7.",
         "",
-        f"Model spend in the DEV and TEST v1 runs after the fixes: **${spend + pre_fix:.2f}**"
-        + (f" (including ${pre_fix:.2f} for a DEV pass before the last fixes, kept in `runs/pre_fix/`, not in the tables)."
-           if pre_fix else "."),
+        f"Model spend: this step (DEV and TEST v2 after the fixes) **${spend(lambda s: '@' not in s):.2f}**; "
+        f"TEST v2 held out **${spend(lambda s: s == 'test_v2@heldout'):.2f}**; the step before "
+        f"**${spend(lambda s: s.endswith('@prev')) + pre_fix:.2f}**"
+        + (f" (including ${pre_fix:.2f} for a DEV pass before its last fixes, kept in `runs/pre_fix/`)." if pre_fix else "."),
         "",
     ]
+    if per.get(("test_v2@heldout", "routed")):
+        lines += _test_v2(per, col, runs, emails, spend(lambda s: s == "test_v2@heldout"), groups)
     if per.get(("test_v2", "routed")):
-        lines += _test_v2(per, col, runs, emails, v2_spend, groups)
+        lines += _test_v2_after(per, col, runs, groups)
+
     lines += [
         "## Results: routed setup",
         "",
+        "DEV now has the 11 cases added in this step (case_022–032); the earlier columns are the same pipeline "
+        "before this step's changes, on the cases DEV had then.",
+        "",
     ]
-    columns = [("DEV now", "dev"), ("DEV at M7 (10 cases)", "dev@m7"), ("TEST v1 now (seen)", "test"),
+    columns = [(f"DEV now ({emails('dev')} cases)", "dev"), (f"DEV before this step ({emails('dev@prev')})", "dev@prev"),
+               ("DEV at M7 (10 cases)", "dev@m7"), ("TEST v1 after M7 fixes (seen)", "test@prev"),
                ("TEST v1 at M7 (held out)", "test@m7")]
-    if per.get(("test_v2", "routed")):
-        columns.append(("TEST v2 (held out)", "test_v2"))
     lines += ["| Metric | " + " | ".join(name for name, _ in columns) + " |", "|---|" + "---|" * len(columns)]
-    for label, key, kind in MAIN_ROWS:
+    for label, key, kind in MAIN_ROWS + ROUTING_ROWS:
         lines.append(f"| {label} | " + " | ".join(col(split, "routed", key, kind) for _, split in columns) + " |")
 
+    lines += _risk_routing(per, col, groups)
+
+    variants = {v: n for v, n in VARIANT_NAMES.items() if per.get(("dev@prev", v))}
     lines += [
         "",
-        "## Cost per email by pipeline stage (DEV, with drafts)",
+        "## Cost per email by pipeline stage (DEV before this step, with drafts)",
         "",
         "Extraction = classify, extract, escalated re-extraction and stated-change detection; risk = the agent's "
         "planning and reasoning; drafting = the reply and the internal note. Averaged over all DEV emails "
-        "(emails without an order skip risk; emails needing no reply skip drafting).",
+        "(emails without an order skip risk; emails needing no reply skip drafting). These passes ran before "
+        "this step, when routed meant Ultra for risk.",
         "",
-        "| Stage | " + " | ".join(VARIANT_NAMES[v] for v in VARIANT_NAMES) + " |",
-        "|---|" + "---|" * len(VARIANT_NAMES),
+        "| Stage | " + " | ".join(variants.values()) + " |",
+        "|---|" + "---|" * len(variants),
     ]
     for stage in STAGES:
         lines.append(f"| {stage.capitalize()} | "
-                     + " | ".join(col("dev", v, f"{stage}_cost_per_email", "usd") for v in VARIANT_NAMES) + " |")
-    lines.append("| **Total** | " + " | ".join(col("dev", v, "cost_per_email", "usd") for v in VARIANT_NAMES) + " |")
+                     + " | ".join(col("dev@prev", v, f"{stage}_cost_per_email", "usd") for v in variants) + " |")
+    lines.append("| **Total** | " + " | ".join(col("dev@prev", v, "cost_per_email", "usd") for v in variants) + " |")
     lines.append("| Model time, all stages | " + " | ".join(
-        _fmt([sum(m[f"{s}_seconds_per_email"] or 0 for s in STAGES) for m in per.get(("dev", v), [])], "s")
-        for v in VARIANT_NAMES) + " |")
+        _fmt([sum(m[f"{s}_seconds_per_email"] or 0 for s in STAGES) for m in per.get(("dev@prev", v), [])], "s")
+        for v in variants) + " |")
 
     quality_rows = [
         ("Field extraction accuracy", "fields", "pct"),
@@ -257,9 +283,9 @@ def build() -> str:
         ("Drafts with no violations", "drafts_clean", "pct"),
     ]
     lines += ["", "Quality of the same DEV passes:", "",
-              "| Metric | " + " | ".join(VARIANT_NAMES.values()) + " |", "|---|" + "---|" * len(VARIANT_NAMES)]
+              "| Metric | " + " | ".join(variants.values()) + " |", "|---|" + "---|" * len(variants)]
     for label, key, kind in quality_rows:
-        lines.append(f"| {label} | " + " | ".join(col("dev", v, key, kind) for v in VARIANT_NAMES) + " |")
+        lines.append(f"| {label} | " + " | ".join(col("dev@prev", v, key, kind) for v in variants) + " |")
 
     lines += _super_vs_ultra(per, col)
 
@@ -267,24 +293,99 @@ def build() -> str:
         "",
         "## Cost and latency by model (routed, per email)",
         "",
-        "| Model | DEV cost | TEST v1 cost | DEV calls | TEST v1 calls | DEV model time | TEST v1 model time |",
-        "|---|---|---|---|---|---|---|",
+        "| Model | DEV now cost | DEV now calls | DEV now model time | TEST v2 after fixes cost | TEST v2 after fixes calls |",
+        "|---|---|---|---|---|---|",
     ]
     for tier in TIERS:
         lines.append(
             f"| {tier.capitalize()} | {col('dev', 'routed', f'{tier}_cost_per_email', 'usd')} "
-            f"| {col('test', 'routed', f'{tier}_cost_per_email', 'usd')} "
             f"| {col('dev', 'routed', f'{tier}_calls_per_email', 'f1')} "
-            f"| {col('test', 'routed', f'{tier}_calls_per_email', 'f1')} "
             f"| {col('dev', 'routed', f'{tier}_seconds_per_email', 's')} "
-            f"| {col('test', 'routed', f'{tier}_seconds_per_email', 's')} |"
+            f"| {col('test_v2', 'routed', f'{tier}_cost_per_email', 'usd')} "
+            f"| {col('test_v2', 'routed', f'{tier}_calls_per_email', 'f1')} |"
         )
 
-    lines += _per_case("DEV per case (routed)", groups.get(("dev", "routed"), []))
-    lines += _per_case("TEST v1 per case (routed, after the fixes)", groups.get(("test", "routed"), []))
+    lines += _per_case("DEV per case (routed, now)", groups.get(("dev", "routed"), []))
+    lines += _per_case("TEST v1 per case (routed, after the M7 fixes)", groups.get(("test@prev", "routed"), []))
     if NOTES.exists():
         lines += ["", NOTES.read_text(encoding="utf-8").strip()]
     return "\n".join(lines) + "\n"
+
+
+def _routing_reasons(runs: list[dict]) -> dict[str, int]:
+    """How often each escalation trigger fired, over all runs (reason text up to the first colon)."""
+    counts: dict[str, int] = defaultdict(int)
+    for run in runs:
+        for record in run["records"]:
+            routing = (record.get("agent") or {}).get("routing") or {}
+            for reason in routing.get("reasons") or []:
+                counts[reason.split(":")[0].split("(")[0].strip()] += 1
+    return dict(sorted(counts.items(), key=lambda kv: -kv[1]))
+
+
+def _risk_routing(per: dict, col, groups: dict) -> list[str]:
+    lines = [
+        "",
+        "## Risk routing: Super by default, Ultra on escalation",
+        "",
+        "Triggers (app/agent/routing.py): the current plan is infeasible; the email or thread mentions materials "
+        "already available or a partial shipment; Super's flags conflict with the Python feasibility result; "
+        "Super's report fails validation. The Ultra column re-runs DEV with risk always on Ultra (no drafts), "
+        "for comparison on the same cases.",
+        "",
+        "| Metric | DEV: routed (Super + escalation) | DEV: Ultra always | TEST v2 after fixes: routed |",
+        "|---|---|---|---|",
+    ]
+    rows = [
+        ("Risk runs escalated to Ultra", "ultra_escalation_rate", "pct"),
+        ("High-risk flags: precision", "high_precision", "pct"),
+        ("High-risk flags: recall", "high_recall", "pct"),
+        ("Risk-stage calls per assessed email", "risk_calls_per_assessed", "f1"),
+        ("Risk-stage cost per assessed email", "risk_cost_per_assessed", "usd"),
+        ("Risk-stage model time per assessed email", "risk_seconds_per_assessed", "s"),
+        ("Emails assessed", "assessed", "n"),
+    ]
+    for label, key, kind in rows:
+        lines.append(f"| {label} | {col('dev', 'routed', key, kind)} | {col('dev', 'ultra_risk', key, kind)} "
+                     f"| {col('test_v2', 'routed', key, kind)} |")
+    lines += ["", "Cost per email by stage, this step (DEV with drafts; the Ultra-always pass ran without drafts):", "",
+              "| Stage | DEV: routed | DEV: Ultra always | TEST v2 after fixes |", "|---|---|---|---|"]
+    for stage in STAGES:
+        lines.append(f"| {stage.capitalize()} | {col('dev', 'routed', f'{stage}_cost_per_email', 'usd')} "
+                     f"| {col('dev', 'ultra_risk', f'{stage}_cost_per_email', 'usd')} "
+                     f"| {col('test_v2', 'routed', f'{stage}_cost_per_email', 'usd')} |")
+    lines.append(f"| **Total** | {col('dev', 'routed', 'cost_per_email', 'usd')} | {col('dev', 'ultra_risk', 'cost_per_email', 'usd')} "
+                 f"| {col('test_v2', 'routed', 'cost_per_email', 'usd')} |")
+    for name, split in (("DEV", "dev"), ("TEST v2 after fixes", "test_v2")):
+        reasons = _routing_reasons(groups.get((split, "routed"), []))
+        if reasons:
+            total = sum(len(r["records"]) for r in groups.get((split, "routed"), []))
+            lines += ["", f"Escalation triggers on {name} (count over all runs, {total} emails):", ""]
+            lines += [f"- {reason}: {count}" for reason, count in reasons.items()]
+    return lines
+
+
+def _test_v2_after(per: dict, col, runs, groups: dict) -> list[str]:
+    lines = [
+        "## TEST v2 after DEV-driven fixes (seen)",
+        "",
+        "The same 30 cases, run once after this step's fixes. **This set is now seen**: its held-out results "
+        "(above) showed which patterns fail; each fix was then written against new DEV cases (case_022–032) "
+        "without changing any TEST v2 file. So this is a check that the fixes generalise, not a held-out score.",
+        "",
+        f"| Metric | After fixes ({runs('test_v2', 'routed')} run) | Held out ({runs('test_v2@heldout', 'routed')} runs, above) |",
+        "|---|---|---|",
+    ]
+    for label, key, kind in MAIN_ROWS + ROUTING_ROWS:
+        lines.append(f"| {label} | {col('test_v2', 'routed', key, kind)} | {col('test_v2@heldout', 'routed', key, kind)} |")
+    lines += ["", "### Cost per email by stage, after fixes", "", "| Stage | After fixes | Held out |", "|---|---|---|"]
+    for stage in STAGES:
+        lines.append(f"| {stage.capitalize()} | {col('test_v2', 'routed', f'{stage}_cost_per_email', 'usd')} "
+                     f"| {col('test_v2@heldout', 'routed', f'{stage}_cost_per_email', 'usd')} |")
+    lines.append(f"| **Total** | {col('test_v2', 'routed', 'cost_per_email', 'usd')} "
+                 f"| {col('test_v2@heldout', 'routed', 'cost_per_email', 'usd')} |")
+    lines += _per_case("TEST v2 per case after fixes (routed)", groups.get(("test_v2", "routed"), []))
+    return lines + [""]
 
 
 def _test_v2(per: dict, col, runs, emails, spend: float, groups: dict) -> list[str]:
@@ -292,10 +393,10 @@ def _test_v2(per: dict, col, runs, emails, spend: float, groups: dict) -> list[s
     lines = [
         "## TEST v2 (held out)",
         "",
-        f"{emails('test_v2')} cases (t2_001–t2_030), all written by a separate assistant session from "
+        f"{emails('test_v2@heldout')} cases (t2_001–t2_030), all written by a separate assistant session from "
         "[TEST_V2_SPEC.md](TEST_V2_SPEC.md) alone; the build assistant validated structure only. Committed before "
         "any run (commit `24f19ae`). Routed setup run "
-        f"{runs('test_v2', 'routed')}×, Super for risk {runs('test_v2', 'super_risk')}×, end to end with the cache "
+        f"{runs('test_v2@heldout', 'routed')}×, Super for risk {runs('test_v2@heldout', 'super_risk')}×, end to end with the cache "
         "off and drafts on. No code or prompt was changed after the set was seen. "
         f"Model spend on TEST v2: **${spend:.2f}**.",
         "",
@@ -303,7 +404,7 @@ def _test_v2(per: dict, col, runs, emails, spend: float, groups: dict) -> list[s
         "|---|---|---|",
     ]
     for label, key, kind in MAIN_ROWS:
-        lines.append(f"| {label} | {col('test_v2', 'routed', key, kind)} | {col('test_v2', 'super_risk', key, kind)} |")
+        lines.append(f"| {label} | {col('test_v2@heldout', 'routed', key, kind)} | {col('test_v2@heldout', 'super_risk', key, kind)} |")
     lines += [
         "",
         "### TEST v2 cost per email by stage",
@@ -312,14 +413,14 @@ def _test_v2(per: dict, col, runs, emails, spend: float, groups: dict) -> list[s
         "|---|---|---|",
     ]
     for stage in STAGES:
-        lines.append(f"| {stage.capitalize()} | {col('test_v2', 'routed', f'{stage}_cost_per_email', 'usd')} "
-                     f"| {col('test_v2', 'super_risk', f'{stage}_cost_per_email', 'usd')} |")
-    lines.append(f"| **Total** | {col('test_v2', 'routed', 'cost_per_email', 'usd')} "
-                 f"| {col('test_v2', 'super_risk', 'cost_per_email', 'usd')} |")
+        lines.append(f"| {stage.capitalize()} | {col('test_v2@heldout', 'routed', f'{stage}_cost_per_email', 'usd')} "
+                     f"| {col('test_v2@heldout', 'super_risk', f'{stage}_cost_per_email', 'usd')} |")
+    lines.append(f"| **Total** | {col('test_v2@heldout', 'routed', 'cost_per_email', 'usd')} "
+                 f"| {col('test_v2@heldout', 'super_risk', 'cost_per_email', 'usd')} |")
     for stage in STAGES:
-        lines.append(f"| Model time: {stage} | {col('test_v2', 'routed', f'{stage}_seconds_per_email', 's')} "
-                     f"| {col('test_v2', 'super_risk', f'{stage}_seconds_per_email', 's')} |")
-    lines += _per_case("TEST v2 per case (routed)", groups.get(("test_v2", "routed"), []))
+        lines.append(f"| Model time: {stage} | {col('test_v2@heldout', 'routed', f'{stage}_seconds_per_email', 's')} "
+                     f"| {col('test_v2@heldout', 'super_risk', f'{stage}_seconds_per_email', 's')} |")
+    lines += _per_case("TEST v2 per case (routed)", groups.get(("test_v2@heldout", "routed"), []))
     return lines + [""]
 
 
@@ -338,7 +439,8 @@ def _super_vs_ultra(per: dict, col) -> list[str]:
         "## Risk agent: Super instead of Ultra",
         "",
         "Same pipeline, same pre-fetch and tools; only the planning and risk-reasoning calls move from Ultra to "
-        "Super. One Super pass per split; the Ultra columns are the routed passes.",
+        "Super. One Super pass per split; the Ultra columns are the routed passes. These ran before this step "
+        "(when routed meant Ultra for risk) and led to Super becoming the default.",
         "",
         "| Metric | DEV: Ultra | DEV: Super | TEST v1: Ultra | TEST v1: Super | TEST v2: Ultra | TEST v2: Super |",
         "|---|---|---|---|---|---|---|",
@@ -350,9 +452,9 @@ def _super_vs_ultra(per: dict, col) -> list[str]:
 
     for label, key, kind in rows:
         if key is None:
-            cells = [counts(s, v) for s in ("dev", "test", "test_v2") for v in ("routed", "super_risk")]
+            cells = [counts(s, v) for s in ("dev@prev", "test@prev", "test_v2@heldout") for v in ("routed", "super_risk")]
         else:
-            cells = [col(s, v, key, kind) for s in ("dev", "test", "test_v2") for v in ("routed", "super_risk")]
+            cells = [col(s, v, key, kind) for s in ("dev@prev", "test@prev", "test_v2@heldout") for v in ("routed", "super_risk")]
         lines.append(f"| {label} | " + " | ".join(cells) + " |")
     return lines
 

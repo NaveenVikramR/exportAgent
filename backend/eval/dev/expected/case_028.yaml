@@ -1,0 +1,27 @@
+id: case_028
+classification:
+  category: po_revision
+  intents: [po_revision]
+  has_po_data: true
+extraction:
+  buyer: Haus Lindqvist GmbH
+  po_number: LH-55120
+  style: LH-SW-08
+  currency: EUR
+  unit_price: "6.95"
+  total_quantity: 1500
+  delivery_date: "2027-04-02"
+  incoterms: FOB
+  port: Tuticorin
+  destination_country: Germany
+  line_items:
+    - {colour: Salbei, quantity: 600, sizes: {S: 100, M: 200, L: 200, XL: 100}}
+    - {colour: Marine, quantity: 900, sizes: {S: 150, M: 300, L: 300, XL: 150}}
+expected_review_fields: []
+revises: case_023
+expected_po_revision: "2"
+expected_changes:
+  - {field: unit_price, old: "7.20", new: "6.95"}
+
+expected_high_risk: []
+risk_note: "tight: Feasible but tight: 92% of free capacity used, 9 days of slack. | value -3.5% (-375.00 EUR)"

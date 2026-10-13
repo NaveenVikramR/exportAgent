@@ -1,0 +1,25 @@
+id: case_032
+classification:
+  category: po_revision
+  intents: [po_revision]
+  has_po_data: true
+extraction:
+  buyer: Northbay Outfitters Ltd
+  po_number: NB-3307
+  style: null
+  currency: CAD
+  unit_price: "8.80"
+  total_quantity: null
+  delivery_date: null
+  incoterms: null
+  port: null
+  destination_country: null
+  line_items: []
+expected_review_fields: []
+revises: case_026
+expected_po_revision: "1"
+expected_changes:
+  - {field: unit_price, old: "9.10", new: "8.80"}
+
+expected_high_risk: []
+risk_note: "value -3.3% (-360.00 CAD)"

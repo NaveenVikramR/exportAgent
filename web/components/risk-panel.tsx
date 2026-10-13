@@ -16,9 +16,10 @@ const TOOL_LABELS: Record<string, string> = {
   propose_delivery_options: "Propose delivery options",
   check_compliance: "Check compliance (Tavily)",
   lookup_buyer: "Look up buyer (Tavily)",
-  plan: "Ultra plans",
-  final: "Ultra writes the report",
-  final_retry: "Ultra retries the report",
+  plan: "Plans the checks",
+  final: "Writes the report",
+  final_retry: "Retries the report",
+  escalate_to_ultra: "Escalated to Ultra",
 };
 
 function money(value: string | null | undefined): string {
@@ -122,7 +123,10 @@ function Json({ value }: { value: unknown }) {
 function StepRow({ step }: { step: AgentStep }) {
   const [open, setOpen] = useState(false);
   const isLlm = step.kind === "llm";
+  const isRouting = step.kind === "routing";
   const reasoning = isLlm ? (step.output?.reasoning as string | undefined) : undefined;
+  // Super by default; Ultra when the run was escalated (see the routing step)
+  const tier = /ultra/i.test(step.model ?? "") ? "Ultra" : /super/i.test(step.model ?? "") ? "Super" : "Model";
   return (
     <li id={step.evidence_id ? `evidence-${step.evidence_id}` : undefined} className="scroll-mt-20">
       <button
@@ -134,10 +138,16 @@ function StepRow({ step }: { step: AgentStep }) {
         </span>
         <span
           className={`rounded px-1.5 py-0.5 text-xs font-medium ${
-            isLlm ? "bg-violet-100 text-violet-800" : step.round === 0 ? "bg-zinc-100 text-zinc-700" : "bg-sky-100 text-sky-800"
+            isLlm
+              ? "bg-violet-100 text-violet-800"
+              : isRouting
+                ? "bg-amber-100 text-amber-800"
+                : step.round === 0
+                  ? "bg-zinc-100 text-zinc-700"
+                  : "bg-sky-100 text-sky-800"
           }`}
         >
-          {isLlm ? "Ultra" : step.round === 0 ? "Python" : "tool"}
+          {isLlm ? tier : isRouting ? "Routing" : step.round === 0 ? "Python" : "tool"}
         </span>
         <span className="font-medium">{TOOL_LABELS[step.name] ?? step.name}</span>
         {step.evidence_id && <span className="font-mono text-xs text-zinc-500">{step.evidence_id}</span>}

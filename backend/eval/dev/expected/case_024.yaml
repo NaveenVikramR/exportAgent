@@ -1,0 +1,24 @@
+id: case_024
+classification:
+  category: new_po
+  intents: [new_po]
+  has_po_data: true
+extraction:
+  buyer: Wattle & Gum Pty Ltd
+  po_number: WG-7781
+  style: WG-HD-3
+  currency: AUD
+  unit_price: "8.40"
+  total_quantity: 1500
+  # day-first: Australian buyer
+  delivery_date: "2027-05-03"
+  incoterms: FOB
+  port: Chennai
+  destination_country: Australia
+  line_items:
+    - {colour: Eucalyptus, quantity: 800}
+    - {colour: Sandstone, quantity: 700}
+expected_review_fields: []
+
+expected_high_risk: []
+risk_note: "feasible: Feasible: 73% of free capacity used, 40 days of slack."

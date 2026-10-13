@@ -1,0 +1,17 @@
+id: case_026
+title: Canadian order with a date that reads both ways ("04/03/2027") and nothing to settle it
+sender: "Owen Leblanc <owen@northbayoutfitters.example>"
+subject: "Long sleeve order NB-3307"
+received_at: "2026-10-23"
+body: |
+  Hi Karthik,
+
+  Following our call, please book NB-3307:
+  Style NB-LS-2 long sleeve tee, 1,200 pcs: Fir 600, Slate 600
+  CAD 9.10 per piece, FOB Chennai, to our Vancouver warehouse
+  Please ship from the factory 04/03/2027.
+
+  Thanks,
+  Owen Leblanc
+  Northbay Outfitters Ltd, Vancouver BC
+attachments: []

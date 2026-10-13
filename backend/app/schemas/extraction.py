@@ -20,6 +20,9 @@ class EmailCategory(StrEnum):
     OTHER = "other"
 
 
+_CATEGORY_VALUES = {c.value for c in EmailCategory}
+
+
 class Classification(BaseModel):
     # the main request; `intents` lists every request in the email, including this one
     category: EmailCategory
@@ -27,6 +30,38 @@ class Classification(BaseModel):
     has_po_data: bool
     summary: str
     confidence: float = Field(ge=0, le=1)
+    # values the model gave outside the allowed list, mapped to "other" (set by Python, not the model)
+    unrecognised: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="before")
+    @classmethod
+    def _map_unknown_to_other(cls, data: Any) -> Any:
+        """An intent or category outside the enum becomes "other" and is kept for review,
+        instead of failing the whole classification."""
+        if not isinstance(data, dict):
+            return data
+        data = dict(data)
+        unknown = list(data.get("unrecognised") or [])
+        category = data.get("category")
+        if isinstance(category, str) and category not in _CATEGORY_VALUES:
+            unknown.append(category)
+            data["category"] = EmailCategory.OTHER.value
+        intents = []
+        for intent in data.get("intents") or []:
+            if isinstance(intent, str) and intent not in _CATEGORY_VALUES:
+                unknown.append(intent)
+                intent = EmailCategory.OTHER.value
+            intents.append(intent)
+        data["intents"] = intents
+        data["unrecognised"] = list(dict.fromkeys(unknown))
+        return data
+
+    @classmethod
+    def output_schema(cls) -> dict[str, Any]:
+        """JSON schema for the model's reply: the enums constrain category and intents."""
+        schema = cls.model_json_schema()
+        schema["properties"].pop("unrecognised", None)
+        return schema
 
     @model_validator(mode="after")
     def _category_is_an_intent(self) -> "Classification":
@@ -95,6 +130,8 @@ class POExtraction(BaseModel):
     line_items: list[LineItem] = Field(default_factory=list)
     # revision split off the PO number by app/services/normalise.py ("CL-7731 Rev A" -> "A")
     po_revision: str | None = None
+    # fields written as an ambiguous numeric date that could not be resolved (set by normalise.py)
+    ambiguous_dates: list[str] = Field(default_factory=list)
 
     @field_validator("unit_price", "total_quantity", mode="before")
     @classmethod

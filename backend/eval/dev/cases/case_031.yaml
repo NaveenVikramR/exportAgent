@@ -1,0 +1,37 @@
+id: case_031
+title: Quantity revision that offers a partial shipment ("Rev. 1")
+sender: "Haruto Sato <h.sato@kumo-textiles.example>"
+subject: "KT-26-118 Rev. 1 - quantity increase"
+received_at: "2026-10-30"
+body: |
+  Dear Karthik-san,
+
+  Sales are strong, so we have increased KT-26-118 to 3,000 pcs; the revised PO (KT-26-118 Rev. 1)
+  is attached.
+
+  If the full quantity is difficult by 2027/04/09, we can accept a partial shipment: 2,000 pcs by
+  2027/04/09 and the balance by 2027/04/23.
+
+  Best regards,
+  Haruto Sato
+attachments:
+  - filename: KT-26-118_Rev1.pdf
+    content_type: application/pdf
+    text: |
+      KUMO TEXTILES K.K.
+      PURCHASE ORDER No. KT-26-118 Rev. 1
+      Date: 2026/10/30
+      Supplier: Sri Velan Knits
+
+      Style: KT-PL-4  Pique polo, 100% cotton
+      Unit price: JPY 980
+      Terms: FOB Chennai
+      Destination: Tokyo, Japan
+      Ex-factory: 2027/04/09
+
+      Colour       S     M     L     XL    Total
+      Sumi Black   300   450   450   300   1500
+      Shiro        300   450   450   300   1500
+
+      Total quantity: 3,000 pcs
+      Amount: JPY 2,940,000

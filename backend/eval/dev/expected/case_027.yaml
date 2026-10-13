@@ -1,0 +1,12 @@
+id: case_027
+classification:
+  category: order_query
+  intents: [order_query]
+  has_po_data: false
+# A question, not an order change. If it is read as a date change, the repeated date must
+# create no new version and no change.
+extraction: null
+expected_review_fields: []
+
+expected_high_risk: []
+risk_note: "no order"

@@ -90,10 +90,14 @@ def _only_new_colours(previous: list[dict], items: list[dict]) -> bool:
 
 
 def _merge_line_items(previous: list[dict], changed: list[dict]) -> list[dict]:
-    """Colours named in the update replace their previous line; the others carry over."""
+    """Colours named in the update replace their previous line; the others carry over.
+    A colour set to 0 ("drop Mustard", "Rust to 0") is removed."""
     by_colour = {(item.get("colour") or "").casefold(): deepcopy(item) for item in previous}
     for item in changed:
         key = (item.get("colour") or "").casefold()
+        if item.get("quantity") == 0:
+            by_colour.pop(key, None)
+            continue
         old = by_colour.get(key, {})
         new = deepcopy(item)
         # Sizes not restated stay only if the colour's quantity did not change.
@@ -270,8 +274,9 @@ def plan_versions(
       diff. Nothing changed, nothing to append.
     """
     if previous is None:
-        if stated:
-            baseline = apply_stated_changes(update, stated)
+        baseline = apply_stated_changes(update, stated) if stated else None
+        # Quoted "earlier" values equal to the new ones are no change: one version, not two.
+        if baseline is not None and diff_po_versions(baseline, update):
             return [
                 PlannedVersion(baseline, [], "thread_reference", from_email=False),
                 PlannedVersion(update, diff_po_versions(baseline, update), "document", from_email=True),

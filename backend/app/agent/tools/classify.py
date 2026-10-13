@@ -16,4 +16,9 @@ def classify_email(router: LLMRouter, email_text: str, *, run_id: int | None = N
         # Thinking off: with it on, Nemotron Nano spends the whole budget reasoning and returns no JSON.
         reasoning=False,
         run_id=run_id,
+        # The schema's enums constrain category and intents; anything else still maps to "other".
+        response_format={
+            "type": "json_schema",
+            "json_schema": {"name": "classification", "schema": Classification.output_schema()},
+        },
     )

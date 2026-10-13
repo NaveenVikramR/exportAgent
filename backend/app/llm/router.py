@@ -129,14 +129,16 @@ class LLMRouter:
         reasoning: bool | None = None,
         run_id: int | None = None,
         detail: str | None = None,
+        tier: Tier | None = None,
     ) -> LLMResult:
         """Run one chat completion for `task` and log it.
 
         `reasoning` toggles Nemotron's thinking for this request; None leaves
         the model default. `detail` is stored with the log row (e.g. why a call
-        was escalated).
+        was escalated). `tier` overrides the routing table for this call (an
+        escalation); a forced tier (LLM_FORCE_TIER, the baselines) still wins.
         """
-        tier = self.tier_for(task)
+        tier = self.tier_for(task) if tier is None or self.settings.llm_force_tier is not None else tier
         model = self.settings.model_for(tier)
 
         if self.settings.llm_mode == "mock":

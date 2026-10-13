@@ -1,0 +1,7712 @@
+{
+ "records": [
+  {
+   "case_id": "case_001",
+   "match": {
+    "expected": "new order",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_001",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_001",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_001",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Nordwind Mode GmbH",
+     "confidence": 1.0,
+     "evidence": "Senior Buyer, Nordwind Mode GmbH, Hamburg"
+    },
+    "po_number": {
+     "value": "NW-45120",
+     "confidence": 1.0,
+     "evidence": "PO Number: NW-45120"
+    },
+    "style": {
+     "value": "NW-TS-2207",
+     "confidence": 1.0,
+     "evidence": "Style No: NW-TS-2207"
+    },
+    "currency": {
+     "value": "USD",
+     "confidence": 1.0,
+     "evidence": "Currency: USD"
+    },
+    "unit_price": {
+     "value": "4.85",
+     "confidence": 1.0,
+     "evidence": "Unit Price: 4.85 per piece"
+    },
+    "total_quantity": {
+     "value": 12000,
+     "confidence": 1.0,
+     "evidence": "Total Quantity: 12,000 pcs"
+    },
+    "delivery_date": {
+     "value": "2026-12-15",
+     "confidence": 1.0,
+     "evidence": "Delivery Date (ex-factory): 15 December 2026"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Incoterms: FOB Tuticorin"
+    },
+    "port": {
+     "value": "Tuticorin",
+     "confidence": 1.0,
+     "evidence": "Incoterms: FOB Tuticorin"
+    },
+    "destination_country": {
+     "value": "Germany",
+     "confidence": 1.0,
+     "evidence": "Destination: Hamburg, Germany"
+    },
+    "line_items": [
+     {
+      "colour": "Navy",
+      "sizes": {
+       "S": 600,
+       "M": 1500,
+       "L": 1500,
+       "XL": 900
+      },
+      "quantity": 4500,
+      "unit_price": null
+     },
+     {
+      "colour": "White",
+      "sizes": {
+       "S": 600,
+       "M": 1500,
+       "L": 1500,
+       "XL": 900
+      },
+      "quantity": 4500,
+      "unit_price": null
+     },
+     {
+      "colour": "Heather Grey",
+      "sizes": {
+       "S": 400,
+       "M": 1000,
+       "L": 1000,
+       "XL": 600
+      },
+      "quantity": 3000,
+      "unit_price": null
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer requests confirmation of receipt and the ex-factory date for PO NW-45120 for men's crew neck tees.",
+    "confidence": 0.99,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "low",
+      "category": "compliance",
+      "reason": "Germany requires fibre composition labelling (name and percentage by weight in descending order) on a durable, legible label in German per EU Regulation 1007/2011 Articles 9, 14, 16(3), plus care labelling.",
+      "evidence": [
+       "E4",
+       "https://collectivestudioltd.com/journal/clothing-labelling-requirements-by-country"
+      ],
+      "rule": "EU Regulation (EU) No 1007/2011 on textile fibre names and related labelling and marking of fibre composition of textile products",
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 3,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "lookup_buyer",
+     "check_compliance"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 24.42,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00030462",
+     "latency_ms": 8206,
+     "input_tokens": 1977,
+     "output_tokens": 775,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01230500",
+     "latency_ms": 8562,
+     "input_tokens": 7460,
+     "output_tokens": 1615,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 2,
+     "cost": "0.00030462",
+     "latency_ms": 8206,
+     "input_tokens": 1977,
+     "output_tokens": 775,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 2,
+     "cost": "0.01230500",
+     "latency_ms": 8562,
+     "input_tokens": 7460,
+     "output_tokens": 1615,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_003",
+   "match": {
+    "expected": "new order",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_003",
+    "category_ok": true,
+    "intents_ok": false,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_003",
+    "category_ok": true,
+    "intents_ok": false,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_003",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Maison Clairet SAS",
+     "confidence": 1.0,
+     "evidence": "Maison Clairet SAS, Lyon, France"
+    },
+    "po_number": {
+     "value": "MC-2026-0871",
+     "confidence": 1.0,
+     "evidence": "PO number MC-2026-0871"
+    },
+    "style": {
+     "value": "MC-PL-118",
+     "confidence": 1.0,
+     "evidence": "Style: MC-PL-118 ladies' pique polo"
+    },
+    "currency": {
+     "value": "EUR",
+     "confidence": 1.0,
+     "evidence": "Price: EUR 6.40 per piece"
+    },
+    "unit_price": {
+     "value": "6.40",
+     "confidence": 1.0,
+     "evidence": "Price: EUR 6.40 per piece"
+    },
+    "total_quantity": {
+     "value": 6000,
+     "confidence": 1.0,
+     "evidence": "total 6,000 pcs"
+    },
+    "delivery_date": {
+     "value": "2027-01-20",
+     "confidence": 1.0,
+     "evidence": "Ex-factory: 20 January 2027"
+    },
+    "incoterms": {
+     "value": "CIF",
+     "confidence": 1.0,
+     "evidence": "CIF Le Havre"
+    },
+    "port": {
+     "value": "Le Havre",
+     "confidence": 1.0,
+     "evidence": "CIF Le Havre"
+    },
+    "destination_country": {
+     "value": "France",
+     "confidence": 1.0,
+     "evidence": "Maison Clairet SAS, Lyon, France"
+    },
+    "line_items": [
+     {
+      "colour": "Blanc",
+      "sizes": {},
+      "quantity": 2000,
+      "unit_price": null
+     },
+     {
+      "colour": "Marine",
+      "sizes": {},
+      "quantity": 2500,
+      "unit_price": null
+     },
+     {
+      "colour": "Rouge",
+      "sizes": {},
+      "quantity": 1500,
+      "unit_price": null
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po",
+     "order_query",
+     "shipment_docs"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer requests a new PO booking, asks about the status of a lab dip, and wants a packing list resent.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [],
+    "info_checked": 5,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 24.15,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00027462",
+     "latency_ms": 5784,
+     "input_tokens": 1741,
+     "output_tokens": 709,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01541800",
+     "latency_ms": 11287,
+     "input_tokens": 7144,
+     "output_tokens": 2758,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 2,
+     "cost": "0.00027462",
+     "latency_ms": 5784,
+     "input_tokens": 1741,
+     "output_tokens": 709,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 2,
+     "cost": "0.01541800",
+     "latency_ms": 11287,
+     "input_tokens": 7144,
+     "output_tokens": 2758,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_004",
+   "match": {
+    "expected": "new order",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_004",
+    "category_ok": true,
+    "intents_ok": false,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [
+     "currency",
+     "delivery_date",
+     "incoterms",
+     "port",
+     "unit_price"
+    ],
+    "review_flagged": [
+     "currency",
+     "delivery_date",
+     "incoterms",
+     "port",
+     "unit_price"
+    ]
+   },
+   "score_before_escalation": {
+    "case_id": "case_004",
+    "category_ok": true,
+    "intents_ok": false,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": false,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [
+     "currency",
+     "delivery_date",
+     "incoterms",
+     "port",
+     "unit_price"
+    ],
+    "review_flagged": [
+     "currency",
+     "delivery_date",
+     "incoterms",
+     "port",
+     "unit_price"
+    ]
+   },
+   "changes": {
+    "case_id": "case_004",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [
+    {
+     "field": "currency",
+     "reason": "source_quote_missing",
+     "model": "nvidia/nemotron-3-super-120b-a12b",
+     "calls": 1,
+     "input_tokens": 979,
+     "output_tokens": 22,
+     "cost_usd": "0.00031350",
+     "outcome": "resolved",
+     "before": "USD",
+     "after": null
+    }
+   ],
+   "extracted": {
+    "buyer": {
+     "value": "Bluepeak Outfitters Inc.",
+     "confidence": 1.0,
+     "evidence": "Bluepeak Outfitters Inc., Portland, OR"
+    },
+    "po_number": {
+     "value": "BP-778301",
+     "confidence": 1.0,
+     "evidence": "PO BP-778301"
+    },
+    "style": {
+     "value": "BP-HD-5512",
+     "confidence": 1.0,
+     "evidence": "style BP-HD-5512"
+    },
+    "currency": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "unit_price": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "total_quantity": {
+     "value": 5000,
+     "confidence": 1.0,
+     "evidence": "total 5,000 units"
+    },
+    "delivery_date": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "incoterms": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "port": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "destination_country": {
+     "value": "United States",
+     "confidence": 1.0,
+     "evidence": "Portland, OR"
+    },
+    "line_items": [
+     {
+      "colour": "Charcoal",
+      "sizes": {},
+      "quantity": 1800,
+      "unit_price": null
+     },
+     {
+      "colour": "Forest Green",
+      "sizes": {},
+      "quantity": 1200,
+      "unit_price": null
+     },
+     {
+      "colour": "Black",
+      "sizes": {},
+      "quantity": 2000,
+      "unit_price": null
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po",
+     "po_revision"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants to reorder 5,000 fleece hoodies under PO BP-778301 with specified colors and quantities.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 2,
+    "error": null,
+    "flags": [
+     {
+      "severity": "medium",
+      "category": "delivery",
+      "reason": "No delivery date specified; buyer will confirm ship window after Thursday allocation meeting.",
+      "evidence": [
+       "E1"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     },
+     {
+      "severity": "medium",
+      "category": "price",
+      "reason": "Unit price and currency not stated; email references price 'as agreed with Suresh on our call last week' but no value is documented.",
+      "evidence": [
+       "E1"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     },
+     {
+      "severity": "low",
+      "category": "data_quality",
+      "reason": "Incoterms and destination port not provided in the PO.",
+      "evidence": [
+       "E1"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 2,
+    "tools": [
+     "find_order (0)",
+     "lookup_buyer",
+     "check_compliance"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 25.07,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00024150",
+     "latency_ms": 4441,
+     "input_tokens": 1505,
+     "output_tokens": 630,
+     "failed": 0
+    },
+    "super": {
+     "calls": 1,
+     "cost": "0.00031350",
+     "latency_ms": 1269,
+     "input_tokens": 979,
+     "output_tokens": 22,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 3,
+     "cost": "0.01602500",
+     "latency_ms": 11194,
+     "input_tokens": 9176,
+     "output_tokens": 2283,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 3,
+     "cost": "0.00055500",
+     "latency_ms": 5710,
+     "input_tokens": 2484,
+     "output_tokens": 652,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 3,
+     "cost": "0.01602500",
+     "latency_ms": 11194,
+     "input_tokens": 9176,
+     "output_tokens": 2283,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_005",
+   "match": {
+    "expected": "new order",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_005",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_005",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_005",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [
+    {
+     "field": "line_items",
+     "reason": "size_table_not_extracted",
+     "model": "nvidia/nemotron-3-super-120b-a12b",
+     "calls": 1,
+     "input_tokens": 1202,
+     "output_tokens": 271,
+     "cost_usd": "0.00060450",
+     "outcome": "resolved",
+     "before": [
+      {
+       "colour": "Dusty Pink",
+       "sizes": {},
+       "quantity": 2400,
+       "unit_price": null
+      },
+      {
+       "colour": "Sage",
+       "sizes": {},
+       "quantity": 2400,
+       "unit_price": null
+      },
+      {
+       "colour": "Charcoal",
+       "sizes": {},
+       "quantity": 2000,
+       "unit_price": null
+      }
+     ],
+     "after": [
+      {
+       "colour": "Dusty Pink",
+       "sizes": {
+        "2-3Y": 500,
+        "4-5Y": 700,
+        "6-7Y": 700,
+        "8-9Y": 500
+       },
+       "quantity": 2400,
+       "unit_price": null
+      },
+      {
+       "colour": "Sage",
+       "sizes": {
+        "2-3Y": 500,
+        "4-5Y": 700,
+        "6-7Y": 700,
+        "8-9Y": 500
+       },
+       "quantity": 2400,
+       "unit_price": null
+      },
+      {
+       "colour": "Charcoal",
+       "sizes": {
+        "2-3Y": 400,
+        "4-5Y": 600,
+        "6-7Y": 600,
+        "8-9Y": 400
+       },
+       "quantity": 2000,
+       "unit_price": null
+      }
+     ]
+    }
+   ],
+   "extracted": {
+    "buyer": {
+     "value": "Harrow & Finch Ltd",
+     "confidence": 1.0,
+     "evidence": "Buying Team, Harrow & Finch Ltd"
+    },
+    "po_number": {
+     "value": "HF/PO/26/3391",
+     "confidence": 1.0,
+     "evidence": "Purchase Order No: HF/PO/26/3391"
+    },
+    "style": {
+     "value": "HF-KL-0932",
+     "confidence": 1.0,
+     "evidence": "Style Ref: HF-KL-0932"
+    },
+    "currency": {
+     "value": "GBP",
+     "confidence": 1.0,
+     "evidence": "Order Currency: GBP"
+    },
+    "unit_price": {
+     "value": "2.95",
+     "confidence": 1.0,
+     "evidence": "Price per unit: \u00a32.95"
+    },
+    "total_quantity": {
+     "value": 6800,
+     "confidence": 1.0,
+     "evidence": "Total units: 6,800"
+    },
+    "delivery_date": {
+     "value": "2027-01-05",
+     "confidence": 1.0,
+     "evidence": "Required ex-factory date: 05/01/2027"
+    },
+    "incoterms": {
+     "value": "CIF",
+     "confidence": 1.0,
+     "evidence": "Delivery terms: CIF Felixstowe"
+    },
+    "port": {
+     "value": "Felixstowe",
+     "confidence": 1.0,
+     "evidence": "Delivery terms: CIF Felixstowe"
+    },
+    "destination_country": {
+     "value": "United Kingdom",
+     "confidence": 1.0,
+     "evidence": "Ship to: Harrow & Finch DC, Leeds, United Kingdom"
+    },
+    "line_items": [
+     {
+      "colour": "Dusty Pink",
+      "sizes": {
+       "2-3Y": 500,
+       "4-5Y": 700,
+       "6-7Y": 700,
+       "8-9Y": 500
+      },
+      "quantity": 2400,
+      "unit_price": null
+     },
+     {
+      "colour": "Sage",
+      "sizes": {
+       "2-3Y": 500,
+       "4-5Y": 700,
+       "6-7Y": 700,
+       "8-9Y": 500
+      },
+      "quantity": 2400,
+      "unit_price": null
+     },
+     {
+      "colour": "Charcoal",
+      "sizes": {
+       "2-3Y": 400,
+       "4-5Y": 600,
+       "6-7Y": 600,
+       "8-9Y": 400
+      },
+      "quantity": 2000,
+      "unit_price": null
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants to place a new purchase order for 6,800 kids' organic leggings with delivery by 5 January 2027.",
+    "confidence": 0.98,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 2,
+    "error": null,
+    "flags": [],
+    "info_checked": 5,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 31.85,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00030162",
+     "latency_ms": 4767,
+     "input_tokens": 1935,
+     "output_tokens": 773,
+     "failed": 0
+    },
+    "super": {
+     "calls": 1,
+     "cost": "0.00060450",
+     "latency_ms": 2219,
+     "input_tokens": 1202,
+     "output_tokens": 271,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 3,
+     "cost": "0.02419400",
+     "latency_ms": 17361,
+     "input_tokens": 11246,
+     "output_tokens": 4316,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 3,
+     "cost": "0.00090612",
+     "latency_ms": 6986,
+     "input_tokens": 3137,
+     "output_tokens": 1044,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 3,
+     "cost": "0.02419400",
+     "latency_ms": 17361,
+     "input_tokens": 11246,
+     "output_tokens": 4316,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_006",
+   "match": {
+    "expected": "new order",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_006",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [
+     "total_quantity"
+    ],
+    "review_flagged": [
+     "total_quantity"
+    ]
+   },
+   "score_before_escalation": {
+    "case_id": "case_006",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [
+     "total_quantity"
+    ],
+    "review_flagged": [
+     "total_quantity"
+    ]
+   },
+   "changes": {
+    "case_id": "case_006",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Bluepeak Outfitters Inc.",
+     "confidence": 1.0,
+     "evidence": "Bluepeak Outfitters Inc."
+    },
+    "po_number": {
+     "value": "BP-778455",
+     "confidence": 1.0,
+     "evidence": "PO BP-778455"
+    },
+    "style": {
+     "value": "BP-TK-2040",
+     "confidence": 1.0,
+     "evidence": "style BP-TK-2040"
+    },
+    "currency": {
+     "value": "USD",
+     "confidence": 1.0,
+     "evidence": "Currency: USD"
+    },
+    "unit_price": {
+     "value": "3.20",
+     "confidence": 1.0,
+     "evidence": "Unit cost: 3.20"
+    },
+    "total_quantity": {
+     "value": 8400,
+     "confidence": 0.5,
+     "evidence": "TOTAL: 8,400 PCS"
+    },
+    "delivery_date": {
+     "value": "2026-11-20",
+     "confidence": 1.0,
+     "evidence": "Ex-factory: November 20, 2026"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Chennai"
+    },
+    "port": {
+     "value": "Chennai",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Chennai"
+    },
+    "destination_country": {
+     "value": "United States",
+     "confidence": 1.0,
+     "evidence": "Ship to: Bluepeak DC, Reno, NV, USA"
+    },
+    "line_items": [
+     {
+      "colour": "Black",
+      "sizes": {
+       "XS": 300,
+       "S": 900,
+       "M": 1200,
+       "L": 900,
+       "XL": 300
+      },
+      "quantity": 3600,
+      "unit_price": null
+     },
+     {
+      "colour": "Ivory",
+      "sizes": {
+       "XS": 250,
+       "S": 700,
+       "M": 1000,
+       "L": 700,
+       "XL": 250
+      },
+      "quantity": 2900,
+      "unit_price": null
+     },
+     {
+      "colour": "Dusty Rose",
+      "sizes": {
+       "XS": 150,
+       "S": 500,
+       "M": 600,
+       "L": 500,
+       "XL": 150
+      },
+      "quantity": 1900,
+      "unit_price": null
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants confirmation of the attached purchase order for 8,000 women's rib tanks.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "medium",
+      "category": "data_quality",
+      "reason": "Email body states 8,000 pcs but PO attachment and system show 8,400 pcs; extraction confidence for total_quantity is 0.50.",
+      "evidence": [
+       "E1"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 4,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "check_compliance"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 18.46,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00029934",
+     "latency_ms": 4966,
+     "input_tokens": 1901,
+     "output_tokens": 772,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01473200",
+     "latency_ms": 9267,
+     "input_tokens": 6521,
+     "output_tokens": 2737,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 2,
+     "cost": "0.00029934",
+     "latency_ms": 4966,
+     "input_tokens": 1901,
+     "output_tokens": 772,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 2,
+     "cost": "0.01473200",
+     "latency_ms": 9267,
+     "input_tokens": 6521,
+     "output_tokens": 2737,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_002",
+   "match": {
+    "expected": "same order as case_001",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_002",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_002",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_002",
+    "expected": 3,
+    "predicted": 3,
+    "correct": 3,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Nordwind Mode GmbH",
+     "confidence": 1.0,
+     "evidence": "Supplier: Sri Velan Knits, Tiruppur, India"
+    },
+    "po_number": {
+     "value": "NW-45120",
+     "confidence": 1.0,
+     "evidence": "PO Number: NW-45120"
+    },
+    "style": {
+     "value": "NW-TS-2207",
+     "confidence": 1.0,
+     "evidence": "Style No: NW-TS-2207"
+    },
+    "currency": {
+     "value": "USD",
+     "confidence": 1.0,
+     "evidence": "Currency: USD"
+    },
+    "unit_price": {
+     "value": "4.85",
+     "confidence": 1.0,
+     "evidence": "Unit Price: 4.85 per piece"
+    },
+    "total_quantity": {
+     "value": 13500,
+     "confidence": 1.0,
+     "evidence": "Total Quantity: 13,500 pcs"
+    },
+    "delivery_date": {
+     "value": "2026-11-30",
+     "confidence": 1.0,
+     "evidence": "Delivery Date (ex-factory): 30 November 2026"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Incoterms: FOB Tuticorin"
+    },
+    "port": {
+     "value": "Tuticorin",
+     "confidence": 1.0,
+     "evidence": "Incoterms: FOB Tuticorin"
+    },
+    "destination_country": {
+     "value": "Germany",
+     "confidence": 1.0,
+     "evidence": "Destination: Hamburg, Germany"
+    },
+    "line_items": [
+     {
+      "colour": "Navy",
+      "sizes": {
+       "S": 800,
+       "M": 2000,
+       "L": 2000,
+       "XL": 1200
+      },
+      "quantity": 6000,
+      "unit_price": null
+     },
+     {
+      "colour": "White",
+      "sizes": {
+       "S": 600,
+       "M": 1500,
+       "L": 1500,
+       "XL": 900
+      },
+      "quantity": 4500,
+      "unit_price": null
+     },
+     {
+      "colour": "Heather Grey",
+      "sizes": {
+       "S": 400,
+       "M": 1000,
+       "L": 1000,
+       "XL": 600
+      },
+      "quantity": 3000,
+      "unit_price": null
+     }
+    ],
+    "po_revision": "1",
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "po_revision",
+    "intents": [
+     "po_revision"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants the supplier to adopt the revised PO NW-45120 Rev.1 and discard the previous version.",
+    "confidence": 0.98,
+    "unrecognised": []
+   },
+   "expected_high": [
+    "schedule",
+    "value"
+   ],
+   "predicted_high": [
+    "schedule",
+    "value"
+   ],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "high",
+      "category": "delivery",
+      "reason": "Current plan infeasible: 13,500 pcs needed but only 9,314 pcs free capacity before 30 Nov 2026 (4,186 pcs short, 123.6% utilisation, -8 slack days).",
+      "evidence": [
+       "E3",
+       "E2",
+       "E4"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": [
+       "Delivery date pulled forward 15 days (15 Dec \u2192 30 Nov), reducing production window from 46 to 31 available days."
+      ]
+     },
+     {
+      "severity": "high",
+      "category": "price",
+      "reason": "Contract value increased from USD 58,200 to 65,475 (+USD 7,275, +12.5%), exceeding both 10% and USD 5,000 high-severity thresholds.",
+      "evidence": [
+       "E2"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     },
+     {
+      "severity": "medium",
+      "category": "quantity",
+      "reason": "Total quantity up 1,500 pcs (+12.5%) and Navy colour up 1,500 pcs (+33.3%) vs previous version.",
+      "evidence": [
+       "E2"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 4,
+    "tools": [
+     "find_order (0)",
+     "diff_po_versions (0)",
+     "check_delivery_feasibility (0)",
+     "check_delivery_feasibility (0)",
+     "propose_delivery_options (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 16.14,
+   "usage": {
+    "nano": {
+     "calls": 3,
+     "cost": "0.00036342",
+     "latency_ms": 8215,
+     "input_tokens": 2677,
+     "output_tokens": 845,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01618800",
+     "latency_ms": 7761,
+     "input_tokens": 10116,
+     "output_tokens": 2024,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 3,
+     "cost": "0.00036342",
+     "latency_ms": 8215,
+     "input_tokens": 2677,
+     "output_tokens": 845,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 2,
+     "cost": "0.01618800",
+     "latency_ms": 7761,
+     "input_tokens": 10116,
+     "output_tokens": 2024,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_007",
+   "match": {
+    "expected": "new order",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_007",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": false
+    },
+    "line_items_total": 0,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_007",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": false,
+     "port": true,
+     "destination_country": false
+    },
+    "line_items_total": 0,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": [
+     "incoterms"
+    ]
+   },
+   "changes": {
+    "case_id": "case_007",
+    "expected": 1,
+    "predicted": 1,
+    "correct": 1,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [
+    {
+     "field": "incoterms",
+     "reason": "source_quote_missing",
+     "model": "nvidia/nemotron-3-super-120b-a12b",
+     "calls": 1,
+     "input_tokens": 1085,
+     "output_tokens": 25,
+     "cost_usd": "0.00034800",
+     "outcome": "resolved",
+     "before": "EXW",
+     "after": null
+    }
+   ],
+   "extracted": {
+    "buyer": {
+     "value": "Nordwind Mode GmbH",
+     "confidence": 1.0,
+     "evidence": "Nordwind Mode GmbH"
+    },
+    "po_number": {
+     "value": "NW-45098",
+     "confidence": 1.0,
+     "evidence": "PO NW-45098"
+    },
+    "style": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "currency": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "unit_price": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "total_quantity": {
+     "value": 9000,
+     "confidence": 1.0,
+     "evidence": "9,000 pcs"
+    },
+    "delivery_date": {
+     "value": "2026-11-10",
+     "confidence": 0.9,
+     "evidence": "ex-factory by 10 November 2026"
+    },
+    "incoterms": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "port": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "destination_country": {
+     "value": "Germany",
+     "confidence": 0.9,
+     "evidence": "Nordwind Mode GmbH"
+    },
+    "line_items": [
+     {
+      "colour": "white",
+      "sizes": {},
+      "quantity": 9000,
+      "unit_price": null
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "delivery_change",
+    "intents": [
+     "delivery_change"
+    ],
+    "has_po_data": true,
+    "summary": "Buyer requests moving the ex-factory date of PO NW-45098 to 10 November 2026.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 2,
+    "error": null,
+    "flags": [
+     {
+      "severity": "medium",
+      "category": "delivery",
+      "reason": "The previous PO date of 24 Nov 2026 was infeasible: order BP-778455 (8,400 pcs due 20 Nov) left only 4,742 pcs free capacity for this order's 9,000 pcs (shortfall 4,258 pcs).",
+      "evidence": [
+       "E4",
+       "E3",
+       "E6",
+       "E2",
+       "E5"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": "high",
+      "related": [
+       "Feasibility of the requested 10 Nov 2026 date depends on fabric being in-house as stated by Karthik; if fabric lead time applies, only 9 production days would be available vs 10 minimum (E3), but with fabric ready the plan is feasible with 35 days slack (E6).",
+       "Delivery pulled forward by 14 days (2026-11-24 \u2192 2026-11-10): less production time.",
+       "Earliest feasible date for full 9,000 pcs without fabric ready is 17 Nov 2026; partial shipment of 5,100 pcs on 10 Nov with balance 3,900 pcs on 17 Nov is possible."
+      ]
+     }
+    ],
+    "info_checked": 3,
+    "tools": [
+     "find_order (0)",
+     "diff_po_versions (0)",
+     "check_delivery_feasibility (0)",
+     "check_delivery_feasibility (0)",
+     "propose_delivery_options (0)",
+     "check_delivery_feasibility",
+     "check_compliance"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 34.95,
+   "usage": {
+    "nano": {
+     "calls": 3,
+     "cost": "0.00028110",
+     "latency_ms": 11279,
+     "input_tokens": 2269,
+     "output_tokens": 604,
+     "failed": 0
+    },
+    "super": {
+     "calls": 1,
+     "cost": "0.00034800",
+     "latency_ms": 818,
+     "input_tokens": 1085,
+     "output_tokens": 25,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 3,
+     "cost": "0.02405100",
+     "latency_ms": 17650,
+     "input_tokens": 11724,
+     "output_tokens": 4109,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 4,
+     "cost": "0.00062910",
+     "latency_ms": 12097,
+     "input_tokens": 3354,
+     "output_tokens": 629,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 3,
+     "cost": "0.02405100",
+     "latency_ms": 17650,
+     "input_tokens": 11724,
+     "output_tokens": 4109,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_008",
+   "match": null,
+   "score": {
+    "case_id": "case_008",
+    "category_ok": true,
+    "intents_ok": false,
+    "has_po_data_ok": true,
+    "fields": {},
+    "line_items_total": 0,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_008",
+    "category_ok": true,
+    "intents_ok": false,
+    "has_po_data_ok": true,
+    "fields": {},
+    "line_items_total": 0,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_008",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": false,
+   "escalations": [],
+   "extracted": null,
+   "classification": {
+    "category": "sample_or_approval",
+    "intents": [
+     "sample_or_approval",
+     "new_po",
+     "shipment_docs"
+    ],
+    "has_po_data": false,
+    "summary": "Request for three fit samples of romper KK-RS-310 in size 6-12M and inquiry about the status of the August shipment.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "seconds": 1.08,
+   "usage": {
+    "nano": {
+     "calls": 1,
+     "cost": "0.00005388",
+     "latency_ms": 1066,
+     "input_tokens": 534,
+     "output_tokens": 91,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 1,
+     "cost": "0.00005388",
+     "latency_ms": 1066,
+     "input_tokens": 534,
+     "output_tokens": 91,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_009",
+   "match": {
+    "expected": "same order as case_005",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_009",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_009",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_009",
+    "expected": 4,
+    "predicted": 4,
+    "correct": 4,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Harrow & Finch Ltd",
+     "confidence": 1.0,
+     "evidence": "Buying Team, Harrow & Finch Ltd"
+    },
+    "po_number": {
+     "value": "HF/PO/26/3391",
+     "confidence": 1.0,
+     "evidence": "Purchase Order No: HF/PO/26/3391"
+    },
+    "style": {
+     "value": "HF-KL-0932",
+     "confidence": 1.0,
+     "evidence": "Style Ref: HF-KL-0932"
+    },
+    "currency": {
+     "value": "GBP",
+     "confidence": 1.0,
+     "evidence": "Order Currency: GBP"
+    },
+    "unit_price": {
+     "value": "2.80",
+     "confidence": 1.0,
+     "evidence": "Price per unit: \u00a32.80"
+    },
+    "total_quantity": {
+     "value": 6800,
+     "confidence": 1.0,
+     "evidence": "Total units: 6,800"
+    },
+    "delivery_date": {
+     "value": "2027-01-05",
+     "confidence": 1.0,
+     "evidence": "Required ex-factory date: 05/01/2027"
+    },
+    "incoterms": {
+     "value": "CIF",
+     "confidence": 1.0,
+     "evidence": "Delivery terms: CIF Felixstowe"
+    },
+    "port": {
+     "value": "Felixstowe",
+     "confidence": 1.0,
+     "evidence": "Delivery terms: CIF Felixstowe"
+    },
+    "destination_country": {
+     "value": "United Kingdom",
+     "confidence": 1.0,
+     "evidence": "Ship to: Harrow & Finch DC, Leeds, United Kingdom"
+    },
+    "line_items": [
+     {
+      "colour": "Dusty Pink",
+      "sizes": {
+       "2-3Y": 400,
+       "4-5Y": 600,
+       "6-7Y": 800,
+       "8-9Y": 600
+      },
+      "quantity": 2400,
+      "unit_price": null
+     },
+     {
+      "colour": "Sage",
+      "sizes": {
+       "2-3Y": 400,
+       "4-5Y": 600,
+       "6-7Y": 800,
+       "8-9Y": 600
+      },
+      "quantity": 2400,
+      "unit_price": null
+     },
+     {
+      "colour": "Charcoal",
+      "sizes": {
+       "2-3Y": 300,
+       "4-5Y": 500,
+       "6-7Y": 700,
+       "8-9Y": 500
+      },
+      "quantity": 2000,
+      "unit_price": null
+     }
+    ],
+    "po_revision": "1",
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "po_revision",
+    "intents": [
+     "po_revision"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer requests an amendment to PO HF/PO/26/3391 to update the unit price to \u00a32.80 and adjust the size curve while keeping total units and delivery terms unchanged.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [
+    "schedule"
+   ],
+   "predicted_high": [
+    "schedule"
+   ],
+   "agent": {
+    "status": "completed",
+    "rounds": 2,
+    "error": null,
+    "flags": [
+     {
+      "severity": "high",
+      "category": "delivery",
+      "reason": "Current plan infeasible: 6,800 pcs needed but only 3,385 pcs free capacity before 2027-01-05 (3,415 pcs short).",
+      "evidence": [
+       "E3"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     },
+     {
+      "severity": "medium",
+      "category": "price",
+      "reason": "Contract value decreased by 5.1% (\u00a31,020) from \u00a320,060 to \u00a319,040 due to unit price reduction from \u00a32.95 to \u00a32.80.",
+      "evidence": [
+       "E2"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 3,
+    "tools": [
+     "find_order (0)",
+     "diff_po_versions (0)",
+     "check_delivery_feasibility (0)",
+     "propose_delivery_options (0)",
+     "check_compliance",
+     "check_compliance"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 31.13,
+   "usage": {
+    "nano": {
+     "calls": 3,
+     "cost": "0.00039072",
+     "latency_ms": 8037,
+     "input_tokens": 2788,
+     "output_tokens": 931,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 4,
+     "cost": "0.03721000",
+     "latency_ms": 22886,
+     "input_tokens": 22534,
+     "output_tokens": 4892,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 3,
+     "cost": "0.00039072",
+     "latency_ms": 8037,
+     "input_tokens": 2788,
+     "output_tokens": 931,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 4,
+     "cost": "0.03721000",
+     "latency_ms": 22886,
+     "input_tokens": 22534,
+     "output_tokens": 4892,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_010",
+   "match": {
+    "expected": "new order",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_010",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 0,
+    "review_expected": [
+     "po_number"
+    ],
+    "review_flagged": [
+     "po_number"
+    ]
+   },
+   "score_before_escalation": {
+    "case_id": "case_010",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 0,
+    "review_expected": [
+     "po_number"
+    ],
+    "review_flagged": [
+     "po_number"
+    ]
+   },
+   "changes": {
+    "case_id": "case_010",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Kestrel Kids Pty Ltd",
+     "confidence": 1.0,
+     "evidence": "Kestrel Kids Pty Ltd"
+    },
+    "po_number": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "style": {
+     "value": "KK-RS-310",
+     "confidence": 1.0,
+     "evidence": "KK-RS-310"
+    },
+    "currency": {
+     "value": "AUD",
+     "confidence": 1.0,
+     "evidence": "AUD"
+    },
+    "unit_price": {
+     "value": "5.75",
+     "confidence": 1.0,
+     "evidence": "AUD 5.75 each"
+    },
+    "total_quantity": {
+     "value": 3000,
+     "confidence": 1.0,
+     "evidence": "3000 all up"
+    },
+    "delivery_date": {
+     "value": "2026-12-18",
+     "confidence": 1.0,
+     "evidence": "18th Dec (2026 obviously!)"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "FOB Chennai"
+    },
+    "port": {
+     "value": "Chennai",
+     "confidence": 1.0,
+     "evidence": "FOB Chennai"
+    },
+    "destination_country": {
+     "value": "Australia",
+     "confidence": 1.0,
+     "evidence": "Melbourne"
+    },
+    "line_items": [
+     {
+      "colour": "mint",
+      "sizes": {},
+      "quantity": 750,
+      "unit_price": "5.75"
+     },
+     {
+      "colour": "lemon",
+      "sizes": {},
+      "quantity": 750,
+      "unit_price": "5.75"
+     },
+     {
+      "colour": "sky blue",
+      "sizes": {},
+      "quantity": 1500,
+      "unit_price": "5.75"
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants to place a new purchase order for summer rompers with specific styles, quantities, colors, pricing, and a delivery deadline of December 18, 2026.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [
+    "schedule"
+   ],
+   "predicted_high": [
+    "schedule"
+   ],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "high",
+      "category": "delivery",
+      "reason": "Current plan infeasible: 3,000 pcs needed but capacity shortfall of 3,000 pcs before 2026-12-18 (utilisation 152%, slack -21 days). Earliest feasible full-quantity date is 2027-01-30.",
+      "evidence": [
+       "E2",
+       "E3"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 4,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "propose_delivery_options (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 29.69,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00025590",
+     "latency_ms": 10356,
+     "input_tokens": 1653,
+     "output_tokens": 653,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01596300",
+     "latency_ms": 12442,
+     "input_tokens": 7302,
+     "output_tokens": 2887,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 2,
+     "cost": "0.00025590",
+     "latency_ms": 10356,
+     "input_tokens": 1653,
+     "output_tokens": 653,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 2,
+     "cost": "0.01596300",
+     "latency_ms": 12442,
+     "input_tokens": 7302,
+     "output_tokens": 2887,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_011",
+   "match": {
+    "expected": "new order",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_011",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_011",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_011",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Tidewater Lane Inc.",
+     "confidence": 1.0,
+     "evidence": "Tidewater Lane Inc."
+    },
+    "po_number": {
+     "value": "TL-8812",
+     "confidence": 1.0,
+     "evidence": "PO No: TL-8812"
+    },
+    "style": {
+     "value": "TL-HD-07",
+     "confidence": 1.0,
+     "evidence": "Style: TL-HD-07"
+    },
+    "currency": {
+     "value": "USD",
+     "confidence": 1.0,
+     "evidence": "USD 7.20"
+    },
+    "unit_price": {
+     "value": "7.20",
+     "confidence": 1.0,
+     "evidence": "USD 7.20"
+    },
+    "total_quantity": {
+     "value": 2000,
+     "confidence": 1.0,
+     "evidence": "Total quantity: 2,000 pcs"
+    },
+    "delivery_date": {
+     "value": "2027-02-20",
+     "confidence": 1.0,
+     "evidence": "Ex-factory date: February 20, 2027"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Tuticorin"
+    },
+    "port": {
+     "value": "Tuticorin",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Tuticorin"
+    },
+    "destination_country": {
+     "value": "United States",
+     "confidence": 1.0,
+     "evidence": "Ship to: Tidewater Lane DC, Savannah GA, USA"
+    },
+    "line_items": [
+     {
+      "colour": "Ocean Stripe",
+      "sizes": {
+       "S": 150,
+       "M": 250,
+       "L": 250,
+       "XL": 150
+      },
+      "quantity": 800,
+      "unit_price": null
+     },
+     {
+      "colour": "Coral Dot",
+      "sizes": {
+       "S": 100,
+       "M": 200,
+       "L": 200,
+       "XL": 100
+      },
+      "quantity": 600,
+      "unit_price": null
+     },
+     {
+      "colour": "Sand Heather",
+      "sizes": {
+       "S": 100,
+       "M": 200,
+       "L": 200,
+       "XL": 100
+      },
+      "quantity": 600,
+      "unit_price": null
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants confirmation of receipt and the ex-factory date for PO TL-8812 for fleece hoodies.",
+    "confidence": 0.99,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "medium",
+      "category": "capacity",
+      "reason": "Feasible but tight: 85% of free capacity used, 14 days of slack.",
+      "evidence": [
+       "E2"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 3,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 22.65,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00029202",
+     "latency_ms": 6238,
+     "input_tokens": 1887,
+     "output_tokens": 745,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01448800",
+     "latency_ms": 8898,
+     "input_tokens": 7711,
+     "output_tokens": 2259,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 2,
+     "cost": "0.00029202",
+     "latency_ms": 6238,
+     "input_tokens": 1887,
+     "output_tokens": 745,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 2,
+     "cost": "0.01448800",
+     "latency_ms": 8898,
+     "input_tokens": 7711,
+     "output_tokens": 2259,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_014",
+   "match": {
+    "expected": "new order",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_014",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [
+     "po_number"
+    ],
+    "review_flagged": [
+     "po_number"
+    ]
+   },
+   "score_before_escalation": {
+    "case_id": "case_014",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [
+     "po_number"
+    ],
+    "review_flagged": [
+     "po_number",
+     "total_quantity"
+    ]
+   },
+   "changes": {
+    "case_id": "case_014",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [
+    {
+     "field": "total_quantity",
+     "reason": "source_quote_missing",
+     "model": "nvidia/nemotron-3-super-120b-a12b",
+     "calls": 1,
+     "input_tokens": 973,
+     "output_tokens": 57,
+     "cost_usd": "0.00034320",
+     "outcome": "resolved",
+     "before": 1800,
+     "after": 1800
+    },
+    {
+     "field": "line_items",
+     "reason": "size_total_mismatch",
+     "model": "nvidia/nemotron-3-super-120b-a12b",
+     "calls": 1,
+     "input_tokens": 989,
+     "output_tokens": 83,
+     "cost_usd": "0.00037140",
+     "outcome": "resolved",
+     "before": [
+      {
+       "colour": "Oatmeal Marl",
+       "sizes": {
+        "S": 200,
+        "M": 400,
+        "L": 600,
+        "XL": 400,
+        "XXL": 200
+       },
+       "quantity": 900,
+       "unit_price": null
+      },
+      {
+       "colour": "Forest Green",
+       "sizes": {
+        "S": 200,
+        "M": 400,
+        "L": 600,
+        "XL": 400,
+        "XXL": 200
+       },
+       "quantity": 900,
+       "unit_price": null
+      }
+     ],
+     "after": [
+      {
+       "colour": "Oatmeal Marl",
+       "sizes": {},
+       "quantity": 900,
+       "unit_price": null
+      },
+      {
+       "colour": "Forest Green",
+       "sizes": {},
+       "quantity": 900,
+       "unit_price": null
+      }
+     ]
+    }
+   ],
+   "extracted": {
+    "buyer": {
+     "value": "Orchard Row Ltd",
+     "confidence": 1.0,
+     "evidence": "Orchard Row Ltd, Bristol"
+    },
+    "po_number": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "style": {
+     "value": "OR-SW-40",
+     "confidence": 1.0,
+     "evidence": "Style OR-SW-40"
+    },
+    "currency": {
+     "value": "GBP",
+     "confidence": 1.0,
+     "evidence": "GBP"
+    },
+    "unit_price": {
+     "value": "8.90",
+     "confidence": 1.0,
+     "evidence": "GBP 8.90 per piece"
+    },
+    "total_quantity": {
+     "value": 1800,
+     "confidence": 1.0,
+     "evidence": "Oatmeal Marl 900 pcs, Forest Green 900 pcs - 1,800 pcs in total"
+    },
+    "delivery_date": {
+     "value": "2027-03-05",
+     "confidence": 1.0,
+     "evidence": "Ex-factory 5 March 2027"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "FOB Chennai"
+    },
+    "port": {
+     "value": "Chennai",
+     "confidence": 1.0,
+     "evidence": "FOB Chennai"
+    },
+    "destination_country": {
+     "value": "United Kingdom",
+     "confidence": 1.0,
+     "evidence": "for our stores in the UK"
+    },
+    "line_items": [
+     {
+      "colour": "Oatmeal Marl",
+      "sizes": {},
+      "quantity": 900,
+      "unit_price": null
+     },
+     {
+      "colour": "Forest Green",
+      "sizes": {},
+      "quantity": 900,
+      "unit_price": null
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "Book 1,800 crew-neck sweatshirts (Oatmeal Marl and Forest Green) in sizes S-XXL with a 1:2:3:2:1 ratio, priced at GBP 8.90 per piece FOB Chennai, ex-factory on 5 March 2027.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "low",
+      "category": "delivery",
+      "reason": "Current plan feasible: 79% free capacity used, 23 days slack, 89 production days needed vs 112 available.",
+      "evidence": [
+       "E2"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 6,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 24.54,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00025614",
+     "latency_ms": 6031,
+     "input_tokens": 1489,
+     "output_tokens": 695,
+     "failed": 0
+    },
+    "super": {
+     "calls": 2,
+     "cost": "0.00071460",
+     "latency_ms": 1829,
+     "input_tokens": 1962,
+     "output_tokens": 140,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01246200",
+     "latency_ms": 8469,
+     "input_tokens": 7269,
+     "output_tokens": 1731,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 4,
+     "cost": "0.00097074",
+     "latency_ms": 7860,
+     "input_tokens": 3451,
+     "output_tokens": 835,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 2,
+     "cost": "0.01246200",
+     "latency_ms": 8469,
+     "input_tokens": 7269,
+     "output_tokens": 1731,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_020",
+   "match": {
+    "expected": "new order",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_020",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_020",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_020",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Hinoki Works Co., Ltd.",
+     "confidence": 1.0,
+     "evidence": "Hinoki Works Co., Ltd., Osaka"
+    },
+    "po_number": {
+     "value": "HW-26-0193",
+     "confidence": 1.0,
+     "evidence": "Purchase Order No. HW-26-0193"
+    },
+    "style": {
+     "value": "HW-TE-88",
+     "confidence": 1.0,
+     "evidence": "Style: HW-TE-88 Garment-dyed tee, 100% cotton slub"
+    },
+    "currency": {
+     "value": "JPY",
+     "confidence": 1.0,
+     "evidence": "Unit price: JPY 610"
+    },
+    "unit_price": {
+     "value": "610",
+     "confidence": 1.0,
+     "evidence": "Unit price: JPY 610"
+    },
+    "total_quantity": {
+     "value": 3000,
+     "confidence": 1.0,
+     "evidence": "Total quantity: 3,000 pcs"
+    },
+    "delivery_date": {
+     "value": "2027-03-12",
+     "confidence": 1.0,
+     "evidence": "Ex-factory: 2027/03/12"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Chennai"
+    },
+    "port": {
+     "value": "Chennai",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Chennai"
+    },
+    "destination_country": {
+     "value": "Japan",
+     "confidence": 1.0,
+     "evidence": "Destination: Osaka, Japan"
+    },
+    "line_items": [
+     {
+      "colour": "Indigo Fade",
+      "sizes": {
+       "S": 300,
+       "M": 500,
+       "L": 500,
+       "XL": 200
+      },
+      "quantity": 1500,
+      "unit_price": null
+     },
+     {
+      "colour": "Kinari White",
+      "sizes": {
+       "S": 300,
+       "M": 500,
+       "L": 500,
+       "XL": 200
+      },
+      "quantity": 1500,
+      "unit_price": null
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer is placing a new purchase order for 3,000 indigo tees.",
+    "confidence": 0.98,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [],
+    "info_checked": 4,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 26.03,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00027138",
+     "latency_ms": 6193,
+     "input_tokens": 1763,
+     "output_tokens": 690,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01443100",
+     "latency_ms": 10955,
+     "input_tokens": 7588,
+     "output_tokens": 2281,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 2,
+     "cost": "0.00027138",
+     "latency_ms": 6193,
+     "input_tokens": 1763,
+     "output_tokens": 690,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 2,
+     "cost": "0.01443100",
+     "latency_ms": 10955,
+     "input_tokens": 7588,
+     "output_tokens": 2281,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_017",
+   "match": {
+    "expected": "same order as case_003",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_017",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 1,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_017",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 1,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_017",
+    "expected": 3,
+    "predicted": 5,
+    "correct": 2,
+    "missed": [
+     "line_items.rouge.quantity"
+    ],
+    "unexpected": [
+     "line_items.blanc",
+     "line_items.marine",
+     "line_items.rouge.quantity"
+    ]
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Maison Clairet SAS",
+     "confidence": 1.0,
+     "evidence": "Maison Clairet SAS"
+    },
+    "po_number": {
+     "value": "MC-2026-0871",
+     "confidence": 1.0,
+     "evidence": "MC-2026-0871"
+    },
+    "style": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "currency": {
+     "value": "EUR",
+     "confidence": 1.0,
+     "evidence": "EUR"
+    },
+    "unit_price": {
+     "value": "6.55",
+     "confidence": 1.0,
+     "evidence": "6,55"
+    },
+    "total_quantity": {
+     "value": 5500,
+     "confidence": 1.0,
+     "evidence": "5.500 pieces"
+    },
+    "delivery_date": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "incoterms": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "port": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "destination_country": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "line_items": [
+     {
+      "colour": "Rouge",
+      "sizes": {},
+      "quantity": 5500,
+      "unit_price": "6.55"
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "po_revision",
+    "intents": [
+     "po_revision"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants to reduce the order quantity of Rouge colour from 1,500 to 1,000 pieces and accept a new unit price of EUR 6.55.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [
+    "schedule"
+   ],
+   "predicted_high": [
+    "schedule"
+   ],
+   "agent": {
+    "status": "completed",
+    "rounds": 3,
+    "error": null,
+    "flags": [
+     {
+      "severity": "high",
+      "category": "delivery",
+      "reason": "Current plan infeasible: 5,500 pcs needed by 2027-01-20 but 0 pcs free capacity remain (5,500 pcs short).",
+      "evidence": [
+       "E3",
+       "E5"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     },
+     {
+      "severity": "high",
+      "category": "capacity",
+      "reason": "Factory utilisation at 124.4% for the delivery window; production needs 81 days but only 65 days available (slack -16 days).",
+      "evidence": [
+       "E3"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     },
+     {
+      "severity": "medium",
+      "category": "price",
+      "reason": "Unit price increased from EUR 6.40 to 6.55 (+2.3%); contract value decreased 6.2% (EUR 2,375) due to quantity cut.",
+      "evidence": [
+       "E2"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     },
+     {
+      "severity": "medium",
+      "category": "quantity",
+      "reason": "Rouge quantity in stored order version 2 shows 5,500 pcs, but buyer email states 1,000 pcs (total 5,500). Data mismatch needs clarification.",
+      "evidence": [
+       "E1",
+       "E2"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 4,
+    "tools": [
+     "find_order (0)",
+     "diff_po_versions (0)",
+     "check_delivery_feasibility (0)",
+     "check_delivery_feasibility (0)",
+     "propose_delivery_options (0)",
+     "check_compliance",
+     "lookup_buyer",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 28.29,
+   "usage": {
+    "nano": {
+     "calls": 3,
+     "cost": "0.00024594",
+     "latency_ms": 5192,
+     "input_tokens": 1759,
+     "output_tokens": 585,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 5,
+     "cost": "0.03976600",
+     "latency_ms": 18583,
+     "input_tokens": 27925,
+     "output_tokens": 3947,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 3,
+     "cost": "0.00024594",
+     "latency_ms": 5192,
+     "input_tokens": 1759,
+     "output_tokens": 585,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 5,
+     "cost": "0.03976600",
+     "latency_ms": 18583,
+     "input_tokens": 27925,
+     "output_tokens": 3947,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_012",
+   "match": {
+    "expected": "same order as case_011",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_012",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_012",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_012",
+    "expected": 2,
+    "predicted": 2,
+    "correct": 2,
+    "missed": [],
+    "unexpected": []
+   },
+   "po_revision": {
+    "expected": "A",
+    "extracted": "A"
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "TIDEWATER LANE INC.",
+     "confidence": 1.0,
+     "evidence": "TIDEWATER LANE INC."
+    },
+    "po_number": {
+     "value": "TL-8812",
+     "confidence": 1.0,
+     "evidence": "PO No: TL-8812 Rev A"
+    },
+    "style": {
+     "value": "TL-HD-07",
+     "confidence": 1.0,
+     "evidence": "Style: TL-HD-07"
+    },
+    "currency": {
+     "value": "USD",
+     "confidence": 1.0,
+     "evidence": "USD"
+    },
+    "unit_price": {
+     "value": "7.20",
+     "confidence": 1.0,
+     "evidence": "Unit price: USD 7.20"
+    },
+    "total_quantity": {
+     "value": 2400,
+     "confidence": 1.0,
+     "evidence": "Total quantity: 2,400 pcs"
+    },
+    "delivery_date": {
+     "value": "2027-02-20",
+     "confidence": 1.0,
+     "evidence": "Ex-factory date: February 20, 2027"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Tuticorin"
+    },
+    "port": {
+     "value": "Tuticorin",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Tuticorin"
+    },
+    "destination_country": {
+     "value": "United States",
+     "confidence": 1.0,
+     "evidence": "Ship to: Tidewater Lane DC, Savannah GA, USA"
+    },
+    "line_items": [
+     {
+      "colour": "Ocean Stripe",
+      "sizes": {
+       "S": 225,
+       "M": 375,
+       "L": 375,
+       "XL": 225
+      },
+      "quantity": 1200,
+      "unit_price": null
+     },
+     {
+      "colour": "Coral Dot",
+      "sizes": {
+       "S": 100,
+       "M": 200,
+       "L": 200,
+       "XL": 100
+      },
+      "quantity": 600,
+      "unit_price": null
+     },
+     {
+      "colour": "Sand Heather",
+      "sizes": {
+       "S": 100,
+       "M": 200,
+       "L": 200,
+       "XL": 100
+      },
+      "quantity": 600,
+      "unit_price": null
+     }
+    ],
+    "po_revision": "A",
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "po_revision",
+    "intents": [
+     "po_revision"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer requests a revision to PO TL-8812 Rev A, increasing the order quantity to 1,200 pcs for Ocean Stripe while keeping other details unchanged.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [
+    "value"
+   ],
+   "predicted_high": [
+    "value"
+   ],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "high",
+      "category": "price",
+      "reason": "Contract value increased 20% (+USD 2,880) from USD 14,400 to USD 17,280, exceeding the 10% threshold.",
+      "evidence": [
+       "E2"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     },
+     {
+      "severity": "medium",
+      "category": "capacity",
+      "reason": "Current plan uses 90% of free capacity (8,085 pcs left in window) with only 9 days slack; any further increase or delay risks infeasibility.",
+      "evidence": [
+       "E3"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 5,
+    "tools": [
+     "find_order (0)",
+     "diff_po_versions (0)",
+     "check_delivery_feasibility (0)",
+     "check_delivery_feasibility (0)",
+     "lookup_buyer",
+     "check_compliance"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 24.2,
+   "usage": {
+    "nano": {
+     "calls": 3,
+     "cost": "0.00034416",
+     "latency_ms": 7449,
+     "input_tokens": 2428,
+     "output_tokens": 827,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01659300",
+     "latency_ms": 11454,
+     "input_tokens": 9702,
+     "output_tokens": 2297,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 3,
+     "cost": "0.00034416",
+     "latency_ms": 7449,
+     "input_tokens": 2428,
+     "output_tokens": 827,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 2,
+     "cost": "0.01659300",
+     "latency_ms": 11454,
+     "input_tokens": 9702,
+     "output_tokens": 2297,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_018",
+   "match": {
+    "expected": "new order",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_018",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_018",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_018",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Brunnhof Sport GmbH",
+     "confidence": 1.0,
+     "evidence": "Einkauf, Brunnhof Sport GmbH"
+    },
+    "po_number": {
+     "value": "BS-26-0442",
+     "confidence": 1.0,
+     "evidence": "BESTELLUNG Nr.: BS-26-0442"
+    },
+    "style": {
+     "value": "BS-TR-12",
+     "confidence": 1.0,
+     "evidence": "Artikel: BS-TR-12 Trainingsshirt"
+    },
+    "currency": {
+     "value": "EUR",
+     "confidence": 1.0,
+     "evidence": "Einzelpreis: EUR 9,80"
+    },
+    "unit_price": {
+     "value": "9.80",
+     "confidence": 1.0,
+     "evidence": "Einzelpreis: EUR 9,80"
+    },
+    "total_quantity": {
+     "value": 2400,
+     "confidence": 1.0,
+     "evidence": "Gesamtmenge: 2.400 St\u00fcck"
+    },
+    "delivery_date": {
+     "value": "2027-02-15",
+     "confidence": 1.0,
+     "evidence": "Liefertermin ab Werk: 15.02.2027"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Lieferbedingung: FOB Tuticorin"
+    },
+    "port": {
+     "value": "Tuticorin",
+     "confidence": 1.0,
+     "evidence": "Lieferbedingung: FOB Tuticorin"
+    },
+    "destination_country": {
+     "value": "Germany",
+     "confidence": 1.0,
+     "evidence": "Lieferadresse: Lager Rosenheim, Deutschland"
+    },
+    "line_items": [
+     {
+      "colour": "Tannengr\u00fcn",
+      "sizes": {
+       "S": 200,
+       "M": 400,
+       "L": 400,
+       "XL": 200
+      },
+      "quantity": 1200,
+      "unit_price": null
+     },
+     {
+      "colour": "Anthrazit",
+      "sizes": {
+       "S": 200,
+       "M": 400,
+       "L": 400,
+       "XL": 200
+      },
+      "quantity": 1200,
+      "unit_price": null
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants confirmation of the new purchase order BS-26-0442 for training tops.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "medium",
+      "category": "delivery",
+      "reason": "Current plan feasible but tight: 96% of free capacity used, only 3 days slack (86 production days needed vs 89 available).",
+      "evidence": [
+       "E2"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 3,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "lookup_buyer",
+     "check_compliance"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 25.64,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00027918",
+     "latency_ms": 4983,
+     "input_tokens": 1833,
+     "output_tokens": 705,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01213300",
+     "latency_ms": 9039,
+     "input_tokens": 7729,
+     "output_tokens": 1468,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 2,
+     "cost": "0.00027918",
+     "latency_ms": 4983,
+     "input_tokens": 1833,
+     "output_tokens": 705,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 2,
+     "cost": "0.01213300",
+     "latency_ms": 9039,
+     "input_tokens": 7729,
+     "output_tokens": 1468,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_019",
+   "match": {
+    "expected": "new order",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_019",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": [
+     "total_quantity"
+    ]
+   },
+   "score_before_escalation": {
+    "case_id": "case_019",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 1,
+    "review_expected": [],
+    "review_flagged": [
+     "total_quantity"
+    ]
+   },
+   "changes": {
+    "case_id": "case_019",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [
+    {
+     "field": "line_items",
+     "reason": "size_total_mismatch",
+     "model": "nvidia/nemotron-3-super-120b-a12b",
+     "calls": 1,
+     "input_tokens": 1165,
+     "output_tokens": 162,
+     "cost_usd": "0.00049530",
+     "outcome": "resolved",
+     "before": [
+      {
+       "colour": "Azul Marino",
+       "sizes": {
+        "S": 300,
+        "M": 500,
+        "L": 500,
+        "XL": 200
+       },
+       "quantity": 1000,
+       "unit_price": null
+      },
+      {
+       "colour": "Blanco Roto",
+       "sizes": {
+        "S": 200,
+        "M": 400,
+        "L": 400,
+        "XL": 100
+       },
+       "quantity": 1100,
+       "unit_price": null
+      }
+     ],
+     "after": [
+      {
+       "colour": "Azul Marino",
+       "sizes": {
+        "S": 300,
+        "M": 500,
+        "L": 500,
+        "XL": 200
+       },
+       "quantity": 1500,
+       "unit_price": null
+      },
+      {
+       "colour": "Blanco Roto",
+       "sizes": {
+        "S": 200,
+        "M": 400,
+        "L": 400,
+        "XL": 100
+       },
+       "quantity": 1100,
+       "unit_price": null
+      }
+     ]
+    }
+   ],
+   "extracted": {
+    "buyer": {
+     "value": "Marisma Moda S.A.",
+     "confidence": 1.0,
+     "evidence": "Compras, Marisma Moda S.A., Valencia"
+    },
+    "po_number": {
+     "value": "MRS/26/0417",
+     "confidence": 1.0,
+     "evidence": "Pedido MRS/26/0417"
+    },
+    "style": {
+     "value": "MRS-T-205",
+     "confidence": 1.0,
+     "evidence": "Modelo: MRS-T-205 Camiseta manga corta, algod\u00f3n org\u00e1nico 160 g"
+    },
+    "currency": {
+     "value": "EUR",
+     "confidence": 1.0,
+     "evidence": "Precio unitario: EUR 5,45"
+    },
+    "unit_price": {
+     "value": "5.45",
+     "confidence": 1.0,
+     "evidence": "Precio unitario: EUR 5,45"
+    },
+    "total_quantity": {
+     "value": 2600,
+     "confidence": 0.4,
+     "evidence": "Cantidad total: 2.600 unidades"
+    },
+    "delivery_date": {
+     "value": "2027-02-26",
+     "confidence": 1.0,
+     "evidence": "Fecha de salida de f\u00e1brica: 26/02/2027"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Condiciones: FOB Chennai"
+    },
+    "port": {
+     "value": "Chennai",
+     "confidence": 1.0,
+     "evidence": "Condiciones: FOB Chennai"
+    },
+    "destination_country": {
+     "value": "Spain",
+     "confidence": 1.0,
+     "evidence": "Destino: Valencia, Espa\u00f1a"
+    },
+    "line_items": [
+     {
+      "colour": "Azul Marino",
+      "sizes": {
+       "S": 300,
+       "M": 500,
+       "L": 500,
+       "XL": 200
+      },
+      "quantity": 1500,
+      "unit_price": null
+     },
+     {
+      "colour": "Blanco Roto",
+      "sizes": {
+       "S": 200,
+       "M": 400,
+       "L": 400,
+       "XL": 100
+      },
+      "quantity": 1100,
+      "unit_price": null
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants confirmation of the factory's shipment date for PO MRS/26/0417.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "medium",
+      "category": "capacity",
+      "reason": "Delivery feasible but tight: 94.7% capacity utilisation in the production window, only 5 days of slack (94 production days needed vs 99 available).",
+      "evidence": [
+       "E2"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     },
+     {
+      "severity": "low",
+      "category": "data_quality",
+      "reason": "Extracted total_quantity confidence 0.40 (below 0.70 threshold), though the PDF shows 2,600 units matching the stored order.",
+      "evidence": [
+       "E1"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 5,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 20.73,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00027990",
+     "latency_ms": 4877,
+     "input_tokens": 1841,
+     "output_tokens": 706,
+     "failed": 0
+    },
+    "super": {
+     "calls": 1,
+     "cost": "0.00049530",
+     "latency_ms": 953,
+     "input_tokens": 1165,
+     "output_tokens": 162,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01327000",
+     "latency_ms": 8032,
+     "input_tokens": 7657,
+     "output_tokens": 1871,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 3,
+     "cost": "0.00077520",
+     "latency_ms": 5830,
+     "input_tokens": 3006,
+     "output_tokens": 868,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 2,
+     "cost": "0.01327000",
+     "latency_ms": 8032,
+     "input_tokens": 7657,
+     "output_tokens": 1871,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_013",
+   "match": {
+    "expected": "same order as case_012",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_013",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 0,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_013",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "po_number": false,
+     "style": false,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": false,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 0,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": [
+     "incoterms",
+     "po_number"
+    ]
+   },
+   "changes": {
+    "case_id": "case_013",
+    "expected": 1,
+    "predicted": 1,
+    "correct": 1,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [
+    {
+     "field": "incoterms",
+     "reason": "source_quote_missing",
+     "model": "nvidia/nemotron-3-super-120b-a12b",
+     "calls": 1,
+     "input_tokens": 890,
+     "output_tokens": 25,
+     "cost_usd": "0.00028950",
+     "outcome": "resolved",
+     "before": "EXW",
+     "after": null
+    }
+   ],
+   "extracted": {
+    "buyer": {
+     "value": "Tidewater Lane",
+     "confidence": 0.95,
+     "evidence": "From: Dana Whitlock <dana.whitlock@tidewaterlane.example>"
+    },
+    "po_number": {
+     "value": "TL-8812",
+     "confidence": 1.0,
+     "evidence": "TL-8812 hoodies - ex-factory"
+    },
+    "style": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "currency": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "unit_price": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "total_quantity": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "delivery_date": {
+     "value": "2027-02-06",
+     "confidence": 0.95,
+     "evidence": "bring the ex-factory forward to 6 February 2027"
+    },
+    "incoterms": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "port": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "destination_country": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "line_items": [
+     {
+      "colour": null,
+      "sizes": {},
+      "quantity": null,
+      "unit_price": null
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "delivery_change",
+    "intents": [
+     "delivery_change"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants to move the ex-factory date for TL-8812 hoodies to 6 February 2027.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [
+    "schedule"
+   ],
+   "predicted_high": [
+    "schedule"
+   ],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "high",
+      "category": "delivery",
+      "reason": "Current plan (6 Feb 2027) is infeasible: 2,400 pcs needed but 0 free capacity remains, utilisation 109%, shortfall 2,400 pcs, 8 days of negative slack.",
+      "evidence": [
+       "E3",
+       "E2",
+       "E4",
+       "E5"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": [
+       "Delivery pulled forward by 14 days (20 Feb \u2192 6 Feb) turns a previously tight but feasible plan into an infeasible one.",
+       "Previous plan (20 Feb 2027) was feasible but tight: 97% free capacity used, only 2 days slack.",
+       "Earliest feasible date for full 2,400 pcs is 14 Feb 2027 \u2014 8 days after the buyer's requested date."
+      ]
+     }
+    ],
+    "info_checked": 2,
+    "tools": [
+     "find_order (0)",
+     "diff_po_versions (0)",
+     "check_delivery_feasibility (0)",
+     "check_delivery_feasibility (0)",
+     "propose_delivery_options (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 15.76,
+   "usage": {
+    "nano": {
+     "calls": 3,
+     "cost": "0.00023832",
+     "latency_ms": 3835,
+     "input_tokens": 1684,
+     "output_tokens": 572,
+     "failed": 0
+    },
+    "super": {
+     "calls": 1,
+     "cost": "0.00028950",
+     "latency_ms": 757,
+     "input_tokens": 890,
+     "output_tokens": 25,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01426700",
+     "latency_ms": 6852,
+     "input_tokens": 8951,
+     "output_tokens": 1772,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 4,
+     "cost": "0.00052782",
+     "latency_ms": 4592,
+     "input_tokens": 2574,
+     "output_tokens": 597,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 2,
+     "cost": "0.01426700",
+     "latency_ms": 6852,
+     "input_tokens": 8951,
+     "output_tokens": 1772,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_015",
+   "match": {
+    "expected": "same order as case_014",
+    "ok": false,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_015",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": false,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_015",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": false,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_015",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "ORCHARD ROW LTD",
+     "confidence": 1.0,
+     "evidence": "ORCHARD ROW LTD"
+    },
+    "po_number": {
+     "value": "OR-5521",
+     "confidence": 1.0,
+     "evidence": "OR-5521"
+    },
+    "style": {
+     "value": "OR-SW-40 Crew-neck sweatshirt, brushed back fleece 300 gsm",
+     "confidence": 1.0,
+     "evidence": "Style: OR-SW-40 Crew-neck sweatshirt, brushed back fleece 300 gsm"
+    },
+    "currency": {
+     "value": "GBP",
+     "confidence": 1.0,
+     "evidence": "GBP"
+    },
+    "unit_price": {
+     "value": "8.90",
+     "confidence": 1.0,
+     "evidence": "Price: GBP 8.90 / pc"
+    },
+    "total_quantity": {
+     "value": 1800,
+     "confidence": 1.0,
+     "evidence": "Total: 1,800 pcs"
+    },
+    "delivery_date": {
+     "value": "2027-03-05",
+     "confidence": 1.0,
+     "evidence": "Ex-factory: 05/03/2027"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Incoterm: FOB Chennai"
+    },
+    "port": {
+     "value": "Chennai",
+     "confidence": 1.0,
+     "evidence": "Incoterm: FOB Chennai"
+    },
+    "destination_country": {
+     "value": "United Kingdom",
+     "confidence": 1.0,
+     "evidence": "Destination: Bristol, United Kingdom"
+    },
+    "line_items": [
+     {
+      "colour": "Oatmeal Marl",
+      "sizes": {
+       "S": 100,
+       "M": 200,
+       "L": 300,
+       "XL": 200,
+       "XXL": 100
+      },
+      "quantity": 900,
+      "unit_price": null
+     },
+     {
+      "colour": "Forest Green",
+      "sizes": {
+       "S": 100,
+       "M": 200,
+       "L": 300,
+       "XL": 200,
+       "XXL": 100
+      },
+      "quantity": 900,
+      "unit_price": null
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants to place a new purchase order for 1,800 crew-neck sweatshirts at GBP 8.90 each, FOB Chennai, with delivery ex-factory on 05/03/2027.",
+    "confidence": 0.98,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "medium",
+      "category": "capacity",
+      "reason": "Feasible but tight: 98% of free capacity used, only 1 day of slack for 1,800 pcs due 2027-03-05.",
+      "evidence": [
+       "E2"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 4,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 12.97,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00028410",
+     "latency_ms": 4379,
+     "input_tokens": 1743,
+     "output_tokens": 748,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01494000",
+     "latency_ms": 8446,
+     "input_tokens": 8001,
+     "output_tokens": 2313,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 2,
+     "cost": "0.00028410",
+     "latency_ms": 4379,
+     "input_tokens": 1743,
+     "output_tokens": 748,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 2,
+     "cost": "0.01494000",
+     "latency_ms": 8446,
+     "input_tokens": 8001,
+     "output_tokens": 2313,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_016",
+   "match": {
+    "expected": "same order as case_015",
+    "ok": false,
+    "asked": true,
+    "oracle_answer": false,
+    "score": 0.55
+   },
+   "score": {
+    "case_id": "case_016",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": false,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 1,
+    "line_items_correct": 1,
+    "review_expected": [],
+    "review_flagged": [
+     "currency",
+     "delivery_date",
+     "destination_country",
+     "incoterms",
+     "po_number",
+     "port",
+     "unit_price"
+    ]
+   },
+   "score_before_escalation": {
+    "case_id": "case_016",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": false,
+     "unit_price": true,
+     "total_quantity": false,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 1,
+    "line_items_correct": 1,
+    "review_expected": [],
+    "review_flagged": [
+     "currency",
+     "delivery_date",
+     "destination_country",
+     "incoterms",
+     "po_number",
+     "port",
+     "unit_price"
+    ]
+   },
+   "changes": {
+    "case_id": "case_016",
+    "expected": 2,
+    "predicted": 1,
+    "correct": 0,
+    "missed": [
+     "line_items.heather marl",
+     "total_quantity"
+    ],
+    "unexpected": [
+     "total_quantity"
+    ]
+   },
+   "has_extraction": true,
+   "escalations": [
+    {
+     "field": "currency",
+     "reason": "source_quote_missing",
+     "model": "nvidia/nemotron-3-super-120b-a12b",
+     "calls": 1,
+     "input_tokens": 860,
+     "output_tokens": 22,
+     "cost_usd": "0.00027780",
+     "outcome": "resolved",
+     "before": "USD",
+     "after": null
+    }
+   ],
+   "extracted": {
+    "buyer": {
+     "value": "Orchard Row Ltd",
+     "confidence": 1.0,
+     "evidence": "Orchard Row Ltd"
+    },
+    "po_number": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "style": {
+     "value": "OR-SW-40",
+     "confidence": 1.0,
+     "evidence": "OR-SW-40"
+    },
+    "currency": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "unit_price": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "total_quantity": {
+     "value": 300,
+     "confidence": 1.0,
+     "evidence": "300 pcs"
+    },
+    "delivery_date": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "incoterms": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "port": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "destination_country": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "line_items": [
+     {
+      "colour": "Heather Marl",
+      "sizes": {},
+      "quantity": 300,
+      "unit_price": null
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "po_revision",
+    "intents": [
+     "po_revision"
+    ],
+    "has_po_data": true,
+    "summary": "Add Heather Marl colour to the existing PO for 300 sweatshirts.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [
+    "value"
+   ],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 0,
+    "error": null,
+    "flags": [
+     {
+      "severity": "medium",
+      "category": "data_quality",
+      "reason": "Critical order fields missing: delivery_date, destination_country, currency, unit_price, incoterms, port, po_number (all null in order version 2).",
+      "evidence": [
+       "E1"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 2,
+    "tools": [
+     "find_order (0)",
+     "diff_po_versions (0)"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 11.7,
+   "usage": {
+    "nano": {
+     "calls": 3,
+     "cost": "0.00022008",
+     "latency_ms": 4467,
+     "input_tokens": 1612,
+     "output_tokens": 514,
+     "failed": 0
+    },
+    "super": {
+     "calls": 1,
+     "cost": "0.00027780",
+     "latency_ms": 573,
+     "input_tokens": 860,
+     "output_tokens": 22,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 1,
+     "cost": "0.00752000",
+     "latency_ms": 6497,
+     "input_tokens": 2267,
+     "output_tokens": 1751,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 4,
+     "cost": "0.00049788",
+     "latency_ms": 5040,
+     "input_tokens": 2472,
+     "output_tokens": 536,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 1,
+     "cost": "0.00752000",
+     "latency_ms": 6497,
+     "input_tokens": 2267,
+     "output_tokens": 1751,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_021",
+   "match": {
+    "expected": "same order as case_020",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_021",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": false,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_021",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": false,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_021",
+    "expected": 1,
+    "predicted": 2,
+    "correct": 1,
+    "missed": [],
+    "unexpected": [
+     "style"
+    ]
+   },
+   "po_revision": {
+    "expected": "1",
+    "extracted": "1"
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Hinoki Works Co., Ltd.",
+     "confidence": 0.9,
+     "evidence": "HINOKI WORKS CO., LTD."
+    },
+    "po_number": {
+     "value": "HW-26-0193",
+     "confidence": 1.0,
+     "evidence": "PURCHASE ORDER No. HW-26-0193 Revision 1"
+    },
+    "style": {
+     "value": "HW-TE-88 Garment-dyed tee, 100% cotton slub",
+     "confidence": 1.0,
+     "evidence": "Style: HW-TE-88 Garment-dyed tee, 100% cotton slub"
+    },
+    "currency": {
+     "value": "JPY",
+     "confidence": 1.0,
+     "evidence": "Unit price: JPY 590"
+    },
+    "unit_price": {
+     "value": "590",
+     "confidence": 1.0,
+     "evidence": "Unit price: JPY 590"
+    },
+    "total_quantity": {
+     "value": 3000,
+     "confidence": 1.0,
+     "evidence": "Total quantity: 3,000 pcs"
+    },
+    "delivery_date": {
+     "value": "2027-03-12",
+     "confidence": 0.9,
+     "evidence": "Ex-factory: 2027/03/12"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Chennai"
+    },
+    "port": {
+     "value": "Chennai",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Chennai"
+    },
+    "destination_country": {
+     "value": "Japan",
+     "confidence": 1.0,
+     "evidence": "Destination: Osaka, Japan"
+    },
+    "line_items": [
+     {
+      "colour": "Indigo Fade",
+      "sizes": {
+       "S": 300,
+       "M": 500,
+       "L": 500,
+       "XL": 200
+      },
+      "quantity": 1500,
+      "unit_price": null
+     },
+     {
+      "colour": "Kinari White",
+      "sizes": {
+       "S": 300,
+       "M": 500,
+       "L": 500,
+       "XL": 200
+      },
+      "quantity": 1500,
+      "unit_price": null
+     }
+    ],
+    "po_revision": "1",
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "po_revision",
+    "intents": [
+     "po_revision"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer requests a price revision to JPY 590 per unit and confirms the updated PO details.",
+    "confidence": 0.98,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [
+    "schedule"
+   ],
+   "agent": {
+    "status": "completed",
+    "rounds": 2,
+    "error": null,
+    "flags": [
+     {
+      "severity": "high",
+      "category": "delivery",
+      "reason": "Current plan infeasible: 3,000 pcs needed but only 2,800 pcs of free capacity remain before 2027-03-12 (200 pcs short).",
+      "evidence": [
+       "E3",
+       "E4"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     },
+     {
+      "severity": "medium",
+      "category": "price",
+      "reason": "Unit price reduced from JPY 610 to JPY 590, contract value decreased by JPY 60,000 (3.3%).",
+      "evidence": [
+       "E2"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 2,
+    "tools": [
+     "find_order (0)",
+     "diff_po_versions (0)",
+     "check_delivery_feasibility (0)",
+     "propose_delivery_options (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 27.68,
+   "usage": {
+    "nano": {
+     "calls": 3,
+     "cost": "0.00032874",
+     "latency_ms": 6448,
+     "input_tokens": 2347,
+     "output_tokens": 783,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 4,
+     "cost": "0.03396500",
+     "latency_ms": 21051,
+     "input_tokens": 20327,
+     "output_tokens": 4546,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 3,
+     "cost": "0.00032874",
+     "latency_ms": 6448,
+     "input_tokens": 2347,
+     "output_tokens": 783,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 4,
+     "cost": "0.03396500",
+     "latency_ms": 21051,
+     "input_tokens": 20327,
+     "output_tokens": 4546,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_022",
+   "match": {
+    "expected": "new order",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_022",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_022",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 3,
+    "line_items_correct": 3,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_022",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Pinecrest Supply Co.",
+     "confidence": 1.0,
+     "evidence": "Product Development, Pinecrest Supply Co., Portland OR"
+    },
+    "po_number": {
+     "value": "PCS-4410",
+     "confidence": 1.0,
+     "evidence": "PO #: PCS-4410"
+    },
+    "style": {
+     "value": "PCS-CR-21",
+     "confidence": 1.0,
+     "evidence": "Style: PCS-CR-21  Crew neck tee, 100% combed cotton, 180 gsm"
+    },
+    "currency": {
+     "value": "USD",
+     "confidence": 1.0,
+     "evidence": "Unit price: USD 6.15"
+    },
+    "unit_price": {
+     "value": "6.15",
+     "confidence": 1.0,
+     "evidence": "Unit price: USD 6.15"
+    },
+    "total_quantity": {
+     "value": 1800,
+     "confidence": 1.0,
+     "evidence": "Total quantity: 1,800 pcs"
+    },
+    "delivery_date": {
+     "value": "2027-04-05",
+     "confidence": 1.0,
+     "evidence": "Ship Date (Ex-Factory): 04/05/2027"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Chennai"
+    },
+    "port": {
+     "value": "Chennai",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Chennai"
+    },
+    "destination_country": {
+     "value": "United States",
+     "confidence": 1.0,
+     "evidence": "Ship to: Pinecrest DC, Portland, OR, USA"
+    },
+    "line_items": [
+     {
+      "colour": "Heather Charcoal",
+      "sizes": {
+       "S": 100,
+       "M": 250,
+       "L": 250,
+       "XL": 100
+      },
+      "quantity": 700,
+      "unit_price": null
+     },
+     {
+      "colour": "Mustard Seed",
+      "sizes": {
+       "S": 80,
+       "M": 170,
+       "L": 170,
+       "XL": 80
+      },
+      "quantity": 500,
+      "unit_price": null
+     },
+     {
+      "colour": "Bone",
+      "sizes": {
+       "S": 100,
+       "M": 200,
+       "L": 200,
+       "XL": 100
+      },
+      "quantity": 600,
+      "unit_price": null
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants confirmation of the attached purchase order for crew tees.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 2,
+    "error": null,
+    "flags": [
+     {
+      "severity": "medium",
+      "category": "delivery",
+      "reason": "Feasible but tight: 86% of free capacity used, only 17 days of slack before the 2027-04-05 ship date.",
+      "evidence": [
+       "E2"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 4,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 21.85,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00029418",
+     "latency_ms": 6004,
+     "input_tokens": 1847,
+     "output_tokens": 764,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 3,
+     "cost": "0.01707900",
+     "latency_ms": 7865,
+     "input_tokens": 11928,
+     "output_tokens": 1717,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 2,
+     "cost": "0.00029418",
+     "latency_ms": 6004,
+     "input_tokens": 1847,
+     "output_tokens": 764,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 3,
+     "cost": "0.01707900",
+     "latency_ms": 7865,
+     "input_tokens": 11928,
+     "output_tokens": 1717,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_023",
+   "match": {
+    "expected": "new order",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_023",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_023",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": [
+     "po_number"
+    ]
+   },
+   "changes": {
+    "case_id": "case_023",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [
+    {
+     "field": "po_number",
+     "reason": "source_quote_missing",
+     "model": "nvidia/nemotron-3-super-120b-a12b",
+     "calls": 1,
+     "input_tokens": 1114,
+     "output_tokens": 45,
+     "cost_usd": "0.00037470",
+     "outcome": "resolved",
+     "before": "LH-55120",
+     "after": "LH-55120"
+    }
+   ],
+   "extracted": {
+    "buyer": {
+     "value": "Haus Lindqvist GmbH",
+     "confidence": 1.0,
+     "evidence": "Haus Lindqvist GmbH, Hamburg"
+    },
+    "po_number": {
+     "value": "LH-55120",
+     "confidence": 1.0,
+     "evidence": "BESTELLUNG Nr.: LH-55120"
+    },
+    "style": {
+     "value": "LH-SW-08",
+     "confidence": 1.0,
+     "evidence": "Artikelnummer: LH-SW-08"
+    },
+    "currency": {
+     "value": "EUR",
+     "confidence": 1.0,
+     "evidence": "Einzelpreis: EUR 7,20"
+    },
+    "unit_price": {
+     "value": "7.20",
+     "confidence": 1.0,
+     "evidence": "Einzelpreis: EUR 7,20"
+    },
+    "total_quantity": {
+     "value": 1500,
+     "confidence": 1.0,
+     "evidence": "Gesamtmenge: 1.500 St\u00fcck"
+    },
+    "delivery_date": {
+     "value": "2027-04-02",
+     "confidence": 1.0,
+     "evidence": "Liefertermin ab Werk: 02.04.2027"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Lieferbedingung: FOB Tuticorin"
+    },
+    "port": {
+     "value": "Tuticorin",
+     "confidence": 1.0,
+     "evidence": "Lieferbedingung: FOB Tuticorin"
+    },
+    "destination_country": {
+     "value": "Germany",
+     "confidence": 1.0,
+     "evidence": "Lieferadresse: Lager Hamburg, Deutschland"
+    },
+    "line_items": [
+     {
+      "colour": "Salbei",
+      "sizes": {
+       "S": 100,
+       "M": 200,
+       "L": 200,
+       "XL": 100
+      },
+      "quantity": 600,
+      "unit_price": null
+     },
+     {
+      "colour": "Marine",
+      "sizes": {
+       "S": 150,
+       "M": 300,
+       "L": 300,
+       "XL": 150
+      },
+      "quantity": 900,
+      "unit_price": null
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants confirmation of a new purchase order for 1,500 sweatshirts.",
+    "confidence": 0.98,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "medium",
+      "category": "capacity",
+      "reason": "Feasible but tight: 88% of free capacity used, only 14 days slack for 1,500 units by 2027-04-02.",
+      "evidence": [
+       "E2"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 5,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 22.12,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00027186",
+     "latency_ms": 4561,
+     "input_tokens": 1771,
+     "output_tokens": 690,
+     "failed": 0
+    },
+    "super": {
+     "calls": 1,
+     "cost": "0.00037470",
+     "latency_ms": 847,
+     "input_tokens": 1114,
+     "output_tokens": 45,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01435400",
+     "latency_ms": 9421,
+     "input_tokens": 8048,
+     "output_tokens": 2102,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 3,
+     "cost": "0.00064656",
+     "latency_ms": 5408,
+     "input_tokens": 2885,
+     "output_tokens": 735,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 2,
+     "cost": "0.01435400",
+     "latency_ms": 9421,
+     "input_tokens": 8048,
+     "output_tokens": 2102,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_024",
+   "match": {
+    "expected": "new order",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_024",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_024",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_024",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Wattle & Gum Pty Ltd",
+     "confidence": 1.0,
+     "evidence": "Wattle & Gum Pty Ltd, Melbourne"
+    },
+    "po_number": {
+     "value": "WG-7781",
+     "confidence": 1.0,
+     "evidence": "order WG-7781"
+    },
+    "style": {
+     "value": "WG-HD-3",
+     "confidence": 1.0,
+     "evidence": "kids hoodie WG-HD-3"
+    },
+    "currency": {
+     "value": "AUD",
+     "confidence": 1.0,
+     "evidence": "AUD 8.40 each"
+    },
+    "unit_price": {
+     "value": "8.40",
+     "confidence": 1.0,
+     "evidence": "AUD 8.40 each"
+    },
+    "total_quantity": {
+     "value": 1500,
+     "confidence": 1.0,
+     "evidence": "800 pcs, Sandstone 700 pcs - 1,500 pcs total"
+    },
+    "delivery_date": {
+     "value": "2027-05-03",
+     "confidence": 0.9,
+     "evidence": "ex-factory 03/05/27"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "FOB Chennai"
+    },
+    "port": {
+     "value": "Chennai",
+     "confidence": 1.0,
+     "evidence": "FOB Chennai"
+    },
+    "destination_country": {
+     "value": "Australia",
+     "confidence": 1.0,
+     "evidence": "lands in Melbourne"
+    },
+    "line_items": [
+     {
+      "colour": "Eucalyptus",
+      "sizes": {},
+      "quantity": 800,
+      "unit_price": "8.40"
+     },
+     {
+      "colour": "Sandstone",
+      "sizes": {},
+      "quantity": 700,
+      "unit_price": "8.40"
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "Book a new purchase order for 1,500 kids hoodies in specified colors and sizes, priced at AUD 8.40 each FOB Chennai with an ex-factory date of 03/05/27.",
+    "confidence": 0.98,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [],
+    "info_checked": 4,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "lookup_buyer",
+     "check_compliance"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 23.04,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00024714",
+     "latency_ms": 4526,
+     "input_tokens": 1459,
+     "output_tokens": 665,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01272800",
+     "latency_ms": 9417,
+     "input_tokens": 7844,
+     "output_tokens": 1628,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 2,
+     "cost": "0.00024714",
+     "latency_ms": 4526,
+     "input_tokens": 1459,
+     "output_tokens": 665,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 2,
+     "cost": "0.01272800",
+     "latency_ms": 9417,
+     "input_tokens": 7844,
+     "output_tokens": 1628,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_025",
+   "match": {
+    "expected": "new order",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_025",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_025",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_025",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Kumo Textiles K.K.",
+     "confidence": 1.0,
+     "evidence": "Kumo Textiles K.K., Tokyo"
+    },
+    "po_number": {
+     "value": "KT-26-118",
+     "confidence": 1.0,
+     "evidence": "Purchase Order No. KT-26-118"
+    },
+    "style": {
+     "value": "KT-PL-4",
+     "confidence": 1.0,
+     "evidence": "Style: KT-PL-4  Pique polo, 100% cotton"
+    },
+    "currency": {
+     "value": "JPY",
+     "confidence": 1.0,
+     "evidence": "Unit price: JPY 980"
+    },
+    "unit_price": {
+     "value": "980",
+     "confidence": 1.0,
+     "evidence": "Unit price: JPY 980"
+    },
+    "total_quantity": {
+     "value": 2000,
+     "confidence": 1.0,
+     "evidence": "Total quantity: 2,000 pcs"
+    },
+    "delivery_date": {
+     "value": "2027-04-09",
+     "confidence": 1.0,
+     "evidence": "Ex-factory: 2027/04/09"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Chennai"
+    },
+    "port": {
+     "value": "Chennai",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Chennai"
+    },
+    "destination_country": {
+     "value": "Japan",
+     "confidence": 1.0,
+     "evidence": "Destination: Tokyo, Japan"
+    },
+    "line_items": [
+     {
+      "colour": "Sumi Black",
+      "sizes": {
+       "S": 200,
+       "M": 300,
+       "L": 300,
+       "XL": 200
+      },
+      "quantity": 1000,
+      "unit_price": null
+     },
+     {
+      "colour": "Shiro",
+      "sizes": {
+       "S": 200,
+       "M": 300,
+       "L": 300,
+       "XL": 200
+      },
+      "quantity": 1000,
+      "unit_price": null
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants to place a new purchase order for 2,000 pcs of polo shirts.",
+    "confidence": 0.99,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "medium",
+      "category": "delivery",
+      "reason": "Feasible but tight: 90% of free capacity used, 12 days of slack for the 2027-04-09 delivery.",
+      "evidence": [
+       "E2"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 5,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 18.9,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00026598",
+     "latency_ms": 4541,
+     "input_tokens": 1721,
+     "output_tokens": 678,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01284300",
+     "latency_ms": 6996,
+     "input_tokens": 7935,
+     "output_tokens": 1636,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 2,
+     "cost": "0.00026598",
+     "latency_ms": 4541,
+     "input_tokens": 1721,
+     "output_tokens": 678,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 2,
+     "cost": "0.01284300",
+     "latency_ms": 6996,
+     "input_tokens": 7935,
+     "output_tokens": 1636,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_026",
+   "match": {
+    "expected": "new order",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_026",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_026",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_026",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Northbay Outfitters Ltd",
+     "confidence": 1.0,
+     "evidence": "Northbay Outfitters Ltd, Vancouver BC"
+    },
+    "po_number": {
+     "value": "NB-3307",
+     "confidence": 1.0,
+     "evidence": "Long sleeve order NB-3307"
+    },
+    "style": {
+     "value": "NB-LS-2",
+     "confidence": 1.0,
+     "evidence": "Style NB-LS-2 long sleeve tee"
+    },
+    "currency": {
+     "value": "CAD",
+     "confidence": 1.0,
+     "evidence": "CAD 9.10 per piece"
+    },
+    "unit_price": {
+     "value": "9.10",
+     "confidence": 1.0,
+     "evidence": "CAD 9.10 per piece"
+    },
+    "total_quantity": {
+     "value": 1200,
+     "confidence": 1.0,
+     "evidence": "1,200 pcs"
+    },
+    "delivery_date": {
+     "value": "2027-03-04",
+     "confidence": 1.0,
+     "evidence": "04/03/2027"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "FOB Chennai"
+    },
+    "port": {
+     "value": "Chennai",
+     "confidence": 1.0,
+     "evidence": "FOB Chennai"
+    },
+    "destination_country": {
+     "value": "Canada",
+     "confidence": 1.0,
+     "evidence": "to our Vancouver warehouse"
+    },
+    "line_items": [
+     {
+      "colour": "Fir",
+      "sizes": {},
+      "quantity": 600,
+      "unit_price": null
+     },
+     {
+      "colour": "Slate",
+      "sizes": {},
+      "quantity": 600,
+      "unit_price": null
+     }
+    ],
+    "po_revision": null,
+    "ambiguous_dates": [
+     "delivery_date"
+    ]
+   },
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants to place a new purchase order for 1,200 pieces of style NB-LS-2 long sleeve tees at CAD 9.10 per piece, FOB Chennai, to be shipped to Vancouver on 04/03/2027.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [
+    "schedule"
+   ],
+   "agent": {
+    "status": "completed",
+    "rounds": 2,
+    "error": null,
+    "flags": [
+     {
+      "severity": "high",
+      "category": "delivery",
+      "reason": "Current plan infeasible: 1,200 pcs shortfall, capacity left -2,172 pcs, utilisation 106.6%, production needs 96 days but only 90 days available before 2027-03-04.",
+      "evidence": [
+       "E2",
+       "E3"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 5,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "propose_delivery_options (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 32.07,
+   "usage": {
+    "nano": {
+     "calls": 2,
+     "cost": "0.00023502",
+     "latency_ms": 5420,
+     "input_tokens": 1381,
+     "output_tokens": 634,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 3,
+     "cost": "0.02245500",
+     "latency_ms": 19539,
+     "input_tokens": 11094,
+     "output_tokens": 3787,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 2,
+     "cost": "0.00023502",
+     "latency_ms": 5420,
+     "input_tokens": 1381,
+     "output_tokens": 634,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 3,
+     "cost": "0.02245500",
+     "latency_ms": 19539,
+     "input_tokens": 11094,
+     "output_tokens": 3787,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_027",
+   "match": null,
+   "score": {
+    "case_id": "case_027",
+    "category_ok": false,
+    "intents_ok": false,
+    "has_po_data_ok": false,
+    "fields": {},
+    "line_items_total": 0,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_027",
+    "category_ok": false,
+    "intents_ok": false,
+    "has_po_data_ok": false,
+    "fields": {},
+    "line_items_total": 0,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_027",
+    "expected": 0,
+    "predicted": 0,
+    "correct": 0,
+    "missed": [],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Pinecrest Supply",
+     "confidence": 0.9,
+     "evidence": "From: Mia Torres <mia.torres@pinecrestsupply.example>"
+    },
+    "po_number": {
+     "value": "PCS-4410",
+     "confidence": 1.0,
+     "evidence": "Subject: PCS-4410 check-in"
+    },
+    "style": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "currency": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "unit_price": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "total_quantity": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "delivery_date": {
+     "value": "2027-04-05",
+     "confidence": 0.8,
+     "evidence": "ship date stays 04/05/2027 on our side"
+    },
+    "incoterms": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "port": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "destination_country": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "line_items": [],
+    "po_revision": null,
+    "ambiguous_dates": [
+     "delivery_date"
+    ]
+   },
+   "classification": {
+    "category": "po_revision",
+    "intents": [
+     "po_revision"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer is checking on the status of order PCS-4410 and asks if cutting has started.",
+    "confidence": 0.92,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "medium",
+      "category": "capacity",
+      "reason": "Feasible but tight: 95% of free capacity used, 5 days of slack.",
+      "evidence": [
+       "E2"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 6,
+    "tools": [
+     "find_order (0)",
+     "check_delivery_feasibility (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 23.16,
+   "usage": {
+    "nano": {
+     "calls": 3,
+     "cost": "0.00020796",
+     "latency_ms": 4752,
+     "input_tokens": 1618,
+     "output_tokens": 462,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01737800",
+     "latency_ms": 14455,
+     "input_tokens": 7097,
+     "output_tokens": 3427,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 3,
+     "cost": "0.00020796",
+     "latency_ms": 4752,
+     "input_tokens": 1618,
+     "output_tokens": 462,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 2,
+     "cost": "0.01737800",
+     "latency_ms": 14455,
+     "input_tokens": 7097,
+     "output_tokens": 3427,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_028",
+   "match": {
+    "expected": "same order as case_023",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_028",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_028",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_028",
+    "expected": 1,
+    "predicted": 1,
+    "correct": 1,
+    "missed": [],
+    "unexpected": []
+   },
+   "po_revision": {
+    "expected": "2",
+    "extracted": "2"
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "HAUS LINDQVIST GMBH",
+     "confidence": 0.9,
+     "evidence": "HAUS LINDQVIST GMBH"
+    },
+    "po_number": {
+     "value": "LH-55120",
+     "confidence": 1.0,
+     "evidence": "BESTELLUNG Nr.: LH-55120 REVISION 2"
+    },
+    "style": {
+     "value": "LH-SW-08",
+     "confidence": 1.0,
+     "evidence": "Artikelnummer: LH-SW-08"
+    },
+    "currency": {
+     "value": "EUR",
+     "confidence": 1.0,
+     "evidence": "Einzelpreis: EUR 6,95"
+    },
+    "unit_price": {
+     "value": "6.95",
+     "confidence": 1.0,
+     "evidence": "Einzelpreis: EUR 6,95"
+    },
+    "total_quantity": {
+     "value": 1500,
+     "confidence": 1.0,
+     "evidence": "Gesamtmenge: 1.500 St\u00fcck"
+    },
+    "delivery_date": {
+     "value": "2027-04-02",
+     "confidence": 0.9,
+     "evidence": "Liefertermin ab Werk: 02.04.2027"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Lieferbedingung: FOB Tuticorin"
+    },
+    "port": {
+     "value": "Tuticorin",
+     "confidence": 1.0,
+     "evidence": "Lieferbedingung: FOB Tuticorin"
+    },
+    "destination_country": {
+     "value": "Germany",
+     "confidence": 1.0,
+     "evidence": "Lieferadresse: Lager Hamburg, Deutschland"
+    },
+    "line_items": [
+     {
+      "colour": "Salbei",
+      "sizes": {
+       "S": 100,
+       "M": 200,
+       "L": 200,
+       "XL": 100
+      },
+      "quantity": 600,
+      "unit_price": null
+     },
+     {
+      "colour": "Marine",
+      "sizes": {
+       "S": 150,
+       "M": 300,
+       "L": 300,
+       "XL": 150
+      },
+      "quantity": 900,
+      "unit_price": null
+     }
+    ],
+    "po_revision": "2",
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "po_revision",
+    "intents": [
+     "po_revision"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer requests Revision 2 of PO LH-55120 with updated price and delivery details.",
+    "confidence": 0.98,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [],
+   "agent": {
+    "status": "completed",
+    "rounds": 2,
+    "error": null,
+    "flags": [
+     {
+      "severity": "medium",
+      "category": "delivery",
+      "reason": "Feasible but tight: 96 % of free capacity used, 4 days of slack (production needs 111 days vs 115 available).",
+      "evidence": [
+       "E3"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     },
+     {
+      "severity": "medium",
+      "category": "price",
+      "reason": "Contract value decreased by 3.5 % (EUR 375) due to unit price reduction from 7.20 to 6.95.",
+      "evidence": [
+       "E2"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 4,
+    "tools": [
+     "find_order (0)",
+     "diff_po_versions (0)",
+     "check_delivery_feasibility (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 24.65,
+   "usage": {
+    "nano": {
+     "calls": 3,
+     "cost": "0.00032298",
+     "latency_ms": 6519,
+     "input_tokens": 2311,
+     "output_tokens": 768,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 3,
+     "cost": "0.02344100",
+     "latency_ms": 14003,
+     "input_tokens": 12896,
+     "output_tokens": 3515,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 3,
+     "cost": "0.00032298",
+     "latency_ms": 6519,
+     "input_tokens": 2311,
+     "output_tokens": 768,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 3,
+     "cost": "0.02344100",
+     "latency_ms": 14003,
+     "input_tokens": 12896,
+     "output_tokens": 3515,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_029",
+   "match": {
+    "expected": "same order as case_024",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_029",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": false,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_029",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": false,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_029",
+    "expected": 2,
+    "predicted": 3,
+    "correct": 2,
+    "missed": [],
+    "unexpected": [
+     "style"
+    ]
+   },
+   "po_revision": {
+    "expected": "A",
+    "extracted": "A"
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "WATTLE & GUM PTY LTD",
+     "confidence": 1.0,
+     "evidence": "WATTLE & GUM PTY LTD"
+    },
+    "po_number": {
+     "value": "WG-7781",
+     "confidence": 1.0,
+     "evidence": "WG-7781-A"
+    },
+    "style": {
+     "value": "WG-HD-3 Kids hoodie, brushed fleece",
+     "confidence": 1.0,
+     "evidence": "Style: WG-HD-3 Kids hoodie, brushed fleece"
+    },
+    "currency": {
+     "value": "AUD",
+     "confidence": 1.0,
+     "evidence": "Price: AUD 8.40"
+    },
+    "unit_price": {
+     "value": "8.40",
+     "confidence": 1.0,
+     "evidence": "Price: AUD 8.40"
+    },
+    "total_quantity": {
+     "value": 1800,
+     "confidence": 1.0,
+     "evidence": "Total: 1,800 pcs"
+    },
+    "delivery_date": {
+     "value": "2027-05-03",
+     "confidence": 1.0,
+     "evidence": "Ex-factory: 03/05/27"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Chennai"
+    },
+    "port": {
+     "value": "Chennai",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Chennai"
+    },
+    "destination_country": {
+     "value": "Australia",
+     "confidence": 1.0,
+     "evidence": "Destination: Melbourne, Australia"
+    },
+    "line_items": [
+     {
+      "colour": "Eucalyptus",
+      "sizes": {},
+      "quantity": 1100,
+      "unit_price": "8.40"
+     },
+     {
+      "colour": "Sandstone",
+      "sizes": {},
+      "quantity": 700,
+      "unit_price": null
+     }
+    ],
+    "po_revision": "A",
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "po_revision",
+    "intents": [
+     "po_revision"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants to revise PO WG-7781-A to increase the Eucalyptus quantity to 1,100 pcs.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [
+    "value"
+   ],
+   "predicted_high": [
+    "value"
+   ],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "high",
+      "category": "price",
+      "reason": "Contract value 12600.00 \u2192 15120.00 AUD (+20.0%).",
+      "evidence": [
+       "E2"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": [
+       "Contract value increased by AUD 2,520 (+20%) due to quantity increase from 1,500 to 1,800 pcs."
+      ]
+     }
+    ],
+    "info_checked": 4,
+    "tools": [
+     "find_order (0)",
+     "diff_po_versions (0)",
+     "check_delivery_feasibility (0)",
+     "check_delivery_feasibility (0)",
+     "lookup_buyer",
+     "check_compliance"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 22.4,
+   "usage": {
+    "nano": {
+     "calls": 3,
+     "cost": "0.00034320",
+     "latency_ms": 7278,
+     "input_tokens": 2140,
+     "output_tokens": 895,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 3,
+     "cost": "0.02925200",
+     "latency_ms": 14996,
+     "input_tokens": 19124,
+     "output_tokens": 3376,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 3,
+     "cost": "0.00034320",
+     "latency_ms": 7278,
+     "input_tokens": 2140,
+     "output_tokens": 895,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 3,
+     "cost": "0.02925200",
+     "latency_ms": 14996,
+     "input_tokens": 19124,
+     "output_tokens": 3376,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_030",
+   "match": {
+    "expected": "same order as case_022",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_030",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 1,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": [
+     "total_quantity"
+    ]
+   },
+   "score_before_escalation": {
+    "case_id": "case_030",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": false,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 1,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": [
+     "currency",
+     "delivery_date",
+     "destination_country",
+     "incoterms",
+     "port",
+     "style",
+     "total_quantity",
+     "unit_price"
+    ]
+   },
+   "changes": {
+    "case_id": "case_030",
+    "expected": 3,
+    "predicted": 2,
+    "correct": 2,
+    "missed": [
+     "line_items.heather charcoal.quantity"
+    ],
+    "unexpected": []
+   },
+   "has_extraction": true,
+   "escalations": [
+    {
+     "field": "currency",
+     "reason": "source_quote_missing",
+     "model": "nvidia/nemotron-3-super-120b-a12b",
+     "calls": 1,
+     "input_tokens": 885,
+     "output_tokens": 22,
+     "cost_usd": "0.00028530",
+     "outcome": "resolved",
+     "before": "USD",
+     "after": null
+    },
+    {
+     "field": "line_items",
+     "reason": "size_total_mismatch",
+     "model": "nvidia/nemotron-3-super-120b-a12b",
+     "calls": 1,
+     "input_tokens": 903,
+     "output_tokens": 7,
+     "cost_usd": "0.00027720",
+     "outcome": "resolved",
+     "before": [
+      {
+       "colour": "Heather Charcoal to",
+       "sizes": {},
+       "quantity": 900,
+       "unit_price": null
+      },
+      {
+       "colour": "Mustard Seed",
+       "sizes": {},
+       "quantity": 0,
+       "unit_price": null
+      }
+     ],
+     "after": []
+    }
+   ],
+   "extracted": {
+    "buyer": {
+     "value": "Pinecrest Supply Co.",
+     "confidence": 1.0,
+     "evidence": "Pinecrest Supply Co."
+    },
+    "po_number": {
+     "value": "PCS-4410",
+     "confidence": 1.0,
+     "evidence": "PCS-4410"
+    },
+    "style": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "currency": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "unit_price": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "total_quantity": {
+     "value": 1500,
+     "confidence": 0.4,
+     "evidence": "1,500 pcs"
+    },
+    "delivery_date": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "incoterms": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "port": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "destination_country": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "line_items": [],
+    "po_revision": null,
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "po_revision",
+    "intents": [
+     "po_revision"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants to change the color of PCS-4410, replace Mustard Seed with Heather Charcoal for 900 pcs, and reduce the total order to 1,500 pcs, keeping the same price and ship date.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [
+    "value"
+   ],
+   "predicted_high": [
+    "value"
+   ],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "high",
+      "category": "price",
+      "reason": "Contract value 11070.00 \u2192 9225.00 USD (-16.7%).",
+      "evidence": [
+       "E2"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": [
+       "Contract value decreased by USD 1,845 (-16.7%) from USD 11,070 to USD 9,225 due to quantity reduction."
+      ]
+     },
+     {
+      "severity": "medium",
+      "category": "capacity",
+      "reason": "Delivery plan is feasible but tight: 97% of free capacity used with only 3 days of slack for the 1,500 pcs order due 2027-04-05.",
+      "evidence": [
+       "E3"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 2,
+    "tools": [
+     "find_order (0)",
+     "diff_po_versions (0)",
+     "check_delivery_feasibility (0)",
+     "check_delivery_feasibility (0)",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 13.39,
+   "usage": {
+    "nano": {
+     "calls": 3,
+     "cost": "0.00025290",
+     "latency_ms": 5789,
+     "input_tokens": 1687,
+     "output_tokens": 632,
+     "failed": 0
+    },
+    "super": {
+     "calls": 2,
+     "cost": "0.00056250",
+     "latency_ms": 1654,
+     "input_tokens": 1788,
+     "output_tokens": 29,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 2,
+     "cost": "0.01241900",
+     "latency_ms": 5788,
+     "input_tokens": 8987,
+     "output_tokens": 1144,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 5,
+     "cost": "0.00081540",
+     "latency_ms": 7443,
+     "input_tokens": 3475,
+     "output_tokens": 661,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 2,
+     "cost": "0.01241900",
+     "latency_ms": 5788,
+     "input_tokens": 8987,
+     "output_tokens": 1144,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_031",
+   "match": {
+    "expected": "same order as case_025",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_031",
+    "category_ok": true,
+    "intents_ok": false,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_031",
+    "category_ok": true,
+    "intents_ok": false,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 2,
+    "line_items_correct": 2,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_031",
+    "expected": 3,
+    "predicted": 3,
+    "correct": 3,
+    "missed": [],
+    "unexpected": []
+   },
+   "po_revision": {
+    "expected": "1",
+    "extracted": "1"
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "KUMO TEXTILES K.K.",
+     "confidence": 1.0,
+     "evidence": "Supplier: Sri Velan Knits"
+    },
+    "po_number": {
+     "value": "KT-26-118",
+     "confidence": 1.0,
+     "evidence": "PURCHASE ORDER No. KT-26-118 Rev. 1"
+    },
+    "style": {
+     "value": "KT-PL-4",
+     "confidence": 1.0,
+     "evidence": "Style: KT-PL-4  Pique polo, 100% cotton"
+    },
+    "currency": {
+     "value": "JPY",
+     "confidence": 1.0,
+     "evidence": "Unit price: JPY 980"
+    },
+    "unit_price": {
+     "value": "980",
+     "confidence": 1.0,
+     "evidence": "Unit price: JPY 980"
+    },
+    "total_quantity": {
+     "value": 3000,
+     "confidence": 1.0,
+     "evidence": "Total quantity: 3,000 pcs"
+    },
+    "delivery_date": {
+     "value": "2027-04-09",
+     "confidence": 1.0,
+     "evidence": "Ex-factory: 2027/04/09"
+    },
+    "incoterms": {
+     "value": "FOB",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Chennai"
+    },
+    "port": {
+     "value": "Chennai",
+     "confidence": 1.0,
+     "evidence": "Terms: FOB Chennai"
+    },
+    "destination_country": {
+     "value": "Japan",
+     "confidence": 1.0,
+     "evidence": "Destination: Tokyo, Japan"
+    },
+    "line_items": [
+     {
+      "colour": "Sumi Black",
+      "sizes": {
+       "S": 300,
+       "M": 450,
+       "L": 450,
+       "XL": 300
+      },
+      "quantity": 1500,
+      "unit_price": null
+     },
+     {
+      "colour": "Shiro",
+      "sizes": {
+       "S": 300,
+       "M": 450,
+       "L": 450,
+       "XL": 300
+      },
+      "quantity": 1500,
+      "unit_price": null
+     }
+    ],
+    "po_revision": "1",
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "po_revision",
+    "intents": [
+     "po_revision",
+     "delivery_change"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants to increase the order quantity to 3,000 pcs and adjust the delivery schedule with a partial shipment by 2027/04/09 and the balance by 2027/04/23.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [
+    "value"
+   ],
+   "predicted_high": [
+    "value"
+   ],
+   "agent": {
+    "status": "completed",
+    "rounds": 1,
+    "error": null,
+    "flags": [
+     {
+      "severity": "high",
+      "category": "price",
+      "reason": "Contract value increased by JPY 980,000 (+50%) from JPY 1,960,000 to JPY 2,940,000, exceeding the 10% threshold.",
+      "evidence": [
+       "E2"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     },
+     {
+      "severity": "medium",
+      "category": "capacity",
+      "reason": "Full 3,000 pcs by 2027-04-09 uses 99% of free capacity with only 1 day slack; first 2,000 pcs by 2027-04-09 uses 98% with 2 days slack.",
+      "evidence": [
+       "E3",
+       "E4"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     },
+     {
+      "severity": "medium",
+      "category": "delivery",
+      "reason": "Buyer proposes split delivery: 2,000 pcs by 2027-04-09 and 1,000 pcs by 2027-04-23. Both legs are feasible; the second leg has 18 days slack.",
+      "evidence": [
+       "E4",
+       "E5"
+      ],
+      "rule": null,
+      "adverse_finding": null,
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 4,
+    "tools": [
+     "find_order (0)",
+     "diff_po_versions (0)",
+     "check_delivery_feasibility (0)",
+     "check_delivery_feasibility (0)",
+     "check_delivery_feasibility",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 23.96,
+   "usage": {
+    "nano": {
+     "calls": 3,
+     "cost": "0.00034164",
+     "latency_ms": 6739,
+     "input_tokens": 2518,
+     "output_tokens": 794,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 3,
+     "cost": "0.02968400",
+     "latency_ms": 12206,
+     "input_tokens": 19250,
+     "output_tokens": 3478,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 3,
+     "cost": "0.00034164",
+     "latency_ms": 6739,
+     "input_tokens": 2518,
+     "output_tokens": 794,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 3,
+     "cost": "0.02968400",
+     "latency_ms": 12206,
+     "input_tokens": 19250,
+     "output_tokens": 3478,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "case_id": "case_032",
+   "match": {
+    "expected": "same order as case_026",
+    "ok": true,
+    "asked": false,
+    "oracle_answer": null,
+    "score": null
+   },
+   "score": {
+    "case_id": "case_032",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 0,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "score_before_escalation": {
+    "case_id": "case_032",
+    "category_ok": true,
+    "intents_ok": true,
+    "has_po_data_ok": true,
+    "fields": {
+     "buyer": true,
+     "po_number": true,
+     "style": true,
+     "currency": true,
+     "unit_price": true,
+     "total_quantity": true,
+     "delivery_date": true,
+     "incoterms": true,
+     "port": true,
+     "destination_country": true
+    },
+    "line_items_total": 0,
+    "line_items_correct": 0,
+    "review_expected": [],
+    "review_flagged": []
+   },
+   "changes": {
+    "case_id": "case_032",
+    "expected": 1,
+    "predicted": 1,
+    "correct": 1,
+    "missed": [],
+    "unexpected": []
+   },
+   "po_revision": {
+    "expected": "1",
+    "extracted": "1"
+   },
+   "has_extraction": true,
+   "escalations": [],
+   "extracted": {
+    "buyer": {
+     "value": "Northbay Outfitters Ltd",
+     "confidence": 1.0,
+     "evidence": "Northbay Outfitters Ltd"
+    },
+    "po_number": {
+     "value": "NB-3307",
+     "confidence": 1.0,
+     "evidence": "NB-3307 Amendment No. 1"
+    },
+    "style": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "currency": {
+     "value": "CAD",
+     "confidence": 1.0,
+     "evidence": "CAD"
+    },
+    "unit_price": {
+     "value": "8.80",
+     "confidence": 1.0,
+     "evidence": "CAD 8.80 per piece"
+    },
+    "total_quantity": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "delivery_date": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "incoterms": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "port": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "destination_country": {
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
+    },
+    "line_items": [
+     {
+      "colour": null,
+      "sizes": {},
+      "quantity": null,
+      "unit_price": null
+     }
+    ],
+    "po_revision": "1",
+    "ambiguous_dates": []
+   },
+   "classification": {
+    "category": "po_revision",
+    "intents": [
+     "po_revision"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants to amend PO NB-3307 to update the unit price to CAD 8.80 per piece.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "expected_high": [],
+   "predicted_high": [
+    "schedule"
+   ],
+   "agent": {
+    "status": "completed",
+    "rounds": 2,
+    "error": null,
+    "flags": [
+     {
+      "severity": "high",
+      "category": "delivery",
+      "reason": "Current plan infeasible: 1,200 pcs shortfall, utilisation 119.9%, slack -16 days; earliest feasible full-quantity date is 2027-04-01.",
+      "evidence": [
+       "E3",
+       "E4"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     },
+     {
+      "severity": "medium",
+      "category": "price",
+      "reason": "Contract value decreased by CAD 360 (3.3%) from CAD 10,920 to CAD 10,560.",
+      "evidence": [
+       "E2"
+      ],
+      "rule": "",
+      "adverse_finding": "",
+      "verified": true,
+      "source": "model",
+      "severity_adjusted_from": null,
+      "related": []
+     }
+    ],
+    "info_checked": 5,
+    "tools": [
+     "find_order (0)",
+     "diff_po_versions (0)",
+     "check_delivery_feasibility (0)",
+     "propose_delivery_options (0)",
+     "check_compliance",
+     "lookup_buyer"
+    ],
+    "routing": {
+     "tier": "ultra",
+     "escalated": true,
+     "reasons": [],
+     "super_attempted": true
+    }
+   },
+   "seconds": 22.55,
+   "usage": {
+    "nano": {
+     "calls": 3,
+     "cost": "0.00022902",
+     "latency_ms": 4959,
+     "input_tokens": 1657,
+     "output_tokens": 540,
+     "failed": 0
+    },
+    "ultra": {
+     "calls": 3,
+     "cost": "0.02307000",
+     "latency_ms": 12860,
+     "input_tokens": 11679,
+     "output_tokens": 3797,
+     "failed": 0
+    }
+   },
+   "stage_usage": {
+    "extraction": {
+     "calls": 3,
+     "cost": "0.00022902",
+     "latency_ms": 4959,
+     "input_tokens": 1657,
+     "output_tokens": 540,
+     "failed": 0
+    },
+    "risk": {
+     "calls": 3,
+     "cost": "0.02307000",
+     "latency_ms": 12860,
+     "input_tokens": 11679,
+     "output_tokens": 3797,
+     "failed": 0
+    }
+   }
+  }
+ ],
+ "split": "dev",
+ "variant": "ultra_risk",
+ "run": 1,
+ "llm_mode": "live",
+ "cache": false,
+ "drafts": false,
+ "started": "2026-10-13T10:16:14.458379+00:00",
+ "finished": "2026-10-13T10:28:21.485048+00:00",
+ "models": {
+  "nano": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+  "super": "nvidia/nemotron-3-super-120b-a12b",
+  "ultra": "nvidia/Nemotron-3-Ultra-550b-a55b"
+ }
+}

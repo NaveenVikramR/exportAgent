@@ -1,0 +1,35 @@
+id: case_029
+title: Revision marked only by a letter after the PO number ("WG-7781-A")
+sender: "Liam Kerr <liam@wattleandgum.example>"
+subject: "WG-7781-A"
+received_at: "2026-10-28"
+body: |
+  Hi Karthik,
+
+  Our system has now issued the PO properly - see WG-7781-A attached. We have bumped Eucalyptus
+  to 1,100 pcs; everything else as before.
+
+  Cheers,
+  Liam
+attachments:
+  - filename: WG-7781-A.pdf
+    content_type: application/pdf
+    text: |
+      WATTLE & GUM PTY LTD
+      88 Smith Street, Collingwood VIC 3066, Australia
+
+      PURCHASE ORDER: WG-7781-A
+      Order date: 28/10/2026
+      Supplier: Sri Velan Knits
+
+      Style: WG-HD-3 Kids hoodie, brushed fleece
+      Price: AUD 8.40
+      Terms: FOB Chennai
+      Destination: Melbourne, Australia
+      Ex-factory: 03/05/27
+
+      Colour       Qty
+      Eucalyptus   1,100
+      Sandstone    700
+
+      Total: 1,800 pcs

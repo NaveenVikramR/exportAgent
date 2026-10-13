@@ -1,0 +1,18 @@
+id: case_024
+title: Australian order in the email body with a two-digit-year date ("03/05/27" is 3 May)
+sender: "Liam Kerr <liam@wattleandgum.example>"
+subject: "kids hoodies - order WG-7781"
+received_at: "2026-10-21"
+body: |
+  G'day Karthik,
+
+  Please book order WG-7781 for the kids hoodie WG-HD-3 (brushed fleece):
+  Eucalyptus 800 pcs, Sandstone 700 pcs - 1,500 pcs total
+  sizes 4-6-8-10-12, ratio 1:2:2:2:1
+  AUD 8.40 each, FOB Chennai
+  ex-factory 03/05/27 so it lands in Melbourne for winter
+
+  Cheers,
+  Liam Kerr
+  Wattle & Gum Pty Ltd, Melbourne
+attachments: []

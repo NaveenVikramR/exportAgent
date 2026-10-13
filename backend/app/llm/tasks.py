@@ -28,6 +28,7 @@ DEFAULT_TASK_TIERS: dict[TaskType, Tier] = {
     TaskType.CHANGE_DETECTION: Tier.NANO,
     TaskType.DRAFT_REPLY: Tier.SUPER,
     TaskType.DRAFT_INTERNAL_NOTE: Tier.SUPER,
-    TaskType.RISK_REASONING: Tier.ULTRA,
-    TaskType.PLANNING: Tier.ULTRA,
+    # Super by default; the agent escalates a run to Ultra on the triggers in app/agent/routing.py.
+    TaskType.RISK_REASONING: Tier.SUPER,
+    TaskType.PLANNING: Tier.SUPER,
 }

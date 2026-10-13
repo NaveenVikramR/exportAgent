@@ -1,0 +1,25 @@
+id: case_022
+classification:
+  category: new_po
+  intents: [new_po]
+  has_po_data: true
+extraction:
+  buyer: Pinecrest Supply Co.
+  po_number: PCS-4410
+  style: PCS-CR-21
+  currency: USD
+  unit_price: "6.15"
+  total_quantity: 1800
+  # "04/05/2027" from a US buyer, and the PO date 10/19/2026 can only be month-first
+  delivery_date: "2027-04-05"
+  incoterms: FOB
+  port: Chennai
+  destination_country: United States
+  line_items:
+    - {colour: Heather Charcoal, quantity: 700, sizes: {S: 100, M: 250, L: 250, XL: 100}}
+    - {colour: Mustard Seed, quantity: 500, sizes: {S: 80, M: 170, L: 170, XL: 80}}
+    - {colour: Bone, quantity: 600, sizes: {S: 100, M: 200, L: 200, XL: 100}}
+expected_review_fields: []
+
+expected_high_risk: []
+risk_note: "feasible: Feasible: 84% of free capacity used, 20 days of slack."

@@ -1,0 +1,29 @@
+id: case_029
+classification:
+  category: po_revision
+  intents: [po_revision]
+  has_po_data: true
+extraction:
+  buyer: Wattle & Gum Pty Ltd
+  # "WG-7781-A": revision A of the known order WG-7781
+  po_number: WG-7781
+  style: WG-HD-3
+  currency: AUD
+  unit_price: "8.40"
+  total_quantity: 1800
+  delivery_date: "2027-05-03"
+  incoterms: FOB
+  port: Chennai
+  destination_country: Australia
+  line_items:
+    - {colour: Eucalyptus, quantity: 1100}
+    - {colour: Sandstone, quantity: 700}
+expected_review_fields: []
+revises: case_024
+expected_po_revision: A
+expected_changes:
+  - {field: total_quantity, old: 1500, new: 1800}
+  - {field: "line_items.Eucalyptus.quantity", old: 800, new: 1100}
+
+expected_high_risk: [value]
+risk_note: "feasible: Feasible: 79% of free capacity used, 29 days of slack. | value +20.0% (2520.00 AUD)"

@@ -10,11 +10,11 @@ from app.agent.tools.extract import extract_po_fields
 from app.agent.tools.stated_changes import extract_stated_changes
 from app.llm.router import LLMError, LLMRouter, SpendCapExceeded
 from app.models import Email
-from app.schemas.extraction import Classification, EmailCategory, ReviewedExtraction
+from app.schemas.extraction import Classification, EmailCategory, ReviewedExtraction, ReviewFlag
 from app.schemas.orders import StatedChange
 from app.services.orders import record_email_po
 from app.services.escalation import escalate
-from app.services.normalise import normalise_extraction
+from app.services.normalise import date_convention, normalise_extraction, resolve_date
 from app.services.review import inherit_from_previous, review_extraction
 
 
@@ -62,6 +62,24 @@ def email_text(email: Email) -> str:
 _ORDER_CATEGORIES = {EmailCategory.NEW_PO, EmailCategory.PO_REVISION, EmailCategory.DELIVERY_CHANGE}
 
 
+def _resolve_stated_dates(stated: list[StatedChange], text: str, final: ReviewedExtraction) -> set[str]:
+    """Read old/new dates the email states with the same convention as the delivery date.
+    Returns {"delivery_date"} if one of them stays ambiguous."""
+    convention = date_convention(text, final.fields.destination_country.value)
+    ambiguous = set()
+    for change in stated:
+        if change.field != "delivery_date":
+            continue
+        for side in ("old", "new"):
+            value = getattr(change, side)
+            if isinstance(value, str) and value:
+                resolved, unclear = resolve_date(value, text, convention)
+                setattr(change, side, resolved)
+                if unclear:
+                    ambiguous.add("delivery_date")
+    return ambiguous
+
+
 def analyse_text(router: LLMRouter, text: str) -> Analysis:
     classification = classify_email(router, text)
     if classification.category in _ORDER_CATEGORIES:
@@ -86,6 +104,18 @@ def analyse_text(router: LLMRouter, text: str) -> Analysis:
         if classification.category in _CHANGE_CATEGORIES
         else []
     )
+    ambiguous = set(final.fields.ambiguous_dates) | _resolve_stated_dates(stated, text, final)
+    flagged = {(f.field, f.reason) for f in final.review}
+    for name in sorted(ambiguous - {f for f, r in flagged if r == "ambiguous_date"}):
+        final.review.append(ReviewFlag(
+            field=name, reason="ambiguous_date",
+            detail="Written as a numeric date that reads both ways; the buyer's country and the email do not settle it.",
+        ))
+    if classification.unrecognised:
+        final.review.append(ReviewFlag(
+            field="classification", reason="unrecognised_intent",
+            detail=f"The model gave {', '.join(classification.unrecognised)}, not an allowed category; read as 'other'.",
+        ))
     return Analysis(
         classification=classification,
         extraction=final,
@@ -122,7 +152,8 @@ def analyse_email(session: Session, email: Email, router: LLMRouter) -> Analysis
         if recorded.previous:
             inherit_from_previous(analysis.extraction, recorded.previous)
     email.extraction = analysis.extraction.model_dump(mode="json") if analysis.extraction else None
-    needs_review = asked or bool(analysis.extraction and analysis.extraction.review)
+    needs_review = asked or bool(analysis.extraction and analysis.extraction.review) \
+        or bool(analysis.classification.unrecognised)
     email.status = "needs_review" if needs_review else "analysed"
     session.commit()
     return analysis

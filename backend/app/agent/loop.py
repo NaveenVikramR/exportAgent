@@ -1,12 +1,16 @@
-"""The risk agent: observe -> reason (Ultra) -> act (tools) -> feed back, at most 8 tool rounds.
+"""The risk agent: observe -> reason -> act (tools) -> feed back, at most 8 tool rounds.
 
 With pre-fetch (the default), Python first runs the deterministic checks:
 find the order, diff the last two versions, check delivery feasibility for the
 current and the previous plan, and propose delivery options if the plan is
-infeasible. Ultra receives those results as evidence and keeps the loop only for
-the optional tools (compliance, buyer lookup, a what-if feasibility check) and
+infeasible. The model receives those results as evidence and keeps the loop only
+for the optional tools (compliance, buyer lookup, a what-if feasibility check) and
 the final judgement. Afterwards the flag policy (app/services/risk_policy.py)
 decides what stays a flag and corrects severities to the rubric.
+
+The model is Super by default; the run goes to Ultra on the triggers in
+app/agent/routing.py (before the run, or after Super's answer), and the reason is
+logged as a "routing" step.
 """
 
 import json
@@ -17,12 +21,13 @@ from typing import Any
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
+from app.agent import routing
 from app.agent.tools.agent_tools import LOOP_TOOL_SPECS, TOOL_NAMES, TOOL_SPECS, ToolContext, run_tool
 from app.config import get_settings
 from app.llm.prompts import planner as prompt
 from app.llm.router import LLMError, LLMResult, LLMRouter, SpendCapExceeded
 from app.llm.structured import json_block
-from app.llm.tasks import TaskType
+from app.llm.tasks import TaskType, Tier
 from app.models import AgentRun, AgentStep, Email, Order
 from app.schemas.risk import RiskReport
 from app.services import tavily_client
@@ -121,6 +126,12 @@ def prefetch_calls(order: Order) -> list[tuple[str, dict[str, Any]]]:
     return calls
 
 
+def email_text(email: Email) -> str:
+    from app.services.analysis import email_text as render
+
+    return render(email)
+
+
 def run_agent(
     session: Session,
     email: Email,
@@ -191,17 +202,22 @@ def run_agent(
         observation["prefetched_evidence"] = prefetched
         offered = LOOP_TOOL_SPECS
     offered_names = {spec["function"]["name"] for spec in offered}
-    messages: list[dict[str, Any]] = [
+    base_messages: list[dict[str, Any]] = [
         {"role": "system", "content": prompt.system_prompt(prefetched=prefetch and order is not None)},
         {"role": "user", "content": json.dumps(observation, default=str)},
     ]
+    prefetched_calls = dict(seen_calls)
 
-    try:
+    def assess(tier: Tier | None, detail: str | None) -> tuple[RiskReport | None, str | None]:
+        """One full reasoning pass. Returns (report, None), or (None, validation error)."""
+        messages = list(base_messages)
+        seen_calls.clear()
+        seen_calls.update(prefetched_calls)
         final: LLMResult | None = None
         for round_ in range(1, MAX_ROUNDS + 1):
             result = router.complete(
                 TaskType.PLANNING, messages, max_tokens=PLANNER_MAX_TOKENS, tools=offered,
-                reasoning=True, run_id=run.id,
+                reasoning=True, run_id=run.id, tier=tier, detail=detail,
             )
             llm_step(round_, "plan", result)
             if not result.tool_calls:
@@ -233,11 +249,11 @@ def run_agent(
         if final is None:
             messages.append({"role": "user", "content": prompt.FINAL_ANSWER})
             final = router.complete(TaskType.RISK_REASONING, messages, max_tokens=FINAL_MAX_TOKENS,
-                                    reasoning=True, run_id=run.id)
+                                    reasoning=True, run_id=run.id, tier=tier, detail=detail)
             llm_step(MAX_ROUNDS + 1, "final", final)
 
         try:
-            report = _parse_report(final.content)
+            return _parse_report(final.content), None
         except ValidationError as exc:
             # One retry without thinking, so the budget goes to the answer.
             messages += [
@@ -245,13 +261,37 @@ def run_agent(
                 {"role": "user", "content": prompt.FIX_JSON.format(error=str(exc)[:300])},
             ]
             retry = router.complete(TaskType.RISK_REASONING, messages, max_tokens=FINAL_MAX_TOKENS,
-                                    reasoning=False, run_id=run.id)
+                                    reasoning=False, run_id=run.id, tier=tier, detail=detail)
             llm_step(run.rounds + 1, "final_retry", retry)
             try:
-                report = _parse_report(retry.content)
+                return _parse_report(retry.content), None
             except ValidationError as retry_exc:
-                report = RiskReport(summary="The agent did not return a valid risk report; review manually.")
-                run.error = str(retry_exc)[:1000]
+                return None, str(retry_exc)[:1000]
+
+    def route_to_ultra(reasons: list[str]) -> None:
+        add_step(round=0, kind="routing", name="escalate_to_ultra", input={"reasons": reasons},
+                 output={"tier": "ultra"}, summary="Escalated to Ultra: " + "; ".join(reasons))
+
+    escalate = router.settings.risk_escalation_enabled and order is not None
+    reasons = routing.reasons_before(evidence, email_text(email)) if escalate else []
+    super_attempted = False
+    try:
+        if reasons:
+            route_to_ultra(reasons)
+            report, error = assess(Tier.ULTRA, "ultra escalation: " + "; ".join(reasons))
+        else:
+            super_attempted = True
+            report, error = assess(None, None)
+            if escalate:
+                after = ([f"Super's report failed validation: {error[:200]}"] if report is None
+                         else [c] if (c := routing.conflict_with_feasibility(report, evidence)) else [])
+                if after:
+                    reasons = after
+                    route_to_ultra(reasons)
+                    report, error = assess(Tier.ULTRA, "ultra escalation: " + "; ".join(reasons))
+        if report is None:
+            report = RiskReport(summary="The agent did not return a valid risk report; review manually.")
+            run.error = error
 
     except LLMError as exc:
         run.status = "failed"
@@ -263,7 +303,10 @@ def run_agent(
         return run
 
     report = apply_policy(report, evidence)
-    run.result = report.model_dump(mode="json")
+    tier_used = "ultra" if reasons else router.tier_for(TaskType.PLANNING).value
+    run.result = report.model_dump(mode="json") | {
+        "routing": routing.routing_record(tier_used, reasons, super_attempted)
+    }
     run.status = "needs_review" if run.error else "completed"
     run.finished_at = datetime.now(UTC)
     session.commit()

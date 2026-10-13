@@ -20,6 +20,7 @@ from app.config import get_settings
 from app.models import Email, Order, POVersion
 from app.schemas.extraction import POExtraction, ReviewedExtraction
 from app.schemas.orders import StatedChange
+from app.services.normalise import removed_colours, split_letter_suffix
 from app.services.order_matching import MatchResult, match_order, po_key
 from app.services.review import inherit_from_previous
 
@@ -105,6 +106,7 @@ def record_email_po(
         email.order_id = existing.order_id
         return RecordResult(version=existing, order=existing.order)
 
+    _read_letter_revision(session, extraction)
     update = snapshot_from_extraction(extraction)
     if extraction.po_revision:
         update["po_revision"] = extraction.po_revision
@@ -142,6 +144,8 @@ def record_email_po(
     if previous is not None and not previous.get("po_number") and order.po_number:
         # A PO number that arrived with no other change is on the order, not in a version yet.
         previous = {**previous, "po_number": order.po_number}
+    if previous is not None and text:
+        _mark_removed_colours(update, previous, text)
     version = None
     planned_versions = plan_versions(previous, update, stated_changes)
     if planned_versions:
@@ -158,6 +162,29 @@ def record_email_po(
             basis=planned.basis,
         )
     return RecordResult(version=version, order=order, previous=previous, match=match)
+
+
+def _read_letter_revision(session: Session, extraction: POExtraction) -> None:
+    """"PRN-2210-A" is revision A of PRN-2210 when PRN-2210 is a known order and PRN-2210-A is not."""
+    po = extraction.po_number.value
+    if not po or extraction.po_revision or find_order(session, po) is not None:
+        return
+    base, letter = split_letter_suffix(po)
+    if letter and find_order(session, base) is not None:
+        extraction.po_number.value, extraction.po_revision = base, letter
+
+
+def _mark_removed_colours(update: dict, previous: dict, text: str) -> None:
+    """Colours the email drops or cancels go into the update with quantity 0 (removed on merge)."""
+    colours = [item["colour"] for item in previous.get("line_items") or [] if item.get("colour")]
+    items = update.setdefault("line_items", [])
+    named = {(item.get("colour") or "").casefold(): item for item in items}
+    for colour in removed_colours(text, colours):
+        if colour.casefold() in named:
+            named[colour.casefold()]["quantity"] = 0
+            named[colour.casefold()]["sizes"] = {}
+        else:
+            items.append({"colour": colour, "quantity": 0, "sizes": {}, "unit_price": None})
 
 
 def record_po_version(

@@ -175,7 +175,7 @@ export type AgentStep = {
   id: number;
   seq: number;
   round: number;
-  kind: "llm" | "tool";
+  kind: "llm" | "tool" | "routing";
   name: string;
   input: Record<string, unknown> | null;
   output: Record<string, unknown> | null;

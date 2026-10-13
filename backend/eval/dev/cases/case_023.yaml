@@ -1,0 +1,36 @@
+id: case_023
+title: German PO with a day-first date ("02.04.2027" is 2 April)
+sender: "Jonas Brandt <j.brandt@haus-lindqvist.example>"
+subject: "Bestellung LH-55120"
+received_at: "2026-10-20"
+body: |
+  Dear Karthik,
+
+  attached is our order LH-55120 for the sweatshirts. Please confirm.
+
+  Best regards,
+  Jonas Brandt
+  Haus Lindqvist GmbH, Hamburg
+attachments:
+  - filename: LH-55120.pdf
+    content_type: application/pdf
+    text: |
+      HAUS LINDQVIST GMBH
+      Speicherstadt 4, 20457 Hamburg, Deutschland
+
+      BESTELLUNG Nr.: LH-55120
+      Datum: 20.10.2026
+      Lieferant: Sri Velan Knits
+
+      Artikelnummer: LH-SW-08  Sweatshirt, Baumwolle 80%, Polyester 20%
+      Einzelpreis: EUR 7,20
+      Lieferbedingung: FOB Tuticorin
+      Lieferadresse: Lager Hamburg, Deutschland
+      Liefertermin ab Werk: 02.04.2027
+
+      Farbe     S     M     L     XL    Gesamt
+      Salbei    100   200   200   100   600
+      Marine    150   300   300   150   900
+
+      Gesamtmenge: 1.500 Stück
+      Gesamtwert: EUR 10.800,00

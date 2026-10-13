@@ -15,11 +15,11 @@ Every LLM call in ExportAgent is a runtime call to the Nebius Token Factory infe
 | Email classification, field extraction, PO change detection | Nemotron Nano | Fast and cheap for high-volume structured work |
 | Re-extracting a single field that failed a Python check (escalation) | Nemotron Super | Stronger model, only where Nano demonstrably failed |
 | Drafting buyer replies and internal notes (thinking on) | Nemotron Super | Better writing quality at moderate cost |
-| Risk reasoning and multi-step planning in the agent loop | Nemotron Ultra | Strongest reasoning, used sparingly |
+| Risk reasoning and multi-step planning in the agent loop | Nemotron Super, escalated to Ultra | Super by default; Ultra only when a run needs it (below) |
 
 **Escalation routing.** Nano extracts every field first. Plain-Python checks then look for three failures: a size breakdown that does not add up, a size table in the email that was not extracted, and a quoted source text that is missing from the email or does not state the value. Only the failing field is re-extracted by Super, and Super's value is kept only if the same check then passes. Every escalation is logged with field, reason, model and cost ([backend/app/services/escalation.py](backend/app/services/escalation.py)).
 
-**The risk agent.** Ultra runs an observe → reason → act loop with OpenAI-style tool calling, a hard cap of 8 tool rounds, and `max_tokens` on every call ([backend/app/agent/loop.py](backend/app/agent/loop.py)). The checks every order needs run deterministically in Python first (pre-fetch): find the order, diff the last two versions, check feasibility for the current and the previous plan, and propose delivery options if the plan is infeasible. Ultra receives those results as evidence and keeps the loop for the optional tools and the final judgement. All maths is in Python:
+**The risk agent.** The model runs an observe → reason → act loop with OpenAI-style tool calling, a hard cap of 8 tool rounds, and `max_tokens` on every call ([backend/app/agent/loop.py](backend/app/agent/loop.py)). The checks every order needs run deterministically in Python first (pre-fetch): find the order, diff the last two versions, check feasibility for the current and the previous plan, and propose delivery options if the plan is infeasible. The model receives those results as evidence and keeps the loop for the optional tools and the final judgement. All maths is in Python:
 
 | Tool | What it does |
 |---|---|
@@ -31,6 +31,14 @@ Every LLM call in ExportAgent is a runtime call to the Nebius Token Factory infe
 | `lookup_buyer` | Tavily search for buyer background, only for buyers with no earlier orders (cached per normalised name, per day) |
 
 Each tool result gets an evidence id (E1, E2, …). The final risk report lists flags with severity, a one-line reason and evidence, plus an *Info checked* list. The flag policy in [backend/policy/risk_policy.yaml](backend/policy/risk_policy.yaml) is enforced in Python ([backend/app/services/risk_policy.py](backend/app/services/risk_policy.py)): evidence must point at a real tool result or a URL a tool returned; a compliance flag must name a concrete rule with a source URL; a buyer flag needs an adverse finding; anything short of that moves to *Info checked*. Severity follows a rubric: high only for an infeasible plan or a contract value change above 10% or 5,000; medium needs confirmation; low is minor. The email page shows every step: pre-fetched Python checks, Ultra's calls, tool inputs and results, model, tokens, latency and cost.
+
+**Risk routing: Super by default, Ultra when it matters.** Evaluation showed Super finding the same high-risk issues as Ultra at a quarter of the cost, so Super runs every assessment. Ultra takes the whole run in four cases ([backend/app/agent/routing.py](backend/app/agent/routing.py)):
+- before the run: the current plan is infeasible, so delivery options need weighing;
+- before the run: the email or thread mentions something that could change feasibility (fabric or trims in-house, a partial shipment offered);
+- after Super's answer: its flags contradict the Python feasibility result;
+- after Super's answer: its report fails validation.
+
+Each escalation is logged as a routing step in the trace, with the reason, and on every Ultra call in the cost log. On DEV, 27% of risk runs went to Ultra. Risk cost per assessed email fell from $0.0158 to $0.0093, and recall on high-risk findings stayed at 100%.
 
 **Why the agent loop exists: the what-if check.** Everything an order always needs is pre-fetched in Python, so the loop has to earn its place. The clearest example is case_007. The buyer pulls the ex-factory date of PO NW-45098 forward from 24 November to 10 November, and the pre-fetched feasibility check says that is infeasible: only 9 production days remain after the 42-day fabric lead time. But further down the reply thread, our own merchandiser had written "fabric is in-house". Ultra reads that, calls `check_delivery_feasibility` again with `fabric_ready=true`, gets "feasible, 35 days of slack", and reports a medium "confirm the new date" flag instead of a false high alarm. No fixed pipeline would have known to run that second check; deciding when a different question needs asking is the model's job, and the arithmetic stays in Python either way.
 
@@ -75,6 +83,8 @@ Live numbers with every model tier (10 labelled emails, cache off, 2026-10-10):
 | Reply and internal note drafts | Super | $0.0026 |
 
 All 18 drafts passed the fact check (132 values checked, 0 violations).
+
+Since then the risk agent runs on Super and escalates to Ultra only when needed (see *Risk routing* above). On the 32 DEV emails (3 runs, cache off), it costs $0.0093 per assessed email, with 27% of runs on Ultra. The whole pipeline costs $0.0126 per email.
 
 ## Architecture
 
@@ -144,7 +154,7 @@ docker compose up --build        # web on :3000, API on :8000
 ## Evaluation
 
 Synthetic buyer emails modelled on real export paperwork, with hand-written expected outputs:
-- **DEV**: [backend/eval/dev/](backend/eval/dev/), 21 cases; fixes are made only against these.
+- **DEV**: [backend/eval/dev/](backend/eval/dev/), 32 cases; fixes are made only against these.
 - **TEST v1**: [backend/eval/test/](backend/eval/test/), 30 cases. It was held out until Milestone 7 and its failures were analysed there, so it now counts as seen.
 - **TEST v2**: [backend/eval/test_v2/](backend/eval/test_v2/), 30 held-out cases, frozen in commit `24f19ae` before any run.
 
@@ -169,32 +179,44 @@ The full pipeline runs live on Nemotron with the cache off. Full tables, baselin
 
 TEST v1 exposed weaknesses DEV did not have: revision suffixes in PO numbers, orders named without the word "PO", orders without a PO number, review flags on body-only revisions, non-English size tables, shortened colour names, decimal commas, and a value threshold in yen. Each became a new DEV case and a plain-Python fix. No TEST email was used to tune.
 
-| Metric | **TEST v2 (held out, 3 runs)** | DEV (21 cases, 3 runs) | TEST v1 after fixes (seen, 1 run) | TEST v1 at M7 (held out, 3 runs) |
+| Metric | **TEST v2 (held out, 3 runs)** | TEST v2 after DEV-driven fixes (seen, 1 run) | DEV (32 cases, 3 runs) | TEST v1 at M7 (held out, 3 runs) |
 |---|---|---|---|---|
-| Classification: main category | 87.6% | 93.7% | 96.7% | 95.6% |
-| Field extraction accuracy | 96.5% | 98.8% | 98.0% | 91.9% |
-| Line-item accuracy | 83.2% | 94.7% | 100% | 88.7% |
+| Classification: main category | 87.6% | 86.7% | 94.8% | 95.6% |
+| Field extraction accuracy | 96.5% | 97.1% | 98.2% | 91.9% |
+| Line-item accuracy | 83.2% | 76.5% | 93.0% | 88.7% |
 | Emails put on the right order | 98.7% | 100% | 100% | – |
-| Change detection recall / precision | 77.4% / 56.4% | 98.0% / 94.7% | 92.3% / 80.0% | 28.2% / 63.1% |
-| High-risk flags precision / recall | 80.1% / 100% | 100% / 100% | 100% / 100% | 78.0% / 66.7% |
-| Review flags precision / recall | 45.1% / 72.2% | 57.9% / 100% | 71.4% / 83.3% | 8.5% / 33.3% |
-| Drafts with no fact-check violations | 97.1% | 99.2% | 98.2% | 98.7% |
-| Cost per email (all models, incl. drafts) | $0.0215 | $0.0188 | $0.0212 | $0.0157 |
+| PO revision read from the PO number | 50.0% | 100% | 100% | – |
+| Change detection recall / precision | 77.4% / 56.4% | 85.0% / 63.0% | 95.1% / 88.6% | 28.2% / 63.1% |
+| High-risk flags precision / recall | 80.1% / 100% | 87.5% / 100% | 89.7% / 100% | 78.0% / 66.7% |
+| Review flags precision / recall | 45.1% / 72.2% | 35.7% / 83.3% | 73.1% / 100% | 8.5% / 33.3% |
+| Drafts with no fact-check violations | 97.1% | 100% | 98.9% | 98.7% |
+| Risk runs escalated to Ultra | – (always Ultra) | 17.9% | 27.2% | – |
+| Cost per email (all models, incl. drafts) | $0.0215 | $0.0095 | $0.0126 | $0.0157 |
 
-**TEST v2 is the honest number.** Its main weaknesses are listed in the report:
+**The held-out TEST v2 column is the honest number.** It exposed:
 - ambiguous numeric dates read the wrong way round;
 - a status question misread as a date change, which produces a false schedule risk;
 - revision suffixes the PO-number splitter does not know;
-- colour-level change wording.
+- colour-level change wording;
+- a malformed classification reply.
 
-They are reported, not fixed.
+Those patterns were then fixed against 11 new DEV cases (case_022–032) without touching TEST v2. TEST v2 was re-run once, and it now counts as seen.
 
-> **About TEST v2.** All 30 cases (t2_001–t2_030) were written by a separate assistant session from [TEST_V2_SPEC.md](backend/eval/TEST_V2_SPEC.md) alone. The build assistant validated their structure only (file pairs, schema, sums, and that risk labels agree with `eval/label_risk.py`), and no code or prompt was changed after seeing the set.
+That re-run improved PO revisions, change detection, high-risk precision and cost. It was worse on exact intents, line items and review precision. The report traces each of these to a cause:
+- the request's JSON schema, or run-to-run variation;
+- Super's escalated re-reads of line items;
+- new ambiguous-date flags.
 
-The risk agent scores the same with **Super instead of Ultra** on all three sets (every expected high-risk finding; on TEST v2 one false positive against Ultra's one to two per run), at a quarter to a fifth of the risk-stage cost. Most of the reasoning that sets severity is in Python tools and policy, so the model mostly plans checks and summarises. Per-stage costs and the comparison are in the report.
+The false schedule risk on the misread status question remains.
+
+> **About TEST v2.** All 30 cases (t2_001–t2_030) were written by a separate assistant session from [TEST_V2_SPEC.md](backend/eval/TEST_V2_SPEC.md) alone. The build assistant validated their structure only (file pairs, schema, sums, and that risk labels agree with `eval/label_risk.py`), and no code or prompt was changed before the held-out run. Later fixes were made against new DEV cases only; the held-out results are kept as first published.
+
+Before Super became the default, it scored the same as Ultra on high-risk findings on all three sets, at a quarter to a fifth of the risk-stage cost. Most of the reasoning that sets severity is in Python tools and policy, so the model mostly plans checks and summarises.
+
+Known gap: when a date reads both ways and is flagged for review, the guessed date still feeds the risk check (DEV case_026). Per-stage costs, escalation triggers and the comparisons are in the report.
 
 ```bash
-python -m eval.run_eval --split dev --variant routed --run 1    # one pass; also nano_only, ultra_all, super_risk
+python -m eval.run_eval --split dev --variant routed --run 1    # one pass; also nano_only, ultra_all, super_risk, ultra_risk
 python -m eval.report                                            # builds eval/REPORT.md from eval/runs/
 python -m eval.label_risk --split test_v2 --write                 # derives expected high risks from labels
 ```

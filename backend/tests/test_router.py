@@ -50,8 +50,9 @@ def test_every_task_type_has_a_default_tier():
         (TaskType.CHANGE_DETECTION, Tier.NANO, "test/nano"),
         (TaskType.DRAFT_REPLY, Tier.SUPER, "test/super"),
         (TaskType.DRAFT_INTERNAL_NOTE, Tier.SUPER, "test/super"),
-        (TaskType.RISK_REASONING, Tier.ULTRA, "test/ultra"),
-        (TaskType.PLANNING, Tier.ULTRA, "test/ultra"),
+        # Super by default; the agent escalates single runs to Ultra (app/agent/routing.py)
+        (TaskType.RISK_REASONING, Tier.SUPER, "test/super"),
+        (TaskType.PLANNING, Tier.SUPER, "test/super"),
     ],
 )
 def test_task_routes_to_expected_model(settings, session_factory, task, tier, model):
@@ -75,11 +76,11 @@ def test_force_tier_overrides_routing_table(settings, session_factory):
 
 
 def test_per_task_override(settings, session_factory):
-    settings.llm_task_tier_overrides = {TaskType.PLANNING: Tier.SUPER}
+    settings.llm_task_tier_overrides = {TaskType.PLANNING: Tier.ULTRA}
     router = LLMRouter(settings, client=FakeClient(), session_factory=session_factory)
 
-    assert router.tier_for(TaskType.PLANNING) is Tier.SUPER
-    assert router.tier_for(TaskType.RISK_REASONING) is Tier.ULTRA
+    assert router.tier_for(TaskType.PLANNING) is Tier.ULTRA
+    assert router.tier_for(TaskType.RISK_REASONING) is Tier.SUPER
 
 
 def test_successful_call_is_logged_with_tokens_latency_and_cost(settings, session_factory):
@@ -132,3 +133,13 @@ def test_missing_api_key_raises_llm_error(settings, session_factory):
 
     with pytest.raises(LLMError, match="NEBIUS_API_KEY"):
         router.complete(TaskType.CLASSIFY, MESSAGES, max_tokens=64)
+
+
+def test_a_call_can_name_its_tier_but_a_forced_tier_wins(settings, session_factory):
+    client = FakeClient()
+    router = LLMRouter(settings, client=client, session_factory=session_factory)
+
+    assert router.complete(TaskType.PLANNING, MESSAGES, max_tokens=8, tier=Tier.ULTRA).model == "test/ultra"
+
+    settings.llm_force_tier = Tier.NANO
+    assert router.complete(TaskType.PLANNING, MESSAGES, max_tokens=8, tier=Tier.ULTRA).model == "test/nano"

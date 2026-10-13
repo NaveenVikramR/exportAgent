@@ -317,7 +317,7 @@ export default function EmailPage() {
             <Card title="Risk assessment">
               <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                 <p className="text-sm text-zinc-600">
-                  Nemotron Ultra plans the checks; Python tools do the maths. Every flag cites its evidence.
+                  Nemotron Super plans the checks (Ultra when the run is escalated); Python tools do the maths. Every flag cites its evidence.
                 </p>
                 <button
                   onClick={() => assess(run !== null)}

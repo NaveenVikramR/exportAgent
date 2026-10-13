@@ -1,8 +1,8 @@
 # ExportAgent evaluation report
 
-DEV (21 cases) run 3× with the routed setup, end to end with the response cache off: classification and extraction, escalation, order matching and change detection, the risk agent, and drafts with the fact check. Values are mean (min–max) across runs. TEST v1 (30 cases) was run 1× after the fixes in this step. **TEST v1 is now seen**: its failures (Milestone 7) led to new DEV cases, and the fixes were made and checked on DEV only, but TEST v1 numbers below are no longer a held-out measurement; TEST v2 (above) is.
+DEV (32 cases) run 3× with the routed setup, end to end with the response cache off: classification and extraction, escalation, order matching and change detection, the risk agent (Super by default, Ultra on escalation), and drafts with the fact check. Values are mean (min–max) across runs. TEST v2 was run once while held out and once after the DEV-driven fixes of this step; the held-out results below are kept exactly as first published. TEST v1 has been seen since Milestone 7.
 
-Model spend in the DEV and TEST v1 runs after the fixes: **$3.19** (including $0.41 for a DEV pass before the last fixes, kept in `runs/pre_fix/`, not in the tables).
+Model spend: this step (DEV and TEST v2 after the fixes) **$2.09**; TEST v2 held out **$2.12**; the step before **$3.19** (including $0.41 for a DEV pass before its last fixes, kept in `runs/pre_fix/`).
 
 ## TEST v2 (held out)
 
@@ -87,41 +87,161 @@ Field and line-item accuracy averaged over the runs; order matching and high-ris
 | t2_029 | 100.0% | – | yes / yes / yes | 3/3 | schedule | schedule / schedule / schedule | 0 |
 | t2_030 | – | – | – | – | – | – / – / – | 1 |
 
+## TEST v2 after DEV-driven fixes (seen)
+
+The same 30 cases, run once after this step's fixes. **This set is now seen**: its held-out results (above) showed which patterns fail; each fix was then written against new DEV cases (case_022–032) without changing any TEST v2 file. So this is a check that the fixes generalise, not a held-out score.
+
+| Metric | After fixes (1 run) | Held out (3 runs, above) |
+|---|---|---|
+| Classification: main category | 86.7% | 87.6% (86.2%–90.0%) |
+| Classification: all intents (exact set) | 63.3% | 74.2% (73.3%–75.9%) |
+| Classification: has PO data | 90.0% | 89.9% (89.7%–90.0%) |
+| Field extraction accuracy (after escalation) | 97.1% | 96.5% (96.1%–97.1%) |
+| Line-item accuracy (colour, quantity, sizes) | 76.5% | 83.2% (82.4%–84.8%) |
+| Human-review flags: recall | 83.3% | 72.2% (66.7%–83.3%) |
+| Human-review flags: precision | 35.7% | 45.1% (36.4%–62.5%) |
+| Order matching: email put on the right order | 100.0% | 98.7% (96.0%–100.0%) |
+| Order matching: questions put to a person | 2.0 | 1.7 (1.0–2.0) |
+| PO revision read from the PO number | 100.0% | 50.0% (50.0%–50.0%) |
+| Change detection: recall | 85.0% | 77.4% (72.2%–80.0%) |
+| Change detection: precision | 63.0% | 56.4% (46.4%–69.6%) |
+| High-risk flags: precision | 87.5% | 80.1% (75.0%–87.5%) |
+| High-risk flags: recall | 100.0% | 100.0% (100.0%–100.0%) |
+| Drafts written | 58 | 57 (56–58) |
+| Draft values fact-checked | 302 | 336 (327–352) |
+| Draft fact-check violations | 0.0 | 1.7 (1.0–2.0) |
+| Drafts with no violations | 100.0% | 97.1% (96.6%–98.2%) |
+| Escalation rate (emails with an escalated field) | 35.7% | 30.1% (25.9%–35.7%) |
+| Emails handled by Nano alone | 64.3% | 69.9% (64.3%–74.1%) |
+| Escalations resolved by Super | 87.5% | 83.8% (77.8%–88.9%) |
+| Escalation gain: field accuracy | +4.1 pp | +2.8 pp (+1.7 pp–+4.1 pp) |
+| Escalation gain: line-item accuracy | -2.9 pp | +5.0 pp (+2.9 pp–+6.1 pp) |
+| Ultra calls per assessed email | 0.5 | 2.8 (2.7–3.0) |
+| Cost per email (all models) | $0.0095 | $0.0215 ($0.0207–$0.0229) |
+| Latency per email (wall clock, end to end) | 29.7 s | 32.6 s (31.1 s–33.8 s) |
+| Emails that failed to process | 0.0 | 0.3 (0.0–1.0) |
+| Risk runs escalated to Ultra | 17.9% | n/a |
+| Risk-stage cost per assessed email | $0.0069 | $0.0196 ($0.0185–$0.0208) |
+
+### Cost per email by stage, after fixes
+
+| Stage | After fixes | Held out |
+|---|---|---|
+| Extraction | $0.0004 | $0.0004 ($0.0004–$0.0005) |
+| Risk | $0.0064 | $0.0181 ($0.0173–$0.0194) |
+| Drafting | $0.0027 | $0.0030 ($0.0029–$0.0031) |
+| **Total** | $0.0095 | $0.0215 ($0.0207–$0.0229) |
+
+## TEST v2 per case after fixes (routed)
+
+Field and line-item accuracy averaged over the runs; order matching and high-risk groups per run.
+
+| Case | Fields | Line items | Right order | Changes found | Expected high | Predicted high per run | Draft violations |
+|---|---|---|---|---|---|---|---|
+| t2_001 | 100.0% | 100.0% | yes | – | – | – | 0 |
+| t2_002 | 100.0% | 100.0% | yes | – | – | – | 0 |
+| t2_003 | 100.0% | 0.0% | yes | – | – | – | 0 |
+| t2_004 | 100.0% | 0.0% | yes | – | – | – | 0 |
+| t2_005 | 100.0% | 100.0% | yes | – | – | – | 0 |
+| t2_006 | 100.0% | 100.0% | yes | – | – | – | 0 |
+| t2_007 | 100.0% | 100.0% | yes | – | – | – | 0 |
+| t2_008 | 100.0% | 100.0% | yes | – | schedule | schedule | 0 |
+| t2_009 | 100.0% | 100.0% | yes | 2/2 | value | value | 0 |
+| t2_010 | 90.0% | 0.0% | yes | 1/2 | – | – | 0 |
+| t2_011 | 100.0% | 100.0% | yes | – | – | – | 0 |
+| t2_012 | 100.0% | – | yes | 1/1 | – | – | 0 |
+| t2_013 | 50.0% | – | yes | 0/1 | – | – | 0 |
+| t2_014 | 100.0% | – | yes | 1/1 | – | – | 0 |
+| t2_015 | 100.0% | 100.0% | yes | 2/2 | value | value | 0 |
+| t2_016 | 90.0% | – | yes | 0/1 | – | – | 0 |
+| t2_017 | 90.0% | 0.0% | yes | – | – | – | 0 |
+| t2_018 | 90.0% | 100.0% | yes (asked) | 1/1 | – | – | 0 |
+| t2_019 | – | – | – | – | – | – | 0 |
+| t2_020 | – | – | – | – | – | – | 0 |
+| t2_021 | – | – | – | – | – | – | 0 |
+| t2_022 | – | – | – | – | – | schedule | 0 |
+| t2_023 | 90.0% | – | yes | 1/1 | – | – | 0 |
+| t2_024 | 100.0% | 100.0% | yes | 4/4 | value | value | 0 |
+| t2_025 | 100.0% | – | yes | 1/1 | – | – | 0 |
+| t2_026 | 100.0% | 100.0% | yes | – | – | – | 0 |
+| t2_027 | 100.0% | 100.0% | yes (asked) | 2/2 | value | value | 0 |
+| t2_028 | 100.0% | 100.0% | yes | – | schedule | schedule | 0 |
+| t2_029 | 90.0% | – | yes | 1/1 | schedule | schedule | 0 |
+| t2_030 | – | – | – | – | – | – | 0 |
+
 ## Results: routed setup
 
-| Metric | DEV now | DEV at M7 (10 cases) | TEST v1 now (seen) | TEST v1 at M7 (held out) | TEST v2 (held out) |
+DEV now has the 11 cases added in this step (case_022–032); the earlier columns are the same pipeline before this step's changes, on the cases DEV had then.
+
+| Metric | DEV now (32 cases) | DEV before this step (21) | DEV at M7 (10 cases) | TEST v1 after M7 fixes (seen) | TEST v1 at M7 (held out) |
 |---|---|---|---|---|---|
-| Classification: main category | 93.7% (90.5%–100.0%) | 96.7% (90.0%–100.0%) | 96.7% | 95.6% (93.3%–96.7%) | 87.6% (86.2%–90.0%) |
-| Classification: all intents (exact set) | 84.1% (81.0%–85.7%) | 70.0% (60.0%–80.0%) | 96.7% | 92.2% (90.0%–93.3%) | 74.2% (73.3%–75.9%) |
-| Classification: has PO data | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% | 94.4% (93.3%–96.7%) | 89.9% (89.7%–90.0%) |
-| Field extraction accuracy (after escalation) | 98.8% (98.5%–99.5%) | 97.8% (96.6%–98.9%) | 98.0% | 91.9% (91.4%–92.6%) | 96.5% (96.1%–97.1%) |
-| Line-item accuracy (colour, quantity, sizes) | 94.7% (90.9%–100.0%) | 88.9% (87.5%–91.7%) | 100.0% | 88.7% (88.7%–88.7%) | 83.2% (82.4%–84.8%) |
-| Human-review flags: recall | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 83.3% | 33.3% (33.3%–33.3%) | 72.2% (66.7%–83.3%) |
-| Human-review flags: precision | 57.9% (50.0%–66.7%) | 100.0% (100.0%–100.0%) | 71.4% | 8.5% (8.3%–8.7%) | 45.1% (36.4%–62.5%) |
-| Order matching: email put on the right order | 100.0% (100.0%–100.0%) | n/a | 100.0% | n/a | 98.7% (96.0%–100.0%) |
-| Order matching: questions put to a person | 1.0 (1.0–1.0) | n/a | 0.0 | n/a | 1.7 (1.0–2.0) |
-| PO revision read from the PO number | 100.0% (100.0%–100.0%) | n/a | n/a | n/a | 50.0% (50.0%–50.0%) |
-| Change detection: recall | 98.0% (94.1%–100.0%) | 100.0% (100.0%–100.0%) | 92.3% | 28.2% (23.1%–34.6%) | 77.4% (72.2%–80.0%) |
-| Change detection: precision | 94.7% (84.2%–100.0%) | 100.0% (100.0%–100.0%) | 80.0% | 63.1% (50.0%–70.0%) | 56.4% (46.4%–69.6%) |
-| High-risk flags: precision | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% | 78.0% (76.9%–78.6%) | 80.1% (75.0%–87.5%) |
-| High-risk flags: recall | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% | 66.7% (62.5%–68.8%) | 100.0% (100.0%–100.0%) |
-| Drafts written | 41 (41–41) | 18 (18–18) | 56 | 52 (52–52) | 57 (56–58) |
-| Draft values fact-checked | 277 (263–285) | 129 (123–141) | 399 | 313 (299–327) | 336 (327–352) |
-| Draft fact-check violations | 0.3 (0.0–1.0) | 0.0 (0.0–0.0) | 1.0 | 0.7 (0.0–1.0) | 1.7 (1.0–2.0) |
-| Drafts with no violations | 99.2% (97.6%–100.0%) | 100.0% (100.0%–100.0%) | 98.2% | 98.7% (98.1%–100.0%) | 97.1% (96.6%–98.2%) |
-| Escalation rate (emails with an escalated field) | 36.7% (35.0%–40.0%) | 33.3% (33.3%–33.3%) | 34.6% | 23.3% (20.8%–25.0%) | 30.1% (25.9%–35.7%) |
-| Emails handled by Nano alone | 63.3% (60.0%–65.0%) | 66.7% (66.7%–66.7%) | 65.4% | 76.7% (75.0%–79.2%) | 69.9% (64.3%–74.1%) |
-| Escalations resolved by Super | 91.9% (85.7%–100.0%) | 100.0% (100.0%–100.0%) | 90.0% | 100.0% (100.0%–100.0%) | 83.8% (77.8%–88.9%) |
-| Escalation gain: field accuracy | +3.4 pp (+3.0 pp–+4.0 pp) | +3.0 pp (+2.2 pp–+3.4 pp) | +2.7 pp | +1.3 pp (+0.8 pp–+2.0 pp) | +2.8 pp (+1.7 pp–+4.1 pp) |
-| Escalation gain: line-item accuracy | +11.4 pp (+9.1 pp–+13.6 pp) | +12.5 pp (+12.5 pp–+12.5 pp) | +7.5 pp | +5.0 pp (+1.9 pp–+9.4 pp) | +5.0 pp (+2.9 pp–+6.1 pp) |
-| Ultra calls per assessed email | 2.3 (2.2–2.4) | 2.4 (2.1–2.8) | 2.8 | 2.6 (2.3–2.8) | 2.8 (2.7–3.0) |
-| Cost per email (all models) | $0.0188 ($0.0187–$0.0190) | $0.0169 ($0.0145–$0.0191) | $0.0212 | $0.0157 ($0.0144–$0.0165) | $0.0215 ($0.0207–$0.0229) |
-| Latency per email (wall clock, end to end) | 31.6 s (29.1 s–35.4 s) | 24.2 s (20.8 s–25.9 s) | 32.1 s | 28.0 s (26.8 s–28.8 s) | 32.6 s (31.1 s–33.8 s) |
-| Emails that failed to process | 0.0 (0.0–0.0) | 0.0 (0.0–0.0) | 0.0 | 0.0 (0.0–0.0) | 0.3 (0.0–1.0) |
+| Classification: main category | 94.8% (93.8%–96.9%) | 93.7% (90.5%–100.0%) | 96.7% (90.0%–100.0%) | 96.7% | 95.6% (93.3%–96.7%) |
+| Classification: all intents (exact set) | 85.4% (81.2%–87.5%) | 84.1% (81.0%–85.7%) | 70.0% (60.0%–80.0%) | 96.7% | 92.2% (90.0%–93.3%) |
+| Classification: has PO data | 97.9% (96.9%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% | 94.4% (93.3%–96.7%) |
+| Field extraction accuracy (after escalation) | 98.2% (98.0%–98.3%) | 98.8% (98.5%–99.5%) | 97.8% (96.6%–98.9%) | 98.0% | 91.9% (91.4%–92.6%) |
+| Line-item accuracy (colour, quantity, sizes) | 93.0% (91.9%–93.5%) | 94.7% (90.9%–100.0%) | 88.9% (87.5%–91.7%) | 100.0% | 88.7% (88.7%–88.7%) |
+| Human-review flags: recall | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 83.3% | 33.3% (33.3%–33.3%) |
+| Human-review flags: precision | 73.1% (66.7%–80.0%) | 57.9% (50.0%–66.7%) | 100.0% (100.0%–100.0%) | 71.4% | 8.5% (8.3%–8.7%) |
+| Order matching: email put on the right order | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | n/a | 100.0% | n/a |
+| Order matching: questions put to a person | 1.0 (1.0–1.0) | 1.0 (1.0–1.0) | n/a | 0.0 | n/a |
+| PO revision read from the PO number | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | n/a | n/a | n/a |
+| Change detection: recall | 95.1% (92.6%–96.3%) | 98.0% (94.1%–100.0%) | 100.0% (100.0%–100.0%) | 92.3% | 28.2% (23.1%–34.6%) |
+| Change detection: precision | 88.6% (83.3%–92.9%) | 94.7% (84.2%–100.0%) | 100.0% (100.0%–100.0%) | 80.0% | 63.1% (50.0%–70.0%) |
+| High-risk flags: precision | 89.7% (84.6%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% | 78.0% (76.9%–78.6%) |
+| High-risk flags: recall | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% | 66.7% (62.5%–68.8%) |
+| Drafts written | 63 (62–63) | 41 (41–41) | 18 (18–18) | 56 | 52 (52–52) |
+| Draft values fact-checked | 399 (383–408) | 277 (263–285) | 129 (123–141) | 399 | 313 (299–327) |
+| Draft fact-check violations | 1.0 (0.0–2.0) | 0.3 (0.0–1.0) | 0.0 (0.0–0.0) | 1.0 | 0.7 (0.0–1.0) |
+| Drafts with no violations | 98.9% (98.4%–100.0%) | 99.2% (97.6%–100.0%) | 100.0% (100.0%–100.0%) | 98.2% | 98.7% (98.1%–100.0%) |
+| Escalation rate (emails with an escalated field) | 32.6% (32.3%–33.3%) | 36.7% (35.0%–40.0%) | 33.3% (33.3%–33.3%) | 34.6% | 23.3% (20.8%–25.0%) |
+| Emails handled by Nano alone | 67.4% (66.7%–67.7%) | 63.3% (60.0%–65.0%) | 66.7% (66.7%–66.7%) | 65.4% | 76.7% (75.0%–79.2%) |
+| Escalations resolved by Super | 91.2% (81.8%–100.0%) | 91.9% (85.7%–100.0%) | 100.0% (100.0%–100.0%) | 90.0% | 100.0% (100.0%–100.0%) |
+| Escalation gain: field accuracy | +2.5 pp (+2.4 pp–+2.7 pp) | +3.4 pp (+3.0 pp–+4.0 pp) | +3.0 pp (+2.2 pp–+3.4 pp) | +2.7 pp | +1.3 pp (+0.8 pp–+2.0 pp) |
+| Escalation gain: line-item accuracy | +7.5 pp (+6.5 pp–+9.7 pp) | +11.4 pp (+9.1 pp–+13.6 pp) | +12.5 pp (+12.5 pp–+12.5 pp) | +7.5 pp | +5.0 pp (+1.9 pp–+9.4 pp) |
+| Ultra calls per assessed email | 0.8 (0.7–0.8) | 2.3 (2.2–2.4) | 2.4 (2.1–2.8) | 2.8 | 2.6 (2.3–2.8) |
+| Cost per email (all models) | $0.0126 ($0.0118–$0.0138) | $0.0188 ($0.0187–$0.0190) | $0.0169 ($0.0145–$0.0191) | $0.0212 | $0.0157 ($0.0144–$0.0165) |
+| Latency per email (wall clock, end to end) | 30.4 s (28.9 s–32.4 s) | 31.6 s (29.1 s–35.4 s) | 24.2 s (20.8 s–25.9 s) | 32.1 s | 28.0 s (26.8 s–28.8 s) |
+| Emails that failed to process | 0.0 (0.0–0.0) | 0.0 (0.0–0.0) | 0.0 (0.0–0.0) | 0.0 | 0.0 (0.0–0.0) |
+| Risk runs escalated to Ultra | 27.2% (22.6%–30.0%) | n/a | n/a | n/a | n/a |
+| Risk-stage cost per assessed email | $0.0093 ($0.0087–$0.0104) | $0.0158 ($0.0156–$0.0161) | n/a | $0.0205 | n/a |
 
-## Cost per email by pipeline stage (DEV, with drafts)
+## Risk routing: Super by default, Ultra on escalation
 
-Extraction = classify, extract, escalated re-extraction and stated-change detection; risk = the agent's planning and reasoning; drafting = the reply and the internal note. Averaged over all DEV emails (emails without an order skip risk; emails needing no reply skip drafting).
+Triggers (app/agent/routing.py): the current plan is infeasible; the email or thread mentions materials already available or a partial shipment; Super's flags conflict with the Python feasibility result; Super's report fails validation. The Ultra column re-runs DEV with risk always on Ultra (no drafts), for comparison on the same cases.
+
+| Metric | DEV: routed (Super + escalation) | DEV: Ultra always | TEST v2 after fixes: routed |
+|---|---|---|---|
+| Risk runs escalated to Ultra | 27.2% (22.6%–30.0%) | 100.0% | 17.9% |
+| High-risk flags: precision | 89.7% (84.6%–100.0%) | 76.9% | 87.5% |
+| High-risk flags: recall | 100.0% (100.0%–100.0%) | 90.9% | 100.0% |
+| Risk-stage calls per assessed email | 2.5 (2.4–2.6) | 2.5 | 2.6 |
+| Risk-stage cost per assessed email | $0.0093 ($0.0087–$0.0104) | $0.0189 | $0.0069 |
+| Risk-stage model time per assessed email | 9.2 s (8.2 s–10.8 s) | 11.7 s | 8.6 s |
+| Emails assessed | 31 (30–31) | 31 | 28 |
+
+Cost per email by stage, this step (DEV with drafts; the Ultra-always pass ran without drafts):
+
+| Stage | DEV: routed | DEV: Ultra always | TEST v2 after fixes |
+|---|---|---|---|
+| Extraction | $0.0004 ($0.0004–$0.0004) | $0.0004 | $0.0004 |
+| Risk | $0.0089 ($0.0082–$0.0101) | $0.0183 | $0.0064 |
+| Drafting | $0.0033 ($0.0032–$0.0033) | $0.0000 | $0.0027 |
+| **Total** | $0.0126 ($0.0118–$0.0138) | $0.0187 | $0.0095 |
+
+Escalation triggers on DEV (count over all runs, 96 emails):
+
+- current plan infeasible: 22
+- thread says materials are available: 3
+- partial shipment mentioned: 3
+
+Escalation triggers on TEST v2 after fixes (count over all runs, 30 emails):
+
+- current plan infeasible: 5
+- thread says materials are available: 1
+
+## Cost per email by pipeline stage (DEV before this step, with drafts)
+
+Extraction = classify, extract, escalated re-extraction and stated-change detection; risk = the agent's planning and reasoning; drafting = the reply and the internal note. Averaged over all DEV emails (emails without an order skip risk; emails needing no reply skip drafting). These passes ran before this step, when routed meant Ultra for risk.
 
 | Stage | Routed (ours) | Nano only | Ultra for everything | Super for risk |
 |---|---|---|---|---|
@@ -144,7 +264,7 @@ Quality of the same DEV passes:
 
 ## Risk agent: Super instead of Ultra
 
-Same pipeline, same pre-fetch and tools; only the planning and risk-reasoning calls move from Ultra to Super. One Super pass per split; the Ultra columns are the routed passes.
+Same pipeline, same pre-fetch and tools; only the planning and risk-reasoning calls move from Ultra to Super. One Super pass per split; the Ultra columns are the routed passes. These ran before this step (when routed meant Ultra for risk) and led to Super becoming the default.
 
 | Metric | DEV: Ultra | DEV: Super | TEST v1: Ultra | TEST v1: Super | TEST v2: Ultra | TEST v2: Super |
 |---|---|---|---|---|---|---|
@@ -158,13 +278,13 @@ Same pipeline, same pre-fetch and tools; only the planning and risk-reasoning ca
 
 ## Cost and latency by model (routed, per email)
 
-| Model | DEV cost | TEST v1 cost | DEV calls | TEST v1 calls | DEV model time | TEST v1 model time |
-|---|---|---|---|---|---|---|
-| Nano | $0.0003 ($0.0003–$0.0003) | $0.0003 | 2.4 (2.3–2.4) | 2.3 | 6.7 s (6.1 s–7.5 s) | 4.0 s |
-| Super | $0.0035 ($0.0033–$0.0036) | $0.0032 | 2.5 (2.4–2.6) | 2.3 | 14.6 s (13.7 s–15.4 s) | 12.7 s |
-| Ultra | $0.0151 ($0.0148–$0.0154) | $0.0177 | 2.2 (2.1–2.2) | 2.4 | 8.6 s (7.7 s–9.4 s) | 10.7 s |
+| Model | DEV now cost | DEV now calls | DEV now model time | TEST v2 after fixes cost | TEST v2 after fixes calls |
+|---|---|---|---|---|---|
+| Nano | $0.0003 ($0.0003–$0.0003) | 2.4 (2.4–2.5) | 5.0 s (4.4 s–5.7 s) | $0.0003 | 2.5 |
+| Super | $0.0059 ($0.0057–$0.0061) | 4.1 (3.9–4.2) | 18.8 s (18.5 s–18.9 s) | $0.0058 | 4.4 |
+| Ultra | $0.0064 ($0.0058–$0.0075) | 0.7 (0.7–0.8) | 4.2 s (3.2 s–5.6 s) | $0.0035 | 0.5 |
 
-## DEV per case (routed)
+## DEV per case (routed, now)
 
 Field and line-item accuracy averaged over the runs; order matching and high-risk groups per run.
 
@@ -176,23 +296,34 @@ Field and line-item accuracy averaged over the runs; order matching and high-ris
 | case_004 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
 | case_005 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
 | case_006 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
-| case_007 | 93.3% | – | yes / yes / yes | 3/3 | – | – / – / – | 0 |
+| case_007 | 90.0% | – | yes / yes / yes | 3/3 | – | – / – / – | 0 |
 | case_008 | – | – | – | – | – | – / – / – | 0 |
 | case_009 | 100.0% | 100.0% | yes / yes / yes | 12/12 | schedule | schedule / schedule / schedule | 0 |
-| case_010 | 100.0% | 33.3% | yes / yes / yes | – | schedule | schedule / schedule / schedule | 0 |
+| case_010 | 100.0% | 0.0% | yes / yes / yes | – | schedule | schedule / schedule / schedule | 0 |
 | case_011 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
 | case_012 | 100.0% | 100.0% | yes / yes / yes | 6/6 | value | value / value / value | 0 |
 | case_013 | 100.0% | – | yes / yes / yes | 3/3 | schedule | schedule / schedule / schedule | 0 |
 | case_014 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
 | case_015 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
 | case_016 | 90.0% | 100.0% | yes (asked) / yes (asked) / yes (asked) | 6/6 | value | value / value / value | 0 |
-| case_017 | 100.0% | 66.7% | yes / yes / yes | 8/9 | schedule | schedule / schedule / schedule | 0 |
-| case_018 | 96.7% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
-| case_019 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 1 |
+| case_017 | 96.7% | 66.7% | yes / yes / yes | 8/9 | schedule | schedule / schedule / schedule | 0 |
+| case_018 | 90.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
+| case_019 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
 | case_020 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
-| case_021 | 96.7% | 100.0% | yes / yes / yes | 3/3 | – | – / – / – | 0 |
+| case_021 | 90.0% | 100.0% | yes / yes / yes | 3/3 | – | – / – / – | 0 |
+| case_022 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
+| case_023 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
+| case_024 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
+| case_025 | 100.0% | 100.0% | yes / yes / yes | – | – | – / – / – | 0 |
+| case_026 | 100.0% | 100.0% | yes / yes / yes | – | – | schedule / – / schedule | 0 |
+| case_027 | – | – | – | – | – | – / – / – | 0 |
+| case_028 | 100.0% | 100.0% | yes / yes / yes | 3/3 | – | – / – / – | 0 |
+| case_029 | 90.0% | 100.0% | yes / yes / yes | 6/6 | value | value / value / value | 0 |
+| case_030 | 100.0% | 0.0% | yes / yes / yes | 6/9 | value | value / value / value | 2 |
+| case_031 | 100.0% | 100.0% | yes / yes / yes | 9/9 | value | value / value / value | 1 |
+| case_032 | 100.0% | – | yes / yes / yes | 3/3 | – | schedule / – / schedule | 0 |
 
-## TEST v1 per case (routed, after the fixes)
+## TEST v1 per case (routed, after the M7 fixes)
 
 Field and line-item accuracy averaged over the runs; order matching and high-risk groups per run.
 
@@ -231,9 +362,9 @@ Field and line-item accuracy averaged over the runs; order matching and high-ris
 
 ## How the sets were built
 
-- **DEV (21 cases).**
+- **DEV (32 cases).** case_022–032 were added in the step after TEST v2 (see below).
   - case_001–010 are the cases ExportAgent was built against, and the demo inbox.
-  - case_011–021 were added in this step, one or more for each failure pattern TEST v1 exposed. They are new emails with new fictional buyers (Tidewater Lane, Orchard Row, Brunnhof Sport, Marisma Moda, Hinoki Works), plus follow-ups to Maison Clairet (case_003) and Kestrel Kids (case_010). Nothing was copied from TEST.
+  - case_011–021 were added in the previous step, one or more for each failure pattern TEST v1 exposed. They are new emails with new fictional buyers (Tidewater Lane, Orchard Row, Brunnhof Sport, Marisma Moda, Hinoki Works), plus follow-ups to Maison Clairet (case_003) and Kestrel Kids (case_010). Nothing was copied from TEST.
   - Fixes are made and checked on DEV only.
 - **TEST v1 (30 cases)** was held out until Milestone 7 (written and committed before any run, commit `10e1b46`). Its failures were analysed in the Milestone 7 report, so it is now **seen**. It is re-run here once to show the effect of the fixes, not as a held-out score.
 - **TEST v2 (30 cases)** was written by a separate assistant session from [TEST_V2_SPEC.md](TEST_V2_SPEC.md) alone, frozen in commit `24f19ae` before any run, and is the held-out measurement.
@@ -241,7 +372,69 @@ Field and line-item accuracy averaged over the runs; order matching and high-ris
   - **Expected high risks** come from the severity rubric applied to the *true* order state in arrival order: *schedule* when the current plan is infeasible under the factory profile, *value* when the contract value changes by 10% or more, or by about USD 5,000.
   - They are now derived by [label_risk.py](label_risk.py) from the labels alone, never from app output.
 
-## Changes in this step
+## This step: Super-default risk routing and DEV-driven fixes (DEV case_022–032)
+
+The held-out TEST v2 run showed the failure patterns listed under "TEST v2: what the held-out set shows" below. The fixes were specified from those patterns and written against **11 new DEV cases** (case_022–032). These have new fictional buyers (Pinecrest Supply, Haus Lindqvist, Wattle & Gum, Kumo Textiles, Northbay Outfitters), dates from 19 Oct to 2 Nov 2026, and no text from TEST v2. No TEST v2 file was changed. TEST v2 was re-run once afterwards and is reported as **seen**.
+
+| # | Change | Kind | DEV cases |
+|---|---|---|---|
+| 14 | **Risk routing.** Super is the default for risk planning and reasoning. A run goes to Ultra when (a) the current plan is infeasible, so delivery options need weighing; (b) the email or thread says materials are already available ("fabric is in-house", "trims in stock") or offers a partial or split shipment; (c) Super's raw flags conflict with the Python feasibility result (a high delivery or capacity flag on a feasible or tight plan, or none on an infeasible one); or (d) Super's report fails validation even after the retry. Triggers (a) and (b) are checked before the run; (c) and (d) re-run the whole assessment on Ultra. The reason is a "routing" step in the trace, `result.routing` on the run, and the `detail` of every Ultra call in the LLM log (`app/agent/routing.py`). | Python | 007 (fabric in-house), 031 (partial shipment), every infeasible plan |
+| 15 | **Ambiguous numeric dates.** When a date the model returned was written in the email as a numeric date whose day and month are both 12 or under (e.g. 03/04/2027), it is re-read with the email's convention. Evidence: dates in the same email that read only one way (10/19/2026, 20.10.2026), and the buyer's country (United States and Philippines month-first, Canada either, others day-first). Year-first and ISO dates are never touched. If the evidence is missing or contradictory, `delivery_date` is flagged `ambiguous_date` for review instead of guessed. The email's own stated old/new dates use the same convention. | Python | 022 (US), 023 (DE), 024 (AU), 025 (JP), 026 (CA, flagged) |
+| 16 | **A repeated date is no change.** Quoted "earlier" values equal to the new ones no longer create a second version for a new order. For an existing order, an unchanged date already produced no version; this is now tested. | Python | 027 |
+| 17 | **Revision-suffix normaliser.** Covers "Rev A", "rev. B", "REVISION 2", "Amendment 1", "Amendment No. 3", "Amdt 4", "R3", "(R3)", "v2", "_v2". A revision the model drops from the PO number is recovered from the text next to it. A PO with a revision read as the style becomes the PO. A bare letter ("WG-7781-A") is a revision only when the base PO is a known order and the full one is not. | Python | 028, 029, 031, 032 |
+| 18 | **Colour changes.** Wording kept with a colour name is removed ("Nachtblau to" → "Nachtblau", "increase Navy" → "Navy"). "Drop / cancel / remove <colour>", "<colour> is cancelled" and "<colour> to 0" record the colour as removed (not when negated: "do not cancel"). | Python | 030 |
+| 19 | **Classification enum.** The classify call sends the output JSON schema with the category enum, as `response_format` (checked live on Token Factory). Any category or intent outside the enum is mapped to "other", kept in `unrecognised`, flagged `unrecognised_intent`, and the email goes to review instead of failing. | Python + request schema | – (unit tests; no DEV email reproduces it) |
+| 20 | **Eval oracle for match questions.** The label answers "yes" only if the question names the order the label links the email to; otherwise "no". It used to answer "yes" to any question on an email with a linked order. | Eval harness | 016 |
+
+**Other changes:**
+- The trace UI labels model steps Super or Ultra from the model actually used, and shows the routing step.
+- The router takes an explicit per-call tier (`tier=`); a forced tier (the `nano_only` and `ultra_all` baselines) still wins.
+- New eval variant `ultra_risk` (risk always on Ultra, no escalation), for the routing comparison.
+- `super_risk` now means Super with escalation turned off.
+
+**Runs and reporting:**
+- Earlier runs were archived: the previous step's DEV and TEST v1 passes to `runs/before_routing/`, and the held-out TEST v2 passes to `runs/test_v2_heldout/`.
+- The held-out TEST v2 section of this report is regenerated from those same files and is byte-for-byte unchanged.
+- DEV labels: risk fields for case_022–032 were derived by `label_risk.py`; no existing label changed.
+
+### Fixed after this step's runs
+
+| # | Change | DEV case |
+|---|---|---|
+| 21 | Restoring a longer colour name from the email no longer re-attaches the wording after it. `restore_colour_names` turned the cleaned "Heather Charcoal" back into "Heather Charcoal to" (case_030, run 3), undoing change 18. Covered by a unit test; the passes above predate it. | 030 |
+
+### Reading this step's results
+
+**Risk routing (DEV, 3 runs):**
+- 27% of risk runs went to Ultra: 25 runs over the three passes. 22 of them had an infeasible plan (in case_007 the thread also says the fabric is in-house); the other 3 were the partial-shipment offer in case_031, once per pass.
+- The two after-the-run triggers, a conflict with feasibility and a failed validation, never fired on DEV or TEST v2.
+- High-risk recall stayed at 100%. Precision is 89.7%, down from 100% before this step on the 21 earlier cases. The false positives come from case_026 and case_032 (2 of 3 runs each), see below.
+- Risk cost per assessed email fell from $0.0158 (Ultra always, before this step) to $0.0093.
+- The same DEV run with Ultra always on for risk (one pass, no drafts) scored 76.9% precision and 90.9% recall at $0.0189. On these cases, Ultra everywhere is not better than Super with escalation.
+
+**What the new DEV cases show:**
+- **Dates:** the US, German, Australian and Japanese dates (case_022–025) were read correctly in every run.
+- **case_026 (Canadian date that reads both ways):** the model guessed 4 March in 2 of 3 runs. With that guess, the risk agent (on Ultra, since the plan looked infeasible) raised a *schedule* high on case_026 and its amendment case_032, against a label that expects none. **The ambiguity flag does not stop a guessed date from driving the risk assessment.** That is the next fix: when `delivery_date` is flagged ambiguous, assess feasibility for both readings or report the date as unknown.
+  - The `ambiguous_date` review flag itself is not measured on case_026. The label puts `delivery_date` in `skip_fields`, which also drops it from the review metric; a label-design slip, noted rather than changed after the run.
+- **Revision suffixes:** "REVISION 2", the bare "WG-7781-A", "Rev. 1" and "Amendment No. 1" were read in every run (PO revision accuracy 100%).
+- **Colours (case_030):** the dropped Mustard Seed was recorded as removed in every run. Nano returned no line items for "Heather Charcoal to 900 pcs" in 2 of 3 runs (that change was missed), and the third run hit the bug fixed as change 21.
+- **Repeated date (case_027):** classified correctly as a question in every run, so no order version was touched.
+
+**TEST v2 after the fixes (seen, 1 run) against the held-out runs:**
+- **Gains:**
+  - PO revisions 100% (was 50%).
+  - Change detection 85.0% / 63.0% (was 77.4% / 56.4%).
+  - High-risk precision 87.5% (was 80.1%), recall still 100%.
+  - No draft fact-check violations (was 1.7 per run).
+  - No failed emails (t2_015's malformed intent no longer fails; change 19).
+  - Cost per email $0.0095 (was $0.0215), with 18% of risk runs on Ultra.
+- **Regressions on this single run, and their causes:**
+  - **Intents (exact set) 63.3%, below the held-out range (73–76%).** Three new-PO emails (t2_003, t2_005, t2_007) were given extra intents (po_revision, delivery_change). This is the first run with the JSON schema in the request (change 19); DEV intents did not drop (85.4% vs 84.1%), so a single run cannot separate the schema from run-to-run variation. To watch.
+  - **Line items 76.5%, below the held-out range (82–85%).** In t2_003 and t2_004, Nano's line items were right, but Super's escalated re-read (a size-total mismatch) returned colours without quantities. That is the escalation path, unchanged in this step, varying between runs.
+  - **Review precision 35.7% (recall 83.3%).** Two emails (t2_006, t2_016) got the new `ambiguous_date` flag, which their labels do not expect. Whether those dates really read both ways from the email alone was not checked, to keep TEST v2 out of the fixing loop.
+- **Unchanged:** the order question read as a date change (t2_022) still produces a false *schedule* high. No fix in this step addressed classification of such emails.
+
+## Changes in the previous step (Milestone 7 patterns, DEV case_011–021)
 
 Every change below was made against DEV cases. None was tuned on a TEST v1 email. TEST v1 failures from Milestone 7 only named the pattern; each fix was then written and checked against the new DEV case listed.
 
@@ -276,7 +469,7 @@ The only prompt edit: the planner's rubric line now says "about USD 5,000" inste
 - New `super_risk` variant: risk planning and reasoning on Super instead of Ultra.
 - The dataset loader reads JSON or YAML and a `test_v2` split.
 
-### Fixed after the runs
+### Fixed after the previous step's runs
 
 | # | Change | DEV case |
 |---|---|---|

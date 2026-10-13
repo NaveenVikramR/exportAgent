@@ -1,0 +1,26 @@
+id: case_026
+classification:
+  category: new_po
+  intents: [new_po]
+  has_po_data: true
+extraction:
+  buyer: Northbay Outfitters Ltd
+  po_number: NB-3307
+  style: NB-LS-2
+  currency: CAD
+  unit_price: "9.10"
+  total_quantity: 1200
+  # 4 March or 3 April: Canada uses both orders and the email has no other date
+  delivery_date: null
+  incoterms: FOB
+  port: Chennai
+  destination_country: Canada
+  line_items:
+    - {colour: Fir, quantity: 600}
+    - {colour: Slate, quantity: 600}
+skip_fields: [delivery_date]
+# The date must be flagged for a person, not guessed.
+expected_review_fields: [delivery_date]
+
+expected_high_risk: []
+risk_note: ""

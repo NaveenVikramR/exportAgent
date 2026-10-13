@@ -31,14 +31,16 @@ def complete_structured(
     run_id: int | None = None,
     detail: str | None = None,
     collect: list[LLMResult] | None = None,
+    response_format: dict[str, Any] | None = None,
 ) -> SchemaT:
-    """`collect`, if given, receives every LLMResult (for callers that report cost)."""
+    """`collect`, if given, receives every LLMResult (for callers that report cost).
+    `response_format` constrains the reply where the endpoint supports it (e.g. a JSON schema)."""
     messages = list(messages)
     error = ""
     for _attempt in range(2):
         result = router.complete(
             task, messages, max_tokens=max_tokens, temperature=0, reasoning=reasoning,
-            run_id=run_id, detail=detail,
+            run_id=run_id, detail=detail, response_format=response_format,
         )
         if collect is not None:
             collect.append(result)

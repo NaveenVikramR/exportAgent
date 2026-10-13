@@ -1,0 +1,37 @@
+id: case_022
+title: US PO with month-first numeric dates ("04/05/2027" is 5 April)
+sender: "Mia Torres <mia.torres@pinecrestsupply.example>"
+subject: "PO PCS-4410 - crew tees"
+received_at: "2026-10-19"
+body: |
+  Hi Karthik,
+
+  Attached is PO PCS-4410 for the crew tees we sampled. Please confirm.
+
+  Thanks,
+  Mia Torres
+  Product Development, Pinecrest Supply Co., Portland OR
+attachments:
+  - filename: PCS-4410.pdf
+    content_type: application/pdf
+    text: |
+      PINECREST SUPPLY CO.
+      1220 NW Marshall St, Portland, OR 97209, USA
+
+      PURCHASE ORDER   PO #: PCS-4410
+      PO Date: 10/19/2026
+      Vendor: Sri Velan Knits, Tiruppur
+
+      Style: PCS-CR-21  Crew neck tee, 100% combed cotton, 180 gsm
+      Unit price: USD 6.15
+      Terms: FOB Chennai
+      Ship to: Pinecrest DC, Portland, OR, USA
+      Ship Date (Ex-Factory): 04/05/2027
+
+      Color             S     M     L     XL    Total
+      Heather Charcoal  100   250   250   100   700
+      Mustard Seed      80    170   170   80    500
+      Bone              100   200   200   100   600
+
+      Total quantity: 1,800 pcs
+      Total value: USD 11,070.00

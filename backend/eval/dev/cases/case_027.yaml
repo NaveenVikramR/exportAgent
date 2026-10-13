@@ -1,0 +1,14 @@
+id: case_027
+title: Status question that repeats the order's unchanged ship date
+sender: "Mia Torres <mia.torres@pinecrestsupply.example>"
+subject: "PCS-4410 check-in"
+received_at: "2026-10-26"
+body: |
+  Hi Karthik,
+
+  Just checking in on PCS-4410 - the ship date stays 04/05/2027 on our side, nothing changes.
+  Has cutting started yet?
+
+  Thanks,
+  Mia
+attachments: []

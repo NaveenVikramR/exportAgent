@@ -1,0 +1,15 @@
+id: case_030
+title: Body-only colour changes ("<colour> to <qty>", "drop <colour>")
+sender: "Mia Torres <mia.torres@pinecrestsupply.example>"
+subject: "PCS-4410 color changes"
+received_at: "2026-10-29"
+body: |
+  Hi Karthik,
+
+  Two changes on PCS-4410: Heather Charcoal to 900 pcs, and please drop Mustard Seed entirely -
+  it didn't test well. That makes the order 1,500 pcs. Same price and ship date.
+
+  Thanks,
+  Mia
+  Pinecrest Supply Co.
+attachments: []

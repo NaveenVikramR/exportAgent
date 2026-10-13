@@ -1,0 +1,29 @@
+id: case_030
+classification:
+  category: po_revision
+  intents: [po_revision]
+  has_po_data: true
+extraction:
+  buyer: Pinecrest Supply Co.
+  po_number: PCS-4410
+  style: null
+  currency: null
+  unit_price: null
+  total_quantity: 1500
+  delivery_date: null
+  incoterms: null
+  port: null
+  destination_country: null
+  line_items:
+    - {colour: Heather Charcoal, quantity: 900}
+# Only the changed colour is restated; Mustard Seed is removed, Bone stays.
+partial_line_items: true
+expected_review_fields: []
+revises: case_022
+expected_changes:
+  - {field: total_quantity, old: 1800, new: 1500}
+  - {field: "line_items.Heather Charcoal.quantity", old: 700, new: 900}
+  - {field: "line_items.Mustard Seed", old: 500, new: null}
+
+expected_high_risk: [value]
+risk_note: "tight: Feasible but tight: 93% of free capacity used, 8 days of slack. | value -16.7% (-1845.00 USD)"

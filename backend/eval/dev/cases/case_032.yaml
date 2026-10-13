@@ -1,0 +1,15 @@
+id: case_032
+title: Price-only "Amendment No. 1" written in the email body (CAD)
+sender: "Owen Leblanc <owen@northbayoutfitters.example>"
+subject: "NB-3307 Amendment No. 1"
+received_at: "2026-11-02"
+body: |
+  Hi Karthik,
+
+  NB-3307 Amendment No. 1: the price is now CAD 8.80 per piece (was 9.10), as agreed on our call.
+  Nothing else changes.
+
+  Thanks,
+  Owen
+  Northbay Outfitters Ltd
+attachments: []

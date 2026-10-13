@@ -52,6 +52,8 @@ class Settings(BaseSettings):
 
     # Re-extract fields that fail a Python check with the stronger model (off = Nano-only baseline)
     escalation_enabled: bool = True
+    # Risk agent: run on Super, escalate to Ultra on the triggers in app/agent/routing.py.
+    risk_escalation_enabled: bool = True
     # Run the deterministic order checks in Python before the agent loop (see app/agent/loop.py)
     agent_prefetch: bool = True
 
