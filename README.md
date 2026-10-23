@@ -99,11 +99,21 @@ _To be filled: architecture diagram._
 
 ## Setup
 
-Requirements: Python 3.11+, Node.js 20+.
+Everything builds from source; no registry login or token is needed. The demo inbox comes with its model responses cached, so you can click through the whole story without any API key. Keys are only needed for new emails.
+
+Requirements: Python 3.11+ and Node.js 20+, or Docker.
 
 ```bash
-cp .env.example .env          # then add NEBIUS_API_KEY and TAVILY_API_KEY
+cp .env.example .env          # optional: add NEBIUS_API_KEY and TAVILY_API_KEY for live runs
 ```
+
+Quickest, with Docker (Postgres, API and web together, demo loaded on first start):
+
+```bash
+docker compose up --build        # web on http://localhost:3000, API on :8000
+```
+
+Or without Docker:
 
 Backend:
 
@@ -113,9 +123,11 @@ python -m venv .venv
 .venv/Scripts/activate        # macOS/Linux: source .venv/bin/activate
 pip install -e ".[dev]"
 alembic upgrade head
-python -m scripts.seed --analyse --agent --drafts   # load, analyse, assess and draft the 10 demo emails
+python -m scripts.load_demo   # the demo inbox: 8 analysed emails, risk runs, drafts, cached responses
 uvicorn app.main:app --reload --port 8000
 ```
+
+With a Nebius key you can instead build the demo live from the raw emails: `python -m scripts.seed --analyse --agent --drafts`.
 
 No Nebius key yet? Set `LLM_MODE=mock` in `.env`. Calls are then answered by a rule-based stand-in ([backend/app/llm/mock.py](backend/app/llm/mock.py)) with no network and no cost, so the whole pipeline runs. Mock results are labelled as such in the trace and the eval report.
 
@@ -139,11 +151,7 @@ python -m eval.report            # builds eval/REPORT.md from the passes
 python -m scripts.rebuild_demo   # rebuild the local demo database, keeping the response cache
 ```
 
-Docker (Postgres, API and web together, reading secrets from `.env`):
-
-```bash
-docker compose up --build        # web on :3000, API on :8000
-```
+The public demo runs from prebuilt private images instead; see [DEPLOY.md](DEPLOY.md). That is only for the hosted server and is not needed to run ExportAgent yourself.
 
 ## Cost controls for the public demo
 

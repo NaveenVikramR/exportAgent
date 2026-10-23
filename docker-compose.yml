@@ -18,10 +18,14 @@ services:
 
   api:
     build: ./backend
-    env_file: .env
+    env_file:
+      - path: .env
+        required: false
     environment:
       DATABASE_URL: postgresql+psycopg://exportagent:${POSTGRES_PASSWORD:-exportagent}@db:5432/exportagent
       WEB_ORIGIN: ${WEB_ORIGIN:-http://localhost:3000}
+      # Load the demo inbox (with its cached model responses) into the empty database.
+      DEMO_SEED_ON_EMPTY: "true"
     depends_on:
       db:
         condition: service_healthy
