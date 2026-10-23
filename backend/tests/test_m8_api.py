@@ -136,6 +136,24 @@ def test_demo_reset_keeps_todays_spend(session_factory, settings, demo):  # noqa
     assert llm.spent_today() == before
 
 
+def test_a_failed_rerun_keeps_showing_the_previous_assessment(client, session_factory, demo):  # noqa: F811
+    with session_factory() as session:
+        email = session.get(Email, demo)
+        good = AgentRun(email_id=email.id, order_id=email.order_id, status="completed", rounds=1,
+                        result={"summary": "stored", "flags": [], "checked": []})
+        session.add(good)
+        session.flush()
+        session.add(AgentRun(email_id=email.id, order_id=email.order_id, status="failed", rounds=0,
+                             error="No key."))
+        session.commit()
+        good_id = good.id
+
+    body = client.get(f"/api/emails/{demo}/agent").json()
+
+    assert body["id"] == good_id and body["status"] == "completed"
+    assert "did not complete: No key." in body["notice"]
+
+
 def test_demo_reset_is_off_unless_enabled(client):
     assert client.post("/api/demo/reset").status_code == 403
 

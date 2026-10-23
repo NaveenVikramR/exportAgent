@@ -99,7 +99,7 @@ _To be filled: architecture diagram._
 
 ## Setup
 
-Everything builds from source; no registry login or token is needed. The demo inbox comes with its model responses cached, so you can click through the whole story without any API key. Keys are only needed for new emails.
+Everything builds from source; no registry login or token is needed. The demo inbox comes with its analyses, risk assessments and drafts stored, so you can click through the whole story without any API key: approve the reply, record the buyer's decision, and generate the export documents. A key is needed for pasting new emails and for the **Re-run** buttons. Without one, a re-run says so and the stored result stays on screen. `LLM_MODE=mock` runs everything with a rule-based stand-in instead.
 
 Requirements: Python 3.11+ and Node.js 20+, or Docker.
 

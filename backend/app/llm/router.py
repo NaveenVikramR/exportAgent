@@ -85,7 +85,10 @@ class LLMRouter:
     def client(self) -> OpenAI:
         if self._client is None:
             if not self.settings.nebius_api_key:
-                raise LLMError("NEBIUS_API_KEY is not set. Add it to .env.")
+                raise LLMError(
+                    "This needs a live model call and NEBIUS_API_KEY is not set (add it to .env, or set "
+                    "LLM_MODE=mock). Stored demo results keep working without a key."
+                )
             self._client = OpenAI(
                 base_url=self.settings.nebius_base_url,
                 api_key=self.settings.nebius_api_key,

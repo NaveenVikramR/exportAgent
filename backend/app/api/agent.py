@@ -23,6 +23,24 @@ def _latest_run(session: Session, email_id: int) -> AgentRun | None:
     )
 
 
+def _last_good_run(session: Session, email_id: int, before_id: int) -> AgentRun | None:
+    return session.scalar(
+        select(AgentRun)
+        .where(AgentRun.email_id == email_id, AgentRun.id < before_id, AgentRun.result.is_not(None))
+        .order_by(AgentRun.id.desc())
+        .limit(1)
+    )
+
+
+def _shown(session: Session, run: AgentRun) -> AgentRunOut:
+    """A failed re-run never hides the assessment before it: show that one, and say why."""
+    if run.status == "failed":
+        good = _last_good_run(session, run.email_id, run.id)
+        if good is not None:
+            return run_out(session, good, notice=f"The re-run did not complete: {run.error} Showing the previous assessment.")
+    return run_out(session, run)
+
+
 def run_out(session: Session, run: AgentRun, notice: str | None = None) -> AgentRunOut:
     calls = {call.id: call for call in session.scalars(select(LLMCall).where(LLMCall.run_id == run.id))}
     steps = []
@@ -61,7 +79,7 @@ def latest(email_id: int, session: Session = Depends(get_session)) -> AgentRunOu
     run = _latest_run(session, email_id)
     if run is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No risk assessment yet.")
-    return run_out(session, run)
+    return _shown(session, run)
 
 
 def _run_in_background(email_id: int, llm: LLMRouter) -> None:
@@ -117,4 +135,4 @@ def assess(
         if previous is not None and previous.result is not None:
             return run_out(session, previous, notice=f"{exc} Showing the stored risk assessment.")
         raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=str(exc)) from exc
-    return run_out(session, run)
+    return _shown(session, run)
