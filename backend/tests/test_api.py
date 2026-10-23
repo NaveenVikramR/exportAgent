@@ -28,6 +28,10 @@ def test_health_reports_database_ok(client):
     body = response.json()
     assert body["status"] == "ok"
     assert body["database"] == "ok"
+    assert body["demo_loaded"] is False
+    assert body["mode"] in {"live", "cached"}
+    assert body["spend_today_usd"] == "0.0000"
+    assert Decimal(body["spend_cap_usd"]) > 0
 
 
 def test_routes_lists_every_task_type(client):

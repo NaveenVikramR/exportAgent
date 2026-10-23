@@ -1,5 +1,6 @@
-# Full stack: Postgres + API + web. Reads secrets from .env (never committed).
+# Local full stack: Postgres + API + web, built from source. Reads secrets from .env (never committed).
 #   docker compose up --build
+# Production (SQLite, prebuilt images, Caddy) is deploy/docker-compose.yml; see DEPLOY.md.
 services:
   db:
     image: postgres:17-alpine

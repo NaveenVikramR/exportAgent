@@ -1,0 +1,22 @@
+# SITE_ADDRESS comes from .env, e.g. 13-201-45-67.sslip.io. Caddy gets the HTTPS certificate itself.
+{$SITE_ADDRESS} {
+	encode zstd gzip
+
+	# PDF uploads are capped at 5 MB by the API; allow a little for the form.
+	request_body {
+		max_size 6MB
+	}
+
+	handle /health {
+		rewrite * /api/health
+		reverse_proxy api:8000
+	}
+
+	handle /api/* {
+		reverse_proxy api:8000
+	}
+
+	handle {
+		reverse_proxy web:3000
+	}
+}
