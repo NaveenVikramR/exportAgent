@@ -116,6 +116,26 @@ def test_demo_snapshot_round_trip(session_factory, demo):  # noqa: F811
         assert session.query(Order).count() == 2
 
 
+def test_demo_reset_keeps_todays_spend(session_factory, settings, demo):  # noqa: F811
+    from decimal import Decimal
+
+    from app.models import LLMCall
+
+    llm = LLMRouter(settings, session_factory=session_factory)
+    with session_factory() as session:
+        snapshot = export_snapshot(session)
+        session.add(LLMCall(task_type="classify", tier="nano", model="m", input_tokens=1, output_tokens=1,
+                            latency_ms=1, cost_usd=Decimal("0.25"), source="live", success=True))
+        session.commit()
+    before = llm.spent_today()
+
+    with session_factory() as session:
+        load_snapshot(session, snapshot)
+
+    assert before >= Decimal("0.25")
+    assert llm.spent_today() == before
+
+
 def test_demo_reset_is_off_unless_enabled(client):
     assert client.post("/api/demo/reset").status_code == 403
 

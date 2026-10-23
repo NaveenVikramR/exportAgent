@@ -11,7 +11,7 @@ generates them live, which needs no model call.
 """
 
 import json
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
@@ -66,7 +66,21 @@ def _typed(table: Table, row: dict[str, Any]) -> dict[str, Any]:
 
 
 def load_snapshot(session: Session, snapshot: dict[str, Any]) -> dict[str, int]:
-    """Replace everything in the database with the snapshot. Returns rows per table."""
+    """Replace everything in the database with the snapshot. Returns rows per table.
+
+    Today's live model calls survive the reset, so resetting the demo never resets the
+    daily spend cap.
+    """
+    from app.models import LLMCall
+
+    calls = LLMCall.__table__
+    start_of_day = datetime.now(UTC).replace(hour=0, minute=0, second=0, microsecond=0)
+    todays_spend = [
+        {key: value for key, value in row._mapping.items() if key not in ("id", "run_id")}
+        for row in session.execute(
+            select(calls).where(calls.c.source == "live", calls.c.created_at >= start_of_day)
+        )
+    ]
     for table in reversed(Base.metadata.sorted_tables):
         session.execute(table.delete())
     counts = {}
@@ -87,6 +101,8 @@ def load_snapshot(session: Session, snapshot: dict[str, Any]) -> dict[str, int]:
                     f"SELECT setval(pg_get_serial_sequence('{table.name}', 'id'), "
                     f"COALESCE((SELECT MAX(id) FROM {table.name}), 0) + 1, false)"
                 ))
+    if todays_spend:
+        session.execute(calls.insert(), todays_spend)
     session.commit()
     return counts
 
