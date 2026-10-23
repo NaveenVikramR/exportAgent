@@ -10,7 +10,7 @@ This guide puts the public demo on one small server in **Asia Pacific (Mumbai), 
 | Disk | 10 GB gp3 |
 | Address | 1 Elastic IP + free `sslip.io` name |
 | Database | SQLite file in a Docker volume, backed up nightly, 7 days kept |
-| Images | GitHub Container Registry (free for public repos) |
+| Images | GitHub Container Registry, private, pulled with a read-only token (free) |
 | Not used | Load balancer, RDS, NAT gateway, anything else that costs extra |
 
 ## Cost
@@ -37,13 +37,25 @@ You pay these from your credits until you delete everything (see the last sectio
 2. **Check your plan and credits.** In **AWS Settings → Billing**, note your remaining credits and, on the free plan, the plan end date. The demo has to stay up until 15 December.
 3. **Set the console to Mumbai.** In the [EC2 console](https://console.aws.amazon.com/ec2/), the Region menu at the top right must say **Asia Pacific (Mumbai)**. Check it every time you open the console.
 
-## 1. Make the Docker images public (one time)
+## 1. Keep the images private and make a read-only token (one time)
 
-GitHub Actions builds the images when code is pushed to `main`. New GitHub packages start out private, so the server could not download them.
+GitHub Actions builds the images when code is pushed to `main`. Because the repository is public, GitHub made the images public too. Make them private, so only the server (with a token) can download them. Private images are free; GitHub currently charges nothing for container storage or downloads.
 
-1. Open <https://github.com/NaveenVikramR/exportAgent/actions> and wait for the **images** workflow to show a green tick.
+**Make both images private.**
+
+1. Open <https://github.com/NaveenVikramR/exportAgent/actions> and wait for the latest **images** run to show a green tick.
 2. Open <https://github.com/NaveenVikramR?tab=packages>. You will see `exportagent-api` and `exportagent-web`.
-3. For each one: click it, then **Package settings** (bottom right) → **Danger Zone → Change visibility → Public**, and type the name to confirm.
+3. For each one: click it, then **Package settings** (right side) → **Danger Zone → Change visibility → Private**, and type the name to confirm.
+
+**Create a classic token that can only read packages.** The server uses it to download the images.
+
+1. Open <https://github.com/settings/tokens> and click **Generate new token → Generate new token (classic)**.
+2. **Note:** `exportagent-ec2 pull`
+3. **Expiration:** choose **Custom** and pick **31 Dec 2026**, after the demo ends.
+4. **Select scopes:** tick only **read:packages**. Leave everything else unticked, including `repo` and `write:packages`.
+5. Click **Generate token**. Copy the token (it starts with `ghp_`) and keep the page open. GitHub shows it only once, and you'll paste it on the server in step 5.
+
+Don't save the token in a file, a note or chat. If you lose it, delete it on the same page and make a new one.
 
 ## 2. Import your SSH key
 
@@ -104,7 +116,16 @@ sudo bash /opt/exportagent/deploy/setup.sh
 exit
 ```
 
-`setup.sh` creates the 2 GB swap file, installs Docker, limits log sizes, creates `deploy/.env` and schedules the nightly backup. Log out with `exit`, then reconnect with the same `ssh` command so the Docker permission takes effect.
+`setup.sh` creates the 2 GB swap file, installs Docker, limits log sizes, creates `deploy/.env` and schedules the nightly backup.
+
+Partway through, it asks two questions:
+
+- **GitHub username:** press **Enter** to accept `NaveenVikramR`.
+- **GitHub token:** paste the `ghp_` token from step 1 with **right-click** and press **Enter**. Nothing appears as you paste; that is deliberate.
+
+It should print **Login Succeeded**. Docker may warn that the credential is stored *unencrypted* in `/home/ubuntu/.docker/config.json`. That file is the only place the token is kept, and only the `ubuntu` user can read it. If the login fails, run `sudo bash /opt/exportagent/deploy/setup.sh --relogin` to try again.
+
+Log out with `exit`, then reconnect with the same `ssh` command so the Docker permission takes effect.
 
 ## 6. Type your keys into `.env`
 
@@ -148,8 +169,63 @@ All three services (`api`, `web`, `caddy`) should say **Up**. Caddy needs up to 
 
 ## 8. Alerts
 
-1. **AWS Budgets.** Open the **Billing and Cost Management** console, then **Budgets → Create budget → Use a template → Monthly cost budget**. Enter the amount and your email, then **Create budget**. Expected usage is about $8.65 a month, so a **$5** budget will email you around day 17 of each month. Pick **$10** if you only want to hear about unexpected spend.
+1. **AWS Budgets: one budget, two alerts.** Expected usage is about $8.65 a month. These alerts only email you if something costs more than planned.
+   1. Open the **Billing and Cost Management** console, then **Budgets → Create budget**.
+   2. Choose **Customize (advanced)**, then **Cost budget**, then **Next**.
+   3. Name `exportagent-monthly`, period **Monthly**, renewal **Recurring budget**, budgeting method **Fixed**, amount **12.00**.
+   4. Under **Budget scope**, keep **All AWS services**. Open **Advanced options** and make sure **Credits** is *not* ticked. You want to see what the usage costs before credits pay for it. Click **Next**.
+   5. **Add an alert threshold:** threshold **10**, type **Absolute value**, trigger **Actual**, and your email as the recipient.
+   6. **Add an alert threshold** again: threshold **12**, type **Absolute value**, trigger **Forecasted**, same email.
+   7. Click **Next**, skip the actions, then **Create budget**.
+
+   The first alert emails you once actual spend this month passes **$10**. The second emails you as soon as AWS forecasts the month will end above **$12**.
 2. **UptimeRobot.** It's free at <https://uptimerobot.com>. Click **New monitor**, choose type **HTTP(s) – Keyword**, set the URL to `https://13-201-45-67.sslip.io/health`, keyword `"status":"ok"`, alert when the keyword **doesn't exist**, interval 5 minutes. Add your email as the alert contact.
+
+## 9. Load test: is 1 GB enough?
+
+The memory limits add up to 834 MB (api 450, web 256, caddy 128), and the server has about 900 MB plus 2 GB of swap. A container can't take more than its limit, and swap catches short peaks. This test shows whether real use fits.
+
+Open **two** SSH windows to the server.
+
+**Window 1: watch.** Leave this running.
+
+```bash
+cd /opt/exportagent/deploy
+docker stats
+```
+
+**Window 2: load.** This starts 5 risk-agent runs at the same time, the heaviest thing the app does.
+
+```bash
+free -m
+bash /opt/exportagent/deploy/loadtest.sh
+free -m
+```
+
+The test first runs one request alone as a baseline, then 5 at once. Then it restores the demo data and shows `/health`, and checks whether any container was killed. Most model responses come from the cache. Prompts that aren't cached yet are live calls, about $0.03–0.04 per test, counted against the $1 daily cap. Run it at most a few times a day.
+
+**What to look at:**
+
+| Where | What | Fine | Move to t4g.small |
+|---|---|---|---|
+| `docker stats`, MEM USAGE / LIMIT | `api` | under ~380 MiB of 450 | stays above ~420 MiB, or hits the limit |
+| `docker stats`, MEM USAGE / LIMIT | `web` | under ~200 MiB of 256 | stays above ~240 MiB |
+| `free -m`, Mem row | `available` | over ~150 MB | under ~100 MB after the test ends |
+| `free -m`, Swap row | `used` | under ~300 MB | over ~600 MB, or still growing on each run |
+| `loadtest.sh` | HTTP codes | all `200` | any `500` or `502`, or a timeout |
+| `loadtest.sh` | time for the 5 runs | under ~3× the single baseline | over ~5× the baseline, or any run over 60 s |
+| `loadtest.sh` | OOMKilled / restarts | `false` / `0` | `true`, or restarts above 0 |
+
+On a PC the same test took 3.8 s for one run, and 0.2–12.3 s for 5 at once, all `200`. Expect the server to be somewhat slower; what matters is the ratio to its own baseline.
+
+To see whether the server is short of memory right now, run `vmstat 1 10`. Non-zero numbers that keep appearing in the `si` and `so` columns mean it is swapping. Pages will feel slow, and it's time to move up.
+
+**Move to t4g.small (2 GB) if** two or more rows land in the right-hand column, or any container was OOM-killed. It costs about twice as much for the instance, roughly $4 more a month. To switch:
+
+1. **Instances:** select `exportagent`, then **Instance state → Stop**, and wait until it shows **Stopped**.
+2. **Actions → Instance settings → Change instance type →** `t4g.small` **→ Apply**.
+3. **Instance state → Start.** The Elastic IP, disk and data stay the same, and the containers start by themselves.
+4. If you set up budgets, raise them to $15 actual and $18 forecast.
 
 ---
 
@@ -164,6 +240,8 @@ docker compose pull
 docker compose up -d
 docker image prune -f
 ```
+
+If `docker compose pull` says **denied** or **unauthorized**, the GitHub token has expired or was deleted. Make a new one (step 1) and run `sudo bash /opt/exportagent/deploy/setup.sh --relogin`.
 
 `git pull` updates the config files, `pull` fetches the new images, `up -d` restarts only what changed, and `prune` deletes the old images so the disk doesn't fill.
 
@@ -199,15 +277,43 @@ docker compose run --rm --no-deps api cp /data/backups/exportagent-YYYY-MM-DD.db
 docker compose start api
 ```
 
-## Deleting everything after 15 December
+## Teardown after 15 December
 
-Do this so credits stop draining. All of it is in the EC2 console, in **Mumbai**.
+Do this so credits stop draining. Stopping the instance is **not** enough: a stopped instance still pays for its disk ($0.91 a month) and its Elastic IP ($3.65 a month). Do the steps in order, in the EC2 console with the Region set to **Mumbai**.
 
-1. **Instances:** select `exportagent`, then **Instance state → Terminate (delete) instance**. Wait until the state is **Terminated**. This also deletes its 10 GB disk.
-2. **Elastic IPs:** select the address, then **Actions → Release Elastic IP addresses → Release**. An Elastic IP that isn't released keeps costing $3.65 a month even with no server.
-3. **Volumes** (under Elastic Block Store): the list should be empty. Delete any `exportagent` volume left over.
-4. **Snapshots:** this should be empty too, since this setup creates none.
-5. Optional and free: delete the `exportagent-web` security group and the `exportagent-ec2` key pair.
-6. A day later, check **AWS Settings → Billing**. EC2 charges should stop on the day you deleted things.
+**Optional: keep a copy of the data first.** On the server:
 
-The GitHub images cost nothing and can stay.
+```bash
+cd /opt/exportagent/deploy && bash backup.sh
+docker compose cp api:/data/backups ./backups-final
+```
+
+Then on your PC, in PowerShell:
+
+```powershell
+scp -i $env:USERPROFILE\.ssh\exportagent_ec2 -r ubuntu@13.201.45.67:/opt/exportagent/deploy/backups-final .
+```
+
+1. **Terminate the instance.** Go to **Instances**, select `exportagent`, then **Instance state → Terminate (delete) instance → Terminate**. Wait until the state shows **Terminated**; this takes a minute or two.
+2. **Release the Elastic IP.** It is billed every hour until it is released, even with no server attached.
+   1. Go to **Network & Security → Elastic IPs** and select the address.
+   2. If **Associated instance ID** still shows an instance, use **Actions → Disassociate Elastic IP address** first.
+   3. Then **Actions → Release Elastic IP addresses → Release**. The list should now be empty.
+3. **Delete the volume.** Go to **Elastic Block Store → Volumes**. The 10 GB disk is normally deleted with the instance. If any volume is still listed with state **available**, select it, then **Actions → Delete volume → Delete**. The list should be empty.
+4. **Delete any snapshots.** Go to **Elastic Block Store → Snapshots**, with the filter set to **Owned by me**. This setup makes none, but if any are listed, select them, then **Actions → Delete snapshot → Delete**.
+5. **Check for leftover AMIs.** Go to **Images → AMIs**, filter **Owned by me**. If you ever made an image of the server, select it, then **Actions → Deregister AMI**, and delete its snapshot as in step 4.
+6. **Optional, and free to keep:** delete the `exportagent-web` security group (**Network & Security → Security Groups**) and the `exportagent-ec2` key pair (**Key Pairs**).
+7. **Optional, budget alerts:** in **Billing and Cost Management → Budgets**, select `exportagent-monthly`, then **Actions → Delete**. Budgets cost nothing, so you can keep it to catch anything you missed.
+8. **Optional, GitHub:**
+   - Delete the `exportagent-ec2 pull` token at <https://github.com/settings/tokens>. It expires on 31 Dec 2026 anyway.
+   - Delete the two images at <https://github.com/NaveenVikramR?tab=packages>, via **Package settings → Delete this package**.
+   - Delete UptimeRobot's monitor, or it will email you that the site is down.
+9. **Check it worked.** A day later, in **Billing and Cost Management → Bills**, the EC2 lines for the current day should be $0. Also look at **AWS Settings → Billing**: your credits should stop going down.
+
+You can also run a quick check with the AWS CLI, if it's set up for this project. All three commands should print `[]`:
+
+```bash
+aws ec2 describe-instances --region ap-south-1 --filters Name=instance-state-name,Values=pending,running,stopping,stopped --query 'Reservations[].Instances[].InstanceId'
+aws ec2 describe-addresses --region ap-south-1 --query 'Addresses[].PublicIp'
+aws ec2 describe-volumes --region ap-south-1 --query 'Volumes[].VolumeId'
+```

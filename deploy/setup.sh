@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # One-time server setup for Ubuntu 24.04. Run from the cloned repo:
 #   sudo bash /opt/exportagent/deploy/setup.sh
+#   sudo bash /opt/exportagent/deploy/setup.sh --relogin   # replace the GHCR token
 # Safe to run again: every step checks whether it is already done.
 set -euo pipefail
 
@@ -44,6 +45,30 @@ echo "== Limit the system journal to 100 MB"
 mkdir -p /etc/systemd/journald.conf.d
 printf '[Journal]\nSystemMaxUse=100M\n' > /etc/systemd/journald.conf.d/size.conf
 systemctl restart systemd-journald
+
+echo "== Log in to GitHub Container Registry (the images are private)"
+# The token is read with echo off, passed to docker login on stdin, and kept only in Docker's
+# credential file (/home/$APP_USER/.docker/config.json, mode 600). Run with --relogin to replace it.
+APP_HOME="$(getent passwd "$APP_USER" | cut -d: -f6)"
+DOCKER_CFG="$APP_HOME/.docker"
+if [[ "${1:-}" == "--relogin" ]] || ! grep -q '"ghcr.io"' "$DOCKER_CFG/config.json" 2>/dev/null; then
+  read -rp "GitHub username [NaveenVikramR]: " GH_USER
+  GH_USER="${GH_USER:-NaveenVikramR}"
+  read -rsp "GitHub token (classic, read:packages only; typing is hidden): " GH_TOKEN
+  echo
+  mkdir -p "$DOCKER_CFG"
+  if ! printf '%s' "$GH_TOKEN" | DOCKER_CONFIG="$DOCKER_CFG" docker login ghcr.io -u "$GH_USER" --password-stdin; then
+    unset GH_TOKEN
+    echo "Login failed. Check the token and its read:packages scope, then run: sudo bash $0 --relogin" >&2
+    exit 1
+  fi
+  unset GH_TOKEN
+  chown -R "$APP_USER:$APP_USER" "$DOCKER_CFG"
+  chmod 700 "$DOCKER_CFG"
+  chmod 600 "$DOCKER_CFG/config.json"
+else
+  echo "Already logged in to ghcr.io (run with --relogin to replace the token)."
+fi
 
 echo "== .env"
 if [[ ! -f "$DEPLOY_DIR/.env" ]]; then
