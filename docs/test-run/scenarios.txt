@@ -1,0 +1,103 @@
+=== T1 ===
+From: Emily Carter <emily.carter@harbourline-apparel.example>
+Subject: New PO HLA-24019 – HL-TS-310 crew tee
+
+Hi Karthik,
+
+Please book the following order:
+
+PO: HLA-24019
+Style: HL-TS-310 men's crew neck tee, 180 GSM
+Price: USD 4.20 per piece, FOB Tuticorin
+Ex-factory: 29 January 2027
+Destination: United States (Savannah, GA)
+
+Colour          S     M     L     XL    Total
+Deep Navy       300   600   600   300   1,800
+Stone Grey      200   400   400   200   1,200
+
+Total: 3,000 pcs
+
+Please confirm receipt and the ex-factory date.
+
+Thanks,
+Emily Carter
+Harbourline Apparel Inc.
+
+=== T2 ===
+From: Emily Carter <emily.carter@harbourline-apparel.example>
+Subject: HLA-24019 Rev A – qty up, earlier ship
+
+Hi Karthik,
+
+Our holiday promo moved up. Revised PO HLA-24019 Rev A:
+
+Deep Navy: S 400 / M 800 / L 800 / XL 400 = 2,400
+Stone Grey: unchanged at 1,200
+New total: 3,600 pcs
+New ex-factory: 10 December 2026
+Price and terms unchanged.
+
+Please confirm you can make it.
+
+Emily
+Harbourline Apparel Inc.
+
+=== T3 ===
+From: Emily Carter <emily.carter@harbourline-apparel.example>
+Subject: Re: HLA-24019 Rev A – qty up, earlier ship
+
+Hi Karthik,
+
+Understood about the fabric lead time. Good news from our side: our nominated mill has already delivered the full fabric for HLA-24019 to your factory last week, so fabric is in-house. Can we do ex-factory 18 December 2026 instead?
+
+Emily
+
+> On 24 Oct 2026, Karthik wrote:
+> Emily, with the fabric lead time we cannot meet 10 December.
+
+=== T4 ===
+From: Tom Reyes <tom@bluekite-goods.example>
+Subject: PO BK-7781 polo order
+
+Hi,
+
+PO BK-7781, style BK-PL-02 piqué polo, colour Forest Green 1,500 pcs (S 300 / M 500 / L 500 / XL 200), price USD 6.75, FOB Chennai, ex-factory 03/02/2027.
+
+Thanks,
+Tom
+Blue Kite Goods
+
+=== T5 ===
+From: Anna Vogt <a.vogt@nordwind-textil.example>
+Subject: Bestellung NW-5520
+
+Hello Karthik,
+
+our order NW-5520 for the hoodie NW-HD-14, at EUR 11,40 as agreed on the phone.
+
+Artikel: NW-HD-14 Kapuzenpullover
+Preis: EUR 11,90 / Stück
+FOB Chennai, Liefertermin ab Werk: 26.02.2027, Germany
+
+Farbe          S     M     L     XL    Summe
+Waldgrün       100   200   200   100   600
+Anthrazit      150   250   250   150   800
+Gesamt: 1.400 Stück
+
+Grüße
+Anna Vogt
+Nordwind Textil GmbH
+
+=== T6 ===
+From: Emily Carter <emily.carter@harbourline-apparel.example>
+Subject: HLA-24019 – lab dips, payment, samples
+
+Hi Karthik,
+
+1. Lab dip for Deep Navy: option B approved. Stone Grey: please resubmit, it's too green.
+2. Our 30% advance for HLA-24019 was remitted today.
+3. Please send 2 PP samples per colour in size M before bulk cutting.
+
+Thanks,
+Emily

@@ -1,0 +1,140 @@
+{
+ "before": {
+  "total_calls": 68,
+  "total_cost_usd": "0.16662944",
+  "llm_mode": "live",
+  "spent_today_usd": "0.05417278",
+  "daily_spend_cap_usd": "1.00",
+  "by_model": [
+   {
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "tier": "nano",
+    "source": "live",
+    "calls": 2,
+    "input_tokens": 1571,
+    "output_tokens": 693,
+    "avg_latency_ms": 4349,
+    "cost_usd": "0.00026058"
+   },
+   {
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "tier": "nano",
+    "source": "snapshot",
+    "calls": 17,
+    "input_tokens": 14585,
+    "output_tokens": 5164,
+    "avg_latency_ms": 2104,
+    "cost_usd": "0.00211446"
+   },
+   {
+    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+    "tier": "ultra",
+    "source": "live",
+    "calls": 6,
+    "input_tokens": 21799,
+    "output_tokens": 7415,
+    "avg_latency_ms": 4781,
+    "cost_usd": "0.04404400"
+   },
+   {
+    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+    "tier": "ultra",
+    "source": "snapshot",
+    "calls": 8,
+    "input_tokens": 32635,
+    "output_tokens": 11365,
+    "avg_latency_ms": 5093,
+    "cost_usd": "0.06673000"
+   },
+   {
+    "model": "nvidia/nemotron-3-super-120b-a12b",
+    "tier": "super",
+    "source": "live",
+    "calls": 6,
+    "input_tokens": 26372,
+    "output_tokens": 2174,
+    "avg_latency_ms": 4681,
+    "cost_usd": "0.00986820"
+   },
+   {
+    "model": "nvidia/nemotron-3-super-120b-a12b",
+    "tier": "super",
+    "source": "snapshot",
+    "calls": 29,
+    "input_tokens": 68175,
+    "output_tokens": 25733,
+    "avg_latency_ms": 10186,
+    "cost_usd": "0.04361220"
+   }
+  ]
+ },
+ "after": {
+  "total_calls": 120,
+  "total_cost_usd": "0.28926468",
+  "llm_mode": "live",
+  "spent_today_usd": "0.17680802",
+  "daily_spend_cap_usd": "1.00",
+  "by_model": [
+   {
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "tier": "nano",
+    "source": "live",
+    "calls": 17,
+    "input_tokens": 11405,
+    "output_tokens": 4463,
+    "avg_latency_ms": 2837,
+    "cost_usd": "0.00175542"
+   },
+   {
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "tier": "nano",
+    "source": "snapshot",
+    "calls": 17,
+    "input_tokens": 14585,
+    "output_tokens": 5164,
+    "avg_latency_ms": 2104,
+    "cost_usd": "0.00211446"
+   },
+   {
+    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+    "tier": "ultra",
+    "source": "live",
+    "calls": 18,
+    "input_tokens": 74444,
+    "output_tokens": 20287,
+    "avg_latency_ms": 5282,
+    "cost_usd": "0.13530500"
+   },
+   {
+    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+    "tier": "ultra",
+    "source": "snapshot",
+    "calls": 8,
+    "input_tokens": 32635,
+    "output_tokens": 11365,
+    "avg_latency_ms": 5093,
+    "cost_usd": "0.06673000"
+   },
+   {
+    "model": "nvidia/nemotron-3-super-120b-a12b",
+    "tier": "super",
+    "source": "live",
+    "calls": 31,
+    "input_tokens": 69981,
+    "output_tokens": 20837,
+    "avg_latency_ms": 4950,
+    "cost_usd": "0.03974760"
+   },
+   {
+    "model": "nvidia/nemotron-3-super-120b-a12b",
+    "tier": "super",
+    "source": "snapshot",
+    "calls": 29,
+    "input_tokens": 68175,
+    "output_tokens": 25733,
+    "avg_latency_ms": 10186,
+    "cost_usd": "0.04361220"
+   }
+  ]
+ }
+}
