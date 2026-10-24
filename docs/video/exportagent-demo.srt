@@ -1,0 +1,107 @@
+1
+00:00:00,321 --> 00:00:06,821
+This is ExportAgent, an AI export desk for apparel and textile exporters.
+
+2
+00:00:06,821 --> 00:00:13,821
+A German buyer has just sent a revised purchase order: Rev 1 of PO NW-45120.
+
+3
+00:00:13,821 --> 00:00:20,321
+Here is their email, with the purchase order attached as a PDF.
+
+4
+00:00:20,432 --> 00:00:27,432
+Nemotron Nano extracted every field, with a confidence score and the exact source quote.
+
+5
+00:00:27,432 --> 00:00:34,432
+Python then checks each one: is the quote really in the email, and do the sizes add up?
+
+6
+00:00:34,432 --> 00:00:40,932
+The order keeps every version, and Python compares them field by field.
+
+7
+00:00:40,932 --> 00:00:46,432
+The total is up 1,500 pieces, and the ex-factory date moved 15 days earlier.
+
+8
+00:00:46,432 --> 00:00:51,832
+Navy alone is up 33%. Every change goes to the risk check.
+
+9
+00:00:51,833 --> 00:00:57,833
+Python found the new plan infeasible, so this run escalated to Nemotron Ultra.
+
+10
+00:00:57,833 --> 00:01:01,833
+The factory is 4,186 pieces short of free capacity.
+
+11
+00:01:01,833 --> 00:01:05,700
+The trace shows every step, and the Python result behind each flag.
+
+12
+00:01:05,700 --> 00:01:10,700
+Ultra chose to check Germany's import rules with a Tavily web search.
+
+13
+00:01:10,700 --> 00:01:15,890
+Its sources are kept as evidence. The labelling rule is listed under Info checked.
+
+14
+00:01:15,890 --> 00:01:21,890
+Nemotron Super drafted the reply. A Python fact check verified all 14 values in it.
+
+15
+00:01:21,890 --> 00:01:28,290
+Both delivery options, the full quantity on 8 December or a split shipment, were computed in Python.
+
+16
+00:01:28,313 --> 00:01:33,313
+A person approves every reply. Nothing is emailed automatically.
+
+17
+00:01:33,315 --> 00:01:39,815
+Capacity, lead times and invoice formats live in factory profiles.
+
+18
+00:01:39,815 --> 00:01:45,815
+The same revision is infeasible in Tiruppur, but feasible in Dhaka, at 72% of free capacity.
+
+19
+00:01:45,815 --> 00:01:50,815
+Switching profiles changes the exporter, the port and the paperwork.
+
+20
+00:01:50,848 --> 00:01:56,348
+The buyer accepts the split shipment, so we record that decision.
+
+21
+00:01:56,348 --> 00:02:01,348
+ExportAgent generates an invoice and a packing list for each shipment.
+
+22
+00:02:01,348 --> 00:02:06,948
+Every number is computed in Python. Anything unknown prints as TO BE CONFIRMED.
+
+23
+00:02:06,977 --> 00:02:13,977
+Every model call runs on Nebius Token Factory. Nano reads, Super drafts and judges risk.
+
+24
+00:02:13,977 --> 00:02:20,977
+Ultra is used only when a trigger fires: about 21% of risk runs.
+
+25
+00:02:20,977 --> 00:02:27,977
+Measured live, a whole email costs under one cent: $0.0094.
+
+26
+00:02:27,977 --> 00:02:35,377
+On a held-out test set, it found every high-risk issue.
+
+27
+00:02:35,387 --> 00:02:43,987
+ExportAgent: every buyer email read, checked and answered, with a person in control.

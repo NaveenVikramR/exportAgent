@@ -1,0 +1,62 @@
+[
+ {
+  "key": "01_inbox_email",
+  "title": "Inbox, open the revised PO, read the buyer's email",
+  "start": 0.321,
+  "end": 20.432
+ },
+ {
+  "key": "02_fields_changes",
+  "title": "Extracted fields, then the changes between PO versions",
+  "start": 20.432,
+  "end": 51.833
+ },
+ {
+  "key": "03_risk_trace",
+  "title": "Risk card: 4,186 pcs short, judged by Nemotron Ultra; the trace",
+  "start": 51.833,
+  "end": 65.7
+ },
+ {
+  "key": "04_compliance_tavily",
+  "title": "Compliance check: Tavily web search with its sources",
+  "start": 65.7,
+  "end": 75.89
+ },
+ {
+  "key": "05_draft_reply",
+  "title": "Draft reply: two delivery options computed in Python, fact check passed",
+  "start": 75.89,
+  "end": 88.313
+ },
+ {
+  "key": "06_approve",
+  "title": "Approve the reply (nothing is emailed)",
+  "start": 88.313,
+  "end": 93.315
+ },
+ {
+  "key": "07_profiles",
+  "title": "Factory profiles: Tiruppur infeasible, Dhaka feasible",
+  "start": 93.315,
+  "end": 110.848
+ },
+ {
+  "key": "08_decision_documents",
+  "title": "Record the split shipment, generate the invoice and packing list",
+  "start": 110.848,
+  "end": 126.977
+ },
+ {
+  "key": "09_how_it_works",
+  "title": "How it works: routing and measured numbers",
+  "start": 126.977,
+  "end": 155.387
+ },
+ {
+  "key": "10_dashboard",
+  "title": "Dashboard: the closing shot",
+  "start": 155.387,
+  "end": 164.083
+ }
+]
