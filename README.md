@@ -9,9 +9,17 @@
 
 A person approves every step. The models are NVIDIA Nemotron Nano, Super and Ultra, called at runtime on Nebius Token Factory.
 
+| **100%** | **96.5%** | **$0.0094** | **~21%** |
+|:---:|:---:|:---:|:---:|
+| high-risk recall on the held-out TEST v2 set | field extraction accuracy on the held-out TEST v2 set | per email, all models, measured live | of risk runs use Ultra. Ultra on every risk run scored worse, at 2× the cost |
+
+**Live web research with Tavily:** compliance rules for the destination country and background on new buyers are looked up live. Every compliance flag shows its source URL.
+
 Built for the **Nebius × NVIDIA Global AI Hackathon**, track: Best Apps and Agents.
 
 **Live demo: <https://3-104-80-176.sslip.io>.** No sign-up, and the demo data is preloaded. Walkthrough below.
+
+**Demo video:** (YouTube link coming)
 
 ![Risk assessment for a revised PO: judged by Nemotron Ultra after a Python check found the plan infeasible, with two high flags citing their evidence](docs/screenshots/email-risk.png)
 
@@ -131,6 +139,8 @@ Anything that falls short moves to *Info checked*.
   - exporter registrations and declarations come from the factory profile (India: IEC, GSTIN, LUT; Bangladesh: ERC, BIN, BGMEA);
   - anything else is printed as **TO BE CONFIRMED**.
 - **Country and factory specifics live in profiles** ([backend/profiles/](backend/profiles/)): capacity, fabric lead time, ports, Incoterms and invoice format. Adding a country means adding a profile. All company names are fictional, and the capacity figures are illustrative.
+
+## Real-user feedback
 
 ## Evaluation
 
