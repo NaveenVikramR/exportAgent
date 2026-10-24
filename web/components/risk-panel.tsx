@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { AgentRun, AgentStep, InfoItem, RiskFlag } from "@/lib/api";
+import { citedSources, domain, sourcesByEvidence, type Source } from "@/lib/sources";
 
 const SEVERITY_STYLES: Record<RiskFlag["severity"], string> = {
   high: "bg-red-600 text-white",
@@ -41,7 +42,29 @@ function Evidence({ item }: { item: string }) {
   );
 }
 
-function InfoChecked({ items }: { items: InfoItem[] }) {
+/** The web sources a flag or finding cites, as links: title and domain. */
+function SourceLinks({ evidence, sources }: { evidence: string[]; sources: Map<string, Source[]> }) {
+  const links = citedSources(evidence, sources);
+  if (links.length === 0) return null;
+  return (
+    <span className="mt-1 flex flex-col gap-0.5 text-xs">
+      {links.map((source) => (
+        <a
+          key={source.url}
+          href={source.url}
+          target="_blank"
+          rel="noreferrer"
+          className="truncate text-sky-700 hover:underline"
+          title={source.url}
+        >
+          {source.title || domain(source.url)} <span className="text-zinc-500">({domain(source.url)})</span>
+        </a>
+      ))}
+    </span>
+  );
+}
+
+function InfoChecked({ items, sources }: { items: InfoItem[]; sources: Map<string, Source[]> }) {
   if (items.length === 0) return null;
   return (
     <div>
@@ -50,7 +73,10 @@ function InfoChecked({ items }: { items: InfoItem[] }) {
         {items.map((item, index) => (
           <li key={index} className="flex flex-wrap items-baseline gap-2">
             <span className="text-xs uppercase tracking-wide text-zinc-400">{item.topic}</span>
-            <span className="min-w-0 flex-1 basis-64">{item.finding}</span>
+            <span className="min-w-0 flex-1 basis-64">
+              {item.finding}
+              <SourceLinks evidence={item.evidence} sources={sources} />
+            </span>
             <span className="flex flex-wrap gap-1.5 text-xs">
               {item.evidence.map((evidence) => (
                 <Evidence key={evidence} item={evidence} />
@@ -66,6 +92,7 @@ function InfoChecked({ items }: { items: InfoItem[] }) {
 export function RiskFlags({ run }: { run: AgentRun }) {
   const flags = run.result?.flags ?? [];
   const routing = run.result?.routing;
+  const sources = sourcesByEvidence(run);
   return (
     <div className="flex flex-col gap-3">
       {routing && (
@@ -109,6 +136,7 @@ export function RiskFlags({ run }: { run: AgentRun }) {
                   Severity set by the rubric (model said {flag.severity_adjusted_from}).
                 </span>
               )}
+              <SourceLinks evidence={flag.evidence} sources={sources} />
             </span>
             <span className="flex flex-wrap items-center gap-1.5 text-xs">
               {flag.evidence.map((item) => (
@@ -124,7 +152,7 @@ export function RiskFlags({ run }: { run: AgentRun }) {
           </li>
         ))}
       </ul>
-      <InfoChecked items={run.result?.info_checked ?? []} />
+      <InfoChecked items={run.result?.info_checked ?? []} sources={sources} />
     </div>
   );
 }

@@ -5,6 +5,7 @@ uses, run under each profile's capacity and lead times, plus the invoice header 
 profile prints. Switching changes which profile new documents and risk runs use.
 """
 
+import json
 from datetime import date
 from typing import Any
 
@@ -64,10 +65,45 @@ def _order_or_404(session: Session, order_id: int) -> Order:
 
 
 def _as_of(session: Session, order: Order) -> date:
-    """The date of the email behind the latest version: feasibility as the factory saw it then."""
-    latest = order.versions[-1]
-    email = session.get(Email, latest.email_id) if latest.email_id else None
-    return (email.received_at if email else latest.created_at).date()
+    """The date of the latest buyer email: feasibility as the factory saw it then.
+
+    Internal versions (a recorded buyer decision) have no email; they settle the plan for that
+    request, so they do not move the clock forward.
+    """
+    for version in reversed(order.versions):
+        email = session.get(Email, version.email_id) if version.email_id else None
+        if email is not None:
+            return email.received_at.date()
+    return order.versions[-1].created_at.date()
+
+
+def _plan_feasibility(ctx: ToolContext, order: Order, data: dict[str, Any]) -> dict[str, Any] | None:
+    """Feasibility of the order's plan. An agreed split is checked shipment by shipment: each
+    shipment's date with the quantity due by then (this one plus the earlier ones)."""
+    shipments = data.get("shipments") or [{"quantity": data.get("total_quantity"), "delivery_date": data.get("delivery_date")}]
+    checks, due = [], 0
+    for shipment in sorted(shipments, key=lambda s: s["delivery_date"]):
+        due += int(shipment["quantity"])
+        args = {"order_id": order.id, "delivery_date": shipment["delivery_date"], "quantity": due}
+        _args, output, _summary = run_tool(ctx, "check_delivery_feasibility", json.dumps(args))
+        if "verdict" not in output:
+            return None
+        checks.append((shipment, output))
+    if len(checks) == 1:
+        output = checks[0][1]
+        return {"verdict": output["verdict"], "reason": output["reason"], "utilisation": output.get("utilisation"),
+                "slack_days": output.get("slack_days"), "shortfall": output.get("shortfall_pcs")}
+    order_of_badness = ["feasible", "tight", "infeasible"]
+    worst = max((o["verdict"] for _, o in checks), key=lambda v: order_of_badness.index(v) if v in order_of_badness else 3)
+    parts = [f"shipment {i} ({s['quantity']:,} pcs by {s['delivery_date']}): {o['verdict']}"
+             for i, (s, o) in enumerate(checks, 1)]
+    return {
+        "verdict": worst,
+        "reason": f"Agreed split: {'; '.join(parts)}.",
+        "utilisation": max((o.get("utilisation") or 0) for _, o in checks),
+        "slack_days": min((o.get("slack_days") for _, o in checks if o.get("slack_days") is not None), default=None),
+        "shortfall": max((o.get("shortfall_pcs") or 0) for _, o in checks),
+    }
 
 
 @router.get("/orders/{order_id}/profiles")
@@ -80,15 +116,7 @@ def compare(order_id: int, session: Session = Depends(get_session)) -> list[dict
         feasibility = None
         if data.get("delivery_date") and data.get("total_quantity"):
             ctx = ToolContext(session=session, as_of=_as_of(session, order), profile=profile)
-            _args, output, _summary = run_tool(ctx, "check_delivery_feasibility", f'{{"order_id": {order.id}}}')
-            if "verdict" in output:
-                feasibility = {
-                    "verdict": output["verdict"],
-                    "reason": output["reason"],
-                    "utilisation": output.get("utilisation"),
-                    "slack_days": output.get("slack_days"),
-                    "shortfall": output.get("shortfall_pcs"),
-                }
+            feasibility = _plan_feasibility(ctx, order, data)
         rows.append({"profile": profile_info(profile), "feasibility": feasibility, "invoice": invoice_header(profile)})
     return rows
 

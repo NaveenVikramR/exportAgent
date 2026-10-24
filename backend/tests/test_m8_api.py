@@ -104,6 +104,40 @@ def test_profiles_compare_the_same_order(client, session_factory, demo):  # noqa
     assert client.patch(f"/api/orders/{order_id}/profile", json={"profile": "mars"}).status_code == 422
 
 
+def test_profiles_check_an_agreed_split_shipment_by_shipment(client, session_factory, demo):  # noqa: F811
+    from app.agent.tools.agent_tools import ToolContext, run_tool
+    from app.api.profiles import _as_of
+    from app.models import AgentStep
+    from app.services.decisions import record_decision
+    from app.services.profiles import load_profile
+
+    with session_factory() as session:
+        email = session.get(Email, demo)
+        order = session.get(Order, email.order_id)
+        # The options a risk run proposes, computed by the same Python tool.
+        ctx = ToolContext(session=session, as_of=_as_of(session, order), profile=load_profile(order.profile))
+        _args, options, _summary = run_tool(ctx, "propose_delivery_options", f'{{"order_id": {order.id}}}')
+        run = AgentRun(email_id=email.id, order_id=order.id, status="completed", rounds=0,
+                       result={"summary": "s", "flags": [], "info_checked": []})
+        session.add(run)
+        session.flush()
+        session.add(AgentStep(run_id=run.id, seq=1, round=0, kind="tool", name="propose_delivery_options",
+                              input={}, output=options))
+        session.flush()
+        record_decision(session, order, "split", "test")
+        session.commit()
+        order_id = order.id
+
+    rows = {row["profile"]["id"]: row for row in client.get(f"/api/orders/{order_id}/profiles").json()}
+
+    # 9,300 pcs by 30 Nov and the rest by the earliest full date: the plan the reply offered.
+    tiruppur = rows["india_tiruppur"]["feasibility"]
+    assert tiruppur["verdict"] in ("feasible", "tight")
+    assert tiruppur["reason"].startswith("Agreed split: shipment 1 (9,300 pcs by 2026-11-30)")
+    assert tiruppur["shortfall"] == 0
+    assert rows["bangladesh_dhaka"]["feasibility"]["verdict"] in ("feasible", "tight")
+
+
 def test_demo_snapshot_round_trip(session_factory, demo):  # noqa: F811
     with session_factory() as session:
         snapshot = export_snapshot(session)
