@@ -289,6 +289,24 @@ def run_agent(
         add_step(round=0, kind="routing", name="escalate_to_ultra", input={"reasons": reasons},
                  output={"tier": "ultra"}, summary="Escalated to Ultra: " + "; ".join(reasons))
 
+    fallback: str | None = None
+
+    def assess_on_ultra(reasons: list[str], super_result: tuple[RiskReport | None, str | None] | None = None):
+        """Escalate to Ultra. If Ultra cannot be reached, Super's judgement stands (or Super runs)."""
+        nonlocal fallback
+        route_to_ultra(reasons)
+        try:
+            return assess(Tier.ULTRA, "ultra escalation: " + "; ".join(reasons))
+        except SpendCapExceeded:
+            raise
+        except LLMError as exc:
+            fallback = f"Nemotron Ultra was unavailable ({exc}); judged by Super instead."
+            add_step(round=0, kind="routing", name="ultra_unavailable", input={"error": str(exc)[:300]},
+                     output={"tier": "super"}, summary=fallback)
+            if super_result is not None:
+                return super_result
+            return assess(None, "fallback: ultra unavailable")
+
     date_unconfirmed = unconfirmed_date(email, order)
     escalate = router.settings.risk_escalation_enabled and order is not None
     reasons = routing.reasons_before(evidence, email_text(email), date_unconfirmed=bool(date_unconfirmed)) \
@@ -296,8 +314,7 @@ def run_agent(
     super_attempted = False
     try:
         if reasons:
-            route_to_ultra(reasons)
-            report, error = assess(Tier.ULTRA, "ultra escalation: " + "; ".join(reasons))
+            report, error = assess_on_ultra(reasons)
         else:
             super_attempted = True
             report, error = assess(None, None)
@@ -307,8 +324,7 @@ def run_agent(
                          else [conflict] if conflict else [])
                 if after:
                     reasons = after
-                    route_to_ultra(reasons)
-                    report, error = assess(Tier.ULTRA, "ultra escalation: " + "; ".join(reasons))
+                    report, error = assess_on_ultra(reasons, super_result=(report, error))
         if report is None:
             report = RiskReport(summary="The agent did not return a valid risk report; review manually.")
             run.error = error
@@ -323,10 +339,11 @@ def run_agent(
         return run
 
     report = apply_policy(report, evidence, date_unconfirmed=date_unconfirmed)
-    tier_used = "ultra" if reasons else router.tier_for(TaskType.PLANNING).value
-    run.result = report.model_dump(mode="json") | {
-        "routing": routing.routing_record(tier_used, reasons, super_attempted)
-    }
+    tier_used = "ultra" if reasons and fallback is None else router.tier_for(TaskType.PLANNING).value
+    record = routing.routing_record(tier_used, reasons, super_attempted)
+    if fallback is not None:
+        record["fallback"] = fallback
+    run.result = report.model_dump(mode="json") | {"routing": record}
     run.status = "needs_review" if run.error else "completed"
     run.finished_at = datetime.now(UTC)
     session.commit()

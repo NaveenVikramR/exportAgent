@@ -303,6 +303,35 @@ def test_invalid_super_report_is_rerun_on_ultra(settings, session_factory, demo)
     assert run.status == "completed"
 
 
+def test_ultra_outage_falls_back_to_super(settings, session_factory, demo):  # noqa: F811
+    from openai import OpenAIError
+
+    final = reply(json.dumps({"summary": "Infeasible.", "flags": [
+        {"severity": "high", "category": "capacity", "reason": "short", "evidence": ["E3"]}]}))
+    client = ScriptedClient([final])
+    scripted = client.chat.completions.create
+
+    def create(**kwargs):
+        if kwargs["model"] == "test/ultra":
+            client.requests.append(kwargs)
+            raise OpenAIError("<html><head><title>503 Service Temporarily Unavailable</title></head></html>")
+        return scripted(**kwargs)
+
+    client.chat.completions.create = create
+    router = LLMRouter(settings, client=client, session_factory=session_factory)
+    with session_factory() as session:
+        run = run_agent(session, session.get(Email, demo), router, search=fake_search, prefetch=True)
+        steps = list(run.steps)
+
+    assert [r["model"] for r in client.requests] == ["test/ultra", "test/super"]
+    assert run.status == "completed" and run.result["flags"]
+    assert run.result["routing"]["tier"] == "super"
+    assert "Ultra was unavailable" in run.result["routing"]["fallback"]
+    assert "<html" not in run.result["routing"]["fallback"]
+    assert "503 Service Temporarily Unavailable" in run.result["routing"]["fallback"]
+    assert [s.name for s in steps if s.kind == "routing"] == ["escalate_to_ultra", "ultra_unavailable"]
+
+
 def test_no_trigger_stays_on_super(settings, session_factory, demo):  # noqa: F811
     run, client, _ = _run(settings, session_factory, demo, [reply(json.dumps({"summary": "Fine.", "flags": []}))],
                           prefetch=False)

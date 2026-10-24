@@ -11,6 +11,7 @@ that order, so already-computed requests keep working once the cap is hit.
 import hashlib
 import json
 import logging
+import re
 import time
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -185,7 +186,7 @@ class LLMRouter:
                 run_id=run_id, task=task, tier=tier, model=model, latency_ms=latency_ms,
                 success=False, error=str(exc), detail=detail,
             )
-            raise LLMError(f"Token Factory call failed ({model}): {exc}") from exc
+            raise LLMError(f"Token Factory call failed ({model}): {_short_error(exc)}") from exc
         latency_ms = round((time.perf_counter() - started) * 1000)
 
         usage = response.usage
@@ -328,6 +329,17 @@ class LLMRouter:
         except SQLAlchemyError:
             logger.exception("Could not write llm_calls row for task %s", task.value)
             return None
+
+
+def _short_error(exc: OpenAIError) -> str:
+    """One readable line: a gateway's HTML error page becomes its status and title."""
+    text = str(exc)
+    if "<html" in text.lower():
+        title = re.search(r"<title>(.*?)</title>", text, re.IGNORECASE | re.DOTALL)
+        status = getattr(exc, "status_code", None)
+        text = " ".join(part for part in (str(status) if status else "", title.group(1).strip() if title else "") if part)
+        text = text or "the provider returned an error page"
+    return " ".join(text.split())[:300]
 
 
 def _cache_key(request: dict[str, Any]) -> str:

@@ -199,7 +199,7 @@ export type AgentRun = {
     flags: RiskFlag[];
     info_checked: InfoItem[];
     // Super by default; Ultra when a trigger fired (see backend/app/agent/routing.py)
-    routing?: { tier: string; escalated: boolean; reasons: string[]; super_attempted: boolean };
+    routing?: { tier: string; escalated: boolean; reasons: string[]; super_attempted: boolean; fallback?: string };
   } | null;
   error: string | null;
   started_at: string;

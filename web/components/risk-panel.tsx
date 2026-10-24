@@ -77,11 +77,15 @@ export function RiskFlags({ run }: { run: AgentRun }) {
           >
             Judged by Nemotron {routing.escalated ? "Ultra" : "Super"}
           </span>
-          {routing.escalated ? `Escalated: ${routing.reasons.join("; ")}` : "No escalation trigger fired."}
+          {routing.fallback
+            ? routing.fallback
+            : routing.escalated
+              ? `Escalated: ${routing.reasons.join("; ")}`
+              : "No escalation trigger fired."}
         </p>
       )}
       {run.result?.summary && <p className="text-sm">{run.result.summary}</p>}
-      {flags.length === 0 && <p className="text-sm text-zinc-500">No risks flagged.</p>}
+      {flags.length === 0 && run.status !== "failed" && <p className="text-sm text-zinc-500">No risks flagged.</p>}
       <ul className="flex flex-col gap-2">
         {flags.map((flag, index) => (
           <li key={index} className="flex flex-wrap items-start gap-2 rounded border border-zinc-200 p-3 text-sm">
