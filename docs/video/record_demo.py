@@ -20,8 +20,11 @@ from urllib.parse import urljoin
 
 from playwright.async_api import async_playwright
 
-OUT = Path(sys.argv[1] if len(sys.argv) > 1 else "footage")
-BASE = sys.argv[2] if len(sys.argv) > 2 else "https://3-104-80-176.sslip.io"
+ARGS = [a for a in sys.argv[1:] if not a.startswith("--")]
+OUT = Path(ARGS[0] if ARGS else "footage")
+BASE = ARGS[1] if len(ARGS) > 1 else "https://3-104-80-176.sslip.io"
+# --only=03,04 films just segments 03 and 04 (no data changes), to replace those clips.
+ONLY_RISK = "--only=03,04" in sys.argv
 PAUSE = 1.5
 NAV_OFFSET = 90  # sticky nav height (CSS px) to keep clear when scrolling to an element
 
@@ -200,35 +203,7 @@ async def shoot(d: Director):
         await d.highlight(change, 1900, pause=2.0)
     await d.wait(1.0)
 
-    # 0:55-1:10 Risk card and trace
-    d.segment("03_risk_trace", "Risk card: 4,186 pcs short, judged by Nemotron Ultra; the trace")
-    await d.goto("/emails/2")
-    await d.scroll_to(heading(page, "Risk assessment"), ms=1200)
-    badge = page.get_by_text("Judged by Nemotron Ultra").first
-    await d.point(badge, ms=500)
-    await d.highlight(badge.locator(".."), 1500, pause=1.4)
-    short = page.locator("li", has_text="4,186").first
-    await d.point(short, dx=0.35, ms=500)
-    await d.highlight(short, 1500, pause=1.4)
-    await d.scroll_to(heading(page, "Agent trace"), ms=1400)
-    step = page.locator("button", has_text="Check delivery feasibility").first
-    await d.click(step, pause=2.2)
-    await d.click(step, pause=0.3)
-
-    # 1:10-1:20 Compliance check with its Tavily sources
-    d.segment("04_compliance_tavily", "Compliance check: Tavily web search with its sources")
-    tavily = page.locator("button", has_text="Check compliance (Tavily)").first
-    await d.scroll_to(tavily, ms=1000, offset=160)
-    await d.click(tavily, pause=0.6)
-    await d.scroll_by(330, ms=1200)
-    url = page.get_by_text("collectivestudioltd.com", exact=False).first
-    await d.point(url, dx=0.4, ms=500)
-    await d.highlight(url, 1500, pause=1.6)
-    await d.click(tavily, pause=0.3)
-    comp = page.locator("li, div", has_text="Germany requires EU textile labelling").last
-    await d.scroll_to(comp, ms=1400, offset=300)
-    await d.point(comp, dx=0.3, ms=500)
-    await d.highlight(comp, 1400, pause=1.3)
+    await shoot_risk_and_sources(d)
 
     # 1:20-1:35 Draft reply with the Python-computed options and the fact check
     d.segment("05_draft_reply", "Draft reply: two delivery options computed in Python, fact check passed")
@@ -301,6 +276,47 @@ async def shoot(d: Director):
     d.segment("end", "end")
 
 
+async def shoot_risk_and_sources(d: Director):
+    """Segments 03 and 04 (0:52-1:16): the risk card, the trace, and the web sources."""
+    page = d.page
+
+    # 0:55-1:10 Risk card and trace
+    await d.goto("/emails/2")
+    await heading(page, "Risk assessment").wait_for()
+    await d.wait(0.5)
+    # Marked after the page has loaded, so the clip opens on content, not "Loading…".
+    d.segment("03_risk_trace", "Risk card: 4,186 pcs short, contract value +12.5%, judged by Nemotron Ultra; the trace")
+    await d.scroll_to(heading(page, "Risk assessment"), ms=1200)
+    badge = page.get_by_text("Judged by Nemotron Ultra").first
+    await d.point(badge, ms=500)
+    await d.highlight(badge.locator(".."), 1500, pause=1.4)
+    short = page.locator("li", has_text="4,186").first
+    await d.point(short, dx=0.35, ms=500)
+    await d.highlight(short, 1500, pause=1.4)
+    value = page.locator("li", has_text="Contract value increased").first
+    await d.point(value, dx=0.35, ms=500)
+    await d.highlight(value, 1500, pause=1.4)
+    await d.scroll_to(heading(page, "Agent trace"), ms=1400)
+    step = page.locator("button", has_text="Check delivery feasibility").first
+    await d.click(step, pause=2.0)
+    await d.click(step, pause=0.3)
+
+    # 1:10-1:20 Compliance check with its Tavily sources, as links on the risk card
+    d.segment("04_compliance_tavily", "Compliance check: Tavily web search, sources as links")
+    comp = page.locator("li", has_text="Germany requires EU textile labelling").first
+    await d.scroll_to(comp, ms=1600, offset=330)
+    await d.point(comp, dx=0.3, ms=500)
+    await d.highlight(comp, 1800, pause=1.6)
+    source = comp.get_by_role("link", name=re.compile("Your Europe")).first
+    await d.point(source, dx=0.25, ms=600)
+    await d.highlight(source, 2000, pause=0.8)
+    await d.page.evaluate(f"window.__ripple({d.x},{d.y})")  # a click would open the page in a new tab
+    await d.wait(1.8)
+    other = comp.get_by_role("link", name=re.compile("Clothing Labelling Requirements")).first
+    await d.point(other, dx=0.25, ms=500)
+    await d.wait(1.6)
+
+
 async def show_pdf(d: Director, data: bytes, title: str):
     """Headless Chromium has no PDF viewer: show the PDF's first page, rendered at full size."""
     import pypdfium2
@@ -338,7 +354,11 @@ async def main():
         d.wall0 = time.time()
         await page.wait_for_timeout(300)
         try:
-            await shoot(d)
+            if ONLY_RISK:
+                await shoot_risk_and_sources(d)
+                d.segment("end", "end")
+            else:
+                await shoot(d)
         finally:
             await page.wait_for_timeout(500)
             await cdp.send("Page.stopScreencast")

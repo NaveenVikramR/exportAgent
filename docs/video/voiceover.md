@@ -20,51 +20,51 @@ Clip: `clips/02_fields_changes.mp4`
 - **0:40** The total is up 1,500 pieces, and the ex-factory date moved 15 days earlier.
 - **0:46** Navy alone is up 33%. Every change goes to the risk check.
 
-## 0:51–1:05 · Risk card: 4,186 pcs short, judged by Nemotron Ultra; the trace
+## 0:51–1:05 · Risk card: 4,186 pcs short, contract value +12.5%, judged by Nemotron Ultra; the trace
 Clip: `clips/03_risk_trace.mp4`
 
 - **0:51** Python found the new plan infeasible, so this run escalated to Nemotron Ultra.
-- **0:57** The factory is 4,186 pieces short of free capacity.
+- **0:56** The factory is 4,186 pieces short, and the contract value is up 12.5%.
 - **1:01** The trace shows every step, and the Python result behind each flag.
 
-## 1:05–1:15 · Compliance check: Tavily web search with its sources
+## 1:05–1:16 · Compliance check: Tavily web search, sources as links
 Clip: `clips/04_compliance_tavily.mp4`
 
-- **1:05** Ultra chose to check Germany's import rules with a Tavily web search.
-- **1:10** Its sources are kept as evidence. The labelling rule is listed under Info checked.
+- **1:05** Ultra chose to check Germany's labelling rules with a Tavily web search.
+- **1:10** Every source is listed under the finding, as a link you can open.
 
-## 1:15–1:28 · Draft reply: two delivery options computed in Python, fact check passed
+## 1:16–1:28 · Draft reply: two delivery options computed in Python, fact check passed
 Clip: `clips/05_draft_reply.mp4`
 
-- **1:15** Nemotron Super drafted the reply. A Python fact check verified all 14 values in it.
-- **1:21** Both delivery options, the full quantity on 8 December or a split shipment, were computed in Python.
+- **1:16** Nemotron Super drafted the reply. A Python fact check verified all 14 values in it.
+- **1:22** Both delivery options, the full quantity on 8 December or a split shipment, were computed in Python.
 
 ## 1:28–1:33 · Approve the reply (nothing is emailed)
 Clip: `clips/06_approve.mp4`
 
 - **1:28** A person approves every reply. Nothing is emailed automatically.
 
-## 1:33–1:50 · Factory profiles: Tiruppur infeasible, Dhaka feasible
+## 1:33–1:51 · Factory profiles: Tiruppur infeasible, Dhaka feasible
 Clip: `clips/07_profiles.mp4`
 
 - **1:33** Capacity, lead times and invoice formats live in factory profiles.
-- **1:39** The same revision is infeasible in Tiruppur, but feasible in Dhaka, at 72% of free capacity.
-- **1:45** Switching profiles changes the exporter, the port and the paperwork.
+- **1:40** The same revision is infeasible in Tiruppur, but feasible in Dhaka, at 72% of free capacity.
+- **1:46** Switching profiles changes the exporter, the port and the paperwork.
 
-## 1:50–2:06 · Record the split shipment, generate the invoice and packing list
+## 1:51–2:07 · Record the split shipment, generate the invoice and packing list
 Clip: `clips/08_decision_documents.mp4`
 
-- **1:50** The buyer accepts the split shipment, so we record that decision.
+- **1:51** The buyer accepts the split shipment, so we record that decision.
 - **1:56** ExportAgent generates an invoice and a packing list for each shipment.
 - **2:01** Every number is computed in Python. Anything unknown prints as TO BE CONFIRMED.
 
-## 2:06–2:35 · How it works: routing and measured numbers
+## 2:07–2:35 · How it works: routing and measured numbers
 Clip: `clips/09_how_it_works.mp4`
 
-- **2:06** Every model call runs on Nebius Token Factory. Nano reads, Super drafts and judges risk.
-- **2:13** Ultra is used only when a trigger fires: about 21% of risk runs.
-- **2:20** Measured live, a whole email costs under one cent: $0.0094.
-- **2:27** On a held-out test set, it found every high-risk issue.
+- **2:07** Every model call runs on Nebius Token Factory. Nano reads, Super drafts and judges risk.
+- **2:14** Ultra is used only when a trigger fires: about 21% of risk runs.
+- **2:21** Measured live, a whole email costs under one cent: $0.0094.
+- **2:28** On a held-out test set, it found every high-risk issue.
 
 ## 2:35–2:44 · Dashboard: the closing shot
 Clip: `clips/10_dashboard.mp4`

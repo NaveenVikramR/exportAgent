@@ -138,6 +138,17 @@ Screenshots: `screenshots/T*_email.png`, the full email page, and `T*_order.png`
 
 These are above the $0.0094 per email measured on DEV, because finding A sent 4 of the 6 risk runs to Ultra. "End to end" runs from submitting the form to the page finishing, over a slow link from the test PC to Sydney.
 
+## Fixes after the test (commit `ad89717`, deployed 25 Oct 2026)
+
+These two fixes were requested after this report. Findings A–F above are still open.
+
+1. **Profile cards after a split decision.** The cards checked the whole quantity by the last shipment date, "as of" the moment the decision was recorded, so both factories showed *infeasible*. They now check each agreed shipment by its own date, with the quantity due by then, as of the latest buyer email. Checked on the live site for case_002 after recording the split:
+   - Tiruppur: *tight*, "Agreed split: shipment 1 (9,300 pcs by 2026-11-30): tight; shipment 2 (4,200 pcs by 2026-12-08): tight".
+   - Dhaka: *feasible*.
+
+   Test: `test_profiles_check_an_agreed_split_shipment_by_shipment`, which fails on the old code.
+2. **Tavily sources as links.** Under each flag and each *Info checked* line, the risk card now lists the web sources its evidence cites, as links showing the title and domain (finding G). Tests: `web/lib/sources.test.ts`, run with `npm test`.
+
 ## Files
 
 - `run_scenarios.py`: the test runner. `summarise.py` prints the results.
