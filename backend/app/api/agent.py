@@ -54,7 +54,18 @@ def run_out(session: Session, run: AgentRun, notice: str | None = None) -> Agent
                 "cost_usd": call.cost_usd, "call_source": call.source,
             })
         steps.append(out)
-    return AgentRunOut.model_validate(run).model_copy(update={
+    out = AgentRunOut.model_validate(run)
+    result = out.result
+    if result is not None and result.routing is None:
+        # Runs stored before the routing record existed: rebuild it from the routing step and calls.
+        routed = next((s for s in run.steps if s.kind == "routing"), None)
+        tier = "ultra" if routed is not None or any(c.tier == "ultra" for c in calls.values()) else "super"
+        reasons = list((routed.input or {}).get("reasons", [])) if routed is not None else []
+        result = result.model_copy(update={"routing": {
+            "tier": tier, "escalated": tier == "ultra", "reasons": reasons, "super_attempted": False,
+        }})
+    return out.model_copy(update={
+        "result": result,
         "steps": steps,
         "ultra_calls": sum(1 for call in calls.values() if call.tier == "ultra"),
         "total_cost_usd": sum((call.cost_usd for call in calls.values()), Decimal("0")),

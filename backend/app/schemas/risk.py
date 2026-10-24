@@ -50,6 +50,8 @@ class RiskReport(BaseModel):
     summary: str
     flags: list[RiskFlag] = Field(default_factory=list)
     info_checked: list[InfoItem] = Field(default_factory=list)
+    # Which model judged the run and why (app/agent/routing.py); set by the loop, not the model.
+    routing: dict[str, Any] | None = None
 
 
 class AgentStepOut(BaseModel):

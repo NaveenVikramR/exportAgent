@@ -154,6 +154,32 @@ def test_a_failed_rerun_keeps_showing_the_previous_assessment(client, session_fa
     assert "did not complete: No key." in body["notice"]
 
 
+def test_the_routing_decision_reaches_the_page(client, session_factory, demo):  # noqa: F811
+    from app.models import AgentStep
+
+    with session_factory() as session:
+        email = session.get(Email, demo)
+        stored = AgentRun(email_id=email.id, order_id=email.order_id, status="completed", rounds=1,
+                          result={"summary": "new", "flags": [], "info_checked": [],
+                                  "routing": {"tier": "super", "escalated": False, "reasons": [], "super_attempted": True}})
+        older = AgentRun(email_id=email.id, order_id=email.order_id, status="completed", rounds=1,
+                         result={"summary": "old", "flags": [], "info_checked": []})
+        session.add_all([older, stored])
+        session.flush()
+        session.add(AgentStep(run_id=older.id, seq=1, round=0, kind="routing", name="escalate_to_ultra",
+                              input={"reasons": ["current plan infeasible"]}, output={"tier": "ultra"}))
+        session.commit()
+        stored_id, older_id = stored.id, older.id
+
+    from app.api.agent import run_out
+
+    assert client.get(f"/api/emails/{demo}/agent").json()["result"]["routing"]["tier"] == "super"
+    with session_factory() as session:
+        rebuilt = run_out(session, session.get(AgentRun, older_id)).result.routing
+    assert rebuilt == {"tier": "ultra", "escalated": True, "reasons": ["current plan infeasible"], "super_attempted": False}
+    assert stored_id > older_id
+
+
 def test_demo_reset_is_off_unless_enabled(client):
     assert client.post("/api/demo/reset").status_code == 403
 
