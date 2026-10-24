@@ -198,7 +198,7 @@ The server pulls the private images with a **classic** token that has only the `
 3. Tick only **read:packages**, then click **Generate token** and copy the `ghp_…` token.
 4. On the server, run `sudo bash /opt/exportagent/deploy/setup.sh --relogin` and paste the token at the hidden prompt. It is stored only in `/home/ubuntu/.docker/config.json`, which only the `ubuntu` user can read.
 
-**Package settings, already done.** On each package (`exportagent-api`, `exportagent-web`):
+**Package settings.** On each package (`exportagent-api`, `exportagent-web`). To confirm the Actions access works, run the **images** workflow by hand (**Actions → images → Run workflow**); a green run means it can still push.
 - **Inherit access from source repository** is turned off. A package linked to a public repository is otherwise public too.
 - **Manage Actions access** gives `NaveenVikramR/exportAgent` the **Write** role, so the build workflow can still push.
 - **Visibility** is **Private**.
