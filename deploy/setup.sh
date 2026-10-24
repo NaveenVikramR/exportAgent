@@ -51,7 +51,9 @@ echo "== Log in to GitHub Container Registry (the images are private)"
 # credential file (/home/$APP_USER/.docker/config.json, mode 600). Run with --relogin to replace it.
 APP_HOME="$(getent passwd "$APP_USER" | cut -d: -f6)"
 DOCKER_CFG="$APP_HOME/.docker"
-if [[ "${1:-}" == "--relogin" ]] || ! grep -q '"ghcr.io"' "$DOCKER_CFG/config.json" 2>/dev/null; then
+if [[ ! -t 0 ]]; then
+  echo "No terminal to type the token into: skipping. Log in later with: sudo bash $0 --relogin"
+elif [[ "${1:-}" == "--relogin" ]] || ! grep -q '"ghcr.io"' "$DOCKER_CFG/config.json" 2>/dev/null; then
   read -rp "GitHub username [NaveenVikramR]: " GH_USER
   GH_USER="${GH_USER:-NaveenVikramR}"
   read -rsp "GitHub token (classic, read:packages only; typing is hidden): " GH_TOKEN
