@@ -2,7 +2,7 @@
 
 DEV (35 cases) run 1× with the final pipeline (evaluation frozen), end to end with the response cache off: classification and extraction, escalation, order matching and change detection, the risk agent (Super by default, Ultra on escalation), and drafts with the fact check. Values are mean (min–max) where there are several runs. TEST v2 was run three times while held out and once after the DEV-driven fixes; the held-out results below are kept exactly as first published, and TEST v2 was not run again after the two final fixes. TEST v1 has been seen since Milestone 7.
 
-Model spend: final DEV pass **$0.33**; routing step (DEV and TEST v2 after the fixes) **$2.09**; TEST v2 held out **$2.12**; the step before **$3.57** (including $0.79 for a DEV pass before its last fixes, kept in `runs/pre_fix/`).
+Model spend: final DEV pass **$0.36**; routing step (DEV and TEST v2 after the fixes) **$2.09**; TEST v2 held out **$2.12**; the step before **$3.57** (including $0.79 for a DEV pass before its last fixes, kept in `runs/pre_fix/`).
 
 ## TEST v2 (held out)
 
@@ -171,39 +171,39 @@ Field and line-item accuracy averaged over the runs; order matching and high-ris
 
 ## Results: routed setup
 
-DEV final adds case_033–035 (the two final fixes) to the 32 cases of the routing step; earlier columns are earlier versions of the pipeline on the cases DEV had then.
+DEV final is the pass after the fixes from the live six-scenario test (destination must be stated, style is not the PO number, two prices in a new PO; docs/test-run/REPORT.md). DEV at freeze is the same 35 cases before those fixes. DEV at freeze adds case_033–035 (the two final fixes) to the 32 cases of the routing step; earlier columns are earlier versions of the pipeline on the cases DEV had then.
 
-| Metric | DEV final (35 cases) | DEV routing step (32) | DEV before routing (21) | DEV at M7 (10 cases) | TEST v1 after M7 fixes (seen) | TEST v1 at M7 (held out) |
-|---|---|---|---|---|---|---|
-| Classification: main category | 94.3% | 94.8% (93.8%–96.9%) | 93.7% (90.5%–100.0%) | 96.7% (90.0%–100.0%) | 96.7% | 95.6% (93.3%–96.7%) |
-| Classification: all intents (exact set) | 80.0% | 85.4% (81.2%–87.5%) | 84.1% (81.0%–85.7%) | 70.0% (60.0%–80.0%) | 96.7% | 92.2% (90.0%–93.3%) |
-| Classification: has PO data | 94.3% | 97.9% (96.9%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% | 94.4% (93.3%–96.7%) |
-| Field extraction accuracy (after escalation) | 98.7% | 98.2% (98.0%–98.3%) | 98.8% (98.5%–99.5%) | 97.8% (96.6%–98.9%) | 98.0% | 91.9% (91.4%–92.6%) |
-| Line-item accuracy (colour, quantity, sizes) | 98.4% | 93.0% (91.9%–93.5%) | 94.7% (90.9%–100.0%) | 88.9% (87.5%–91.7%) | 100.0% | 88.7% (88.7%–88.7%) |
-| Human-review flags: recall | 100.0% | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 83.3% | 33.3% (33.3%–33.3%) |
-| Human-review flags: precision | 76.9% | 73.1% (66.7%–80.0%) | 57.9% (50.0%–66.7%) | 100.0% (100.0%–100.0%) | 71.4% | 8.5% (8.3%–8.7%) |
-| Order matching: email put on the right order | 100.0% | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | n/a | 100.0% | n/a |
-| Order matching: questions put to a person | 1.0 | 1.0 (1.0–1.0) | 1.0 (1.0–1.0) | n/a | 0.0 | n/a |
-| PO revision read from the PO number | 100.0% | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | n/a | n/a | n/a |
-| Change detection: recall | 96.3% | 95.1% (92.6%–96.3%) | 98.0% (94.1%–100.0%) | 100.0% (100.0%–100.0%) | 92.3% | 28.2% (23.1%–34.6%) |
-| Change detection: precision | 92.9% | 88.6% (83.3%–92.9%) | 94.7% (84.2%–100.0%) | 100.0% (100.0%–100.0%) | 80.0% | 63.1% (50.0%–70.0%) |
-| High-risk flags: precision | 100.0% | 89.7% (84.6%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% | 78.0% (76.9%–78.6%) |
-| High-risk flags: recall | 100.0% | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% | 66.7% (62.5%–68.8%) |
-| Drafts written | 68 | 63 (62–63) | 41 (41–41) | 18 (18–18) | 56 | 52 (52–52) |
-| Draft values fact-checked | 386 | 399 (383–408) | 277 (263–285) | 129 (123–141) | 399 | 313 (299–327) |
-| Draft fact-check violations | 2.0 | 1.0 (0.0–2.0) | 0.3 (0.0–1.0) | 0.0 (0.0–0.0) | 1.0 | 0.7 (0.0–1.0) |
-| Drafts with no violations | 97.1% | 98.9% (98.4%–100.0%) | 99.2% (97.6%–100.0%) | 100.0% (100.0%–100.0%) | 98.2% | 98.7% (98.1%–100.0%) |
-| Escalation rate (emails with an escalated field) | 30.3% | 32.6% (32.3%–33.3%) | 36.7% (35.0%–40.0%) | 33.3% (33.3%–33.3%) | 34.6% | 23.3% (20.8%–25.0%) |
-| Emails handled by Nano alone | 69.7% | 67.4% (66.7%–67.7%) | 63.3% (60.0%–65.0%) | 66.7% (66.7%–66.7%) | 65.4% | 76.7% (75.0%–79.2%) |
-| Escalations resolved by Super | 90.9% | 91.2% (81.8%–100.0%) | 91.9% (85.7%–100.0%) | 100.0% (100.0%–100.0%) | 90.0% | 100.0% (100.0%–100.0%) |
-| Escalation gain: field accuracy | +2.3 pp | +2.5 pp (+2.4 pp–+2.7 pp) | +3.4 pp (+3.0 pp–+4.0 pp) | +3.0 pp (+2.2 pp–+3.4 pp) | +2.7 pp | +1.3 pp (+0.8 pp–+2.0 pp) |
-| Escalation gain: line-item accuracy | +4.7 pp | +7.5 pp (+6.5 pp–+9.7 pp) | +11.4 pp (+9.1 pp–+13.6 pp) | +12.5 pp (+12.5 pp–+12.5 pp) | +7.5 pp | +5.0 pp (+1.9 pp–+9.4 pp) |
-| Ultra calls per assessed email | 0.4 | 0.8 (0.7–0.8) | 2.3 (2.2–2.4) | 2.4 (2.1–2.8) | 2.8 | 2.6 (2.3–2.8) |
-| Cost per email (all models) | $0.0094 | $0.0126 ($0.0118–$0.0138) | $0.0188 ($0.0187–$0.0190) | $0.0169 ($0.0145–$0.0191) | $0.0212 | $0.0157 ($0.0144–$0.0165) |
-| Latency per email (wall clock, end to end) | 27.6 s | 30.4 s (28.9 s–32.4 s) | 31.6 s (29.1 s–35.4 s) | 24.2 s (20.8 s–25.9 s) | 32.1 s | 28.0 s (26.8 s–28.8 s) |
-| Emails that failed to process | 0.0 | 0.0 (0.0–0.0) | 0.0 (0.0–0.0) | 0.0 (0.0–0.0) | 0.0 | 0.0 (0.0–0.0) |
-| Risk runs escalated to Ultra | 21.2% | 27.2% (22.6%–30.0%) | n/a | n/a | n/a | n/a |
-| Risk-stage cost per assessed email | $0.0064 | $0.0093 ($0.0087–$0.0104) | $0.0158 ($0.0156–$0.0161) | n/a | $0.0205 | n/a |
+| Metric | DEV final (35 cases) | DEV at freeze (35) | DEV routing step (32) | DEV before routing (21) | DEV at M7 (10 cases) | TEST v1 after M7 fixes (seen) | TEST v1 at M7 (held out) |
+|---|---|---|---|---|---|---|---|
+| Classification: main category | 91.4% | 94.3% | 94.8% (93.8%–96.9%) | 93.7% (90.5%–100.0%) | 96.7% (90.0%–100.0%) | 96.7% | 95.6% (93.3%–96.7%) |
+| Classification: all intents (exact set) | 80.0% | 80.0% | 85.4% (81.2%–87.5%) | 84.1% (81.0%–85.7%) | 70.0% (60.0%–80.0%) | 96.7% | 92.2% (90.0%–93.3%) |
+| Classification: has PO data | 94.3% | 94.3% | 97.9% (96.9%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% | 94.4% (93.3%–96.7%) |
+| Field extraction accuracy (after escalation) | 98.4% | 98.7% | 98.2% (98.0%–98.3%) | 98.8% (98.5%–99.5%) | 97.8% (96.6%–98.9%) | 98.0% | 91.9% (91.4%–92.6%) |
+| Line-item accuracy (colour, quantity, sizes) | 98.4% | 98.4% | 93.0% (91.9%–93.5%) | 94.7% (90.9%–100.0%) | 88.9% (87.5%–91.7%) | 100.0% | 88.7% (88.7%–88.7%) |
+| Human-review flags: recall | 100.0% | 100.0% | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 83.3% | 33.3% (33.3%–33.3%) |
+| Human-review flags: precision | 52.6% | 76.9% | 73.1% (66.7%–80.0%) | 57.9% (50.0%–66.7%) | 100.0% (100.0%–100.0%) | 71.4% | 8.5% (8.3%–8.7%) |
+| Order matching: email put on the right order | 100.0% | 100.0% | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | n/a | 100.0% | n/a |
+| Order matching: questions put to a person | 1.0 | 1.0 | 1.0 (1.0–1.0) | 1.0 (1.0–1.0) | n/a | 0.0 | n/a |
+| PO revision read from the PO number | 100.0% | 100.0% | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | n/a | n/a | n/a |
+| Change detection: recall | 96.3% | 96.3% | 95.1% (92.6%–96.3%) | 98.0% (94.1%–100.0%) | 100.0% (100.0%–100.0%) | 92.3% | 28.2% (23.1%–34.6%) |
+| Change detection: precision | 89.7% | 92.9% | 88.6% (83.3%–92.9%) | 94.7% (84.2%–100.0%) | 100.0% (100.0%–100.0%) | 80.0% | 63.1% (50.0%–70.0%) |
+| High-risk flags: precision | 91.7% | 100.0% | 89.7% (84.6%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% | 78.0% (76.9%–78.6%) |
+| High-risk flags: recall | 100.0% | 100.0% | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% (100.0%–100.0%) | 100.0% | 66.7% (62.5%–68.8%) |
+| Drafts written | 68 | 68 | 63 (62–63) | 41 (41–41) | 18 (18–18) | 56 | 52 (52–52) |
+| Draft values fact-checked | 400 | 386 | 399 (383–408) | 277 (263–285) | 129 (123–141) | 399 | 313 (299–327) |
+| Draft fact-check violations | 5.0 | 2.0 | 1.0 (0.0–2.0) | 0.3 (0.0–1.0) | 0.0 (0.0–0.0) | 1.0 | 0.7 (0.0–1.0) |
+| Drafts with no violations | 95.6% | 97.1% | 98.9% (98.4%–100.0%) | 99.2% (97.6%–100.0%) | 100.0% (100.0%–100.0%) | 98.2% | 98.7% (98.1%–100.0%) |
+| Escalation rate (emails with an escalated field) | 30.3% | 30.3% | 32.6% (32.3%–33.3%) | 36.7% (35.0%–40.0%) | 33.3% (33.3%–33.3%) | 34.6% | 23.3% (20.8%–25.0%) |
+| Emails handled by Nano alone | 69.7% | 69.7% | 67.4% (66.7%–67.7%) | 63.3% (60.0%–65.0%) | 66.7% (66.7%–66.7%) | 65.4% | 76.7% (75.0%–79.2%) |
+| Escalations resolved by Super | 91.7% | 90.9% | 91.2% (81.8%–100.0%) | 91.9% (85.7%–100.0%) | 100.0% (100.0%–100.0%) | 90.0% | 100.0% (100.0%–100.0%) |
+| Escalation gain: field accuracy | +2.6 pp | +2.3 pp | +2.5 pp (+2.4 pp–+2.7 pp) | +3.4 pp (+3.0 pp–+4.0 pp) | +3.0 pp (+2.2 pp–+3.4 pp) | +2.7 pp | +1.3 pp (+0.8 pp–+2.0 pp) |
+| Escalation gain: line-item accuracy | +3.1 pp | +4.7 pp | +7.5 pp (+6.5 pp–+9.7 pp) | +11.4 pp (+9.1 pp–+13.6 pp) | +12.5 pp (+12.5 pp–+12.5 pp) | +7.5 pp | +5.0 pp (+1.9 pp–+9.4 pp) |
+| Ultra calls per assessed email | 0.6 | 0.4 | 0.8 (0.7–0.8) | 2.3 (2.2–2.4) | 2.4 (2.1–2.8) | 2.8 | 2.6 (2.3–2.8) |
+| Cost per email (all models) | $0.0102 | $0.0094 | $0.0126 ($0.0118–$0.0138) | $0.0188 ($0.0187–$0.0190) | $0.0169 ($0.0145–$0.0191) | $0.0212 | $0.0157 ($0.0144–$0.0165) |
+| Latency per email (wall clock, end to end) | 42.2 s | 27.6 s | 30.4 s (28.9 s–32.4 s) | 31.6 s (29.1 s–35.4 s) | 24.2 s (20.8 s–25.9 s) | 32.1 s | 28.0 s (26.8 s–28.8 s) |
+| Emails that failed to process | 0.0 | 0.0 | 0.0 (0.0–0.0) | 0.0 (0.0–0.0) | 0.0 (0.0–0.0) | 0.0 | 0.0 (0.0–0.0) |
+| Risk runs escalated to Ultra | 24.2% | 21.2% | 27.2% (22.6%–30.0%) | n/a | n/a | n/a | n/a |
+| Risk-stage cost per assessed email | $0.0070 | $0.0064 | $0.0093 ($0.0087–$0.0104) | $0.0158 ($0.0156–$0.0161) | n/a | $0.0205 | n/a |
 
 ## Risk routing: Super by default, Ultra on escalation
 
@@ -280,9 +280,9 @@ Same pipeline, same pre-fetch and tools; only the planning and risk-reasoning ca
 
 | Model | DEV final cost | DEV final calls | DEV final model time | TEST v2 after fixes cost | TEST v2 after fixes calls |
 |---|---|---|---|---|---|
-| Nano | $0.0003 | 2.4 | 5.5 s | $0.0003 | 2.5 |
-| Super | $0.0061 | 4.3 | 19.7 s | $0.0058 | 4.4 |
-| Ultra | $0.0031 | 0.4 | 1.7 s | $0.0035 | 0.5 |
+| Nano | $0.0003 | 2.4 | 12.4 s | $0.0003 | 2.5 |
+| Super | $0.0058 | 4.0 | 21.6 s | $0.0058 | 4.4 |
+| Ultra | $0.0041 | 0.5 | 2.3 s | $0.0035 | 0.5 |
 
 ## DEV per case (routed, final)
 
@@ -302,29 +302,29 @@ Field and line-item accuracy averaged over the runs; order matching and high-ris
 | case_010 | 100.0% | 100.0% | yes | – | schedule | schedule | 0 |
 | case_011 | 100.0% | 100.0% | yes | – | – | – | 0 |
 | case_012 | 100.0% | 100.0% | yes | 2/2 | value | value | 0 |
-| case_013 | 100.0% | – | yes | 1/1 | schedule | schedule | 0 |
+| case_013 | 88.9% | – | yes | 1/1 | schedule | schedule | 0 |
 | case_014 | 100.0% | 100.0% | yes | – | – | – | 0 |
 | case_015 | 100.0% | 100.0% | yes | – | – | – | 0 |
 | case_016 | 90.0% | 100.0% | yes (asked) | 2/2 | value | value | 0 |
 | case_017 | 100.0% | 100.0% | yes | 3/3 | schedule | schedule | 0 |
-| case_018 | 100.0% | 100.0% | yes | – | – | – | 0 |
+| case_018 | 90.0% | 100.0% | yes | – | – | – | 0 |
 | case_019 | 100.0% | 100.0% | yes | – | – | – | 0 |
 | case_020 | 100.0% | 100.0% | yes | – | – | – | 0 |
-| case_021 | 80.0% | 100.0% | yes | 1/1 | – | – | 0 |
+| case_021 | 90.0% | 100.0% | yes | 1/1 | – | – | 0 |
 | case_022 | 100.0% | 100.0% | yes | – | – | – | 0 |
 | case_023 | 100.0% | 100.0% | yes | – | – | – | 1 |
 | case_024 | 100.0% | 100.0% | yes | – | – | – | 0 |
 | case_025 | 100.0% | 100.0% | yes | – | – | – | 0 |
 | case_026 | 100.0% | 100.0% | yes | – | – | – | 0 |
 | case_027 | – | – | – | – | – | – | 0 |
-| case_028 | 100.0% | 100.0% | yes | 1/1 | – | – | 0 |
+| case_028 | 100.0% | 100.0% | yes | 1/1 | – | – | 3 |
 | case_029 | 90.0% | 100.0% | yes | 2/2 | value | value | 0 |
 | case_030 | 100.0% | 0.0% | yes | 2/3 | value | value | 0 |
 | case_031 | 100.0% | 100.0% | yes | 3/3 | value | value | 0 |
 | case_032 | 100.0% | – | yes | 1/1 | – | – | 0 |
 | case_033 | 100.0% | 100.0% | yes | – | – | – | 0 |
 | case_034 | – | – | – | – | – | – | 1 |
-| case_035 | – | – | – | – | – | – | 0 |
+| case_035 | – | – | – | – | – | schedule | 0 |
 
 ## TEST v1 per case (routed, after the M7 fixes)
 

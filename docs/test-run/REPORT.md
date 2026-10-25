@@ -47,7 +47,7 @@ T3 is different. 33,900 pcs of other orders are due by 18 Dec against about 31,4
 
 ## Scenario details
 
-Screenshots: `screenshots/T*_email.png`, the full email page, and `T*_order.png`, the order with its versions. Also `00_dashboard_before.png` and `99_dashboard_after.png`. Raw results: `results/T*.json`.
+Screenshots (first run): `screenshots_before/T*_email.png`, the full email page, and `T*_order.png`, the order with its versions. Also `00_dashboard_before.png` and `99_dashboard_after.png`. Raw results: `results_before/T*.json`.
 
 ### T1: New PO HLA-24019 (56 s, $0.0247, 7 calls)
 - **Classification:** `new_po` (0.99).
@@ -149,9 +149,43 @@ These two fixes were requested after this report. Findings A–F above are still
    Test: `test_profiles_check_an_agreed_split_shipment_by_shipment`, which fails on the old code.
 2. **Tavily sources as links.** Under each flag and each *Info checked* line, the risk card now lists the web sources its evidence cites, as links showing the title and domain (finding G). Tests: `web/lib/sources.test.ts`, run with `npm test`.
 
+## Re-run after the fixes (25 Oct 2026, 06:40 UTC)
+
+The same six emails ran again, in the same way, after deploying the fixes for findings B, C and D (commit `10d87c2`). Finding A was reviewed and **kept by decision**: the capacity model charges other orders due by the ex-factory date to the sewing window after fabric arrives. This simplification is documented in `backend/app/agent/tools/feasibility.py` and pinned by a test with T1's numbers. Applying the spec's whole-window reading instead would have made case_002 feasible, removing the demo's delivery story, and it would remove the schedule high from 5 DEV cases.
+
+| | Before | After | |
+|---|---|---|---|
+| **T1** | High delivery (capacity model) | Same | Kept by decision (A) |
+| **T2** | False style change HL-TS-310 → HLA-24019 | **No style change.** Style kept from v1 (note: "Style 'HLA-24019' is the PO number"). The unstated destination is left empty and inherited | ✅ D fixed |
+| **T3** | High delivery even with fabric in-house | Same high. New: Nano invented colours "Navy" and "White" with no quantities, added to v3 | High kept (A). Invented colours fixed after the re-run (see below) |
+| **T4** | Read as 2 March; destination "United States" invented; no flag | **Destination empty** (review: *missing*), **date flagged as ambiguous**, MEDIUM "Confirm ex-factory date with buyer". The reply asks whether 2 March or 3 February is meant, and asks for the destination | ✅ B fixed |
+| **T5** | 11,40 vs 11,90 not flagged | **`unit_price` flagged** (*price_conflict*: "11.40 besides 11.90"). MEDIUM price flag; the reply asks which price applies. New: **high delivery**, 443 pcs short | ✅ C fixed. The high comes from the capacity model with one day less (see below) |
+| **T6** | All three points answered, no new version | Same, but the reply also offers PP samples for the invented colours from T3 | Fixed with T3 |
+
+**T5's new high delivery flag.** The email arrived a day later than in the first run (25 Oct instead of 24 Oct), so the sewing window before 26 Feb 2027 is one day shorter: 957 pcs free instead of 1,528. 1,400 pcs no longer fit; on 24 Oct the plan was already at 99.7% of capacity with 0 days of slack. This is the capacity model working as documented, with the demo's order book filling the factory.
+
+**Invented colours (fixed after the re-run).** In T3, Nano returned two line items, "Navy" and "White", with no quantity or sizes; neither colour appears in the email. The order merged them in as new colours, and T6's reply then promised PP samples for them. A line item with no quantity, no sizes and a colour the email never mentions is now dropped, with a note. Checked against every DEV extraction and label: none is affected. Tests are in `backend/tests/test_scenario_fixes.py`. This fix is not covered by a live re-run.
+
+**Cost of the re-run:** $0.1280, for 48 model calls, against today's spend on the live site.
+
+| | End to end | Calls | Cost | Risk model |
+|---|---|---|---|---|
+| T1 | 42.4 s | 7 | $0.0222 | Ultra |
+| T2 | 33.9 s | 8 | $0.0213 | Ultra |
+| T3 | 39.8 s | 10 | $0.0298 | Ultra |
+| T4 | 42.8 s | 7 | $0.0064 | Super |
+| T5 | 54.3 s | 6 | $0.0178 | Ultra |
+| T6 | 51.8 s | 10 | $0.0306 | Ultra |
+
+After the re-run, the demo was reset and checked: 8 emails and 6 orders. case_002 is unchanged:
+- **Risk:** Ultra escalation ("current plan infeasible"), high delivery (9,314 free, 4,186 short), high price (+12.5%).
+- **Options:** the same three: as requested, full quantity on 8 Dec, or the 9,300 / 4,200 split.
+- **Profiles:** Tiruppur infeasible, Dhaka feasible.
+
+So no video clip needed re-recording.
+
 ## Files
 
 - `run_scenarios.py`: the test runner. `summarise.py` prints the results.
 - `scenarios.txt`: the six emails, exactly as sent.
-- `results/`: `T1.json` … `T6.json`, `state_before.json` and `spend.json`.
-- `screenshots/`: the email and order pages per scenario, and the dashboard before and after.
+- `results_before/` and `screenshots_before/`: the first run (24 Oct). `results/` and `screenshots/`: the re-run after the fixes (25 Oct). Each holds `T1.json` … `T6.json`, `state_before.json` and `spend.json`, and the email and order pages per scenario with the dashboard before and after.

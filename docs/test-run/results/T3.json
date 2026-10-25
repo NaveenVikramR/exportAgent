@@ -6,22 +6,23 @@
   "body": "Hi Karthik,\n\nUnderstood about the fabric lead time. Good news from our side: our nominated mill has already delivered the full fabric for HLA-24019 to your factory last week, so fabric is in-house. Can we do ex-factory 18 December 2026 instead?\n\nEmily\n\n> On 24 Oct 2026, Karthik wrote:\n> Emily, with the fabric lead time we cannot meet 10 December."
  },
  "email_id": 11,
- "elapsed_s": 58.7,
+ "elapsed_s": 39.8,
  "email": {
   "id": 11,
   "external_id": null,
   "sender": "Emily Carter <emily.carter@harbourline-apparel.example>",
   "subject": "Re: HLA-24019 Rev A \u2013 qty up, earlier ship",
-  "received_at": "2026-10-24T19:14:17.847301",
+  "received_at": "2026-10-25T10:16:16.693031",
   "status": "analysed",
   "order_id": 7,
   "classification": {
    "category": "delivery_change",
    "intents": [
-    "delivery_change"
+    "delivery_change",
+    "new_po"
    ],
    "has_po_data": true,
-   "summary": "The buyer wants to move the ex-factory date to 18 December 2026.",
+   "summary": "The buyer wants to move the ex-factory date to 18 December 2026 for PO HLA-24019 Rev A.",
    "confidence": 0.96,
    "unrecognised": []
   },
@@ -36,14 +37,14 @@
      "evidence": "From: Emily Carter <emily.carter@harbourline-apparel.example>"
     },
     "po_number": {
-     "value": null,
-     "confidence": 0.0,
-     "evidence": null
+     "value": "HLA-24019",
+     "confidence": 0.9,
+     "evidence": "Subject: Re: HLA-24019 Rev A \u2013 qty up, earlier ship"
     },
     "style": {
      "value": null,
      "confidence": 0.0,
-     "evidence": "HLA-24019 Rev A"
+     "evidence": null
     },
     "currency": {
      "value": null,
@@ -62,8 +63,8 @@
     },
     "delivery_date": {
      "value": "2026-12-18",
-     "confidence": 1.0,
-     "evidence": "18 December 2026"
+     "confidence": 0.9,
+     "evidence": "ex-factory 18 December 2026"
     },
     "incoterms": {
      "value": null,
@@ -82,7 +83,13 @@
     },
     "line_items": [
      {
-      "colour": null,
+      "colour": "Navy",
+      "sizes": {},
+      "quantity": null,
+      "unit_price": null
+     },
+     {
+      "colour": "White",
       "sizes": {},
       "quantity": null,
       "unit_price": null
@@ -93,30 +100,6 @@
    },
    "review": [],
    "escalations": [
-    {
-     "field": "buyer",
-     "reason": "source_quote_missing",
-     "model": "nvidia/nemotron-3-super-120b-a12b",
-     "calls": 1,
-     "input_tokens": 923,
-     "output_tokens": 55,
-     "cost_usd": "0.00032640",
-     "outcome": "resolved",
-     "before": "Harbourline Apparel",
-     "after": "Harbourline Apparel"
-    },
-    {
-     "field": "po_number",
-     "reason": "source_quote_missing",
-     "model": "nvidia/nemotron-3-super-120b-a12b",
-     "calls": 1,
-     "input_tokens": 923,
-     "output_tokens": 23,
-     "cost_usd": "0.00029760",
-     "outcome": "resolved",
-     "before": "HLA-24019",
-     "after": null
-    },
     {
      "field": "currency",
      "reason": "source_quote_missing",
@@ -140,25 +123,13 @@
      "outcome": "resolved",
      "before": "EXW",
      "after": null
-    },
-    {
-     "field": "destination_country",
-     "reason": "source_quote_missing",
-     "model": "nvidia/nemotron-3-super-120b-a12b",
-     "calls": 1,
-     "input_tokens": 923,
-     "output_tokens": 23,
-     "cost_usd": "0.00029760",
-     "outcome": "resolved",
-     "before": "United States",
-     "after": null
     }
    ],
-   "inherited": [
-    "po_number"
-   ],
+   "inherited": [],
    "notes": [
-    "Style 'HLA-24019 Rev A' read as PO HLA-24019, revision A."
+    "PO number 'HLA-24019 Rev A' read as PO HLA-24019, revision A.",
+    "Style 'HLA-24019 Rev A' is the PO number; the email names no style.",
+    "Destination 'United States' is not stated in the email; left empty."
    ]
   },
   "analysis_error": null,
@@ -168,13 +139,13 @@
   "id": 7,
   "buyer": "Harbourline Apparel Inc.",
   "po_number": "HLA-24019",
-  "style": "HLA-24019",
+  "style": "HL-TS-310",
   "status": "open",
   "profile": "india_tiruppur",
   "current_version": 3,
-  "updated_at": "2026-10-24T19:14:33.941076",
+  "updated_at": "2026-10-25T10:16:23.791065",
   "alerts": [],
-  "latest_change_count": 1,
+  "latest_change_count": 3,
   "versions": [
    {
     "id": 11,
@@ -184,7 +155,7 @@
     "data": {
      "buyer": "Harbourline Apparel",
      "po_number": "HLA-24019",
-     "style": "HLA-24019",
+     "style": "HL-TS-310",
      "currency": "USD",
      "unit_price": "4.20",
      "total_quantity": 3600,
@@ -209,6 +180,14 @@
        "sizes": {},
        "quantity": 1200,
        "unit_price": null
+      },
+      {
+       "colour": "Navy",
+       "sizes": {}
+      },
+      {
+       "colour": "White",
+       "sizes": {}
       }
      ],
      "po_revision": "A",
@@ -216,12 +195,12 @@
     },
     "confidence": {
      "buyer": 0.9,
-     "po_number": 0,
+     "po_number": 0.9,
      "style": 0,
      "currency": 0,
      "unit_price": 0,
      "total_quantity": 0,
-     "delivery_date": 1.0,
+     "delivery_date": 0.9,
      "incoterms": 0,
      "port": 0,
      "destination_country": 0
@@ -234,9 +213,25 @@
       "new": "2026-12-18",
       "detail": "Delivery pushed back by 8 days (2026-12-10 \u2192 2026-12-18).",
       "alert": null
+     },
+     {
+      "field": "line_items.Navy",
+      "kind": "colour",
+      "old": null,
+      "new": null,
+      "detail": "Colour added: Navy, 0 pcs.",
+      "alert": null
+     },
+     {
+      "field": "line_items.White",
+      "kind": "colour",
+      "old": null,
+      "new": null,
+      "detail": "Colour added: White, 0 pcs.",
+      "alert": null
      }
     ],
-    "created_at": "2026-10-24T19:14:33.941679"
+    "created_at": "2026-10-25T10:16:23.791609"
    },
    {
     "id": 10,
@@ -246,7 +241,7 @@
     "data": {
      "buyer": "Harbourline Apparel Inc.",
      "po_number": "HLA-24019",
-     "style": "HLA-24019",
+     "style": "HL-TS-310",
      "currency": "USD",
      "unit_price": "4.20",
      "total_quantity": 3600,
@@ -279,24 +274,16 @@
     "confidence": {
      "buyer": 1.0,
      "po_number": 1.0,
-     "style": 1.0,
+     "style": 0,
      "currency": 0,
      "unit_price": 0,
      "total_quantity": 1.0,
      "delivery_date": 1.0,
      "incoterms": 0,
      "port": 0,
-     "destination_country": 1.0
+     "destination_country": 0
     },
     "changes": [
-     {
-      "field": "style",
-      "kind": "other",
-      "old": "HL-TS-310",
-      "new": "HLA-24019",
-      "detail": "Style HL-TS-310 \u2192 HLA-24019.",
-      "alert": null
-     },
      {
       "field": "total_quantity",
       "kind": "quantity",
@@ -322,7 +309,7 @@
       "alert": null
      }
     ],
-    "created_at": "2026-10-24T19:13:21.093138"
+    "created_at": "2026-10-25T10:15:41.436010"
    },
    {
     "id": 9,
@@ -378,7 +365,7 @@
      "destination_country": 1.0
     },
     "changes": [],
-    "created_at": "2026-10-24T19:12:13.312603"
+    "created_at": "2026-10-25T10:14:50.706685"
    }
   ]
  },
@@ -389,12 +376,12 @@
   "status": "completed",
   "rounds": 2,
   "result": {
-   "summary": "The buyer requests ex-factory 18 December 2026 for HLA-24019 (3,600 pcs) and states fabric is already in-house. Even with fabric ready, the current plan is infeasible: capacity shortfall of 3,600 pcs (utilisation 119%) and 11 fewer production days than needed. The earliest feasible date for the full quantity is 24 February 2027.",
+   "summary": "The buyer requests ex-factory 18 December 2026 for PO HLA-24019 Rev A (3,600 pcs, style HL-TS-310, USA) and states fabric is already in-house. Even with fabric ready, the current plan is infeasible: the factory has zero free capacity for the order (3,600 pcs shortfall, utilisation 121.5%). The earliest feasible date for the full quantity is 25 February 2027.",
    "flags": [
     {
      "severity": "high",
      "category": "delivery",
-     "reason": "Current plan (18 Dec 2026) infeasible even with fabric in-house: 3,600 pcs shortfall, utilisation 119%, need 66 production days but only 55 available (slack -11 days).",
+     "reason": "Current plan (2026-12-18) infeasible even with fabric in-house: 3,600 pcs shortfall, capacity utilisation 121.5% (capacity left -3,043 pcs).",
      "evidence": [
       "E6",
       "E4",
@@ -406,31 +393,37 @@
      "source": "model",
      "severity_adjusted_from": null,
      "related": [
-      "Previous plan (10 Dec 2026) also infeasible: only 5 production days after 42-day fabric lead time; minimum is 10 days.",
-      "Earliest feasible date for full 3,600 pcs is 24 Feb 2027 \u2014 over two months later than requested."
+      "Previous plan (2026-12-10) was infeasible due to fabric lead time: only 4 production days available (minimum 10).",
+      "Earliest feasible date for full 3,600 pcs is 2027-02-25."
      ]
+    },
+    {
+     "severity": "medium",
+     "category": "data_quality",
+     "reason": "Version 3 adds colours Navy and White with 0 pcs each; colour-level quantities not specified.",
+     "evidence": [
+      "E2"
+     ],
+     "rule": "",
+     "adverse_finding": "",
+     "verified": true,
+     "source": "model",
+     "severity_adjusted_from": null,
+     "related": []
     }
    ],
    "info_checked": [
     {
      "topic": "buyer",
-     "finding": "No adverse information found on Harbourline Apparel Inc. (no insolvency, sanctions, fraud, or disputes).",
+     "finding": "No adverse information found; Harbourline Apparel is a global merchant export company with no reported insolvency, sanctions, fraud, or disputes.",
      "evidence": [
       "E8"
      ],
      "note": null
     },
     {
-     "topic": "compliance",
-     "finding": "US apparel labelling requires fibre content in descending order, RN/importer identity, country of origin, and care instructions with at least one safe cleaning method.",
-     "evidence": [
-      "E7"
-     ],
-     "note": null
-    },
-    {
-     "topic": "order_history",
-     "finding": "Order evolved from v1 (29 Jan 2027, 3,000 pcs) to v2 (10 Dec 2026, 3,600 pcs) to v3 (18 Dec 2026, 3,600 pcs); only change v2\u2192v3 is delivery pushed back 8 days.",
+     "topic": "contract_value",
+     "finding": "No contract value change between versions 2 and 3 (unit price $4.20, quantity 3,600 pcs in both).",
      "evidence": [
       "E1",
       "E2"
@@ -438,16 +431,16 @@
      "note": null
     },
     {
-     "topic": "compliance",
-     "finding": "US requires fibre composition, country of origin, manufacturer/importer RN, and care labels per FTC 16 CFR Part 423.",
+     "topic": "delivery_date_change",
+     "finding": "Delivery date pushed back 8 days from 2026-12-10 (v2) to 2026-12-18 (v3).",
      "evidence": [
-      "E7"
+      "E2"
      ],
-     "note": "Not a flag: no concrete rule with a source URL."
+     "note": null
     },
     {
      "topic": "compliance",
-     "finding": "California AB 1817 and New York PFAS apparel ban effective 1 Jan 2025 apply to this shipment.",
+     "finding": "US shipment requires fiber content label, RN/importer identity, country of origin, care labels (16 CFR Part 423); PFAS restrictions (CA AB 1817) and heavy metals \u2264100 mg/kg apply.",
      "evidence": [
       "E7"
      ],
@@ -465,11 +458,11 @@
    }
   },
   "error": null,
-  "started_at": "2026-10-24T19:14:35.994554",
-  "finished_at": "2026-10-24T19:14:54.110580",
+  "started_at": "2026-10-25T10:16:24.160600",
+  "finished_at": "2026-10-25T10:16:41.918508",
   "steps": [
    {
-    "id": 79,
+    "id": 78,
     "seq": 1,
     "round": 0,
     "kind": "tool",
@@ -483,7 +476,7 @@
      "order_id": 7,
      "buyer": "Harbourline Apparel Inc.",
      "po_number": "HLA-24019",
-     "style": "HLA-24019",
+     "style": "HL-TS-310",
      "current_version": 3,
      "versions": [
       {
@@ -505,7 +498,7 @@
        "unit_price": "4.20",
        "currency": "USD",
        "destination_country": "United States",
-       "change_count": 4,
+       "change_count": 3,
        "alerts": [
         "delivery_pulled_forward"
        ]
@@ -518,7 +511,7 @@
        "unit_price": "4.20",
        "currency": "USD",
        "destination_country": "United States",
-       "change_count": 1,
+       "change_count": 3,
        "alerts": []
       }
      ],
@@ -527,7 +520,7 @@
     "summary": "PO HLA-24019: v3, 3600 pcs, delivery 2026-12-18",
     "evidence_id": "E1",
     "call_id": null,
-    "created_at": "2026-10-24T19:14:35.997948",
+    "created_at": "2026-10-25T10:16:24.163811",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -537,7 +530,7 @@
     "call_source": null
    },
    {
-    "id": 80,
+    "id": 79,
     "seq": 2,
     "round": 0,
     "kind": "tool",
@@ -560,15 +553,31 @@
        "new": "2026-12-18",
        "detail": "Delivery pushed back by 8 days (2026-12-10 \u2192 2026-12-18).",
        "alert": null
+      },
+      {
+       "field": "line_items.Navy",
+       "kind": "colour",
+       "old": null,
+       "new": null,
+       "detail": "Colour added: Navy, 0 pcs.",
+       "alert": null
+      },
+      {
+       "field": "line_items.White",
+       "kind": "colour",
+       "old": null,
+       "new": null,
+       "detail": "Colour added: White, 0 pcs.",
+       "alert": null
       }
      ],
      "alerts": [],
      "contract_value": null
     },
-    "summary": "v2 \u2192 v3: 1 changes",
+    "summary": "v2 \u2192 v3: 3 changes",
     "evidence_id": "E2",
     "call_id": null,
-    "created_at": "2026-10-24T19:14:35.998953",
+    "created_at": "2026-10-25T10:16:24.164879",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -578,7 +587,7 @@
     "call_source": null
    },
    {
-    "id": 81,
+    "id": 80,
     "seq": 3,
     "round": 0,
     "kind": "tool",
@@ -591,19 +600,19 @@
      "verdict": "infeasible",
      "suggested_severity": "high",
      "reason": "3,600 pcs needed but only 0 pcs of free capacity remain before 2026-12-18 after other orders (3,600 pcs short).",
-     "as_of": "2026-10-24",
+     "as_of": "2026-10-25",
      "delivery_date": "2026-12-18",
      "quantity": 3600,
-     "days_to_delivery": 55,
+     "days_to_delivery": 54,
      "fabric_days": 42,
-     "production_days_available": 13,
+     "production_days_available": 12,
      "free_capacity_per_week": 4000,
-     "capacity_in_window": 7428,
+     "capacity_in_window": 6857,
      "other_orders_load": 33900,
-     "capacity_left_for_order": -26472,
-     "utilisation": 5.048,
+     "capacity_left_for_order": -27043,
+     "utilisation": 5.469,
      "production_days_needed": 66,
-     "slack_days": -53,
+     "slack_days": -54,
      "shortfall_pcs": 3600,
      "order_id": 7,
      "profile": "india_tiruppur",
@@ -635,7 +644,7 @@
     "summary": "INFEASIBLE for 3,600 pcs by 2026-12-18: 3,600 pcs needed but only 0 pcs of free capacity remain before 2026-12-18 after other orders (3,600 pcs short).",
     "evidence_id": "E3",
     "call_id": null,
-    "created_at": "2026-10-24T19:14:36.004264",
+    "created_at": "2026-10-25T10:16:24.169560",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -645,7 +654,7 @@
     "call_source": null
    },
    {
-    "id": 82,
+    "id": 81,
     "seq": 4,
     "round": 0,
     "kind": "tool",
@@ -659,20 +668,20 @@
      "evidence_id": "E4",
      "verdict": "infeasible",
      "suggested_severity": "high",
-     "reason": "Only 5 production days after the 42-day fabric lead time; the minimum is 10.",
-     "as_of": "2026-10-24",
+     "reason": "Only 4 production days after the 42-day fabric lead time; the minimum is 10.",
+     "as_of": "2026-10-25",
      "delivery_date": "2026-12-10",
      "quantity": 3600,
-     "days_to_delivery": 47,
+     "days_to_delivery": 46,
      "fabric_days": 42,
-     "production_days_available": 5,
+     "production_days_available": 4,
      "free_capacity_per_week": 4000,
-     "capacity_in_window": 2857,
+     "capacity_in_window": 2285,
      "other_orders_load": 30900,
-     "capacity_left_for_order": -28043,
-     "utilisation": 12.076,
+     "capacity_left_for_order": -28615,
+     "utilisation": 15.098,
      "production_days_needed": 61,
-     "slack_days": -56,
+     "slack_days": -57,
      "shortfall_pcs": 3600,
      "order_id": 7,
      "profile": "india_tiruppur",
@@ -696,10 +705,10 @@
      "fabric_ready": false,
      "is_current_plan": false
     },
-    "summary": "INFEASIBLE for 3,600 pcs by 2026-12-10: Only 5 production days after the 42-day fabric lead time; the minimum is 10.",
+    "summary": "INFEASIBLE for 3,600 pcs by 2026-12-10: Only 4 production days after the 42-day fabric lead time; the minimum is 10.",
     "evidence_id": "E4",
     "call_id": null,
-    "created_at": "2026-10-24T19:14:36.010370",
+    "created_at": "2026-10-25T10:16:24.174119",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -709,7 +718,7 @@
     "call_source": null
    },
    {
-    "id": 83,
+    "id": 82,
     "seq": 5,
     "round": 0,
     "kind": "tool",
@@ -724,13 +733,13 @@
      "quantity": 3600,
      "current_verdict": "infeasible",
      "options_needed": true,
-     "earliest_feasible_date_full_quantity": "2027-02-24",
+     "earliest_feasible_date_full_quantity": "2027-02-25",
      "partial_shipment": null
     },
-    "summary": "Full 3,600 pcs feasible from 2027-02-24",
+    "summary": "Full 3,600 pcs feasible from 2027-02-25",
     "evidence_id": "E5",
     "call_id": null,
-    "created_at": "2026-10-24T19:14:36.016900",
+    "created_at": "2026-10-25T10:16:24.179662",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -740,7 +749,7 @@
     "call_source": null
    },
    {
-    "id": 84,
+    "id": 83,
     "seq": 6,
     "round": 0,
     "kind": "routing",
@@ -757,7 +766,7 @@
     "summary": "Escalated to Ultra: current plan infeasible: delivery options need weighing; thread says materials are available ('fabric is in-house'): may change feasibility",
     "evidence_id": null,
     "call_id": null,
-    "created_at": "2026-10-24T19:14:36.018324",
+    "created_at": "2026-10-25T10:16:24.180809",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -767,7 +776,7 @@
     "call_source": null
    },
    {
-    "id": 85,
+    "id": 84,
     "seq": 7,
     "round": 1,
     "kind": "llm",
@@ -777,36 +786,34 @@
     },
     "output": {
      "content": "",
-     "reasoning": "The email is from Emily Carter at Harbourline Apparel. She says the nominated mill has already delivered the full fabric for HLA-24019 to our factory last week, so fabric is in-house. She asks if we can do ex-factory 18 December 2026 instead.\n\nThe prefetched evidence shows:\n- Order HLA-24019 (order_id 7) current version 3 has delivery_date 2026-12-18, quantity 3600, destination United States.\n- Previous version 2 had delivery_date 2026-12-10.\n- The diff shows delivery pushed back by 8 days (from 10 Dec to 18 Dec).\n- Delivery feasibility check for current plan (2026-12-18) with fabric_ready=false shows infeasible due to capacity shortfall (3,600 pcs short). Evidence E3.\n- Delivery feasibility for previous plan (2026-12-10) also infeasible due to insufficient production days after fabric lead time. Evidence E4.\n- Propose delivery options shows earliest feasible date for full quantity is 2027-02-24. Evidence E5.\n\nBut the email says fabric is already in-house (delivered last week). That means fabric_ready=true. The prefetched checks assumed fabric_ready=false (fabric lead time 42 days). Since fabric is ready, we need to re-check delivery feasibility for the current plan (2026-12-18) wi",
+     "reasoning": "The email indicates that the fabric is already in-house (delivered to factory last week). The prefetched evidence shows delivery feasibility checks were done with fabric_ready=false. Since the email states fabric is in-house, I need to call check_delivery_feasibility for the current plan (2026-12-18) with fabric_ready=true. This is a what-if the email itself raises.\n\nAlso, the destination country is United States (from order data). I should check compliance for apparel shipped to US. The product is described as style HL-TS-310, but we don't have fibre details. The email doesn't specify garment type. I'll need to infer from context or use generic description. The order shows style HL-TS-310, but no fibre. I'll call check_compliance with destination_country \"United States\" and product \"apparel (style HL-TS-310)\" or similar.\n\nAlso, buyer is Harbourline Apparel Inc. The prefetched evidence shows earlier_orders_from_buyer: 0. So this is the first order from this buyer. I should call lookup_buyer for Harbourline Apparel Inc. in United States (or maybe country unknown). The email domain is harbourline-apparel.example, but the order shows buyer \"Harbourline Apparel Inc.\" and destination Un",
      "tool_calls": [
       {
        "name": "check_delivery_feasibility",
-       "arguments": "{\"order_id\": 7, \"delivery_date\": \"2026-12-18\", \"quantity\": 3600, \"fabric_ready\": true}"
+       "arguments": "{\"order_id\": 7, \"fabric_ready\": true}"
       }
      ]
     },
     "summary": "Calls check_delivery_feasibility",
     "evidence_id": null,
-    "call_id": 93,
-    "created_at": "2026-10-24T19:14:40.478332",
+    "call_id": 141,
+    "created_at": "2026-10-25T10:16:26.658017",
     "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
     "tier": "ultra",
-    "input_tokens": 3458,
-    "output_tokens": 1002,
-    "latency_ms": 4455,
-    "cost_usd": "0.00646400",
+    "input_tokens": 3684,
+    "output_tokens": 395,
+    "latency_ms": 2472,
+    "cost_usd": "0.00486900",
     "call_source": "live"
    },
    {
-    "id": 86,
+    "id": 85,
     "seq": 8,
     "round": 1,
     "kind": "tool",
     "name": "check_delivery_feasibility",
     "input": {
      "order_id": 7,
-     "delivery_date": "2026-12-18",
-     "quantity": 3600,
      "fabric_ready": true
     },
     "output": {
@@ -814,19 +821,19 @@
      "verdict": "infeasible",
      "suggested_severity": "high",
      "reason": "3,600 pcs needed but only 0 pcs of free capacity remain before 2026-12-18 after other orders (3,600 pcs short).",
-     "as_of": "2026-10-24",
+     "as_of": "2026-10-25",
      "delivery_date": "2026-12-18",
      "quantity": 3600,
-     "days_to_delivery": 55,
+     "days_to_delivery": 54,
      "fabric_days": 0,
-     "production_days_available": 55,
+     "production_days_available": 54,
      "free_capacity_per_week": 4000,
-     "capacity_in_window": 31428,
+     "capacity_in_window": 30857,
      "other_orders_load": 33900,
-     "capacity_left_for_order": -2472,
-     "utilisation": 1.193,
+     "capacity_left_for_order": -3043,
+     "utilisation": 1.215,
      "production_days_needed": 66,
-     "slack_days": -11,
+     "slack_days": -12,
      "shortfall_pcs": 3600,
      "order_id": 7,
      "profile": "india_tiruppur",
@@ -858,7 +865,7 @@
     "summary": "INFEASIBLE for 3,600 pcs by 2026-12-18: 3,600 pcs needed but only 0 pcs of free capacity remain before 2026-12-18 after other orders (3,600 pcs short).",
     "evidence_id": "E6",
     "call_id": null,
-    "created_at": "2026-10-24T19:14:40.483169",
+    "created_at": "2026-10-25T10:16:26.663210",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -868,7 +875,7 @@
     "call_source": null
    },
    {
-    "id": 87,
+    "id": 86,
     "seq": 9,
     "round": 2,
     "kind": "llm",
@@ -878,54 +885,54 @@
     },
     "output": {
      "content": "",
-     "reasoning": "The buyer wants to move the ex-factory date to 18 December 2026 (which is already the current version 3 date). The email says fabric is already in-house (delivered last week). I've checked delivery feasibility with fabric_ready=true for the current plan (18 Dec 2026, 3600 pcs). The result (E6) shows it's still infeasible due to capacity constraints: 3,600 pcs needed but only 0 pcs of free capacity remain before 2026-12-18 after other orders (3,600 pcs short). The capacity left for order is -2,472, utilisation 1.193, slack_days -11, shortfall_pcs 3600.\n\nThe prefetched evidence shows:\n- E1: Order HLA-24019, version 3 current, destination United States, 3600 pcs, $4.20/unit, delivery 2026-12-18\n- E2: Change from version 2 to 3: delivery pushed back by 8 days (2026-12-10 \u2192 2026-12-18)\n- E3: Current plan (fabric_ready=false) infeasible, high severity\n- E4: Previous plan (2026-12-10) infeasible, high severity\n- E5: Earliest feasible date for full quantity is 2027-02-24\n- E6: Current plan with fabric_ready=true still infeasible due to capacity\n\nThe buyer is asking if we can do ex-factory 18 December 2026, which is already the current plan. But even with fabric ready, capacity is insuffici",
+     "reasoning": "The buyer (Harbourline Apparel) wants to move the ex-factory date to 18 December 2026 for PO HLA-24019 Rev A. The email states that the nominated mill has already delivered the full fabric to the factory last week, so fabric is in-house. The current plan (version 3) has delivery date 2026-12-18, quantity 3600, unit price $4.20, destination United States.\n\nFrom prefetched evidence:\n- E1: Order found, versions: v1 (2027-01-29, 3000 pcs), v2 (2026-12-10, 3600 pcs), v3 (2026-12-18, 3600 pcs). Earlier orders from buyer: 0.\n- E2: Diff between v2 and v3: delivery pushed back by 8 days (2026-12-10 \u2192 2026-12-18), colours added Navy and White (0 pcs each). Contract value change: null (so no price change).\n- E3: Delivery feasibility for current plan (2026-12-18, 3600 pcs, fabric_ready=false): infeasible, high severity. Reason: 3,600 pcs needed but only 0 pcs free capacity remain before 2026-12-18 after other orders (3,600 pcs short). Capacity left for order: -27043, utilisation 5.469, production days needed 66, slack days -54, shortfall 3600.\n- E4: Delivery feasibility for previous plan (2026-12-10, 3600 pcs, fabric_ready=false): infeasible, high severity. Reason: only 4 production days after",
      "tool_calls": [
       {
        "name": "check_compliance",
-       "arguments": "{\"destination_country\": \"United States\", \"product\": \"apparel\"}"
+       "arguments": "{\"destination_country\": \"United States\", \"product\": \"apparel (style HL-TS-310)\"}"
       },
       {
        "name": "lookup_buyer",
-       "arguments": "{\"company_name\": \"Harbourline Apparel Inc.\", \"country\": \"United States\"}"
+       "arguments": "{\"company_name\": \"Harbourline Apparel\", \"country\": \"United States\"}"
       }
      ]
     },
     "summary": "Calls check_compliance, lookup_buyer",
     "evidence_id": null,
-    "call_id": 94,
-    "created_at": "2026-10-24T19:14:44.066048",
+    "call_id": 142,
+    "created_at": "2026-10-25T10:16:32.194352",
     "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
     "tier": "ultra",
-    "input_tokens": 3978,
-    "output_tokens": 665,
-    "latency_ms": 3578,
-    "cost_usd": "0.00597300",
+    "input_tokens": 4171,
+    "output_tokens": 1680,
+    "latency_ms": 5526,
+    "cost_usd": "0.00921100",
     "call_source": "live"
    },
    {
-    "id": 88,
+    "id": 87,
     "seq": 10,
     "round": 2,
     "kind": "tool",
     "name": "check_compliance",
     "input": {
      "destination_country": "United States",
-     "product": "apparel"
+     "product": "apparel (style HL-TS-310)"
     },
     "output": {
      "evidence_id": "E7",
-     "query": "apparel import requirements United States: labelling, fibre composition, care labels, chemical restrictions",
-     "answer": "The United States requires apparel to be labeled with fibre composition, country of origin, and manufacturer or importer identification. Fibre composition must disclose the material specification for each product, listing fibers that make up 5% or more of the total fiber weight. Care labels must include at least one safe cleaning method or state if a method would harm the product. The country of origin must indicate where the garment was manufactured. The label must be conspicuous and legible, affixed in such a way that it adheres to the clothing until delivered to the consumer. The FTC\u2019s Care Labeling Rule mandates care instructions for textile-wearing apparel.",
+     "query": "apparel (style HL-TS-310) import requirements United States: labelling, fibre composition, care labels, chemical restrictions",
+     "answer": "The United States requires apparel to be labeled with fiber content, importer or manufacturer identity, and country of origin. The Federal Trade Commission (FTC) administers textile and apparel labeling regulations, which include disclosing fiber composition using generic names and percentages by weight. Care labels are mandatory under 16 CFR Part 423, providing instructions for washing, drying, ironing, and other care methods. Chemical restrictions include PFAS in food-contact packaging being prohibited above specific limits starting August 12, 2026, and heavy metals limited to a combined 100 mg/kg. The sources do not provide specific details on delayed compliance dates or threshold changes for PFAS in apparel beyond the general information provided.",
      "sources": [
+      {
+       "title": "Apparel regulations overview 2026: Label, safety testing, sustainability",
+       "url": "https://www.eurofins.com/en/consumer-product-testing/softlines-hardlines/news-articles/apparel-regulations-overview-2026-care-label-safety-testing-and-sustainability",
+       "snippet": "Comprehensive chemical and safety testing to verify compliance with REACH, MRSL, POPs, US CPSC rules, UK requirements and buyer-specific RSLs.\n Labelling and performance assessments covering fibre composition, care label durability, colour fastness, dimensional stability, flammability and physical performance. [...] US PFAS restrictions on apparel continue to expand, including California AB 1817 a"
+      },
       {
        "title": "Clothing Labeling Requirements for USA, UK & EU (2026) \u2013 Dpassion Sportswear (Wholesale & Bulk Supplier)",
        "url": "https://dpassion.co.in/blogs/news/clothing-labeling-requirements-usa-uk-eu",
        "snippet": "The United States has specific requirements for many textile and wool products under federal labeling rules. The Federal Trade Commission (FTC) administers important textile and apparel labeling regulations, while US Customs and Border Protection (CBP) oversees country-of-origin marking and customs matters.\n\n### Fibre composition\n\nMany covered textile products must disclose their fibre content usi"
-      },
-      {
-       "title": "Apparel regulations overview 2026: Label, safety testing, sustainability",
-       "url": "https://www.eurofins.com/en/consumer-product-testing/softlines-hardlines/news-articles/apparel-regulations-overview-2026-care-label-safety-testing-and-sustainability",
-       "snippet": "US PFAS restrictions on apparel continue to expand, including California AB 1817 and New York\u2019s PFAS apparel ban, both effective from 1 January 2025, with later threshold changes and delayed compliance dates for certain outdoor apparel.\n US apparel care labelling is a compliance requirement, not a preference: the FTC\u2019s Care Labeling Rule is codified at 16 CFR Part 423. [...] Comprehensive chemical"
       },
       {
        "title": "Clothing and Textiles Regulations in the United States: A Complete Guide",
@@ -933,17 +940,17 @@
        "snippet": "Textile and apparel products to be sold in the United States must be labeled with the following information:\n\n Fiber content\n Importer or manufacturer identity or Registered Identification Number (RN)\n Country of Origin\n\n#### Fiber Composition\n\nThe label of a textile product must indicate the product\u2019s fiber composition. For example, if the textile fiber product is made entirely out of cotton, the"
       },
       {
-       "title": "Clothing Label Requirements in the United States - Textile Labeling",
-       "url": "https://wunderlabel.com/blog/p/clothing-label-requirements-textile-labeling-usa",
-       "snippet": "The components of the material must be listed in descending order, e.g: \"65% viscose, 35% polyester\". Only fibers that make up 5% or more of the total fiber weight can be listed. As a general rule, anything less than 5% must be listed as \"other fibers\". If a garment is made of only one fabric, such as cotton, you can use the phrase \"All cotton\" instead of \"100% cotton\". If part of a garment is mad"
+       "title": "A Guide to United States Apparel and Household Textiles Compliance ...",
+       "url": "https://www.cpsc.gov/s3fs-public/Guide-to-US-Apparel-and-Household-Textiles.pdf",
+       "snippet": "them. If the pants would be harmed by ironing, the label should read, \"Do not iron.\" \u2022 Ensure that care labels remain attached and legible throughout the useful life of the product. Care labels must be attached to products prior to sale in the United States; however, care labels do not have to be attached to products when they enter the United States. The importer must ensure the labels are attach"
       }
      ],
      "cached": false
     },
-    "summary": "4 sources for: apparel import requirements United States: labelling, fibre composition, care labels, chemical restrictions",
+    "summary": "4 sources for: apparel (style HL-TS-310) import requirements United States: labelling, fibre composition, care labels, chemical restrictions",
     "evidence_id": "E7",
     "call_id": null,
-    "created_at": "2026-10-24T19:14:47.927657",
+    "created_at": "2026-10-25T10:16:36.130525",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -953,24 +960,29 @@
     "call_source": null
    },
    {
-    "id": 89,
+    "id": 88,
     "seq": 11,
     "round": 2,
     "kind": "tool",
     "name": "lookup_buyer",
     "input": {
-     "company_name": "Harbourline Apparel Inc.",
+     "company_name": "Harbourline Apparel",
      "country": "United States"
     },
     "output": {
      "evidence_id": "E8",
      "query": "Harbourline Apparel Inc. United States apparel company news",
-     "answer": "The sources do not provide specific news about Harbourline Apparel Inc. United States apparel company. However, they mention Marvin Mittleman, director of corporate sales, discussing strategies to manage price uncertainties and advance buying, and a general trend of suppliers being aggressive in recapturing market share. Additionally, there is a mention of legal issues faced by Ambiance Apparel and Noh, indicating a focus on compliance and ethics in the fashion industry. No direct information about Harbourline Apparel Inc. is given.",
+     "answer": "The sources do not provide specific news about Harbourline Apparel Inc. as a United States apparel company. The provided sources mention Harbourline International as a global merchant export company focused on international trade solutions, but no details about its involvement in the United States apparel market are given. Additionally, other sources focus on mergers and acquisitions in the uniform and apparel industry, but none specifically mention Harbourline Apparel Inc. in the context of United States apparel company news.",
      "sources": [
       {
-       "title": "APPAREL'S",
-       "url": "https://www.archerlaw.com/a/web/j3MB3DFoebNkXPJcceGyyi/joe20martincounselor20magjan202012.pdf",
-       "snippet": "\u201cIn the heat of the increase, we saved clients $1,000 to $5,000 per order because we had them buy in advance,\u201d says Marvin Mittleman, director of corporate sales. \u201cW e\u2019ll absolutely continue to do it because of the uncertainty over prices.\u201d \u201cAdding some kind of performance element to cotton is going to bring buzz into the market. [...] stock there is vs. new inventory, then we will adjust prices.\u201d"
+       "title": "About-us - HarbourLine International",
+       "url": "https://harbourline.com/about-us.php",
+       "snippet": "We are a trusted global merchant export company providing superior-quality products and reliable international trade solutions. With a strong supply chain network, professional expertise, and commitment to excellence, we ensure seamless global sourcing and export services for clients around the world.\n\n Contact us\n\n#### MISSION & VISION\n\n##### Our Mission [...] #### WHY CHOOSE US\n\nWe stand out in "
+      },
+      {
+       "title": "The 2017 Economic Retrospective",
+       "url": "https://apparelnews.media.clients.ellingtoncms.com/news/documents/2017/12/14/CAN121517_online.pdf",
+       "snippet": "your ad in our self-serve system P 213-627-3737 Ext. 278, 280 F 213-623-1515 C L A S S I F I E D S Jobs Available Jobs Available Jobs Available Real Estate Buy, Sell and Trade For classified advertising information: call Jeffery 213-627-3737 ext. 280, email classifieds@apparelnews.net or visit www.apparelnews.net/classifieds to place your ad in our self-serve system 14 CALIFORNIA APPAREL NEWS APRI"
       },
       {
        "title": "All Fashion News and Press Releases from PR Newswire",
@@ -981,19 +993,14 @@
        "title": "Mergers & Acquisitions Archives - NAUMD, Network Association of Uniform Manufacturers & Distributors, a global network",
        "url": "https://naumd.com/category/news/mergers-acquisitions",
        "snippet": "Kroger Is Putting 400,000 Employees in Uniforms. It\u2019s Not About Enforcing a Dress Code October 5, 2026\n 2026 Awards Profile: Pier 66 Resort, Design Collective by Cintas October 5, 2026\n Meet uniform.news: A New Resource for the Entire Uniform Industry October 5, 2026\n Carhartt opens apparel design lab at Pensole Lewis College September 28, 2026\n The Uniform Chronicles: From School Halls to Deliver"
-      },
-      {
-       "title": "Cozen O\u2019Connor: DOJ Prosecutes Fashion Company For Skirting Customs Tariffs - Could This Be The Hot New Trend? [Alert]",
-       "url": "https://www.cozen.com/news-resources/publications/2020/doj-prosecutes-fashion-company-for-skirting-customs-tariffs---could-this-be-the-hot-new-trend",
-       "snippet": "Fashion companies and their executives looking to avoid paying millions in penalties and increased government monitoring, not to mention prison time, should heed Ambiance Apparel and Noh\u2019s prosecutions as a cautionary tale signaling DOJ\u2019s current focus.\n\n1  \n\n2  Ambiance Apparel is the operating name for two corporations, Ambiance U.S.A. Inc. and Apparel Line U.S.A., Inc.\n\n3  Id.\n\n4  \n\n5  \n\nShare "
       }
      ],
      "cached": true
     },
-    "summary": "4 sources (cached) for: Harbourline Apparel Inc. United States apparel company news",
+    "summary": "4 sources (cached) for: Harbourline Apparel United States apparel company news",
     "evidence_id": "E8",
     "call_id": null,
-    "created_at": "2026-10-24T19:14:47.929164",
+    "created_at": "2026-10-25T10:16:36.132111",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -1003,7 +1010,7 @@
     "call_source": null
    },
    {
-    "id": 90,
+    "id": 89,
     "seq": 12,
     "round": 3,
     "kind": "llm",
@@ -1012,25 +1019,25 @@
      "task": "planning"
     },
     "output": {
-     "content": "{\n  \"summary\": \"The buyer requests ex-factory 18 December 2026 for HLA-24019 (3,600 pcs) and states fabric is already in-house. Even with fabric ready, the current plan is infeasible: capacity shortfall of 3,600 pcs (utilisation 119%) and 11 fewer production days than needed. The earliest feasible date for the full quantity is 24 February 2027.\",\n  \"flags\": [\n    {\n      \"severity\": \"high\",\n      \"category\": \"delivery\",\n      \"reason\": \"Current plan (18 Dec 2026) infeasible even with fabric in-house: 3,600 pcs shortfall, utilisation 119%, need 66 production days but only 55 available (slack -11 days).\",\n      \"evidence\": [\"E6\"],\n      \"rule\": \"\",\n      \"adverse_finding\": \"\"\n    },\n    {\n      \"severity\": \"high\",\n      \"category\": \"delivery\",\n      \"reason\": \"Previous plan (10 Dec 2026) also infeasible: only 5 production days after 42-day fabric lead time; minimum is 10 days.\",\n      \"evidence\": [\"E4\"],\n      \"rule\": \"\",\n      \"adverse_finding\": \"\"\n    },\n    {\n      \"severity\": \"medium\",\n      \"category\": \"delivery\",\n      \"reason\": \"Earliest feasible date for full 3,600 pcs is 24 Feb 2027 \u2014 over two months later than requested.\",\n      \"evidence\": [\"E5\"],\n      \"rule\": \"\",\n      \"",
-     "reasoning": "The user wants me to analyze the risk for this apparel export order based on the evidence provided. Let me review all the evidence:\n\n1. **Order details (E1)**: Order HLA-24019, buyer Harbourline Apparel Inc., current version 3, delivery date 2026-12-18, quantity 3600, unit price $4.20, destination United States. Version history: v1 had delivery 2027-01-29, qty 3000; v2 had delivery 2026-12-10, qty 3600; v3 has delivery 2026-12-18, qty 3600.\n\n2. **Version diff (E2)**: Only change from v2 to v3 is delivery date pushed back by 8 days (Dec 10 \u2192 Dec 18). No contract value change.\n\n3. **Delivery feasibility for current plan (E3)**: Infeasible - 3,600 pcs needed but 0 free capacity before Dec 18 after other orders (3,600 short). Fabric lead time 42 days, only 13 production days available, need 66 days. Utilization 5.048x.\n\n4. **Delivery feasibility for previous plan (E4)**: Also infeasible - only 5 production days after 42-day fabric lead time, minimum 10 days.\n\n5. **Delivery options (E5)**: Earliest feasible date for full quantity is 2027-02-24.\n\n6. **New check with fabric_ready=true (E6)**: Still infeasible - even with fabric ready (0 fabric days), capacity shortfall of 2,472 pcs (utili",
+     "content": "{\n  \"summary\": \"The buyer requests ex-factory 18 December 2026 for PO HLA-24019 Rev A (3,600 pcs, style HL-TS-310, USA) and states fabric is already in-house. Even with fabric ready, the current plan is infeasible: the factory has zero free capacity for the order (3,600 pcs shortfall, utilisation 121.5%). The earliest feasible date for the full quantity is 25 February 2027.\",\n  \"flags\": [\n    {\n      \"severity\": \"high\",\n      \"category\": \"delivery\",\n      \"reason\": \"Current plan (2026-12-18) infeasible even with fabric in-house: 3,600 pcs shortfall, capacity utilisation 121.5% (capacity left -3,043 pcs).\",\n      \"evidence\": [\"E6\"],\n      \"rule\": \"\",\n      \"adverse_finding\": \"\"\n    },\n    {\n      \"severity\": \"high\",\n      \"category\": \"delivery\",\n      \"reason\": \"Previous plan (2026-12-10) was infeasible due to fabric lead time: only 4 production days available (minimum 10).\",\n      \"evidence\": [\"E4\"],\n      \"rule\": \"\",\n      \"adverse_finding\": \"\"\n    },\n    {\n      \"severity\": \"high\",\n      \"category\": \"delivery\",\n      \"reason\": \"Earliest feasible date for full 3,600 pcs is 2027-02-25.\",\n      \"evidence\": [\"E5\"],\n      \"rule\": \"\",\n      \"adverse_finding\": \"\"\n    },\n    {\n      \"sev",
+     "reasoning": "The user wants me to analyze the email and provide a JSON response with summary, flags, and info_checked based on the evidence provided and the tool results I've gathered.\n\nLet me review all the evidence:\n\n1. **Email context**: Buyer (Harbourline Apparel) wants to move ex-factory date to 18 December 2026 for PO HLA-24019 Rev A. They claim fabric is already in-house (delivered last week).\n\n2. **Order details from prefetched evidence (E1)**:\n   - Order ID: 7\n   - PO: HLA-24019\n   - Style: HL-TS-310\n   - Current version: 3\n   - Version 1: delivery 2027-01-29, qty 3000, $4.20, USA\n   - Version 2: delivery 2026-12-10, qty 3600, $4.20, USA (delivery pulled forward)\n   - Version 3: delivery 2026-12-18, qty 3600, $4.20, USA (pushed back 8 days from v2)\n   - Earlier orders from buyer: 0\n\n3. **Diff between v2 and v3 (E2)**: Delivery date changed from 2026-12-10 to 2026-12-18 (pushed back 8 days). Two colours added (Navy, White) with 0 pcs each.\n\n4. **Delivery feasibility for current plan (v3, 2026-12-18) with fabric lead time (E3)**: INFEASIBLE - high severity. 3,600 pcs needed but 0 free capacity. Shortfall 3,600 pcs. Production days needed 66, only 12 available after 42-day fabric lead tim",
      "tool_calls": []
     },
     "summary": "Writes the risk report",
     "evidence_id": null,
-    "call_id": 95,
-    "created_at": "2026-10-24T19:14:54.109818",
+    "call_id": 143,
+    "created_at": "2026-10-25T10:16:41.917712",
     "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
     "tier": "ultra",
-    "input_tokens": 5756,
-    "output_tokens": 1679,
-    "latency_ms": 6176,
-    "cost_usd": "0.01079300",
+    "input_tokens": 5845,
+    "output_tokens": 2012,
+    "latency_ms": 5780,
+    "cost_usd": "0.01188100",
     "call_source": "live"
    }
   ],
   "ultra_calls": 3,
-  "total_cost_usd": "0.02323000",
+  "total_cost_usd": "0.02596100",
   "notice": null
  },
  "drafts": [
@@ -1040,19 +1047,19 @@
    "order_id": 7,
    "kind": "buyer_reply",
    "subject": "Re: Re: HLA-24019 Rev A \u2013 qty up, earlier ship",
-   "body": "Hi Emily,\n\nThank you for your email and for confirming that the fabric for PO HLA\u201124019 is now in\u2011house.\n\nI acknowledge your request to move the ex\u2011factory date to 18\u202fDecember\u202f2026. Unfortunately, our capacity check shows that even with the fabric available we cannot meet that date \u2013 we are short 3\u202f600\u202fpcs and would need 66 production days while only 55 are available before 18\u202fDec\u202f2026.\n\nThe earliest date we can ship the full 3\u202f600\u202fpcs is 24\u202fFebruary\u202f2027. As no split\u2011shipment option is currently feasible, I propose we revise the delivery to that date unless you would like to explore other possibilities.\n\nPlease let me know if you agree or if you need any further details.\n\nBest regards,\nKarthik\nMerchandiser\nSri Velan Knits",
+   "body": "Hi Emily,\n\nThank you for your email. I acknowledge your requests for a delivery\u2011date change and for any new PO details.\n\nAs noted, the fabric for HLA\u201124019 Rev\u202fA is now in\u2011house. However, moving the ex\u2011factory date to 18\u202fDecember\u202f2026 is not feasible with our current capacity; we would be short 3,600\u202fpcs.\n\nThe earliest date we can ship the full 3,600\u202fpcs is 25\u202fFebruary\u202f2027. Please confirm if this works for you, or let us know if you would like to discuss alternatives.\n\nBest regards,\nKarthik\nMerchandiser\nSri Velan Knits",
    "edited_body": null,
-   "text": "Hi Emily,\n\nThank you for your email and for confirming that the fabric for PO HLA\u201124019 is now in\u2011house.\n\nI acknowledge your request to move the ex\u2011factory date to 18\u202fDecember\u202f2026. Unfortunately, our capacity check shows that even with the fabric available we cannot meet that date \u2013 we are short 3\u202f600\u202fpcs and would need 66 production days while only 55 are available before 18\u202fDec\u202f2026.\n\nThe earliest date we can ship the full 3\u202f600\u202fpcs is 24\u202fFebruary\u202f2027. As no split\u2011shipment option is currently feasible, I propose we revise the delivery to that date unless you would like to explore other possibilities.\n\nPlease let me know if you agree or if you need any further details.\n\nBest regards,\nKarthik\nMerchandiser\nSri Velan Knits",
+   "text": "Hi Emily,\n\nThank you for your email. I acknowledge your requests for a delivery\u2011date change and for any new PO details.\n\nAs noted, the fabric for HLA\u201124019 Rev\u202fA is now in\u2011house. However, moving the ex\u2011factory date to 18\u202fDecember\u202f2026 is not feasible with our current capacity; we would be short 3,600\u202fpcs.\n\nThe earliest date we can ship the full 3,600\u202fpcs is 25\u202fFebruary\u202f2027. Please confirm if this works for you, or let us know if you would like to discuss alternatives.\n\nBest regards,\nKarthik\nMerchandiser\nSri Velan Knits",
    "status": "pending",
-   "checked": 5,
+   "checked": 4,
    "violations": [],
    "reviewed_by": null,
    "reviewed_at": null,
    "sent_at": null,
    "reject_reason": null,
-   "created_at": "2026-10-24T19:15:11.960933",
+   "created_at": "2026-10-25T10:16:53.043456",
    "model": "nvidia/nemotron-3-super-120b-a12b",
-   "cost_usd": "0.00139410",
+   "cost_usd": "0.00118380",
    "email_subject": "Re: HLA-24019 Rev A \u2013 qty up, earlier ship",
    "email_sender": "Emily Carter <emily.carter@harbourline-apparel.example>",
    "offer": null
@@ -1063,19 +1070,19 @@
    "order_id": 7,
    "kind": "internal_note",
    "subject": "Internal: Re: HLA-24019 Rev A \u2013 qty up, earlier ship",
-   "body": "- Buyer requests ex\u2011factory date change to 18\u202fDec\u202f2026 (no quantity or price change; PO HLA\u201124019, 3\u202f600 pcs @ $4.20 USD, FOB Tuticorin).  \n- Risk: high\u2011severity delivery infeasibility \u2013 3\u202f600\u2011pcs shortfall, utilisation 119%, requires 66 production days vs 55 available (\u201111\u2011day slack).  \n- Management decision needed: approve the new 18\u202fDec date only if capacity can be secured, otherwise propose alternative date or resource adjustments.  \n- Production: keep fabric ready but hold cutting/sewing schedule for HLA\u201124019 until buyer confirms the ex\u2011factory date (or management gives go\u2011ahead).",
+   "body": "- Buyer requests ex\u2011factory delivery moved to **2026\u201112\u201118** for PO HLA\u201124019 Rev\u202fA (no quantity change stated).  \n- Risk\u202f\u2013\u202fHigh (delivery): Current plan for 2026\u201112\u201118 infeasible; 3,600\u202fpcs shortfall, capacity utilisation 121.5\u202f% (\u20113,043\u202fpcs left).  \n- Risk\u202f\u2013\u202fMedium (data quality): Version\u202f3 adds colours Navy and White with 0\u202fpcs each; colour\u2011level quantities unspecified.  \n- Management decision needed: approve the 2026\u201112\u201118 date despite infeasibility, or authorize a new feasible date (earliest\u202f2027\u201102\u201125) or discuss alternatives with the buyer.  \n- Production: Hold scheduling and material allocation for HLA\u201124019 pending buyer confirmation; keep fabric (already in\u2011house) reserved but do not release to line until the date is confirmed.",
    "edited_body": null,
-   "text": "- Buyer requests ex\u2011factory date change to 18\u202fDec\u202f2026 (no quantity or price change; PO HLA\u201124019, 3\u202f600 pcs @ $4.20 USD, FOB Tuticorin).  \n- Risk: high\u2011severity delivery infeasibility \u2013 3\u202f600\u2011pcs shortfall, utilisation 119%, requires 66 production days vs 55 available (\u201111\u2011day slack).  \n- Management decision needed: approve the new 18\u202fDec date only if capacity can be secured, otherwise propose alternative date or resource adjustments.  \n- Production: keep fabric ready but hold cutting/sewing schedule for HLA\u201124019 until buyer confirms the ex\u2011factory date (or management gives go\u2011ahead).",
+   "text": "- Buyer requests ex\u2011factory delivery moved to **2026\u201112\u201118** for PO HLA\u201124019 Rev\u202fA (no quantity change stated).  \n- Risk\u202f\u2013\u202fHigh (delivery): Current plan for 2026\u201112\u201118 infeasible; 3,600\u202fpcs shortfall, capacity utilisation 121.5\u202f% (\u20113,043\u202fpcs left).  \n- Risk\u202f\u2013\u202fMedium (data quality): Version\u202f3 adds colours Navy and White with 0\u202fpcs each; colour\u2011level quantities unspecified.  \n- Management decision needed: approve the 2026\u201112\u201118 date despite infeasibility, or authorize a new feasible date (earliest\u202f2027\u201102\u201125) or discuss alternatives with the buyer.  \n- Production: Hold scheduling and material allocation for HLA\u201124019 pending buyer confirmation; keep fabric (already in\u2011house) reserved but do not release to line until the date is confirmed.",
    "status": "pending",
-   "checked": 5,
+   "checked": 7,
    "violations": [],
    "reviewed_by": null,
    "reviewed_at": null,
    "sent_at": null,
    "reject_reason": null,
-   "created_at": "2026-10-24T19:15:11.960937",
+   "created_at": "2026-10-25T10:16:53.043461",
    "model": "nvidia/nemotron-3-super-120b-a12b",
-   "cost_usd": "0.00171540",
+   "cost_usd": "0.00178320",
    "email_subject": "Re: HLA-24019 Rev A \u2013 qty up, earlier ship",
    "email_sender": "Emily Carter <emily.carter@harbourline-apparel.example>",
    "offer": null
@@ -1084,214 +1091,166 @@
  "match_questions": [],
  "calls": [
   {
-   "id": 97,
+   "id": 145,
    "run_id": null,
    "task_type": "draft_internal_note",
    "tier": "super",
    "model": "nvidia/nemotron-3-super-120b-a12b",
-   "input_tokens": 1296,
-   "output_tokens": 1474,
-   "latency_ms": 10801,
-   "cost_usd": "0.00171540",
+   "input_tokens": 1474,
+   "output_tokens": 1490,
+   "latency_ms": 6489,
+   "cost_usd": "0.00178320",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:15:11.958523"
+   "created_at": "2026-10-25T10:16:53.040758"
   },
   {
-   "id": 96,
+   "id": 144,
    "run_id": null,
    "task_type": "draft_reply",
    "tier": "super",
    "model": "nvidia/nemotron-3-super-120b-a12b",
-   "input_tokens": 1422,
-   "output_tokens": 1075,
-   "latency_ms": 5805,
-   "cost_usd": "0.00139410",
+   "input_tokens": 1600,
+   "output_tokens": 782,
+   "latency_ms": 4234,
+   "cost_usd": "0.00118380",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:15:01.151293"
+   "created_at": "2026-10-25T10:16:46.545997"
   },
   {
-   "id": 95,
+   "id": 143,
    "run_id": 10,
    "task_type": "planning",
    "tier": "ultra",
    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
-   "input_tokens": 5756,
-   "output_tokens": 1679,
-   "latency_ms": 6176,
-   "cost_usd": "0.01079300",
+   "input_tokens": 5845,
+   "output_tokens": 2012,
+   "latency_ms": 5780,
+   "cost_usd": "0.01188100",
    "source": "live",
    "detail": "ultra escalation: current plan infeasible: delivery options need weighing; thread says materials are available ('fabric is in-house'): may change feasibility",
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:14:54.108984"
+   "created_at": "2026-10-25T10:16:41.916791"
   },
   {
-   "id": 94,
+   "id": 142,
    "run_id": 10,
    "task_type": "planning",
    "tier": "ultra",
    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
-   "input_tokens": 3978,
-   "output_tokens": 665,
-   "latency_ms": 3578,
-   "cost_usd": "0.00597300",
+   "input_tokens": 4171,
+   "output_tokens": 1680,
+   "latency_ms": 5526,
+   "cost_usd": "0.00921100",
    "source": "live",
    "detail": "ultra escalation: current plan infeasible: delivery options need weighing; thread says materials are available ('fabric is in-house'): may change feasibility",
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:14:44.065016"
+   "created_at": "2026-10-25T10:16:32.193462"
   },
   {
-   "id": 93,
+   "id": 141,
    "run_id": 10,
    "task_type": "planning",
    "tier": "ultra",
    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
-   "input_tokens": 3458,
-   "output_tokens": 1002,
-   "latency_ms": 4455,
-   "cost_usd": "0.00646400",
+   "input_tokens": 3684,
+   "output_tokens": 395,
+   "latency_ms": 2472,
+   "cost_usd": "0.00486900",
    "source": "live",
    "detail": "ultra escalation: current plan infeasible: delivery options need weighing; thread says materials are available ('fabric is in-house'): may change feasibility",
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:14:40.477518"
+   "created_at": "2026-10-25T10:16:26.657114"
   },
   {
-   "id": 92,
+   "id": 140,
    "run_id": null,
    "task_type": "change_detection",
    "tier": "nano",
    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
    "input_tokens": 406,
    "output_tokens": 74,
-   "latency_ms": 1424,
+   "latency_ms": 734,
    "cost_usd": "0.00004212",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:14:33.930753"
+   "created_at": "2026-10-25T10:16:23.784623"
   },
   {
-   "id": 91,
-   "run_id": null,
-   "task_type": "extract_escalation",
-   "tier": "super",
-   "model": "nvidia/nemotron-3-super-120b-a12b",
-   "input_tokens": 923,
-   "output_tokens": 23,
-   "latency_ms": 917,
-   "cost_usd": "0.00029760",
-   "source": "live",
-   "detail": "escalation: destination_country (source_quote_missing)",
-   "success": true,
-   "error": null,
-   "created_at": "2026-10-24T19:14:32.501887"
-  },
-  {
-   "id": 90,
+   "id": 139,
    "run_id": null,
    "task_type": "extract_escalation",
    "tier": "super",
    "model": "nvidia/nemotron-3-super-120b-a12b",
    "input_tokens": 927,
    "output_tokens": 25,
-   "latency_ms": 916,
+   "latency_ms": 939,
    "cost_usd": "0.00030060",
    "source": "live",
    "detail": "escalation: incoterms (source_quote_missing)",
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:14:31.580447"
+   "created_at": "2026-10-25T10:16:23.045633"
   },
   {
-   "id": 89,
+   "id": 138,
    "run_id": null,
    "task_type": "extract_escalation",
    "tier": "super",
    "model": "nvidia/nemotron-3-super-120b-a12b",
    "input_tokens": 921,
    "output_tokens": 22,
-   "latency_ms": 1114,
+   "latency_ms": 977,
    "cost_usd": "0.00029610",
    "source": "live",
    "detail": "escalation: currency (source_quote_missing)",
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:14:30.660303"
+   "created_at": "2026-10-25T10:16:22.101267"
   },
   {
-   "id": 88,
-   "run_id": null,
-   "task_type": "extract_escalation",
-   "tier": "super",
-   "model": "nvidia/nemotron-3-super-120b-a12b",
-   "input_tokens": 923,
-   "output_tokens": 23,
-   "latency_ms": 918,
-   "cost_usd": "0.00029760",
-   "source": "live",
-   "detail": "escalation: po_number (source_quote_missing)",
-   "success": true,
-   "error": null,
-   "created_at": "2026-10-24T19:14:29.541815"
-  },
-  {
-   "id": 87,
-   "run_id": null,
-   "task_type": "extract_escalation",
-   "tier": "super",
-   "model": "nvidia/nemotron-3-super-120b-a12b",
-   "input_tokens": 923,
-   "output_tokens": 55,
-   "latency_ms": 762,
-   "cost_usd": "0.00032640",
-   "source": "live",
-   "detail": "escalation: buyer (source_quote_missing)",
-   "success": true,
-   "error": null,
-   "created_at": "2026-10-24T19:14:28.619289"
-  },
-  {
-   "id": 86,
+   "id": 137,
    "run_id": null,
    "task_type": "extract",
    "tier": "nano",
    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
    "input_tokens": 839,
-   "output_tokens": 409,
-   "latency_ms": 4654,
-   "cost_usd": "0.00014850",
+   "output_tokens": 495,
+   "latency_ms": 1846,
+   "cost_usd": "0.00016914",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:14:27.852682"
+   "created_at": "2026-10-25T10:16:21.118504"
   },
   {
-   "id": 85,
+   "id": 136,
    "run_id": null,
    "task_type": "classify",
    "tier": "nano",
    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
    "input_tokens": 550,
-   "output_tokens": 66,
-   "latency_ms": 1556,
-   "cost_usd": "0.00004884",
+   "output_tokens": 82,
+   "latency_ms": 1230,
+   "cost_usd": "0.00005268",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:14:23.194289"
+   "created_at": "2026-10-25T10:16:19.268072"
   }
  ],
- "cost_usd": 0.028097,
- "model_latency_ms": 43076
+ "cost_usd": 0.029789,
+ "model_latency_ms": 30227
 }

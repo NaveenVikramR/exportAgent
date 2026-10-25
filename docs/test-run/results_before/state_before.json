@@ -1,0 +1,256 @@
+{
+ "emails": [
+  {
+   "id": 8,
+   "external_id": "case_018",
+   "sender": "Katrin Vogel <k.vogel@brunnhof-sport.example>",
+   "subject": "Bestellung BS-26-0442",
+   "received_at": "2026-10-07T09:00:00",
+   "status": "analysed",
+   "order_id": 6,
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants confirmation of the new purchase order BS-26-0442 for training tops.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "review_count": 0
+  },
+  {
+   "id": 7,
+   "external_id": "case_010",
+   "sender": "Suresh <suresh@srivelanknits.example>",
+   "subject": "Fwd: summer rompers order - pls action",
+   "received_at": "2026-09-28T09:00:00",
+   "status": "needs_review",
+   "order_id": 5,
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants to place a new purchase order for summer rompers with specified styles, quantities, colors, pricing, and delivery requirements.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "review_count": 1
+  },
+  {
+   "id": 6,
+   "external_id": "case_008",
+   "sender": "Priya Nair <priya@kestrelkids.example>",
+   "subject": "Fit samples for style KK-RS-310 + shipment status",
+   "received_at": "2026-09-22T09:00:00",
+   "status": "analysed",
+   "order_id": null,
+   "classification": {
+    "category": "sample_or_approval",
+    "intents": [
+     "sample_or_approval",
+     "order_query"
+    ],
+    "has_po_data": false,
+    "summary": "Request for three fit samples of romper KK-RS-310 in size 6-12M and inquiry about the August shipment status.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "review_count": 0
+  },
+  {
+   "id": 5,
+   "external_id": "case_007",
+   "sender": "Anna Becker <anna.becker@nordwind-mode.example>",
+   "subject": "RE: RE: PO NW-45098 - delivery",
+   "received_at": "2026-09-20T09:00:00",
+   "status": "analysed",
+   "order_id": 4,
+   "classification": {
+    "category": "delivery_change",
+    "intents": [
+     "delivery_change"
+    ],
+    "has_po_data": true,
+    "summary": "Buyer requests moving the ex-factory date for PO NW-45098 to 10 November 2026.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "review_count": 0
+  },
+  {
+   "id": 2,
+   "external_id": "case_002",
+   "sender": "Anna Becker <anna.becker@nordwind-mode.example>",
+   "subject": "REVISED PO NW-45120 Rev.1 - please replace previous version",
+   "received_at": "2026-09-18T09:00:00",
+   "status": "analysed",
+   "order_id": 1,
+   "classification": {
+    "category": "po_revision",
+    "intents": [
+     "po_revision"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants the supplier to adopt the revised PO (Rev.1) and discard the previous version.",
+    "confidence": 0.98,
+    "unrecognised": []
+   },
+   "review_count": 0
+  },
+  {
+   "id": 4,
+   "external_id": "case_006",
+   "sender": "Dana Whitfield <dana.whitfield@bluepeakoutfitters.example>",
+   "subject": "PO BP-778455 - women's rib tank, 8,000 pcs",
+   "received_at": "2026-09-15T09:00:00",
+   "status": "needs_review",
+   "order_id": 3,
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer wants confirmation of a new purchase order for 8,000 women's rib tanks.",
+    "confidence": 0.98,
+    "unrecognised": []
+   },
+   "review_count": 1
+  },
+  {
+   "id": 3,
+   "external_id": "case_003",
+   "sender": "Julien Moreau <j.moreau@maison-clairet.example>",
+   "subject": "Order MC-2026-0871 + lab dips + packing list for last shipment",
+   "received_at": "2026-09-08T09:00:00",
+   "status": "analysed",
+   "order_id": 2,
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po",
+     "sample_or_approval",
+     "shipment_docs"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer requests a new PO booking, asks for lab dips for a previous order, and wants the packing list for a recent shipment.",
+    "confidence": 0.96,
+    "unrecognised": []
+   },
+   "review_count": 0
+  },
+  {
+   "id": 1,
+   "external_id": "case_001",
+   "sender": "Anna Becker <anna.becker@nordwind-mode.example>",
+   "subject": "New order PO NW-45120 - Men's crew neck tee, style NW-TS-2207",
+   "received_at": "2026-09-01T09:00:00",
+   "status": "analysed",
+   "order_id": 1,
+   "classification": {
+    "category": "new_po",
+    "intents": [
+     "new_po"
+    ],
+    "has_po_data": true,
+    "summary": "The buyer requests confirmation of receipt and the ex-factory date for PO NW-45120 for 12,000 men's crew neck tees.",
+    "confidence": 0.98,
+    "unrecognised": []
+   },
+   "review_count": 0
+  }
+ ],
+ "orders": [
+  {
+   "id": 6,
+   "buyer": "Brunnhof Sport GmbH",
+   "po_number": "BS-26-0442",
+   "style": "BS-TR-12",
+   "status": "open",
+   "profile": "india_tiruppur",
+   "current_version": 1,
+   "updated_at": "2026-10-13T18:25:18.632577",
+   "alerts": [],
+   "latest_change_count": 0
+  },
+  {
+   "id": 5,
+   "buyer": "Kestrel Kids Pty Ltd",
+   "po_number": null,
+   "style": "KK-RS-310",
+   "status": "open",
+   "profile": "india_tiruppur",
+   "current_version": 1,
+   "updated_at": "2026-10-13T18:23:44.659265",
+   "alerts": [],
+   "latest_change_count": 0
+  },
+  {
+   "id": 4,
+   "buyer": "Nordwind Mode GmbH",
+   "po_number": "NW-45098",
+   "style": null,
+   "status": "open",
+   "profile": "india_tiruppur",
+   "current_version": 2,
+   "updated_at": "2026-10-13T18:22:53.808955",
+   "alerts": [
+    "delivery_pulled_forward"
+   ],
+   "latest_change_count": 1
+  },
+  {
+   "id": 1,
+   "buyer": "Nordwind Mode GmbH",
+   "po_number": "NW-45120",
+   "style": "NW-TS-2207",
+   "status": "open",
+   "profile": "india_tiruppur",
+   "current_version": 2,
+   "updated_at": "2026-10-13T18:22:05.740840",
+   "alerts": [
+    "delivery_pulled_forward"
+   ],
+   "latest_change_count": 3
+  },
+  {
+   "id": 3,
+   "buyer": "Bluepeak Outfitters Inc.",
+   "po_number": "BP-778455",
+   "style": "BP-TK-2040",
+   "status": "open",
+   "profile": "india_tiruppur",
+   "current_version": 1,
+   "updated_at": "2026-10-13T18:21:01.018154",
+   "alerts": [],
+   "latest_change_count": 0
+  },
+  {
+   "id": 2,
+   "buyer": "Maison Clairet SAS",
+   "po_number": "MC-2026-0871",
+   "style": "MC-PL-118",
+   "status": "open",
+   "profile": "india_tiruppur",
+   "current_version": 1,
+   "updated_at": "2026-10-13T18:20:11.507618",
+   "alerts": [],
+   "latest_change_count": 0
+  }
+ ],
+ "health": {
+  "status": "ok",
+  "database": "ok",
+  "demo_loaded": true,
+  "mode": "live",
+  "spend_today_usd": "0.0542",
+  "spend_cap_usd": "1.00",
+  "rate_limit_per_minute": 10,
+  "nebius_configured": true,
+  "tavily_configured": true
+ }
+}

@@ -96,6 +96,30 @@ def test_a_style_the_email_names_equal_to_the_po_is_kept():
     assert extraction.style.value == "KT-500"
 
 
+# --- colours the email never mentions (T3 re-run) ----------------------------------------------
+
+
+def test_an_empty_line_item_with_an_unmentioned_colour_is_dropped():
+    extraction = _po(delivery_date="2026-12-18", line_items=[
+        {"colour": "Navy", "sizes": {}, "quantity": None}, {"colour": "White", "sizes": {}, "quantity": None},
+    ])
+    text = "fabric is in-house. Can we do ex-factory 18 December 2026 instead?"
+
+    notes = normalise_extraction(extraction, text)
+
+    assert extraction.line_items == []
+    assert sum("is not in the email" in note for note in notes) == 2
+
+
+def test_a_named_colour_without_a_quantity_is_kept():
+    # e.g. "please drop Mustard": the colour is in the email, so the item stays for change detection.
+    extraction = _po(line_items=[{"colour": "Mustard", "sizes": {}, "quantity": None}])
+
+    normalise_extraction(extraction, "Please drop Mustard from PO 4471.")
+
+    assert [item.colour for item in extraction.line_items] == ["Mustard"]
+
+
 # --- two prices in one new PO (T5) -------------------------------------------------------------
 
 T5 = """our order NW-5520 for the hoodie NW-HD-14, at EUR 11,40 as agreed on the phone.

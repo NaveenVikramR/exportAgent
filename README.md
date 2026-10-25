@@ -9,9 +9,9 @@
 
 A person approves every step. The models are NVIDIA Nemotron Nano, Super and Ultra, called at runtime on Nebius Token Factory.
 
-| **100%** | **96.5%** | **$0.0094** | **~21%** |
+| **100%** | **96.5%** | **$0.0102** | **~24%** |
 |:---:|:---:|:---:|:---:|
-| high-risk recall on the held-out TEST v2 set | field extraction accuracy on the held-out TEST v2 set | per email, all models, measured live | of risk runs use Ultra. Ultra on every risk run scored worse, at 2× the cost |
+| high-risk recall on the held-out TEST v2 set | field extraction accuracy on the held-out TEST v2 set | per email, all models, measured live (post-fix DEV run) | of risk runs use Ultra. Ultra on every risk run scored worse, at 2× the cost |
 
 **Live web research with Tavily:** compliance rules for the destination country and background on new buyers are looked up live. Every compliance flag shows its source URL.
 
@@ -76,7 +76,7 @@ Every model call goes through one module, [backend/app/llm/router.py](backend/ap
 - no size table in the email was missed;
 - the quoted source text is really in the email and states the value.
 
-Only a field that fails is re-read by Super, and Super's value is kept only if the same check then passes. In the final evaluation, 70% of emails needed Nano alone, and Super resolved 91% of the escalated fields ([escalation.py](backend/app/services/escalation.py)).
+Only a field that fails is re-read by Super, and Super's value is kept only if the same check then passes. In the post-fix DEV run, 70% of emails needed Nano alone, and Super resolved 92% of the escalated fields ([escalation.py](backend/app/services/escalation.py)).
 
 **Routing in the risk agent.** On all three evaluation sets, Super found the same high-risk issues as Ultra at a quarter to a fifth of the risk-stage cost, so Super runs every assessment. Ultra takes over the whole run in four cases ([routing.py](backend/app/agent/routing.py)):
 - the Python pre-check says the current plan is infeasible, so delivery options need weighing;
@@ -84,14 +84,14 @@ Only a field that fails is re-read by Super, and Super's value is kept only if t
 - Super's flags contradict the Python feasibility result;
 - Super's report fails validation.
 
-The risk card on each email shows which model judged it and why. In the final evaluation, 21% of risk runs went to Ultra.
+The risk card on each email shows which model judged it and why. In the post-fix DEV run, 24% of risk runs went to Ultra (21% at the freeze).
 
-**Cost per email, all models, measured live with the cache off on 35 DEV emails: $0.0094.**
+**Cost per email, all models, measured live with the cache off on 35 DEV emails: $0.0102** (post-fix run; $0.0094 at the freeze).
 
 | Stage | Model | Per email |
 |---|---|---|
 | Classify and extract, plus escalations | Nano, Super | about $0.0004 |
-| Risk agent (on emails with an order) | Super, Ultra on escalation | $0.0064 per assessed email |
+| Risk agent (on emails with an order) | Super, Ultra on escalation | $0.0070 per assessed email |
 | Reply and internal note | Super | about $0.003 |
 
 Model IDs, prices and per-task tiers come from environment variables ([.env.example](.env.example)), so tiers can change without code changes. Every call is logged with task, tier, model, tokens, latency, cost and source (live or cache), and the **Model calls** page reads that log.
@@ -149,19 +149,32 @@ Synthetic buyer emails modelled on real export paperwork, each with a hand-writt
 - **DEV** (35 cases): fixes are made only against these.
 - **TEST v2** (30 cases, held out): written by a separate assistant session from [the spec](backend/eval/TEST_V2_SPEC.md) alone, and committed before any run. Nothing was tuned on it.
 
-| Metric | DEV, final pipeline | **TEST v2, held out** (3 runs) |
+| Metric | DEV, final pipeline (post-fix run) | **TEST v2, held out** (3 runs) |
 |---|---|---|
 | High-risk findings: recall | **100%** | **100%** |
-| High-risk findings: precision | 100% | 80.1% |
-| Field extraction accuracy | 98.7% | 96.5% |
+| High-risk findings: precision | 91.7% | 80.1% |
+| Field extraction accuracy | 98.4% | 96.5% |
 | Line items (colour, quantity, sizes) | 98.4% | 83.2% |
 | Email put on the right order | 100% | 98.7% |
-| Change detection: recall / precision | 96.3% / 92.9% | 77.4% / 56.4% |
-| Classification: main category | 94.3% | 87.6% |
-| Drafts with no fact-check violations | 97.1% | 97.1% |
-| Cost per email, all models | **$0.0094** | $0.0215* |
+| Change detection: recall / precision | 96.3% / 89.7% | 77.4% / 56.4% |
+| Classification: main category | 91.4% | 87.6% |
+| Drafts with no fact-check violations | 95.6% | 97.1% |
+| Cost per email, all models | **$0.0102** | $0.0215* |
 
 \* TEST v2 ran while Ultra still did every risk assessment. With Super for risk on the same set: the same 100% recall, 85.7% precision and $0.0063 per email.
+
+**About the DEV column.** It comes from one post-fix DEV pass (25 Oct 2026), run after the fixes from the [live scenario test](docs/test-run/REPORT.md):
+- a destination must be stated in the email;
+- the style is not the PO number;
+- two prices in one new PO are flagged;
+- empty colours the email never mentions are dropped.
+
+None of these fixes fired on a DEV case. So the differences from the pass at the freeze (100% high-risk precision, $0.0094 per email, 21% of risk runs on Ultra) are run-to-run model variation. Three cases account for them:
+- one DEV email was classified as a revision, not a delivery change;
+- one style came back empty;
+- one follow-up picked up a changed buyer name and drew a schedule flag.
+
+The held-out TEST v2 results are kept exactly as first reported. The capacity check was reviewed after them and deliberately kept as it is: other orders due by the ex-factory date compete for the sewing window after fabric arrives. That simplification is documented in [feasibility.py](backend/app/agent/tools/feasibility.py) and errs towards flagging a plan.
 
 **The held-out column is the honest number.** It found weaknesses DEV didn't have:
 - ambiguous numeric dates read the wrong way round;

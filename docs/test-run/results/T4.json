@@ -6,14 +6,14 @@
   "body": "Hi,\n\nPO BK-7781, style BK-PL-02 piqu\u00e9 polo, colour Forest Green 1,500 pcs (S 300 / M 500 / L 500 / XL 200), price USD 6.75, FOB Chennai, ex-factory 03/02/2027.\n\nThanks,\nTom\nBlue Kite Goods"
  },
  "email_id": 12,
- "elapsed_s": 46.0,
+ "elapsed_s": 42.8,
  "email": {
   "id": 12,
   "external_id": null,
   "sender": "Tom Reyes <tom@bluekite-goods.example>",
   "subject": "PO BK-7781 polo order",
-  "received_at": "2026-10-24T19:15:31.422951",
-  "status": "analysed",
+  "received_at": "2026-10-25T10:17:04.808563",
+  "status": "needs_review",
   "order_id": 8,
   "classification": {
    "category": "po_revision",
@@ -21,11 +21,11 @@
     "po_revision"
    ],
    "has_po_data": true,
-   "summary": "The buyer is confirming a PO for 1,500 piqu\u00e9 polo shirts in Forest Green with specified sizes and pricing.",
+   "summary": "The buyer is confirming a PO for 1,500 piqu\u00e9 polo shirts in Forest Green with specified sizes and pricing, scheduled for ex-factory delivery on 03/02/2027.",
    "confidence": 0.96,
    "unrecognised": []
   },
-  "review_count": 0,
+  "review_count": 2,
   "body": "Hi,\n\nPO BK-7781, style BK-PL-02 piqu\u00e9 polo, colour Forest Green 1,500 pcs (S 300 / M 500 / L 500 / XL 200), price USD 6.75, FOB Chennai, ex-factory 03/02/2027.\n\nThanks,\nTom\nBlue Kite Goods",
   "attachments": [],
   "extraction": {
@@ -76,9 +76,9 @@
      "evidence": "FOB Chennai"
     },
     "destination_country": {
-     "value": "United States",
-     "confidence": 0.9,
-     "evidence": "Blue Kite Goods"
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
     },
     "line_items": [
      {
@@ -94,12 +94,28 @@
      }
     ],
     "po_revision": null,
-    "ambiguous_dates": []
+    "ambiguous_dates": [
+     "delivery_date"
+    ]
    },
-   "review": [],
+   "review": [
+    {
+     "field": "destination_country",
+     "reason": "missing",
+     "detail": "Not stated in the email."
+    },
+    {
+     "field": "delivery_date",
+     "reason": "ambiguous_date",
+     "detail": "Written as a numeric date that reads both ways; the buyer's country and the email do not settle it."
+    }
+   ],
    "escalations": [],
    "inherited": [],
-   "notes": []
+   "notes": [
+    "Destination 'United States' is not stated in the email; left empty.",
+    "Delivery date 2027-03-02 is written as an ambiguous numeric date; flagged for review."
+   ]
   },
   "analysis_error": null,
   "notice": null
@@ -112,7 +128,7 @@
   "status": "open",
   "profile": "india_tiruppur",
   "current_version": 1,
-  "updated_at": "2026-10-24T19:15:39.511784",
+  "updated_at": "2026-10-25T10:17:10.727917",
   "alerts": [],
   "latest_change_count": 0,
   "versions": [
@@ -131,7 +147,7 @@
      "delivery_date": "2027-03-02",
      "incoterms": "FOB",
      "port": "Chennai",
-     "destination_country": "United States",
+     "destination_country": null,
      "line_items": [
       {
        "colour": "Forest Green",
@@ -144,7 +160,8 @@
        "quantity": 1500,
        "unit_price": "6.75"
       }
-     ]
+     ],
+     "date_unconfirmed": true
     },
     "confidence": {
      "buyer": 1.0,
@@ -156,10 +173,10 @@
      "delivery_date": 1.0,
      "incoterms": 1.0,
      "port": 1.0,
-     "destination_country": 0.9
+     "destination_country": 0
     },
     "changes": [],
-    "created_at": "2026-10-24T19:15:39.512302"
+    "created_at": "2026-10-25T10:17:10.728568"
    }
   ]
  },
@@ -168,41 +185,55 @@
   "email_id": 12,
   "order_id": 8,
   "status": "completed",
-  "rounds": 2,
+  "rounds": 1,
   "result": {
-   "summary": "PO BK-7781 for 1,500 piqu\u00e9 polo shirts (Forest Green) is confirmed at USD 6.75 FOB Chennai with delivery 2027-03-02. The current plan is feasible but tight, using ~95% of free capacity with only 4 days of slack.",
+   "summary": "PO BK-7781 for 1,500 Forest Green piqu\u00e9 polos at USD 6.75 FOB Chennai is confirmed for ex-factory delivery on 2027-03-02. The current plan is feasible but tight, using 96% of free capacity with only 3 days of slack.",
    "flags": [
     {
      "severity": "medium",
      "category": "delivery",
-     "reason": "Feasible but tight: 95% of free capacity used, 4 days of slack (utilisation 0.953).",
+     "reason": "Confirm ex-factory date with buyer: '2027-03-02 or 2027-02-03' reads two ways; feasibility is not assessed until the buyer confirms it.",
      "evidence": [
       "E2"
      ],
-     "rule": "",
-     "adverse_finding": "",
+     "rule": null,
+     "adverse_finding": null,
      "verified": true,
-     "source": "model",
+     "source": "rule",
      "severity_adjusted_from": null,
      "related": []
     }
    ],
    "info_checked": [
     {
-     "topic": "compliance",
-     "finding": "US imports require fibre content, country of origin, care label (FTC Textile Fiber Products Identification Act & Care Labeling Rule); non\u2011compliance risks detention and re\u2011labeling.",
+     "topic": "buyer",
+     "finding": "Blue Kite Goods appears to be a creative services studio based in Wellesley, MA, USA, with no adverse findings.",
      "evidence": [
       "E3"
      ],
      "note": null
     },
     {
-     "topic": "buyer",
-     "finding": "No specific adverse information found for Blue Kite Goods; limited public data available.",
+     "topic": "data_quality",
+     "finding": "Destination country not specified in email; needed for compliance checks.",
+     "evidence": [],
+     "note": null
+    },
+    {
+     "topic": "order_history",
+     "finding": "This is the first order from Blue Kite Goods (no earlier orders).",
      "evidence": [
-      "E4"
+      "E1"
      ],
      "note": null
+    },
+    {
+     "topic": "delivery",
+     "finding": "Feasible but tight: 96% of free capacity used, 3 days of slack.",
+     "evidence": [
+      "E2"
+     ],
+     "note": "Not a flag: it depends on an ex-factory date that is not confirmed."
     }
    ],
    "routing": {
@@ -213,11 +244,11 @@
    }
   },
   "error": null,
-  "started_at": "2026-10-24T19:15:40.838657",
-  "finished_at": "2026-10-24T19:15:55.341757",
+  "started_at": "2026-10-25T10:17:11.094990",
+  "finished_at": "2026-10-25T10:17:21.111818",
   "steps": [
    {
-    "id": 91,
+    "id": 90,
     "seq": 1,
     "round": 0,
     "kind": "tool",
@@ -241,7 +272,7 @@
        "total_quantity": 1500,
        "unit_price": "6.75",
        "currency": "USD",
-       "destination_country": "United States",
+       "destination_country": null,
        "change_count": 0,
        "alerts": []
       }
@@ -251,7 +282,7 @@
     "summary": "PO BK-7781: v1, 1500 pcs, delivery 2027-03-02",
     "evidence_id": "E1",
     "call_id": null,
-    "created_at": "2026-10-24T19:15:40.841575",
+    "created_at": "2026-10-25T10:17:11.097937",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -261,7 +292,7 @@
     "call_source": null
    },
    {
-    "id": 92,
+    "id": 91,
     "seq": 2,
     "round": 0,
     "kind": "tool",
@@ -273,20 +304,20 @@
      "evidence_id": "E2",
      "verdict": "tight",
      "suggested_severity": "medium",
-     "reason": "Feasible but tight: 95% of free capacity used, 4 days of slack.",
-     "as_of": "2026-10-24",
+     "reason": "Feasible but tight: 96% of free capacity used, 3 days of slack.",
+     "as_of": "2026-10-25",
      "delivery_date": "2027-03-02",
      "quantity": 1500,
-     "days_to_delivery": 129,
+     "days_to_delivery": 128,
      "fabric_days": 42,
-     "production_days_available": 87,
+     "production_days_available": 86,
      "free_capacity_per_week": 4000,
-     "capacity_in_window": 49714,
+     "capacity_in_window": 49142,
      "other_orders_load": 45900,
-     "capacity_left_for_order": 3814,
-     "utilisation": 0.953,
+     "capacity_left_for_order": 3242,
+     "utilisation": 0.965,
      "production_days_needed": 83,
-     "slack_days": 4,
+     "slack_days": 3,
      "shortfall_pcs": 0,
      "order_id": 8,
      "profile": "india_tiruppur",
@@ -330,10 +361,10 @@
      "fabric_ready": false,
      "is_current_plan": true
     },
-    "summary": "TIGHT for 1,500 pcs by 2027-03-02: Feasible but tight: 95% of free capacity used, 4 days of slack.",
+    "summary": "TIGHT for 1,500 pcs by 2027-03-02: Feasible but tight: 96% of free capacity used, 3 days of slack.",
     "evidence_id": "E2",
     "call_id": null,
-    "created_at": "2026-10-24T19:15:40.847698",
+    "created_at": "2026-10-25T10:17:11.103357",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -343,7 +374,7 @@
     "call_source": null
    },
    {
-    "id": 93,
+    "id": 92,
     "seq": 3,
     "round": 1,
     "kind": "llm",
@@ -353,88 +384,7 @@
     },
     "output": {
      "content": "",
-     "reasoning": "We need to output JSON with summary, flags, info_checked based on prefetched evidence. No extra tool needed? Check compliance maybe because destination US known. Could run check_compliance for US, product description: piqu\u00e9 polo shirt, cotton? Not given fiber. Use generic \"piqu\u00e9 polo\". We'll call check_compliance.",
-     "tool_calls": [
-      {
-       "name": "check_compliance",
-       "arguments": "{\"destination_country\": \"United States\", \"product\": \"piqu\u00e9 polo shirt\"}"
-      }
-     ]
-    },
-    "summary": "Calls check_compliance",
-    "evidence_id": null,
-    "call_id": 101,
-    "created_at": "2026-10-24T19:15:42.004557",
-    "model": "nvidia/nemotron-3-super-120b-a12b",
-    "tier": "super",
-    "input_tokens": 2691,
-    "output_tokens": 110,
-    "latency_ms": 1151,
-    "cost_usd": "0.00090630",
-    "call_source": "live"
-   },
-   {
-    "id": 94,
-    "seq": 4,
-    "round": 1,
-    "kind": "tool",
-    "name": "check_compliance",
-    "input": {
-     "destination_country": "United States",
-     "product": "piqu\u00e9 polo shirt"
-    },
-    "output": {
-     "evidence_id": "E3",
-     "query": "piqu\u00e9 polo shirt import requirements United States: labelling, fibre composition, care labels, chemical restrictions",
-     "answer": "Importing a piqu\u00e9 polo shirt into the United States requires compliance with several labelling and fibre composition regulations. According to the sources, the US Federal Trade Commission's Care Labeling Rule (16 CFR Part 423) mandates that textile-wearing apparel include at least one safe cleaning method on the care label, which must be permanent, legible, and accessible to the consumer. The Textile Fiber Products Identification Act, enforced by the FTC, requires labels to include fibre composition content, traceability information, country of origin, and care instructions. Mislabeling can lead to detention of shipments by customs authorities, with importers required to pay penalty fees and re-label in a bonded warehouse. The sources do not provide specific details on chemical restrictions beyond mentioning US PFAS restrictions.",
-     "sources": [
-      {
-       "title": "Apparel regulations overview 2026: Label, safety testing, sustainability",
-       "url": "https://www.eurofins.com/en/consumer-product-testing/softlines-hardlines/news-articles/apparel-regulations-overview-2026-care-label-safety-testing-and-sustainability",
-       "snippet": "Comprehensive chemical and safety testing to verify compliance with REACH, MRSL, POPs, US CPSC rules, UK requirements and buyer-specific RSLs.\n Labelling and performance assessments covering fibre composition, care label durability, colour fastness, dimensional stability, flammability and physical performance. [...] US PFAS restrictions on apparel continue to expand, including California AB 1817 a"
-      },
-      {
-       "title": "Textile Labeling Regulations Guide: Fiber Content & Care Labels | TradeAider",
-       "url": "https://www.tradeaiders.com/es/wiki/textile-labeling-regulations-fiber-content-and-care-labeling",
-       "snippet": "Customs authorities (such as US CBP) will detain the shipment at the port of entry for mislabeling. Importers must pay penalty fees and cover expenses to re-label the entire shipment in a bonded warehouse before customs clearance is granted.\n\n## References\n\n US Federal Trade Commission. Threading Your Way Through the Labeling Requirements Under the Textile and Wool Acts[R]. Washington D.C.: FTC, 2"
-      },
-      {
-       "title": "Clothing Labelling Requirements by Country (US, EU, UK, CA, AU)",
-       "url": "https://collectivestudioltd.com/journal/clothing-labelling-requirements-by-country",
-       "snippet": "Every market has its own rules for what a clothing label must say, and they disagree on four things: fibre content, country of origin, care instructions and language. This guide gives the legal minimum for the United States, the European Union, the United Kingdom, Canada and Australia, verified against each regulator on 19 September 2026, so one label artwork per market clears.\n\n## What is the sam"
-      },
-      {
-       "title": "Textile Labeling Requirements in the United States",
-       "url": "https://www.compliancegate.com/textiles-labeling-requirements-united-states",
-       "snippet": "REQUEST A CALL\n\n###### You will speak with:Ivan Malloci\n\n### 16 CFR Part 303 \u2013 \u200b\u200bRules and Regulations Under the Textile Fiber Products Identification Act\n\n16 CFR Part 303 sets requirements for textile products. This section explains its scope, exemptions, and labeling requirements.\n\n#### General requirements\n\nHere are the general requirements of 16 CFR Part 303:\n\na. Textile products must include "
-      }
-     ],
-     "cached": false
-    },
-    "summary": "4 sources for: piqu\u00e9 polo shirt import requirements United States: labelling, fibre composition, care labels, chemical restrictions",
-    "evidence_id": "E3",
-    "call_id": null,
-    "created_at": "2026-10-24T19:15:45.935566",
-    "model": null,
-    "tier": null,
-    "input_tokens": null,
-    "output_tokens": null,
-    "latency_ms": null,
-    "cost_usd": null,
-    "call_source": null
-   },
-   {
-    "id": 95,
-    "seq": 5,
-    "round": 2,
-    "kind": "llm",
-    "name": "plan",
-    "input": {
-     "task": "planning"
-    },
-    "output": {
-     "content": "",
-     "reasoning": "We have prefetched evidence includes find_order (E1) and check_delivery_feasibility (E2). We also called check_compliance (E3). Need to output JSON with summary, flags, info_checked.\n\nFrom E2: verdict \"tight\", suggested_severity \"medium\". Reason: Feasible but tight: 95% of free capacity used, 4 days of slack. So it's feasible but tight => maybe a flag? Severity medium category delivery? It's not infeasible, just tight. According to rubric: medium: needs a decision or confirmation before replying (tight capacity, a date pulled forward that is still feasible, a smaller price or value change, missing order data). So we could flag as medium delivery with reason referencing utilization 95% etc.\n\nNo price change (no revision). No compliance issues? We got compliance info; likely no adverse findings. Could add info_checked for compliance.\n\nBuyer: earlier_orders_from_buyer = 0 (from E1). Since no earlier orders, we could optionally call lookup_buyer but not needed? The instruction: call lookup_buyer only when the buyer has no earlier orders. Actually says: Optional tools: call lookup_buyer only when the buyer has no earlier orders. So we should call lookup_buyer because earlier_orders_from",
+     "reasoning": "We need to decide which tools to call. The prefetched evidence includes find_order and check_delivery_feasibility for current plan. Destination country unknown -> fields needing review include destination_country. We might need to infer? Could we get destination country from port Chennai implies India domestic? Actually FOB Chennai means goods exported from Chennai port, so destination country is buyer's country, unknown. Might need to ask? But we cannot guess. Since we don't know destination, maybe skip compliance check. However we could attempt to infer buyer location? No data. So we will not call check_compliance because destination_country unknown.\n\nBuyer has no earlier orders (earlier_orders_from_buyer:0). According to instruction: call lookup_buyer only when buyer has no earlier orders. Yes, we should call lookup_buyer for Blue Kite Goods.\n\nAlso ambiguous delivery date: written as numeric date that reads both ways; they gave 03/02/2027 which could be March 2 or Feb 3. Need clarification. Should we call check_delivery_feasibility for alternative date? Possibly test both interpretations. The email says ex-factory 03/02/2027. Ambiguity: US format MM/DD/YYYY vs DD/MM/YYYY. As of ",
      "tool_calls": [
       {
        "name": "lookup_buyer",
@@ -444,29 +394,29 @@
     },
     "summary": "Calls lookup_buyer",
     "evidence_id": null,
-    "call_id": 102,
-    "created_at": "2026-10-24T19:15:49.251449",
+    "call_id": 149,
+    "created_at": "2026-10-25T10:17:14.230376",
     "model": "nvidia/nemotron-3-super-120b-a12b",
     "tier": "super",
-    "input_tokens": 3577,
-    "output_tokens": 355,
-    "latency_ms": 3311,
-    "cost_usd": "0.00139260",
+    "input_tokens": 2745,
+    "output_tokens": 476,
+    "latency_ms": 3122,
+    "cost_usd": "0.00125190",
     "call_source": "live"
    },
    {
-    "id": 96,
-    "seq": 6,
-    "round": 2,
+    "id": 93,
+    "seq": 4,
+    "round": 1,
     "kind": "tool",
     "name": "lookup_buyer",
     "input": {
      "company_name": "Blue Kite Goods"
     },
     "output": {
-     "evidence_id": "E4",
+     "evidence_id": "E3",
      "query": "Blue Kite Goods apparel company news",
-     "answer": "The sources do not provide specific news about Blue Kite Goods apparel company. One source discusses The Blue Kite by Vianaar, which manages holiday villas, emphasizing its growth and focus on reliability and quality. Another source mentions Dana Lynch as the founder of Blue Kite Company LLC and Blue Kite Press, focusing on their involvement in the greeting card industry. A third source refers to Blue Kite as a Nashville brand strategy and development agency, highlighting a rebranding effort for a nonprofit foster care organization. No information about Blue Kite Goods apparel company is given in the sources.",
+     "answer": "The sources indicate that Blue Kite Company is a creative services studio based in Wellesley, MA, offering graphic design, custom apparel, branded merchandise, and event materials. It was founded by Dana Lynch in 2019 and has expanded its services to include auction and fundraiser coordination. The company emphasizes a seamless process from design to delivery, with no minimum order quantities. However, the sources do not provide information about Blue Kite Goods apparel company news.",
      "sources": [
       {
        "title": "The Blue Kite by Vianaar: Revolutionizing the Holiday Home Rental Market in India, ETHospitalityWorld",
@@ -474,27 +424,27 @@
        "snippet": "The Blue Kite, a company which manages and markets stays in holiday villas as part of Vianaar developers, has been growing substantially since the pandemic. Founded in 2017, the company now has properties it manages beyond Goa, where it began and where it also has its largest inventory. Caroline Mulliez, Founder & CEO of the company, spoke exclusively to ET HospitalityWorld about what she saw in t"
       },
       {
+       "title": "About \u2014 Blue Kite Company \u2013 Creative Services Studio",
+       "url": "https://www.bluekiteco.com/about",
+       "snippet": "What started as a way to simplify team apparel orders for local youth sports organizations grew into Bleacher Supply Co., an online team store and fulfillment service. By combining custom merchandise, on-demand decoration, and local delivery, I made it easier for teams and community groups to offer branded gear without getting caught up in the details.\n\n  Explore Bleacher Supply Co.\n Blue Kite Pre"
+      },
+      {
        "title": "Dana Lynch - Founder, Blue Kite Co. & ...",
        "url": "https://www.linkedin.com/in/dana-lynch-4527078",
        "snippet": "## Experience\n- Founder & Managing Principal at Blue Kite Company LLC (Jan 2019 to present)\n- Founder at Blue Kite Press (Feb 2019 to present)\n- Public Affairs Committee (Marketing & Member Engagement Subcommittee Chair) \u00b7 Louie Awards Committee at Greeting Card Association (Sep 2021 to present)\n- Program Administrator at Wellesley Youth Lacrosse Club (Sep 2016 to Dec 2019)\n- Graphic Designer and "
       },
       {
-       "title": "Blue Kite | Nashville Brand Strategy & Development Agency - Blue Kite",
-       "url": "https://flybluekite.com",
-       "snippet": "January 25, 2024\n\nIt\u2019s a new year and if you\u2019re like many companies, you\u2019ve got a fresh new marketing plan to help you grow your business. However, for\n\n Read More \u00bb\n\n[](\n\n### Why You Should Build Your Brand Strategy Before Investing in Marketing\n\nNovember 21, 2023\n\nIf you\u2019re ready to attract more customers and increase revenue for your business, chances are good that marketing is at the top of yo"
-      },
-      {
-       "title": "Textiles Apparel and Luxury Goods",
-       "url": "https://www.cnbc.com/textiles-apparel-and-luxury-goods",
-       "snippet": "USA\n INTL\n\n Livestream\n\n Livestream\n\nWatchlist\n\nSIGN IN\n\nCreate free account\n\nPolitics & Policy\n\nWatchlist\n\nInvesting Club\n\nJoin IC\n\nPRO\n\nJoin Pro\n\nLivestream\n\nBusiness News\n\n# Textiles Apparel and Luxury Goods\n\nArmani open to more than one investor for sale of 15% stake, CEO says\n\nReutersSun, Sep 27th 2026\n\nwatch now\n\nTD Cowen's Oliver Chen on luxury retail: Consumers are being selective about wh"
+       "title": "Blue Kite Company \u2013 Creative Services Studio",
+       "url": "https://www.bluekiteco.com",
+       "snippet": "Skip to Content \n\nBlue Kite Company \u2013 Creative Services Studio\n\nBlue Kite Company \u2013 Creative Services Studio\n\nStart a Project\n\nBlue Kite Company \u2013 Creative Services Studio\n\nBlue Kite Company \u2013 Creative Services Studio\n\nStart a Project\n\n## Your Creative Partner from Design through Delivery\n\nTAKE THE GUESSWORK OUT OF YOUR NEXT PROJECT\n\nBased in Wellesley, MA, Blue Kite Co. helps bring creative proje"
       }
      ],
      "cached": false
     },
     "summary": "4 sources for: Blue Kite Goods apparel company news",
-    "evidence_id": "E4",
+    "evidence_id": "E3",
     "call_id": null,
-    "created_at": "2026-10-24T19:15:51.594488",
+    "created_at": "2026-10-25T10:17:17.025706",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -504,34 +454,34 @@
     "call_source": null
    },
    {
-    "id": 97,
-    "seq": 7,
-    "round": 3,
+    "id": 94,
+    "seq": 5,
+    "round": 2,
     "kind": "llm",
     "name": "plan",
     "input": {
      "task": "planning"
     },
     "output": {
-     "content": "\n{\n  \"summary\": \"PO BK-7781 for 1,500 piqu\u00e9 polo shirts (Forest Green) is confirmed at USD 6.75 FOB Chennai with delivery 2027-03-02. The current plan is feasible but tight, using ~95% of free capacity with only 4 days of slack.\",\n  \"flags\": [\n    {\n      \"severity\": \"medium\",\n      \"category\": \"delivery\",\n      \"reason\": \"Feasible but tight: 95% of free capacity used, 4 days of slack (utilisation 0.953).\",\n      \"evidence\": [\"E2\"],\n      \"rule\": \"\",\n      \"adverse_finding\": \"\"\n    }\n  ],\n  \"info_checked\": [\n    {\n      \"topic\": \"compliance\",\n      \"finding\": \"US imports require fibre content, country of origin, care label (FTC Textile Fiber Products Identification Act & Care Labeling Rule); non\u2011compliance risks detention and re\u2011labeling.\",\n      \"evidence\": [\"E3\"]\n    },\n    {\n      \"topic\": \"buyer\",\n      \"finding\": \"No specific adverse information found for Blue Kite Goods; limited public data available.\",\n      \"evidence\": [\"E4\"]\n    }\n  ]\n}",
-     "reasoning": "We need to output final JSON with summary, flags, info_checked.\n\nFrom prefetched evidence: order exists, version 1, no changes. Delivery feasibility verdict \"tight\", suggested severity medium, reason: Feasible but tight: 95% of free capacity used, 4 days of slack. So we should add a flag? Severity medium because needs decision/tight capacity. Category likely \"delivery\". Reason includes utilization 0.953, slack days 4. Evidence E2.\n\nAlso maybe compliance flag? Check compliance gave info about US labeling requirements. That's info_checked, not a flag unless violation. No indication of non-compliance. So info_checked includes compliance check.\n\nBuyer lookup gave little public information -> info_checked.\n\nThus flags: one delivery flag medium.\n\nInfo_checked: compliance, buyer.\n\nLet's craft summary: two sentences for merchandiser.\n\nNow produce JSON.",
+     "content": "\n{\n  \"summary\": \"PO BK-7781 for 1,500 Forest Green piqu\u00e9 polos at USD 6.75 FOB Chennai is confirmed for ex-factory delivery on 2027-03-02. The current plan is feasible but tight, using 96% of free capacity with only 3 days of slack.\",\n  \"flags\": [\n    {\n      \"severity\": \"medium\",\n      \"category\": \"delivery\",\n      \"reason\": \"Feasible but tight: 96% of free capacity used, 3 days of slack.\",\n      \"evidence\": [\"E2\"]\n    }\n  ],\n  \"info_checked\": [\n    {\n      \"topic\": \"buyer\",\n      \"finding\": \"Blue Kite Goods appears to be a creative services studio based in Wellesley, MA, USA, with no adverse findings.\",\n      \"evidence\": [\"E3\"]\n    },\n    {\n      \"topic\": \"data_quality\",\n      \"finding\": \"Destination country not specified in email; needed for compliance checks.\",\n      \"evidence\": []\n    },\n    {\n      \"topic\": \"order_history\",\n      \"finding\": \"This is the first order from Blue Kite Goods (no earlier orders).\",\n      \"evidence\": [\"E1\"]\n    }\n  ]\n}",
+     "reasoning": "We need to output final JSON with summary, flags, info_checked.\n\nFrom prefetched evidence: order exists, version 1, no changes. Destination country unknown. Need maybe compliance? Since destination unknown, cannot check compliance. Could we infer destination from port Chennai -> likely India domestic? But incoterms FOB Chennai means goods exported from Chennai, destination could be anywhere. No info.\n\nBuyer lookup shows Blue Kite Goods appears to be a creative services studio in Wellesley, MA, USA. So likely destination USA. We could assume destination country = United States. Should we call check_compliance? The instruction: call check_compliance when a destination country is known, describing the garment as the email does. We don't have explicit destination country, but we might infer from buyer location. Might be acceptable to call check_compliance with destination_country \"United States\". However we should not guess incorrectly. The fields_needing_review includes destination_country: Not stated. So we should not assume; we should note missing destination country as info_checked perhaps. No compliance flag.\n\nDelivery feasibility: E2 shows verdict tight, suggested severity medium",
      "tool_calls": []
     },
     "summary": "Writes the risk report",
     "evidence_id": null,
-    "call_id": 103,
-    "created_at": "2026-10-24T19:15:55.341129",
+    "call_id": 150,
+    "created_at": "2026-10-25T10:17:21.111079",
     "model": "nvidia/nemotron-3-super-120b-a12b",
     "tier": "super",
-    "input_tokens": 4483,
-    "output_tokens": 474,
-    "latency_ms": 3742,
-    "cost_usd": "0.00177150",
+    "input_tokens": 3561,
+    "output_tokens": 672,
+    "latency_ms": 4080,
+    "cost_usd": "0.00167310",
     "call_source": "live"
    }
   ],
   "ultra_calls": 0,
-  "total_cost_usd": "0.00407040",
+  "total_cost_usd": "0.00292500",
   "notice": null
  },
  "drafts": [
@@ -541,19 +491,19 @@
    "order_id": 8,
    "kind": "buyer_reply",
    "subject": "Re: PO BK-7781 polo order",
-   "body": "Hi Tom,\n\nThank you for your email. I acknowledge your request for a PO revision.\n\nI can confirm the details of PO BK\u20117781 for 1,500 piqu\u00e9 polo shirts in Forest Green (S\u202f300 / M\u202f500 / L\u202f500 / XL\u202f200) at USD\u202f6.75 FOB Chennai.\n\nHowever, our current plan shows the requested ex\u2011factory date of 03/02/2027 is tight \u2013 fabric is not yet ready and we have only four days of slack in capacity. To move forward we would need either a revised delivery date that accommodates this constraint or a split shipment (the portion that can be ready by 03/02/2027 and the balance thereafter).\n\nPlease let us know your preferred revised date or how you would like to split the shipment.\n\nBest regards,\nKarthik\nMerchandiser\nSri Velan Knits",
+   "body": "Hi Tom,\n\nThank you for your email regarding PO BK\u20117781. I acknowledge your request to revise/confirm the PO.\n\nI can confirm the following details from your PO:\n- Style BK\u2011PL\u201102, colour Forest Green, 1,500 pcs (S\u202f300 / M\u202f500 / L\u202f500 / XL\u202f200)\n- Unit price USD\u202f6.75, FOB Chennai\n- Current ex\u2011factory date shown as 03/02/2027.\n\nHowever, the date format is ambiguous (it could be 2\u202fMarch\u202f2027 or 3\u202fFebruary\u202f2027). Until you clarify which date you intend, we cannot assess feasibility. Please also confirm the destination country for the shipment.\n\nOnce the ex\u2011factory date is confirmed, we will advise on the earliest feasible delivery for the full 1,500 pcs or, if needed, propose a split shipment based on available capacity.\n\nKind regards,\nKarthik\nMerchandiser\nSri Velan Knits",
    "edited_body": null,
-   "text": "Hi Tom,\n\nThank you for your email. I acknowledge your request for a PO revision.\n\nI can confirm the details of PO BK\u20117781 for 1,500 piqu\u00e9 polo shirts in Forest Green (S\u202f300 / M\u202f500 / L\u202f500 / XL\u202f200) at USD\u202f6.75 FOB Chennai.\n\nHowever, our current plan shows the requested ex\u2011factory date of 03/02/2027 is tight \u2013 fabric is not yet ready and we have only four days of slack in capacity. To move forward we would need either a revised delivery date that accommodates this constraint or a split shipment (the portion that can be ready by 03/02/2027 and the balance thereafter).\n\nPlease let us know your preferred revised date or how you would like to split the shipment.\n\nBest regards,\nKarthik\nMerchandiser\nSri Velan Knits",
+   "text": "Hi Tom,\n\nThank you for your email regarding PO BK\u20117781. I acknowledge your request to revise/confirm the PO.\n\nI can confirm the following details from your PO:\n- Style BK\u2011PL\u201102, colour Forest Green, 1,500 pcs (S\u202f300 / M\u202f500 / L\u202f500 / XL\u202f200)\n- Unit price USD\u202f6.75, FOB Chennai\n- Current ex\u2011factory date shown as 03/02/2027.\n\nHowever, the date format is ambiguous (it could be 2\u202fMarch\u202f2027 or 3\u202fFebruary\u202f2027). Until you clarify which date you intend, we cannot assess feasibility. Please also confirm the destination country for the shipment.\n\nOnce the ex\u2011factory date is confirmed, we will advise on the earliest feasible delivery for the full 1,500 pcs or, if needed, propose a split shipment based on available capacity.\n\nKind regards,\nKarthik\nMerchandiser\nSri Velan Knits",
    "status": "pending",
-   "checked": 4,
+   "checked": 6,
    "violations": [],
    "reviewed_by": null,
    "reviewed_at": null,
    "sent_at": null,
    "reject_reason": null,
-   "created_at": "2026-10-24T19:16:12.269130",
+   "created_at": "2026-10-25T10:17:44.320947",
    "model": "nvidia/nemotron-3-super-120b-a12b",
-   "cost_usd": "0.00154860",
+   "cost_usd": "0.00152010",
    "email_subject": "PO BK-7781 polo order",
    "email_sender": "Tom Reyes <tom@bluekite-goods.example>",
    "offer": null
@@ -564,19 +514,19 @@
    "order_id": 8,
    "kind": "internal_note",
    "subject": "Internal: PO BK-7781 polo order",
-   "body": "- Buyer confirmed PO BK-7781 for 1,500 piqu\u00e9 polo shirts (Forest Green: S 300 / M 500 / L 500 / XL 200) at USD 6.75 each, FOB Chennai, delivery 2027-03-02.  \n- Risk: medium severity delivery issue \u2013 feasible but tight: 95% of free capacity used, 4 days of slack (utilisation 0.953).  \n- Management decision: approve the tight schedule or request adjustments/resources/new date before committing.  \n- Production: prepare materials and staging but hold final load\u2011in/start\u2011cut until management confirms go\u2011ahead.",
+   "body": "- Buyer confirmed PO BK\u20117781 for 1,500 piqu\u00e9 polo shirts (Style BK\u2011PL\u201102, Forest Green) \u2013 S\u202f300 / M\u202f500 / L\u202f500 / XL\u202f200 \u2013 at USD\u202f6.75 each, FOB Chennai, ex\u2011factory\u202f03/02/2027 (date ambiguous, could be 2027\u201103\u201102 or 2027\u201102\u201103).  \n- Risk: medium severity \u2013 delivery \u2013 need to confirm exact ex\u2011factory date with buyer; feasibility cannot be assessed until clarified.  \n- Decision required: management to obtain buyer clarification on the ex\u2011factory date before authorising any production start.  \n- Production action: prepare cut\u2011and\u2011sew kits for the 1,500 pcs per size breakdown; hold scheduling, cutting release and subsequent operations until the buyer confirms the exact date.",
    "edited_body": null,
-   "text": "- Buyer confirmed PO BK-7781 for 1,500 piqu\u00e9 polo shirts (Forest Green: S 300 / M 500 / L 500 / XL 200) at USD 6.75 each, FOB Chennai, delivery 2027-03-02.  \n- Risk: medium severity delivery issue \u2013 feasible but tight: 95% of free capacity used, 4 days of slack (utilisation 0.953).  \n- Management decision: approve the tight schedule or request adjustments/resources/new date before committing.  \n- Production: prepare materials and staging but hold final load\u2011in/start\u2011cut until management confirms go\u2011ahead.",
+   "text": "- Buyer confirmed PO BK\u20117781 for 1,500 piqu\u00e9 polo shirts (Style BK\u2011PL\u201102, Forest Green) \u2013 S\u202f300 / M\u202f500 / L\u202f500 / XL\u202f200 \u2013 at USD\u202f6.75 each, FOB Chennai, ex\u2011factory\u202f03/02/2027 (date ambiguous, could be 2027\u201103\u201102 or 2027\u201102\u201103).  \n- Risk: medium severity \u2013 delivery \u2013 need to confirm exact ex\u2011factory date with buyer; feasibility cannot be assessed until clarified.  \n- Decision required: management to obtain buyer clarification on the ex\u2011factory date before authorising any production start.  \n- Production action: prepare cut\u2011and\u2011sew kits for the 1,500 pcs per size breakdown; hold scheduling, cutting release and subsequent operations until the buyer confirms the exact date.",
    "status": "pending",
-   "checked": 3,
+   "checked": 6,
    "violations": [],
    "reviewed_by": null,
    "reviewed_at": null,
    "sent_at": null,
    "reject_reason": null,
-   "created_at": "2026-10-24T19:16:12.269134",
+   "created_at": "2026-10-25T10:17:44.320951",
    "model": "nvidia/nemotron-3-super-120b-a12b",
-   "cost_usd": "0.00141810",
+   "cost_usd": "0.00168750",
    "email_subject": "PO BK-7781 polo order",
    "email_sender": "Tom Reyes <tom@bluekite-goods.example>",
    "offer": null
@@ -585,134 +535,118 @@
  "match_questions": [],
  "calls": [
   {
-   "id": 105,
+   "id": 152,
    "run_id": null,
    "task_type": "draft_internal_note",
    "tier": "super",
    "model": "nvidia/nemotron-3-super-120b-a12b",
-   "input_tokens": 827,
-   "output_tokens": 1300,
-   "latency_ms": 6474,
-   "cost_usd": "0.00141810",
+   "input_tokens": 810,
+   "output_tokens": 1605,
+   "latency_ms": 12379,
+   "cost_usd": "0.00168750",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:16:12.267295"
+   "created_at": "2026-10-25T10:17:44.318744"
   },
   {
-   "id": 104,
+   "id": 151,
    "run_id": null,
    "task_type": "draft_reply",
    "tier": "super",
    "model": "nvidia/nemotron-3-super-120b-a12b",
-   "input_tokens": 953,
-   "output_tokens": 1403,
-   "latency_ms": 8581,
-   "cost_usd": "0.00154860",
+   "input_tokens": 936,
+   "output_tokens": 1377,
+   "latency_ms": 9053,
+   "cost_usd": "0.00152010",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:16:05.788209"
+   "created_at": "2026-10-25T10:17:31.933894"
   },
   {
-   "id": 103,
+   "id": 150,
    "run_id": 11,
    "task_type": "planning",
    "tier": "super",
    "model": "nvidia/nemotron-3-super-120b-a12b",
-   "input_tokens": 4483,
-   "output_tokens": 474,
-   "latency_ms": 3742,
-   "cost_usd": "0.00177150",
+   "input_tokens": 3561,
+   "output_tokens": 672,
+   "latency_ms": 4080,
+   "cost_usd": "0.00167310",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:15:55.340310"
+   "created_at": "2026-10-25T10:17:21.110158"
   },
   {
-   "id": 102,
+   "id": 149,
    "run_id": 11,
    "task_type": "planning",
    "tier": "super",
    "model": "nvidia/nemotron-3-super-120b-a12b",
-   "input_tokens": 3577,
-   "output_tokens": 355,
-   "latency_ms": 3311,
-   "cost_usd": "0.00139260",
+   "input_tokens": 2745,
+   "output_tokens": 476,
+   "latency_ms": 3122,
+   "cost_usd": "0.00125190",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:15:49.250632"
+   "created_at": "2026-10-25T10:17:14.229489"
   },
   {
-   "id": 101,
-   "run_id": 11,
-   "task_type": "planning",
-   "tier": "super",
-   "model": "nvidia/nemotron-3-super-120b-a12b",
-   "input_tokens": 2691,
-   "output_tokens": 110,
-   "latency_ms": 1151,
-   "cost_usd": "0.00090630",
-   "source": "live",
-   "detail": null,
-   "success": true,
-   "error": null,
-   "created_at": "2026-10-24T19:15:42.003419"
-  },
-  {
-   "id": 100,
+   "id": 148,
    "run_id": null,
    "task_type": "change_detection",
    "tier": "nano",
    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
    "input_tokens": 388,
    "output_tokens": 8,
-   "latency_ms": 549,
+   "latency_ms": 467,
    "cost_usd": "0.00002520",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:15:39.505857"
+   "created_at": "2026-10-25T10:17:10.721108"
   },
   {
-   "id": 99,
+   "id": 147,
    "run_id": null,
    "task_type": "extract",
    "tier": "nano",
    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
    "input_tokens": 821,
-   "output_tokens": 547,
-   "latency_ms": 4171,
-   "cost_usd": "0.00018054",
+   "output_tokens": 549,
+   "latency_ms": 2676,
+   "cost_usd": "0.00018102",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:15:38.948315"
+   "created_at": "2026-10-25T10:17:10.245485"
   },
   {
-   "id": 98,
+   "id": 146,
    "run_id": null,
    "task_type": "classify",
    "tier": "nano",
    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
    "input_tokens": 532,
-   "output_tokens": 73,
-   "latency_ms": 1684,
-   "cost_usd": "0.00004944",
+   "output_tokens": 92,
+   "latency_ms": 1353,
+   "cost_usd": "0.00005400",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:15:34.773341"
+   "created_at": "2026-10-25T10:17:07.566064"
   }
  ],
- "cost_usd": 0.007292,
- "model_latency_ms": 29663
+ "cost_usd": 0.006393,
+ "model_latency_ms": 33130
 }

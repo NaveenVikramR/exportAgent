@@ -247,7 +247,7 @@
   "database": "ok",
   "demo_loaded": true,
   "mode": "live",
-  "spend_today_usd": "0.0542",
+  "spend_today_usd": "0.0000",
   "spend_cap_usd": "1.00",
   "rate_limit_per_minute": 10,
   "nebius_configured": true,

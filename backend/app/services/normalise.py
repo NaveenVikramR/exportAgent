@@ -165,6 +165,7 @@ def normalise_extraction(extraction: POExtraction, text: str) -> list[str]:
             extraction.style.value = None
             notes.append(f"Style '{style}' read as PO {base}, revision {revision}.")
     notes += _style_is_not_the_po(extraction, text)
+    notes += _drop_empty_unstated_colours(extraction, text)
     for item in extraction.line_items:
         if item.colour and clean_colour_name(item.colour) != item.colour:
             notes.append(f"Colour '{item.colour}' read as '{clean_colour_name(item.colour)}'.")
@@ -180,6 +181,22 @@ def normalise_extraction(extraction: POExtraction, text: str) -> list[str]:
         extraction.destination_country.value, extraction.destination_country.evidence = None, None
         notes.append(f"Destination '{country}' is not stated in the email; left empty.")
     notes += resolve_delivery_date(extraction, text)
+    return notes
+
+
+def _drop_empty_unstated_colours(extraction: POExtraction, text: str) -> list[str]:
+    """A line item with no quantity, no sizes and a colour the email never mentions carries no
+    data: the model made it up (seen: "Navy" and "White" on a date-change email). Dropped, so it
+    is not added to the order as a new colour."""
+    low = text.casefold()
+    notes, kept = [], []
+    for item in extraction.line_items:
+        empty = item.quantity is None and not item.sizes
+        if empty and item.colour and item.colour.casefold() not in low:
+            notes.append(f"Colour '{item.colour}' is not in the email and has no quantity; dropped.")
+            continue
+        kept.append(item)
+    extraction.line_items = kept
     return notes
 
 

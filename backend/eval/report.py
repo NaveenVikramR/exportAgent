@@ -123,6 +123,7 @@ ARCHIVES = (
     ("before_routing", "@prev"),       # the step before Super became the default for risk
     ("test_v2_heldout", "@heldout"),   # TEST v2, run once while still held out
     ("routing_step", "@routing"),      # Super-default risk routing and the DEV fixes after TEST v2
+    ("frozen", "@frozen"),             # DEV when the evaluation was frozen, before the live-test fixes
 )
 
 
@@ -243,11 +244,14 @@ def build() -> str:
     lines += [
         "## Results: routed setup",
         "",
-        "DEV final adds case_033–035 (the two final fixes) to the 32 cases of the routing step; earlier "
-        "columns are earlier versions of the pipeline on the cases DEV had then.",
+        "DEV final is the pass after the fixes from the live six-scenario test (destination must be stated, "
+        "style is not the PO number, two prices in a new PO; docs/test-run/REPORT.md). DEV at freeze is the "
+        "same 35 cases before those fixes. DEV at freeze adds case_033–035 (the two final fixes) to the 32 "
+        "cases of the routing step; earlier columns are earlier versions of the pipeline on the cases DEV had then.",
         "",
     ]
-    columns = [(f"DEV final ({emails('dev')} cases)", "dev"), (f"DEV routing step ({emails('dev@routing')})", "dev@routing"),
+    columns = [(f"DEV final ({emails('dev')} cases)", "dev"), (f"DEV at freeze ({emails('dev@frozen')})", "dev@frozen"),
+               (f"DEV routing step ({emails('dev@routing')})", "dev@routing"),
                (f"DEV before routing ({emails('dev@prev')})", "dev@prev"),
                ("DEV at M7 (10 cases)", "dev@m7"), ("TEST v1 after M7 fixes (seen)", "test@prev"),
                ("TEST v1 at M7 (held out)", "test@m7")]

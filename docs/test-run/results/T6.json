@@ -6,13 +6,13 @@
   "body": "Hi Karthik,\n\n1. Lab dip for Deep Navy: option B approved. Stone Grey: please resubmit, it's too green.\n2. Our 30% advance for HLA-24019 was remitted today.\n3. Please send 2 PP samples per colour in size M before bulk cutting.\n\nThanks,\nEmily"
  },
  "email_id": 14,
- "elapsed_s": 65.8,
+ "elapsed_s": 51.8,
  "email": {
   "id": 14,
   "external_id": null,
   "sender": "Emily Carter <emily.carter@harbourline-apparel.example>",
   "subject": "HLA-24019 \u2013 lab dips, payment, samples",
-  "received_at": "2026-10-24T19:17:33.191681",
+  "received_at": "2026-10-25T10:18:58.287912",
   "status": "analysed",
   "order_id": 7,
   "classification": {
@@ -34,18 +34,18 @@
    "fields": {
     "buyer": {
      "value": "Harbourline Apparel",
-     "confidence": 0.95,
-     "evidence": "From: Emily Carter <emily.carter@harbourline-apparel.example>"
+     "confidence": 0.9,
+     "evidence": "harbourline-apparel.example"
     },
     "po_number": {
      "value": "HLA-24019",
      "confidence": 1.0,
-     "evidence": "HLA-24019 \u2013 lab dips, payment, samples"
+     "evidence": "HLA-24019"
     },
     "style": {
-     "value": "HLA-24019",
-     "confidence": 1.0,
-     "evidence": "HLA-24019 \u2013 lab dips, payment, samples"
+     "value": null,
+     "confidence": 0.0,
+     "evidence": null
     },
     "currency": {
      "value": null,
@@ -102,6 +102,18 @@
    "review": [],
    "escalations": [
     {
+     "field": "buyer",
+     "reason": "source_quote_missing",
+     "model": "nvidia/nemotron-3-super-120b-a12b",
+     "calls": 1,
+     "input_tokens": 893,
+     "output_tokens": 36,
+     "cost_usd": "0.00030030",
+     "outcome": "resolved",
+     "before": "Harbourline Apparel",
+     "after": "Harbourline Apparel"
+    },
+    {
      "field": "currency",
      "reason": "source_quote_missing",
      "model": "nvidia/nemotron-3-super-120b-a12b",
@@ -124,13 +136,13 @@
   "id": 7,
   "buyer": "Harbourline Apparel Inc.",
   "po_number": "HLA-24019",
-  "style": "HLA-24019",
+  "style": "HL-TS-310",
   "status": "open",
   "profile": "india_tiruppur",
   "current_version": 3,
-  "updated_at": "2026-10-24T19:14:33.941076",
+  "updated_at": "2026-10-25T10:16:23.791065",
   "alerts": [],
-  "latest_change_count": 1,
+  "latest_change_count": 3,
   "versions": [
    {
     "id": 11,
@@ -140,7 +152,7 @@
     "data": {
      "buyer": "Harbourline Apparel",
      "po_number": "HLA-24019",
-     "style": "HLA-24019",
+     "style": "HL-TS-310",
      "currency": "USD",
      "unit_price": "4.20",
      "total_quantity": 3600,
@@ -165,6 +177,14 @@
        "sizes": {},
        "quantity": 1200,
        "unit_price": null
+      },
+      {
+       "colour": "Navy",
+       "sizes": {}
+      },
+      {
+       "colour": "White",
+       "sizes": {}
       }
      ],
      "po_revision": "A",
@@ -172,12 +192,12 @@
     },
     "confidence": {
      "buyer": 0.9,
-     "po_number": 0,
+     "po_number": 0.9,
      "style": 0,
      "currency": 0,
      "unit_price": 0,
      "total_quantity": 0,
-     "delivery_date": 1.0,
+     "delivery_date": 0.9,
      "incoterms": 0,
      "port": 0,
      "destination_country": 0
@@ -190,9 +210,25 @@
       "new": "2026-12-18",
       "detail": "Delivery pushed back by 8 days (2026-12-10 \u2192 2026-12-18).",
       "alert": null
+     },
+     {
+      "field": "line_items.Navy",
+      "kind": "colour",
+      "old": null,
+      "new": null,
+      "detail": "Colour added: Navy, 0 pcs.",
+      "alert": null
+     },
+     {
+      "field": "line_items.White",
+      "kind": "colour",
+      "old": null,
+      "new": null,
+      "detail": "Colour added: White, 0 pcs.",
+      "alert": null
      }
     ],
-    "created_at": "2026-10-24T19:14:33.941679"
+    "created_at": "2026-10-25T10:16:23.791609"
    },
    {
     "id": 10,
@@ -202,7 +238,7 @@
     "data": {
      "buyer": "Harbourline Apparel Inc.",
      "po_number": "HLA-24019",
-     "style": "HLA-24019",
+     "style": "HL-TS-310",
      "currency": "USD",
      "unit_price": "4.20",
      "total_quantity": 3600,
@@ -235,24 +271,16 @@
     "confidence": {
      "buyer": 1.0,
      "po_number": 1.0,
-     "style": 1.0,
+     "style": 0,
      "currency": 0,
      "unit_price": 0,
      "total_quantity": 1.0,
      "delivery_date": 1.0,
      "incoterms": 0,
      "port": 0,
-     "destination_country": 1.0
+     "destination_country": 0
     },
     "changes": [
-     {
-      "field": "style",
-      "kind": "other",
-      "old": "HL-TS-310",
-      "new": "HLA-24019",
-      "detail": "Style HL-TS-310 \u2192 HLA-24019.",
-      "alert": null
-     },
      {
       "field": "total_quantity",
       "kind": "quantity",
@@ -278,7 +306,7 @@
       "alert": null
      }
     ],
-    "created_at": "2026-10-24T19:13:21.093138"
+    "created_at": "2026-10-25T10:15:41.436010"
    },
    {
     "id": 9,
@@ -334,7 +362,7 @@
      "destination_country": 1.0
     },
     "changes": [],
-    "created_at": "2026-10-24T19:12:13.312603"
+    "created_at": "2026-10-25T10:14:50.706685"
    }
   ]
  },
@@ -345,77 +373,91 @@
   "status": "completed",
   "rounds": 2,
   "result": {
-   "summary": "The current delivery plan for HLA-24019 (3,600 pcs by 2026-12-18) is infeasible due to zero free capacity and a 53-day production shortfall; the earliest feasible date for full quantity is 2027-02-24. The buyer has approved the Deep Navy lab dip, requested resubmission for Stone Grey, confirmed the 30% advance payment, and requires 2 PP samples per colour in size M before bulk cutting.",
+   "summary": "The current delivery plan for HLA-24019 (3,600 pcs by 2026-12-18) is infeasible due to a 3,600-piece capacity shortfall and negative 54 slack days; the previous 2026-12-10 plan was also infeasible with only 4 production days after fabric lead time. The earliest feasible date for the full quantity is 2027-02-25, and US compliance requires compliant fibre, origin, and care labels under FTC and CBP rules.",
    "flags": [
     {
      "severity": "high",
      "category": "delivery",
-     "reason": "Current plan infeasible: 3,600 pcs short, capacity left -26,472, utilisation 5.05x, production needs 66 days but only 13 available; earliest feasible date 2027-02-24.",
+     "reason": "Current plan (2026-12-18, 3,600 pcs) infeasible: 3,600 pcs short, capacity left -27,043, utilisation 5.47, slack days -54.",
      "evidence": [
       "E3",
-      "E5",
-      "E2",
-      "E4"
+      "E4",
+      "E5"
      ],
-     "rule": null,
-     "adverse_finding": null,
+     "rule": "",
+     "adverse_finding": "",
      "verified": true,
      "source": "model",
      "severity_adjusted_from": null,
      "related": [
-      "Delivery date pushed back 8 days (2026-12-10 \u2192 2026-12-18) but both current and previous plans remain infeasible due to fabric lead time and capacity constraints."
+      "Previous plan (2026-12-10, 3,600 pcs) infeasible: only 4 production days after 42-day fabric lead time; minimum is 10 days.",
+      "Earliest feasible date for full 3,600 pcs is 2027-02-25; no partial shipment option available."
      ]
     },
     {
-     "severity": "low",
-     "category": "other",
-     "reason": "Stone Grey lab dip rejected as too green; resubmission required before bulk approval.",
+     "severity": "medium",
+     "category": "data_quality",
+     "reason": "Email references colours 'Deep Navy' and 'Stone Grey', but order version 3 shows colours 'Navy' and 'White' added with 0 pcs each.",
      "evidence": [
-      "E1"
+      "E1",
+      "E2"
      ],
-     "rule": null,
-     "adverse_finding": null,
+     "rule": "",
+     "adverse_finding": "",
      "verified": true,
      "source": "model",
      "severity_adjusted_from": null,
-     "related": [
-      "Buyer requires 2 PP samples per colour in size M before bulk cutting can proceed."
-     ]
+     "related": []
+    },
+    {
+     "severity": "low",
+     "category": "quantity",
+     "reason": "Buyer requests 2 PP samples per colour in size M before bulk cutting, but order shows 0 pcs for the two new colours (Navy, White).",
+     "evidence": [
+      "E1",
+      "E2"
+     ],
+     "rule": "",
+     "adverse_finding": "",
+     "verified": true,
+     "source": "model",
+     "severity_adjusted_from": null,
+     "related": []
     }
    ],
    "info_checked": [
     {
-     "topic": "compliance",
-     "finding": "US apparel imports require fibre composition, care labels, country of origin, and importer identity labelling per FTC and CBP regulations; no specific non-compliance identified for this shipment.",
-     "evidence": [
-      "E7"
-     ],
-     "note": null
-    },
-    {
      "topic": "buyer",
-     "finding": "No adverse information found for Harbourline Apparel Inc. (US); limited public records available.",
+     "finding": "No adverse information found for Harbourline Apparel Inc.; general company description as global merchant export company only.",
      "evidence": [
       "E6"
      ],
      "note": null
     },
     {
-     "topic": "payment",
-     "finding": "Buyer confirms 30% advance for HLA-24019 remitted today.",
+     "topic": "compliance",
+     "finding": "US labelling checklist: fibre content, importer/manufacturer identity or RN, country of origin; labels must be verified during sample approval and pre-shipment inspection.",
      "evidence": [
-      "E1"
+      "E7"
      ],
      "note": null
     },
     {
      "topic": "order_history",
-     "finding": "Order evolved from v1 (2027-01-29, 3,000 pcs) to v2 (2026-12-10, 3,600 pcs, delivery pulled forward) to v3 (2026-12-18, 3,600 pcs, delivery pushed back 8 days); unit price stable at $4.20.",
+     "finding": "Order v1: 2027-01-29, 3,000 pcs; v2: pulled forward to 2026-12-10, 3,600 pcs; v3: pushed back to 2026-12-18, 3,600 pcs; two colours added with 0 pcs in v3.",
      "evidence": [
       "E1",
       "E2"
      ],
      "note": null
+    },
+    {
+     "topic": "compliance",
+     "finding": "US import requires fibre composition, country of origin, manufacturer ID, and care labels with washing/drying/ironing/bleaching instructions; non-compliant labels risk detention or seizure.",
+     "evidence": [
+      "E7"
+     ],
+     "note": "Not a flag: no concrete rule with a source URL."
     }
    ],
    "routing": {
@@ -428,11 +470,11 @@
    }
   },
   "error": null,
-  "started_at": "2026-10-24T19:17:42.033756",
-  "finished_at": "2026-10-24T19:18:11.159009",
+  "started_at": "2026-10-25T10:19:08.759969",
+  "finished_at": "2026-10-25T10:19:24.841877",
   "steps": [
    {
-    "id": 105,
+    "id": 103,
     "seq": 1,
     "round": 0,
     "kind": "tool",
@@ -446,7 +488,7 @@
      "order_id": 7,
      "buyer": "Harbourline Apparel Inc.",
      "po_number": "HLA-24019",
-     "style": "HLA-24019",
+     "style": "HL-TS-310",
      "current_version": 3,
      "versions": [
       {
@@ -468,7 +510,7 @@
        "unit_price": "4.20",
        "currency": "USD",
        "destination_country": "United States",
-       "change_count": 4,
+       "change_count": 3,
        "alerts": [
         "delivery_pulled_forward"
        ]
@@ -481,7 +523,7 @@
        "unit_price": "4.20",
        "currency": "USD",
        "destination_country": "United States",
-       "change_count": 1,
+       "change_count": 3,
        "alerts": []
       }
      ],
@@ -490,7 +532,7 @@
     "summary": "PO HLA-24019: v3, 3600 pcs, delivery 2026-12-18",
     "evidence_id": "E1",
     "call_id": null,
-    "created_at": "2026-10-24T19:17:42.037242",
+    "created_at": "2026-10-25T10:19:08.762995",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -500,7 +542,7 @@
     "call_source": null
    },
    {
-    "id": 106,
+    "id": 104,
     "seq": 2,
     "round": 0,
     "kind": "tool",
@@ -523,15 +565,31 @@
        "new": "2026-12-18",
        "detail": "Delivery pushed back by 8 days (2026-12-10 \u2192 2026-12-18).",
        "alert": null
+      },
+      {
+       "field": "line_items.Navy",
+       "kind": "colour",
+       "old": null,
+       "new": null,
+       "detail": "Colour added: Navy, 0 pcs.",
+       "alert": null
+      },
+      {
+       "field": "line_items.White",
+       "kind": "colour",
+       "old": null,
+       "new": null,
+       "detail": "Colour added: White, 0 pcs.",
+       "alert": null
       }
      ],
      "alerts": [],
      "contract_value": null
     },
-    "summary": "v2 \u2192 v3: 1 changes",
+    "summary": "v2 \u2192 v3: 3 changes",
     "evidence_id": "E2",
     "call_id": null,
-    "created_at": "2026-10-24T19:17:42.038450",
+    "created_at": "2026-10-25T10:19:08.764075",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -541,7 +599,7 @@
     "call_source": null
    },
    {
-    "id": 107,
+    "id": 105,
     "seq": 3,
     "round": 0,
     "kind": "tool",
@@ -554,19 +612,19 @@
      "verdict": "infeasible",
      "suggested_severity": "high",
      "reason": "3,600 pcs needed but only 0 pcs of free capacity remain before 2026-12-18 after other orders (3,600 pcs short).",
-     "as_of": "2026-10-24",
+     "as_of": "2026-10-25",
      "delivery_date": "2026-12-18",
      "quantity": 3600,
-     "days_to_delivery": 55,
+     "days_to_delivery": 54,
      "fabric_days": 42,
-     "production_days_available": 13,
+     "production_days_available": 12,
      "free_capacity_per_week": 4000,
-     "capacity_in_window": 7428,
+     "capacity_in_window": 6857,
      "other_orders_load": 33900,
-     "capacity_left_for_order": -26472,
-     "utilisation": 5.048,
+     "capacity_left_for_order": -27043,
+     "utilisation": 5.469,
      "production_days_needed": 66,
-     "slack_days": -53,
+     "slack_days": -54,
      "shortfall_pcs": 3600,
      "order_id": 7,
      "profile": "india_tiruppur",
@@ -598,7 +656,7 @@
     "summary": "INFEASIBLE for 3,600 pcs by 2026-12-18: 3,600 pcs needed but only 0 pcs of free capacity remain before 2026-12-18 after other orders (3,600 pcs short).",
     "evidence_id": "E3",
     "call_id": null,
-    "created_at": "2026-10-24T19:17:42.044592",
+    "created_at": "2026-10-25T10:19:08.769431",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -608,7 +666,7 @@
     "call_source": null
    },
    {
-    "id": 108,
+    "id": 106,
     "seq": 4,
     "round": 0,
     "kind": "tool",
@@ -622,20 +680,20 @@
      "evidence_id": "E4",
      "verdict": "infeasible",
      "suggested_severity": "high",
-     "reason": "Only 5 production days after the 42-day fabric lead time; the minimum is 10.",
-     "as_of": "2026-10-24",
+     "reason": "Only 4 production days after the 42-day fabric lead time; the minimum is 10.",
+     "as_of": "2026-10-25",
      "delivery_date": "2026-12-10",
      "quantity": 3600,
-     "days_to_delivery": 47,
+     "days_to_delivery": 46,
      "fabric_days": 42,
-     "production_days_available": 5,
+     "production_days_available": 4,
      "free_capacity_per_week": 4000,
-     "capacity_in_window": 2857,
+     "capacity_in_window": 2285,
      "other_orders_load": 30900,
-     "capacity_left_for_order": -28043,
-     "utilisation": 12.076,
+     "capacity_left_for_order": -28615,
+     "utilisation": 15.098,
      "production_days_needed": 61,
-     "slack_days": -56,
+     "slack_days": -57,
      "shortfall_pcs": 3600,
      "order_id": 7,
      "profile": "india_tiruppur",
@@ -659,10 +717,10 @@
      "fabric_ready": false,
      "is_current_plan": false
     },
-    "summary": "INFEASIBLE for 3,600 pcs by 2026-12-10: Only 5 production days after the 42-day fabric lead time; the minimum is 10.",
+    "summary": "INFEASIBLE for 3,600 pcs by 2026-12-10: Only 4 production days after the 42-day fabric lead time; the minimum is 10.",
     "evidence_id": "E4",
     "call_id": null,
-    "created_at": "2026-10-24T19:17:42.050451",
+    "created_at": "2026-10-25T10:19:08.774695",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -672,7 +730,7 @@
     "call_source": null
    },
    {
-    "id": 109,
+    "id": 107,
     "seq": 5,
     "round": 0,
     "kind": "tool",
@@ -687,13 +745,13 @@
      "quantity": 3600,
      "current_verdict": "infeasible",
      "options_needed": true,
-     "earliest_feasible_date_full_quantity": "2027-02-24",
+     "earliest_feasible_date_full_quantity": "2027-02-25",
      "partial_shipment": null
     },
-    "summary": "Full 3,600 pcs feasible from 2027-02-24",
+    "summary": "Full 3,600 pcs feasible from 2027-02-25",
     "evidence_id": "E5",
     "call_id": null,
-    "created_at": "2026-10-24T19:17:42.057431",
+    "created_at": "2026-10-25T10:19:08.780997",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -703,7 +761,7 @@
     "call_source": null
    },
    {
-    "id": 110,
+    "id": 108,
     "seq": 6,
     "round": 0,
     "kind": "routing",
@@ -719,7 +777,7 @@
     "summary": "Escalated to Ultra: current plan infeasible: delivery options need weighing",
     "evidence_id": null,
     "call_id": null,
-    "created_at": "2026-10-24T19:17:42.058641",
+    "created_at": "2026-10-25T10:19:08.782010",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -729,7 +787,7 @@
     "call_source": null
    },
    {
-    "id": 111,
+    "id": 109,
     "seq": 7,
     "round": 1,
     "kind": "llm",
@@ -739,7 +797,7 @@
     },
     "output": {
      "content": "",
-     "reasoning": "The email is about lab dip approvals, payment confirmation, and PP samples request. The order HLA-24019 has been analyzed. Key facts from prefetched evidence:\n\n- Order ID 7, PO HLA-24019, buyer Harbourline Apparel Inc.\n- Current version 3: delivery date 2026-12-18, quantity 3600, unit price $4.20, destination United States.\n- Previous version 2: delivery date 2026-12-10, same quantity and price.\n- Change: delivery pushed back by 8 days (Dec 10 \u2192 Dec 18).\n- Delivery feasibility check for current plan (Dec 18): infeasible, high severity. Reason: 3,600 pcs needed but only 0 pcs free capacity remain before 2026-12-18 after other orders (3,600 pcs short). Production days needed 66, only 13 available after fabric lead time (42 days). Shortfall 3600 pcs.\n- Delivery feasibility for previous plan (Dec 10): also infeasible, high severity. Only 5 production days after fabric lead time, minimum 10.\n- Propose delivery options: earliest feasible date for full quantity is 2027-02-24.\n- No earlier orders from this buyer (earlier_orders_from_buyer: 0).\n- Email mentions 30% advance remitted today.\n- Request: 2 PP samples per colour in size M before bulk cutting.\n- Lab dip: Deep Navy option B approve",
+     "reasoning": "The user has provided a detailed JSON with email analysis, extracted data, order information, and prefetched evidence. I need to analyze this and produce a JSON response with summary, flags, and info_checked.\n\nLet me first understand the situation:\n\n1. Email from Emily Carter at Harbourline Apparel regarding PO HLA-24019\n2. She mentions: lab dip approvals (Deep Navy option B approved, Stone Grey needs resubmission), 30% advance payment remitted, request for 2 PP samples per colour in size M before bulk cutting\n3. Order details from prefetched evidence:\n   - Order ID: 7, PO: HLA-24019, buyer: Harbourline Apparel Inc.\n   - Current version 3: delivery date 2026-12-18, quantity 3600, unit price $4.20, destination US\n   - Version 2: delivery date 2026-12-10, quantity 3600\n   - Version 1: delivery date 2027-01-29, quantity 3000\n   - Style: HL-TS-310\n   - Earlier orders from buyer: 0\n\n4. Delivery feasibility checks:\n   - E3: Current plan (2026-12-18, 3600 pcs) - INFEASIBLE, high severity. 3,600 pcs needed but only 0 pcs free capacity. Shortfall 3600 pcs.\n   - E4: Previous plan (2026-12-10, 3600 pcs) - INFEASIBLE, high severity. Only 4 production days after 42-day fabric lead time.\n   - E5",
      "tool_calls": [
       {
        "name": "lookup_buyer",
@@ -749,18 +807,18 @@
     },
     "summary": "Calls lookup_buyer",
     "evidence_id": null,
-    "call_id": 116,
-    "created_at": "2026-10-24T19:17:46.834350",
+    "call_id": 163,
+    "created_at": "2026-10-25T10:19:12.795879",
     "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
     "tier": "ultra",
-    "input_tokens": 3474,
-    "output_tokens": 805,
-    "latency_ms": 4771,
-    "cost_usd": "0.00588900",
+    "input_tokens": 3643,
+    "output_tokens": 1156,
+    "latency_ms": 4009,
+    "cost_usd": "0.00711100",
     "call_source": "live"
    },
    {
-    "id": 112,
+    "id": 110,
     "seq": 8,
     "round": 1,
     "kind": "tool",
@@ -772,12 +830,17 @@
     "output": {
      "evidence_id": "E6",
      "query": "Harbourline Apparel Inc. United States apparel company news",
-     "answer": "The sources do not provide specific news about Harbourline Apparel Inc. United States apparel company. However, they mention Marvin Mittleman, director of corporate sales, discussing strategies to manage price uncertainties and advance buying, and a general trend of suppliers being aggressive in recapturing market share. Additionally, there is a mention of legal issues faced by Ambiance Apparel and Noh, indicating a focus on compliance and ethics in the fashion industry. No direct information about Harbourline Apparel Inc. is given.",
+     "answer": "The sources do not provide specific news about Harbourline Apparel Inc. as a United States apparel company. The provided sources mention Harbourline International as a global merchant export company focused on international trade solutions, but no details about its involvement in the United States apparel market are given. Additionally, other sources focus on mergers and acquisitions in the uniform and apparel industry, but none specifically mention Harbourline Apparel Inc. in the context of United States apparel company news.",
      "sources": [
       {
-       "title": "APPAREL'S",
-       "url": "https://www.archerlaw.com/a/web/j3MB3DFoebNkXPJcceGyyi/joe20martincounselor20magjan202012.pdf",
-       "snippet": "\u201cIn the heat of the increase, we saved clients $1,000 to $5,000 per order because we had them buy in advance,\u201d says Marvin Mittleman, director of corporate sales. \u201cW e\u2019ll absolutely continue to do it because of the uncertainty over prices.\u201d \u201cAdding some kind of performance element to cotton is going to bring buzz into the market. [...] stock there is vs. new inventory, then we will adjust prices.\u201d"
+       "title": "About-us - HarbourLine International",
+       "url": "https://harbourline.com/about-us.php",
+       "snippet": "We are a trusted global merchant export company providing superior-quality products and reliable international trade solutions. With a strong supply chain network, professional expertise, and commitment to excellence, we ensure seamless global sourcing and export services for clients around the world.\n\n Contact us\n\n#### MISSION & VISION\n\n##### Our Mission [...] #### WHY CHOOSE US\n\nWe stand out in "
+      },
+      {
+       "title": "The 2017 Economic Retrospective",
+       "url": "https://apparelnews.media.clients.ellingtoncms.com/news/documents/2017/12/14/CAN121517_online.pdf",
+       "snippet": "your ad in our self-serve system P 213-627-3737 Ext. 278, 280 F 213-623-1515 C L A S S I F I E D S Jobs Available Jobs Available Jobs Available Real Estate Buy, Sell and Trade For classified advertising information: call Jeffery 213-627-3737 ext. 280, email classifieds@apparelnews.net or visit www.apparelnews.net/classifieds to place your ad in our self-serve system 14 CALIFORNIA APPAREL NEWS APRI"
       },
       {
        "title": "All Fashion News and Press Releases from PR Newswire",
@@ -788,11 +851,6 @@
        "title": "Mergers & Acquisitions Archives - NAUMD, Network Association of Uniform Manufacturers & Distributors, a global network",
        "url": "https://naumd.com/category/news/mergers-acquisitions",
        "snippet": "Kroger Is Putting 400,000 Employees in Uniforms. It\u2019s Not About Enforcing a Dress Code October 5, 2026\n 2026 Awards Profile: Pier 66 Resort, Design Collective by Cintas October 5, 2026\n Meet uniform.news: A New Resource for the Entire Uniform Industry October 5, 2026\n Carhartt opens apparel design lab at Pensole Lewis College September 28, 2026\n The Uniform Chronicles: From School Halls to Deliver"
-      },
-      {
-       "title": "Cozen O\u2019Connor: DOJ Prosecutes Fashion Company For Skirting Customs Tariffs - Could This Be The Hot New Trend? [Alert]",
-       "url": "https://www.cozen.com/news-resources/publications/2020/doj-prosecutes-fashion-company-for-skirting-customs-tariffs---could-this-be-the-hot-new-trend",
-       "snippet": "Fashion companies and their executives looking to avoid paying millions in penalties and increased government monitoring, not to mention prison time, should heed Ambiance Apparel and Noh\u2019s prosecutions as a cautionary tale signaling DOJ\u2019s current focus.\n\n1  \n\n2  Ambiance Apparel is the operating name for two corporations, Ambiance U.S.A. Inc. and Apparel Line U.S.A., Inc.\n\n3  Id.\n\n4  \n\n5  \n\nShare "
       }
      ],
      "cached": true
@@ -800,7 +858,88 @@
     "summary": "4 sources (cached) for: Harbourline Apparel United States apparel company news",
     "evidence_id": "E6",
     "call_id": null,
-    "created_at": "2026-10-24T19:17:46.836011",
+    "created_at": "2026-10-25T10:19:12.797656",
+    "model": null,
+    "tier": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "latency_ms": null,
+    "cost_usd": null,
+    "call_source": null
+   },
+   {
+    "id": 111,
+    "seq": 9,
+    "round": 2,
+    "kind": "llm",
+    "name": "plan",
+    "input": {
+     "task": "planning"
+    },
+    "output": {
+     "content": "",
+     "reasoning": "The buyer lookup shows no adverse information - just general company info. No insolvency, sanctions, fraud, or disputes found. This goes to info_checked.\n\nNow I need to check compliance for the destination country (United States) for the garment. The email mentions \"lab dip\" which suggests fabric dyeing/color approval, and the style is HL-TS-310. I need to describe the garment as the email does. The email mentions \"Deep Navy\" and \"Stone Grey\" colors, and \"PP samples\" (pre-production samples). The order is for 3,600 pcs total. I'll call check_compliance for United States with a general description of the garment. Since the email doesn't specify fiber content, I'll describe it as \"apparel\" or \"garments\" generally. Let me call check_compliance.",
+     "tool_calls": [
+      {
+       "name": "check_compliance",
+       "arguments": "{\"destination_country\": \"United States\", \"product\": \"apparel garments (style HL-TS-310, colours Deep Navy and Stone Grey)\"}"
+      }
+     ]
+    },
+    "summary": "Calls check_compliance",
+    "evidence_id": null,
+    "call_id": 164,
+    "created_at": "2026-10-25T10:19:14.747321",
+    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+    "tier": "ultra",
+    "input_tokens": 4469,
+    "output_tokens": 234,
+    "latency_ms": 1945,
+    "cost_usd": "0.00517100",
+    "call_source": "live"
+   },
+   {
+    "id": 112,
+    "seq": 10,
+    "round": 2,
+    "kind": "tool",
+    "name": "check_compliance",
+    "input": {
+     "destination_country": "United States",
+     "product": "apparel garments (style HL-TS-310, colours Deep Navy and Stone Grey)"
+    },
+    "output": {
+     "evidence_id": "E7",
+     "query": "apparel garments (style HL-TS-310, colours Deep Navy and Stone Grey) import requirements United States: labelling, fibre composition, care labels, chemical restrictions",
+     "answer": "Import requirements for apparel garments (style HL-TS-310, colours Deep Navy and Stone Grey) in the United States include labelling the fibre composition, country of origin, and manufacturer identification. Care labels must include washing, drying, ironing, and bleaching instructions based on reasonable testing. The Federal Trade Commission (FTC) administers textile and apparel labelling regulations, and US Customs and Border Protection (CBP) oversees country-of-origin marking. Garments lacking compliant labels, especially missing or inaccurate country of origin markings, can be detained, refused entry, or seized at the port.",
+     "sources": [
+      {
+       "title": "Clothing Labeling Requirements for USA, UK & EU (2026) \u2013 Dpassion Sportswear (Wholesale & Bulk Supplier)",
+       "url": "https://dpassion.co.in/blogs/news/clothing-labeling-requirements-usa-uk-eu",
+       "snippet": "### How to manage care labels when importing clothing\n\n1. Confirm the fabric composition and construction.\n2. Establish suitable care instructions for the finished garment.\n3. Verify any mandatory requirements in the destination market.\n4. Obtain approval for the label artwork.\n5. Check the printed information and attachment during sample approval and pre-shipment inspection.\n\nDo not copy washing "
+      },
+      {
+       "title": "US Clothing Label Requirements: FTC Rules 2026",
+       "url": "https://pluckyreach.com/blog/us-clothing-label-requirements",
+       "snippet": "Imported garments that lack compliant labels particularly missing or inaccurate country of origin markings can be detained, refused entry, or seized at the port. Customs and Border Protection enforces 19 USC 1304 (country of origin marking requirements) independently of the FTC, and the penalties include destruction of goods at the importer's expense.\n\n## Label Requirements Checklist: Every Elemen"
+      },
+      {
+       "title": "Clothing and Textiles Regulations in the United States: A Complete Guide",
+       "url": "https://www.compliancegate.com/united-states-clothing-textiles-regulations",
+       "snippet": "Textile and apparel products to be sold in the United States must be labeled with the following information:\n\n Fiber content\n Importer or manufacturer identity or Registered Identification Number (RN)\n Country of Origin\n\n#### Fiber Composition\n\nThe label of a textile product must indicate the product\u2019s fiber composition. For example, if the textile fiber product is made entirely out of cotton, the"
+      },
+      {
+       "title": "A Guide to United States Apparel and Household Textiles Compliance ...",
+       "url": "https://www.cpsc.gov/s3fs-public/Guide-to-US-Apparel-and-Household-Textiles.pdf",
+       "snippet": "see FTC\u2019s: Environmental Claims: Summary of the Green Guides Page | 18 This publication is available free of charge from:  Care Labels 16 CFR 423, Care Labeling of Textile Wearing Apparel and Certain Piece Goods as Amended The Federal Trade Commission\u2019s (FTC) Care Labeling Rule requires manufacturers and importers to attach care instructions to garments. The Rule requires that manufacturers or imp"
+      }
+     ],
+     "cached": false
+    },
+    "summary": "4 sources for: apparel garments (style HL-TS-310, colours Deep Navy and Stone Grey) import requirements United States: labelling, fibre composition, care labels, chemical restrictions",
+    "evidence_id": "E7",
+    "call_id": null,
+    "created_at": "2026-10-25T10:19:17.876676",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -811,87 +950,6 @@
    },
    {
     "id": 113,
-    "seq": 9,
-    "round": 2,
-    "kind": "llm",
-    "name": "plan",
-    "input": {
-     "task": "planning"
-    },
-    "output": {
-     "content": "",
-     "reasoning": "The buyer lookup returned no specific adverse information about Harbourline Apparel - just general industry news. This goes to info_checked, not flags.\n\nNow I have all the evidence I need. Let me compile the final response.\n\nKey findings:\n1. Delivery infeasibility for current plan (Dec 18) - HIGH severity, capacity shortfall of 3,600 pcs (E3)\n2. Previous plan (Dec 10) also infeasible - HIGH severity, only 5 production days vs 10 minimum (E4)\n3. Earliest feasible date for full quantity is Feb 24, 2027 (E5)\n4. Contract value unchanged between v2 and v3 (E2)\n5. Buyer has no earlier orders (E1)\n6. No adverse buyer info found (E6)\n7. Destination is United States - should check compliance for apparel\n\nWait, I should also check compliance for US destination since we know the destination country from the order data (United States). The email doesn't describe the garment type/fibre, but the order is style HLA-24019. I need to call check_compliance with the product description. The email mentions \"lab dip\" for colours Deep Navy and Stone Grey, but doesn't specify fabric. I'll use a generic description or note it's apparel.\n\nActually, the tool requires a product description. Since the email d",
-     "tool_calls": [
-      {
-       "name": "check_compliance",
-       "arguments": "{\"destination_country\": \"United States\", \"product\": \"apparel garment\"}"
-      }
-     ]
-    },
-    "summary": "Calls check_compliance",
-    "evidence_id": null,
-    "call_id": 117,
-    "created_at": "2026-10-24T19:17:50.187453",
-    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
-    "tier": "ultra",
-    "input_tokens": 4407,
-    "output_tokens": 365,
-    "latency_ms": 3347,
-    "cost_usd": "0.00550200",
-    "call_source": "live"
-   },
-   {
-    "id": 114,
-    "seq": 10,
-    "round": 2,
-    "kind": "tool",
-    "name": "check_compliance",
-    "input": {
-     "destination_country": "United States",
-     "product": "apparel garment"
-    },
-    "output": {
-     "evidence_id": "E7",
-     "query": "apparel garment import requirements United States: labelling, fibre composition, care labels, chemical restrictions",
-     "answer": "Apparel garment import requirements in the United States include labelling the product category, fibre composition, and care instructions. Fibre composition must disclose the material specification and percentage by weight of each component. Care labels must include at least one safe cleaning method or state if a method would harm the product. Labels must be conspicuous, legible, and affixed in such a way that they adhere to the clothing until delivery to the consumer. The label must also indicate the fiber content, importer or manufacturer identity, and country of origin. The Federal Trade Commission (FTC) administers textile and apparel labeling regulations, while US Customs and Border Protection (CBP) oversees country-of-origin marking and customs matters.",
-     "sources": [
-      {
-       "title": "Clothing Labeling Requirements for USA, UK & EU (2026) \u2013 Dpassion Sportswear (Wholesale & Bulk Supplier)",
-       "url": "https://dpassion.co.in/blogs/news/clothing-labeling-requirements-usa-uk-eu",
-       "snippet": "2. Product category: Identify the garment type, such as T-shirts, hoodies, leggings, sportswear or tracksuits.\n\n3. Fibre composition: Provide the confirmed material specification for each product and relevant component.\n\n4. Label artwork: Supply the approved brand logo, wording, size and placement instructions.\n\n5. Care instructions: Confirm the instructions suitable for the finished garment and t"
-      },
-      {
-       "title": "Apparel regulations overview 2026: Label, safety testing, sustainability",
-       "url": "https://www.eurofins.com/en/consumer-product-testing/softlines-hardlines/news-articles/apparel-regulations-overview-2026-care-label-safety-testing-and-sustainability",
-       "snippet": "Comprehensive chemical and safety testing to verify compliance with REACH, MRSL, POPs, US CPSC rules, UK requirements and buyer-specific RSLs.\n Labelling and performance assessments covering fibre composition, care label durability, colour fastness, dimensional stability, flammability and physical performance. [...] US PFAS restrictions on apparel continue to expand, including California AB 1817 a"
-      },
-      {
-       "title": "Clothing and Textiles Regulations in the United States: A Complete Guide",
-       "url": "https://www.compliancegate.com/united-states-clothing-textiles-regulations",
-       "snippet": "Textile and apparel products to be sold in the United States must be labeled with the following information:\n\n Fiber content\n Importer or manufacturer identity or Registered Identification Number (RN)\n Country of Origin\n\n#### Fiber Composition\n\nThe label of a textile product must indicate the product\u2019s fiber composition. For example, if the textile fiber product is made entirely out of cotton, the"
-      },
-      {
-       "title": "Clothing Label Requirements in the United States - Textile Labeling",
-       "url": "https://wunderlabel.com/blog/p/clothing-label-requirements-textile-labeling-usa",
-       "snippet": "The components of the material must be listed in descending order, e.g: \"65% viscose, 35% polyester\". Only fibers that make up 5% or more of the total fiber weight can be listed. As a general rule, anything less than 5% must be listed as \"other fibers\". If a garment is made of only one fabric, such as cotton, you can use the phrase \"All cotton\" instead of \"100% cotton\". If part of a garment is mad"
-      }
-     ],
-     "cached": false
-    },
-    "summary": "4 sources for: apparel garment import requirements United States: labelling, fibre composition, care labels, chemical restrictions",
-    "evidence_id": "E7",
-    "call_id": null,
-    "created_at": "2026-10-24T19:17:53.767673",
-    "model": null,
-    "tier": null,
-    "input_tokens": null,
-    "output_tokens": null,
-    "latency_ms": null,
-    "cost_usd": null,
-    "call_source": null
-   },
-   {
-    "id": 115,
     "seq": 11,
     "round": 3,
     "kind": "llm",
@@ -900,25 +958,25 @@
      "task": "planning"
     },
     "output": {
-     "content": "{\n  \"summary\": \"The current delivery plan for HLA-24019 (3,600 pcs by 2026-12-18) is infeasible due to zero free capacity and a 53-day production shortfall; the earliest feasible date for full quantity is 2027-02-24. The buyer has approved the Deep Navy lab dip, requested resubmission for Stone Grey, confirmed the 30% advance payment, and requires 2 PP samples per colour in size M before bulk cutting.\",\n  \"flags\": [\n    {\n      \"severity\": \"high\",\n      \"category\": \"delivery\",\n      \"reason\": \"Current plan infeasible: 3,600 pcs short, capacity left -26,472, utilisation 5.05x, production needs 66 days but only 13 available; earliest feasible date 2027-02-24.\",\n      \"evidence\": [\"E3\", \"E5\"]\n    },\n    {\n      \"severity\": \"medium\",\n      \"category\": \"delivery\",\n      \"reason\": \"Delivery date pushed back 8 days (2026-12-10 \u2192 2026-12-18) but both current and previous plans remain infeasible due to fabric lead time and capacity constraints.\",\n      \"evidence\": [\"E2\", \"E3\", \"E4\"]\n    },\n    {\n      \"severity\": \"low\",\n      \"category\": \"other\",\n      \"reason\": \"Stone Grey lab dip rejected as too green; resubmission required before bulk approval.\",\n      \"evidence\": [\"E1\"]\n    },\n    {\n   ",
-     "reasoning": "The user has provided a detailed scenario with pre-fetched evidence and tool results. I need to analyze this information and produce a JSON response with summary, flags, and info_checked.\n\nLet me review the key information:\n\n1. **Email content**: Emily Carter from Harbourline Apparel wants:\n   - Lab dip approvals (Deep Navy option B approved, Stone Grey needs resubmission)\n   - 30% advance payment remitted today\n   - 2 PP samples per colour in size M before bulk cutting\n\n2. **Order details (from prefetched evidence)**:\n   - Order ID: 7, PO: HLA-24019\n   - Buyer: Harbourline Apparel Inc.\n   - Current version: 3\n   - Version 1: delivery 2027-01-29, qty 3000, $4.20/unit, USD, destination US\n   - Version 2: delivery 2026-12-10, qty 3600, $4.20/unit, USD, destination US (delivery pulled forward)\n   - Version 3: delivery 2026-12-18, qty 3600, $4.20/unit, USD, destination US (delivery pushed back 8 days)\n   - Contract value: 3600 * $4.20 = $15,120\n   - Earlier orders from buyer: 0\n\n3. **Delivery feasibility (E3, E4, E5)**:\n   - Current plan (2026-12-18, 3600 pcs): INFEASIBLE - 3,600 pcs short, capacity left -26,472, utilisation 5.048, production days needed 66, slack -53 days\n   - Previou",
+     "content": "{\n  \"summary\": \"The current delivery plan for HLA-24019 (3,600 pcs by 2026-12-18) is infeasible due to a 3,600-piece capacity shortfall and negative 54 slack days; the previous 2026-12-10 plan was also infeasible with only 4 production days after fabric lead time. The earliest feasible date for the full quantity is 2027-02-25, and US compliance requires compliant fibre, origin, and care labels under FTC and CBP rules.\",\n  \"flags\": [\n    {\n      \"severity\": \"high\",\n      \"category\": \"delivery\",\n      \"reason\": \"Current plan (2026-12-18, 3,600 pcs) infeasible: 3,600 pcs short, capacity left -27,043, utilisation 5.47, slack days -54.\",\n      \"evidence\": [\"E3\"],\n      \"rule\": \"\",\n      \"adverse_finding\": \"\"\n    },\n    {\n      \"severity\": \"high\",\n      \"category\": \"delivery\",\n      \"reason\": \"Previous plan (2026-12-10, 3,600 pcs) infeasible: only 4 production days after 42-day fabric lead time; minimum is 10 days.\",\n      \"evidence\": [\"E4\"],\n      \"rule\": \"\",\n      \"adverse_finding\": \"\"\n    },\n    {\n      \"severity\": \"high\",\n      \"category\": \"delivery\",\n      \"reason\": \"Earliest feasible date for full 3,600 pcs is 2027-02-25; no partial shipment option available.\",\n      \"evidence\": [\"",
+     "reasoning": "The user has provided a detailed scenario with pre-fetched evidence and tool results. I need to analyze this information and produce a JSON response with summary, flags, and info_checked sections.\n\nLet me review the key information:\n\n1. **Email Context**: Emily Carter from Harbourline Apparel wants:\n   - Lab dip approvals (Deep Navy option B approved, Stone Grey needs resubmission)\n   - 30% advance payment remitted today\n   - 2 PP samples per colour in size M before bulk cutting\n\n2. **Order Details (from prefetched evidence)**:\n   - Order ID: 7, PO: HLA-24019\n   - Buyer: Harbourline Apparel Inc.\n   - Style: HL-TS-310\n   - Current version: 3\n   - Version 1: delivery 2027-01-29, qty 3000, $4.20/unit, USD, destination US\n   - Version 2: delivery 2026-12-10, qty 3600, $4.20/unit, USD, destination US (delivery pulled forward)\n   - Version 3: delivery 2026-12-18, qty 3600, $4.20/unit, USD, destination US (delivery pushed back 8 days)\n   - Colours added: Navy (0 pcs), White (0 pcs)\n   - Earlier orders from buyer: 0\n\n3. **Delivery Feasibility**:\n   - Current plan (v3, 2026-12-18, 3600 pcs): INFEASIBLE (E3) - 3,600 pcs short, capacity left -27,043, utilisation 5.469, slack days -54\n   - Pre",
      "tool_calls": []
     },
     "summary": "Writes the risk report",
     "evidence_id": null,
-    "call_id": 118,
-    "created_at": "2026-10-24T19:18:11.158226",
+    "call_id": 165,
+    "created_at": "2026-10-25T10:19:24.841136",
     "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
     "tier": "ultra",
-    "input_tokens": 5263,
-    "output_tokens": 2857,
-    "latency_ms": 17385,
-    "cost_usd": "0.01383400",
+    "input_tokens": 5306,
+    "output_tokens": 2369,
+    "latency_ms": 6959,
+    "cost_usd": "0.01241300",
     "call_source": "live"
    }
   ],
   "ultra_calls": 3,
-  "total_cost_usd": "0.02522500",
+  "total_cost_usd": "0.02469500",
   "notice": null
  },
  "drafts": [
@@ -928,19 +986,19 @@
    "order_id": 7,
    "kind": "buyer_reply",
    "subject": "Re: HLA-24019 \u2013 lab dips, payment, samples",
-   "body": "Hi Emily,\n\nThank you for your email.\n\n1. **Lab dips** \u2013 Deep Navy option B is approved. Stone Grey was assessed as too green and needs a new submission before bulk approval.  \n2. **Payment** \u2013 We have received the 30\u202f% advance for PO HLA\u201124019.  \n3. **PP samples** \u2013 We will prepare two pre\u2011production samples per colour in size\u202fM and send them ahead of bulk cutting.\n\nRegarding delivery, our capacity check shows the originally scheduled date of 2026\u201112\u201118 for the full 3\u202f600\u202fpcs is not feasible. The earliest date we can ship the complete order is **2027\u201102\u201124**. Please let us know if this works for you or if you would like to discuss any alternatives.\n\nBest regards,  \nKarthik  \nMerchandiser  \nSri Velan Knits",
+   "body": "Hi Emily,\n\nThank you for your email dated 2026\u201110\u201125.\n\n1. Lab dips \u2013 Deep Navy option B is approved. Stone Grey appears too green; we will resubmit a corrected dip for your review.  \n2. Payment \u2013 we have confirmed receipt of your 30\u202f% advance for PO HLA\u201124019 today.  \n3. Samples \u2013 we will prepare and send two PP samples per colour in size\u202fM (Deep Navy, Stone Grey, Navy, White) before bulk cutting begins.  \n4. New PO \u2013 we have not received a separate new PO; please advise if additional details are required.\n\nRegarding delivery, the current plan for 3\u202f600\u202fpcs by 2026\u201112\u201118 is not feasible due to capacity constraints. The earliest date we can ship the full quantity is **2027\u201102\u201125**. If this works for you, please confirm and we will adjust the schedule accordingly.\n\nBest regards,  \nKarthik  \nMerchandiser  \nSri Velan Knits",
    "edited_body": null,
-   "text": "Hi Emily,\n\nThank you for your email.\n\n1. **Lab dips** \u2013 Deep Navy option B is approved. Stone Grey was assessed as too green and needs a new submission before bulk approval.  \n2. **Payment** \u2013 We have received the 30\u202f% advance for PO HLA\u201124019.  \n3. **PP samples** \u2013 We will prepare two pre\u2011production samples per colour in size\u202fM and send them ahead of bulk cutting.\n\nRegarding delivery, our capacity check shows the originally scheduled date of 2026\u201112\u201118 for the full 3\u202f600\u202fpcs is not feasible. The earliest date we can ship the complete order is **2027\u201102\u201124**. Please let us know if this works for you or if you would like to discuss any alternatives.\n\nBest regards,  \nKarthik  \nMerchandiser  \nSri Velan Knits",
+   "text": "Hi Emily,\n\nThank you for your email dated 2026\u201110\u201125.\n\n1. Lab dips \u2013 Deep Navy option B is approved. Stone Grey appears too green; we will resubmit a corrected dip for your review.  \n2. Payment \u2013 we have confirmed receipt of your 30\u202f% advance for PO HLA\u201124019 today.  \n3. Samples \u2013 we will prepare and send two PP samples per colour in size\u202fM (Deep Navy, Stone Grey, Navy, White) before bulk cutting begins.  \n4. New PO \u2013 we have not received a separate new PO; please advise if additional details are required.\n\nRegarding delivery, the current plan for 3\u202f600\u202fpcs by 2026\u201112\u201118 is not feasible due to capacity constraints. The earliest date we can ship the full quantity is **2027\u201102\u201125**. If this works for you, please confirm and we will adjust the schedule accordingly.\n\nBest regards,  \nKarthik  \nMerchandiser  \nSri Velan Knits",
    "status": "pending",
-   "checked": 3,
+   "checked": 4,
    "violations": [],
    "reviewed_by": null,
    "reviewed_at": null,
    "sent_at": null,
    "reject_reason": null,
-   "created_at": "2026-10-24T19:18:34.560159",
+   "created_at": "2026-10-25T10:19:46.496100",
    "model": "nvidia/nemotron-3-super-120b-a12b",
-   "cost_usd": "0.00130650",
+   "cost_usd": "0.00124020",
    "email_subject": "HLA-24019 \u2013 lab dips, payment, samples",
    "email_sender": "Emily Carter <emily.carter@harbourline-apparel.example>",
    "offer": null
@@ -951,19 +1009,19 @@
    "order_id": 7,
    "kind": "internal_note",
    "subject": "Internal: HLA-24019 \u2013 lab dips, payment, samples",
-   "body": "- Buyer approved Deep Navy lab dip (option B); asked Stone Grey lab dip be resubmitted (too green).  \n- Confirmed 30\u202f% advance payment for PO HLA\u201124019.  \n- Requested 2 PP samples per colour in size\u202fM before bulk cutting.  \n- Delivery date moved from 2026\u201112\u201110 to 2026\u201112\u201118.  \n- High\u2011severity risk: delivery infeasible \u2013 3,600\u202fpcs short, needs 66\u202fdays vs 13 available, earliest feasible 2027\u201102\u201124.  \n- Low\u2011severity risk: Stone Grey lab dip rejected, requires resubmission.  \n- Management must decide on revised schedule/capacity and approve Stone Grey lab dip resubmission.  \n- Production: prepare 2 PP samples each for Deep Navy and Stone Grey (size\u202fM); hold bulk cutting until lab dip approvals confirmed and delivery decision made.",
+   "body": "Note to Production Planning Team:\n\nBuyer confirmed:  \n- Lab dip: Deep Navy Option B approved; Stone Grey needs resubmission (too green).  \n- 30% advance payment received for PO HLA-24019.  \n- Request: 2 PP samples per colour in size M before bulk cutting.\n\nRisks:  \n- High: Delivery date changed to 2026-12-18 (from 2026-12-10); current plan infeasible \u2014 3,600 pcs short, capacity left -27,043.  \n- Medium: Order version 3 lists Navy and White at 0 pcs each, but buyer references Deep Navy and Stone Grey.  \n- Low: Buyer requests 2 PP samples per colour in size M; order shows 0 pcs for Navy and White.\n\nDecision needed: Management must confirm whether to proceed with Deep Navy and Stone Grey only (per buyer feedback) or include Navy and White despite zero quantity.\n\nProduction: Prepare lab dip resubmission for Stone Grey. Hold bulk cutting until buyer confirms PP sample requirements and colour inclusion. Do not start cutting for Navy or White without buyer clarification on quantities.",
    "edited_body": null,
-   "text": "- Buyer approved Deep Navy lab dip (option B); asked Stone Grey lab dip be resubmitted (too green).  \n- Confirmed 30\u202f% advance payment for PO HLA\u201124019.  \n- Requested 2 PP samples per colour in size\u202fM before bulk cutting.  \n- Delivery date moved from 2026\u201112\u201110 to 2026\u201112\u201118.  \n- High\u2011severity risk: delivery infeasible \u2013 3,600\u202fpcs short, needs 66\u202fdays vs 13 available, earliest feasible 2027\u201102\u201124.  \n- Low\u2011severity risk: Stone Grey lab dip rejected, requires resubmission.  \n- Management must decide on revised schedule/capacity and approve Stone Grey lab dip resubmission.  \n- Production: prepare 2 PP samples each for Deep Navy and Stone Grey (size\u202fM); hold bulk cutting until lab dip approvals confirmed and delivery decision made.",
+   "text": "Note to Production Planning Team:\n\nBuyer confirmed:  \n- Lab dip: Deep Navy Option B approved; Stone Grey needs resubmission (too green).  \n- 30% advance payment received for PO HLA-24019.  \n- Request: 2 PP samples per colour in size M before bulk cutting.\n\nRisks:  \n- High: Delivery date changed to 2026-12-18 (from 2026-12-10); current plan infeasible \u2014 3,600 pcs short, capacity left -27,043.  \n- Medium: Order version 3 lists Navy and White at 0 pcs each, but buyer references Deep Navy and Stone Grey.  \n- Low: Buyer requests 2 PP samples per colour in size M; order shows 0 pcs for Navy and White.\n\nDecision needed: Management must confirm whether to proceed with Deep Navy and Stone Grey only (per buyer feedback) or include Navy and White despite zero quantity.\n\nProduction: Prepare lab dip resubmission for Stone Grey. Hold bulk cutting until buyer confirms PP sample requirements and colour inclusion. Do not start cutting for Navy or White without buyer clarification on quantities.",
    "status": "pending",
-   "checked": 4,
+   "checked": 6,
    "violations": [],
    "reviewed_by": null,
    "reviewed_at": null,
    "sent_at": null,
    "reject_reason": null,
-   "created_at": "2026-10-24T19:18:34.560163",
+   "created_at": "2026-10-25T10:19:46.496104",
    "model": "nvidia/nemotron-3-super-120b-a12b",
-   "cost_usd": "0.00234600",
+   "cost_usd": "0.00069030",
    "email_subject": "HLA-24019 \u2013 lab dips, payment, samples",
    "email_sender": "Emily Carter <emily.carter@harbourline-apparel.example>",
    "offer": null
@@ -972,134 +1030,166 @@
  "match_questions": [],
  "calls": [
   {
-   "id": 120,
+   "id": 168,
    "run_id": null,
    "task_type": "draft_internal_note",
    "tier": "super",
    "model": "nvidia/nemotron-3-super-120b-a12b",
-   "input_tokens": 1322,
-   "output_tokens": 2166,
-   "latency_ms": 14007,
-   "cost_usd": "0.00234600",
+   "input_tokens": 1515,
+   "output_tokens": 262,
+   "latency_ms": 1994,
+   "cost_usd": "0.00069030",
+   "source": "live",
+   "detail": "retry without thinking: empty or truncated draft",
+   "success": true,
+   "error": null,
+   "created_at": "2026-10-25T10:19:46.493179"
+  },
+  {
+   "id": 167,
+   "run_id": null,
+   "task_type": "draft_internal_note",
+   "tier": "super",
+   "model": "nvidia/nemotron-3-super-120b-a12b",
+   "input_tokens": 1515,
+   "output_tokens": 3000,
+   "latency_ms": 12202,
+   "cost_usd": "0.00315450",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:18:34.557694"
+   "created_at": "2026-10-25T10:19:44.494434"
   },
   {
-   "id": 119,
+   "id": 166,
    "run_id": null,
    "task_type": "draft_reply",
    "tier": "super",
    "model": "nvidia/nemotron-3-super-120b-a12b",
-   "input_tokens": 1448,
-   "output_tokens": 969,
-   "latency_ms": 7823,
-   "cost_usd": "0.00130650",
+   "input_tokens": 1641,
+   "output_tokens": 831,
+   "latency_ms": 5538,
+   "cost_usd": "0.00124020",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:18:20.544765"
+   "created_at": "2026-10-25T10:19:32.286875"
   },
   {
-   "id": 118,
+   "id": 165,
    "run_id": 13,
    "task_type": "planning",
    "tier": "ultra",
    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
-   "input_tokens": 5263,
-   "output_tokens": 2857,
-   "latency_ms": 17385,
-   "cost_usd": "0.01383400",
+   "input_tokens": 5306,
+   "output_tokens": 2369,
+   "latency_ms": 6959,
+   "cost_usd": "0.01241300",
    "source": "live",
    "detail": "ultra escalation: current plan infeasible: delivery options need weighing",
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:18:11.157229"
+   "created_at": "2026-10-25T10:19:24.840304"
   },
   {
-   "id": 117,
+   "id": 164,
    "run_id": 13,
    "task_type": "planning",
    "tier": "ultra",
    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
-   "input_tokens": 4407,
-   "output_tokens": 365,
-   "latency_ms": 3347,
-   "cost_usd": "0.00550200",
+   "input_tokens": 4469,
+   "output_tokens": 234,
+   "latency_ms": 1945,
+   "cost_usd": "0.00517100",
    "source": "live",
    "detail": "ultra escalation: current plan infeasible: delivery options need weighing",
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:17:50.186598"
+   "created_at": "2026-10-25T10:19:14.746429"
   },
   {
-   "id": 116,
+   "id": 163,
    "run_id": 13,
    "task_type": "planning",
    "tier": "ultra",
    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
-   "input_tokens": 3474,
-   "output_tokens": 805,
-   "latency_ms": 4771,
-   "cost_usd": "0.00588900",
+   "input_tokens": 3643,
+   "output_tokens": 1156,
+   "latency_ms": 4009,
+   "cost_usd": "0.00711100",
    "source": "live",
    "detail": "ultra escalation: current plan infeasible: delivery options need weighing",
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:17:46.833503"
+   "created_at": "2026-10-25T10:19:12.795017"
   },
   {
-   "id": 115,
+   "id": 162,
    "run_id": null,
    "task_type": "extract_escalation",
    "tier": "super",
    "model": "nvidia/nemotron-3-super-120b-a12b",
    "input_tokens": 891,
    "output_tokens": 22,
-   "latency_ms": 940,
+   "latency_ms": 710,
    "cost_usd": "0.00028710",
    "source": "live",
    "detail": "escalation: currency (source_quote_missing)",
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:17:40.386525"
+   "created_at": "2026-10-25T10:19:08.383015"
   },
   {
-   "id": 114,
+   "id": 161,
+   "run_id": null,
+   "task_type": "extract_escalation",
+   "tier": "super",
+   "model": "nvidia/nemotron-3-super-120b-a12b",
+   "input_tokens": 893,
+   "output_tokens": 36,
+   "latency_ms": 1109,
+   "cost_usd": "0.00030030",
+   "source": "live",
+   "detail": "escalation: buyer (source_quote_missing)",
+   "success": true,
+   "error": null,
+   "created_at": "2026-10-25T10:19:07.668096"
+  },
+  {
+   "id": 160,
    "run_id": null,
    "task_type": "extract",
    "tier": "nano",
    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
    "input_tokens": 809,
-   "output_tokens": 459,
-   "latency_ms": 3010,
-   "cost_usd": "0.00015870",
+   "output_tokens": 416,
+   "latency_ms": 4651,
+   "cost_usd": "0.00014838",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:17:39.442016"
+   "created_at": "2026-10-25T10:19:06.553940"
   },
   {
-   "id": 113,
+   "id": 159,
    "run_id": null,
    "task_type": "classify",
    "tier": "nano",
    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
    "input_tokens": 520,
    "output_tokens": 86,
-   "latency_ms": 1661,
+   "latency_ms": 2281,
    "cost_usd": "0.00005184",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:17:36.428110"
+   "created_at": "2026-10-25T10:19:01.899166"
   }
  ],
- "cost_usd": 0.029375,
- "model_latency_ms": 52944
+ "cost_usd": 0.030568,
+ "model_latency_ms": 41398
 }

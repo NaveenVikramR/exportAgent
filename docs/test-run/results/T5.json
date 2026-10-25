@@ -6,14 +6,14 @@
   "body": "Hello Karthik,\n\nour order NW-5520 for the hoodie NW-HD-14, at EUR 11,40 as agreed on the phone.\n\nArtikel: NW-HD-14 Kapuzenpullover\nPreis: EUR 11,90 / St\u00fcck\nFOB Chennai, Liefertermin ab Werk: 26.02.2027, Germany\n\nFarbe          S     M     L     XL    Summe\nWaldgr\u00fcn       100   200   200   100   600\nAnthrazit      150   250   250   150   800\nGesamt: 1.400 St\u00fcck\n\nGr\u00fc\u00dfe\nAnna Vogt\nNordwind Textil GmbH"
  },
  "email_id": 13,
- "elapsed_s": 50.9,
+ "elapsed_s": 54.3,
  "email": {
   "id": 13,
   "external_id": null,
   "sender": "Anna Vogt <a.vogt@nordwind-textil.example>",
   "subject": "Bestellung NW-5520",
-  "received_at": "2026-10-24T19:16:29.317814",
-  "status": "analysed",
+  "received_at": "2026-10-25T10:17:56.303542",
+  "status": "needs_review",
   "order_id": 9,
   "classification": {
    "category": "new_po",
@@ -22,10 +22,10 @@
    ],
    "has_po_data": true,
    "summary": "The buyer wants to place a new purchase order for 1,400 hoodies at EUR 11.90 per piece, with delivery from Chennai by 26 February 2027.",
-   "confidence": 0.98,
+   "confidence": 0.96,
    "unrecognised": []
   },
-  "review_count": 0,
+  "review_count": 1,
   "body": "Hello Karthik,\n\nour order NW-5520 for the hoodie NW-HD-14, at EUR 11,40 as agreed on the phone.\n\nArtikel: NW-HD-14 Kapuzenpullover\nPreis: EUR 11,90 / St\u00fcck\nFOB Chennai, Liefertermin ab Werk: 26.02.2027, Germany\n\nFarbe          S     M     L     XL    Summe\nWaldgr\u00fcn       100   200   200   100   600\nAnthrazit      150   250   250   150   800\nGesamt: 1.400 St\u00fcck\n\nGr\u00fc\u00dfe\nAnna Vogt\nNordwind Textil GmbH",
   "attachments": [],
   "extraction": {
@@ -38,7 +38,7 @@
     "po_number": {
      "value": "NW-5520",
      "confidence": 1.0,
-     "evidence": "NW-5520"
+     "evidence": "Bestellung NW-5520"
     },
     "style": {
      "value": "NW-HD-14",
@@ -52,7 +52,7 @@
     },
     "unit_price": {
      "value": "11.90",
-     "confidence": 1.0,
+     "confidence": 0.4,
      "evidence": "Preis: EUR 11,90 / St\u00fcck"
     },
     "total_quantity": {
@@ -107,7 +107,13 @@
     "po_revision": null,
     "ambiguous_dates": []
    },
-   "review": [],
+   "review": [
+    {
+     "field": "unit_price",
+     "reason": "price_conflict",
+     "detail": "The email states more than one unit price: 11.40 besides 11.90. Confirm which is agreed."
+    }
+   ],
    "escalations": [],
    "inherited": [],
    "notes": []
@@ -123,7 +129,7 @@
   "status": "open",
   "profile": "india_tiruppur",
   "current_version": 1,
-  "updated_at": "2026-10-24T19:16:42.636836",
+  "updated_at": "2026-10-25T10:18:04.679593",
   "alerts": [],
   "latest_change_count": 0,
   "versions": [
@@ -173,7 +179,7 @@
      "po_number": 1.0,
      "style": 1.0,
      "currency": 1.0,
-     "unit_price": 1.0,
+     "unit_price": 0.4,
      "total_quantity": 1.0,
      "delivery_date": 1.0,
      "incoterms": 1.0,
@@ -181,7 +187,7 @@
      "destination_country": 1.0
     },
     "changes": [],
-    "created_at": "2026-10-24T19:16:42.637371"
+    "created_at": "2026-10-25T10:18:04.680125"
    }
   ]
  },
@@ -190,16 +196,31 @@
   "email_id": 13,
   "order_id": 9,
   "status": "completed",
-  "rounds": 2,
+  "rounds": 1,
   "result": {
-   "summary": "The purchase order NW-5520 is for 1,400 hoodies at EUR 11.90 FOB Chennai, with delivery requested by 26 February 2027 to Germany. The feasibility check indicates the plan is feasible but tight, using essentially all available capacity with zero slack.",
+   "summary": "The new PO NW-5520 for 1,400 hoodies with delivery 26 Feb 2027 is infeasible: only 957 pcs of free capacity remain in the window, leaving a 443 pc shortfall. The email also cites two different unit prices (EUR 11.40 and EUR 11.90), which must be confirmed before booking.",
    "flags": [
     {
-     "severity": "medium",
+     "severity": "high",
      "category": "delivery",
-     "reason": "Utilisation 99.7%, slack 0 days, capacity left 1,528 pcs for the order.",
+     "reason": "1,400 pcs needed but only 957 pcs of free capacity remain before 2027-02-26 after other orders (443 pcs short).",
      "evidence": [
-      "E2"
+      "E2",
+      "E3"
+     ],
+     "rule": null,
+     "adverse_finding": null,
+     "verified": true,
+     "source": "model",
+     "severity_adjusted_from": null,
+     "related": []
+    },
+    {
+     "severity": "medium",
+     "category": "price",
+     "reason": "Email states two unit prices: EUR 11.40 (agreed on phone) and EUR 11.90 (listed in PO); confirmation required.",
+     "evidence": [
+      "E1"
      ],
      "rule": null,
      "adverse_finding": null,
@@ -211,35 +232,37 @@
    ],
    "info_checked": [
     {
-     "topic": "buyer",
-     "finding": "No adverse information found for Nordwind Textil GmbH; sources note a general German fashion industry crisis but no specifics about the buyer.",
+     "topic": "compliance",
+     "finding": "EU Regulation (EU) No 1007/2011 requires fibre composition labelling in German; REACH/MRSL/POPs chemical restrictions apply.",
      "evidence": [
-      "E3"
+      "E4"
      ],
      "note": null
     },
     {
-     "topic": "compliance",
-     "finding": "Germany requires fibre composition labelling in German per EU Regulation 1007/2011 for imported apparel such as hoodies.",
+     "topic": "buyer",
+     "finding": "No adverse information (insolvency, sanctions, fraud, disputes) found for Nordwind Textil GmbH; general German apparel market headwinds noted.",
      "evidence": [
-      "E4"
+      "E5"
      ],
      "note": null
     }
    ],
    "routing": {
-    "tier": "super",
-    "escalated": false,
-    "reasons": [],
-    "super_attempted": true
+    "tier": "ultra",
+    "escalated": true,
+    "reasons": [
+     "current plan infeasible: delivery options need weighing"
+    ],
+    "super_attempted": false
    }
   },
   "error": null,
-  "started_at": "2026-10-24T19:16:44.419931",
-  "finished_at": "2026-10-24T19:17:02.551799",
+  "started_at": "2026-10-25T10:18:05.048091",
+  "finished_at": "2026-10-25T10:18:19.879788",
   "steps": [
    {
-    "id": 98,
+    "id": 95,
     "seq": 1,
     "round": 0,
     "kind": "tool",
@@ -273,7 +296,7 @@
     "summary": "PO NW-5520: v1, 1400 pcs, delivery 2027-02-26",
     "evidence_id": "E1",
     "call_id": null,
-    "created_at": "2026-10-24T19:16:44.422890",
+    "created_at": "2026-10-25T10:18:05.050898",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -283,7 +306,7 @@
     "call_source": null
    },
    {
-    "id": 99,
+    "id": 96,
     "seq": 2,
     "round": 0,
     "kind": "tool",
@@ -293,23 +316,23 @@
     },
     "output": {
      "evidence_id": "E2",
-     "verdict": "tight",
-     "suggested_severity": "medium",
-     "reason": "Feasible but tight: 100% of free capacity used, 0 days of slack.",
-     "as_of": "2026-10-24",
+     "verdict": "infeasible",
+     "suggested_severity": "high",
+     "reason": "1,400 pcs needed but only 957 pcs of free capacity remain before 2027-02-26 after other orders (443 pcs short).",
+     "as_of": "2026-10-25",
      "delivery_date": "2027-02-26",
      "quantity": 1400,
-     "days_to_delivery": 125,
+     "days_to_delivery": 124,
      "fabric_days": 42,
-     "production_days_available": 83,
+     "production_days_available": 82,
      "free_capacity_per_week": 4000,
-     "capacity_in_window": 47428,
+     "capacity_in_window": 46857,
      "other_orders_load": 45900,
-     "capacity_left_for_order": 1528,
-     "utilisation": 0.997,
+     "capacity_left_for_order": 957,
+     "utilisation": 1.009,
      "production_days_needed": 83,
-     "slack_days": 0,
-     "shortfall_pcs": 0,
+     "slack_days": -1,
+     "shortfall_pcs": 443,
      "order_id": 9,
      "profile": "india_tiruppur",
      "other_orders": [
@@ -352,10 +375,10 @@
      "fabric_ready": false,
      "is_current_plan": true
     },
-    "summary": "TIGHT for 1,400 pcs by 2027-02-26: Feasible but tight: 100% of free capacity used, 0 days of slack.",
+    "summary": "INFEASIBLE for 1,400 pcs by 2027-02-26: 1,400 pcs needed but only 957 pcs of free capacity remain before 2027-02-26 after other orders (443 pcs short).",
     "evidence_id": "E2",
     "call_id": null,
-    "created_at": "2026-10-24T19:16:44.428645",
+    "created_at": "2026-10-25T10:18:05.056721",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -365,8 +388,70 @@
     "call_source": null
    },
    {
-    "id": 100,
+    "id": 97,
     "seq": 3,
+    "round": 0,
+    "kind": "tool",
+    "name": "propose_delivery_options",
+    "input": {
+     "order_id": 9
+    },
+    "output": {
+     "evidence_id": "E3",
+     "order_id": 9,
+     "requested_date": "2027-02-26",
+     "quantity": 1400,
+     "current_verdict": "infeasible",
+     "options_needed": true,
+     "earliest_feasible_date_full_quantity": "2027-02-27",
+     "partial_shipment": {
+      "quantity_on_requested_date": 900,
+      "requested_date": "2027-02-26",
+      "balance_quantity": 500,
+      "balance_date": "2027-02-27"
+     }
+    },
+    "summary": "Full 1,400 pcs feasible from 2027-02-27; or 900 pcs by 2027-02-26 and 500 pcs later",
+    "evidence_id": "E3",
+    "call_id": null,
+    "created_at": "2026-10-25T10:18:05.062439",
+    "model": null,
+    "tier": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "latency_ms": null,
+    "cost_usd": null,
+    "call_source": null
+   },
+   {
+    "id": 98,
+    "seq": 4,
+    "round": 0,
+    "kind": "routing",
+    "name": "escalate_to_ultra",
+    "input": {
+     "reasons": [
+      "current plan infeasible: delivery options need weighing"
+     ]
+    },
+    "output": {
+     "tier": "ultra"
+    },
+    "summary": "Escalated to Ultra: current plan infeasible: delivery options need weighing",
+    "evidence_id": null,
+    "call_id": null,
+    "created_at": "2026-10-25T10:18:05.063477",
+    "model": null,
+    "tier": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "latency_ms": null,
+    "cost_usd": null,
+    "call_source": null
+   },
+   {
+    "id": 99,
+    "seq": 5,
     "round": 1,
     "kind": "llm",
     "name": "plan",
@@ -375,29 +460,83 @@
     },
     "output": {
      "content": "",
-     "reasoning": "We need to decide if any flags needed. The prefetched shows order version 1, no changes. Delivery feasibility verdict \"tight\" with suggested severity medium. That indicates capacity tight but feasible. According to rubric: high if current delivery plan infeasible; here it's feasible but tight => medium? Actually they said high if infeasible; medium needs decision/confirmation before replying (tight capacity). So we should add a flag of severity medium category delivery with reason referencing utilization etc. Also note buyer has no earlier orders (earlier_orders_from_buyer:0). Could check buyer background via lookup_buyer because no earlier orders. Should we? It's optional but could be info_checked. Since we have no adverse info likely. We'll call lookup_buyer for Nordwind Textil GmbH, country Germany maybe. Then include in info_checked.\n\nAlso compliance: destination Germany, product hoodies (cotton? not specified). Need to check compliance. Use check_compliance with destination_country Germany, product \"hoodie\". Let's do that.\n\nProceed with calls.",
+     "reasoning": "The email is a new purchase order from Nordwind Textil GmbH for 1,400 hoodies (NW-HD-14) at EUR 11.90/piece, FOB Chennai, delivery by 26 Feb 2027. The prefetched evidence shows:\n\n1. Order found (E1): order_id 9, version 1, delivery 2027-02-26, quantity 1400, unit_price 11.90 EUR, destination Germany. No earlier orders from this buyer.\n\n2. Delivery feasibility check (E2): INFEASIBLE. Verdict: infeasible, suggested_severity high. Reason: 1,400 pcs needed but only 957 pcs free capacity remain before 2027-02-26 after other orders (443 pcs short). Details: days_to_delivery 124, fabric_days 42, production_days_available 82, free_capacity_per_week 4000, capacity_in_window 46857, other_orders_load 45900, capacity_left_for_order 957, utilisation 1.009, production_days_needed 83, slack_days -1, shortfall_pcs 443. Fabric_ready false, is_current_plan true.\n\n3. Delivery options (E3): earliest_feasible_date_full_quantity is 2027-02-27 (just one day later). Partial shipment: 900 on requested date (2027-02-26), balance 500 on 2027-02-27.\n\nAlso note: fields_needing_review includes unit_price discrepancy: email states \"EUR 11,40 as agreed on the phone\" but then says \"Preis: EUR 11,90 / St\u00fcck\". The e",
      "tool_calls": [
+      {
+       "name": "check_compliance",
+       "arguments": "{\"destination_country\": \"Germany\", \"product\": \"hoodie NW-HD-14\"}"
+      },
       {
        "name": "lookup_buyer",
        "arguments": "{\"company_name\": \"Nordwind Textil GmbH\", \"country\": \"Germany\"}"
       }
      ]
     },
-    "summary": "Calls lookup_buyer",
+    "summary": "Calls check_compliance, lookup_buyer",
     "evidence_id": null,
-    "call_id": 108,
-    "created_at": "2026-10-24T19:16:48.071736",
-    "model": "nvidia/nemotron-3-super-120b-a12b",
-    "tier": "super",
-    "input_tokens": 2891,
-    "output_tokens": 271,
-    "latency_ms": 3638,
-    "cost_usd": "0.00111120",
+    "call_id": 155,
+    "created_at": "2026-10-25T10:18:08.385801",
+    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+    "tier": "ultra",
+    "input_tokens": 3068,
+    "output_tokens": 812,
+    "latency_ms": 3317,
+    "cost_usd": "0.00550400",
     "call_source": "live"
    },
    {
+    "id": 100,
+    "seq": 6,
+    "round": 1,
+    "kind": "tool",
+    "name": "check_compliance",
+    "input": {
+     "destination_country": "Germany",
+     "product": "hoodie NW-HD-14"
+    },
+    "output": {
+     "evidence_id": "E4",
+     "query": "hoodie NW-HD-14 import requirements Germany: labelling, fibre composition, care labels, chemical restrictions",
+     "answer": "For importing hoodie NW-HD-14 into Germany, labelling must comply with EU Regulation (EU) No 1007/2011, stating fibre composition using harmonized names from Annex I in the official language(s) of the country where the product is sold. Fibre composition must be declared on the garment itself, not on packaging or swing tags. Care labels can use standardized ISO 3758 care symbols to eliminate written text requirements for care steps. Chemical restrictions are governed by comprehensive chemical and safety testing to verify compliance with REACH, MRSL, POPs, US CPSC rules, UK requirements, and buyer-specific RSLs.",
+     "sources": [
+      {
+       "title": "Apparel regulations overview 2026: Label, safety testing, sustainability",
+       "url": "https://www.eurofins.com/en/consumer-product-testing/softlines-hardlines/news-articles/apparel-regulations-overview-2026-care-label-safety-testing-and-sustainability",
+       "snippet": "Comprehensive chemical and safety testing to verify compliance with REACH, MRSL, POPs, US CPSC rules, UK requirements and buyer-specific RSLs.\n Labelling and performance assessments covering fibre composition, care label durability, colour fastness, dimensional stability, flammability and physical performance. [...] Best-practice control: Treat chemical compliance as a managed system (RSL/MRSL ali"
+      },
+      {
+       "title": "Clothing Label Requirements in Europe - 2026 Guide",
+       "url": "https://wonnda.com/magazine/clothing-label-requirements",
+       "snippet": "| Requirement | Details |\n --- |\n| Fiber composition | Must state the fiber name and percentage by weight of each fiber using harmonized names from Annex I |\n| Presentation | Must be durable, legible, visible, and accessible |\n| Language | Must be in the official language(s) of the country where the product is sold |\n| Multi-fiber products | Fibers listed in descending order by weight; under 5% ca"
+      },
+      {
+       "title": "Textile Labeling Regulations Guide: Fiber Content & Care Labels | TradeAider",
+       "url": "https://www.tradeaiders.com/de/wiki/textile-labeling-regulations-fiber-content-and-care-labeling",
+       "snippet": "Customs authorities (such as US CBP) will detain the shipment at the port of entry for mislabeling. Importers must pay penalty fees and cover expenses to re-label the entire shipment in a bonded warehouse before customs clearance is granted.\n\n## References\n\n US Federal Trade Commission. Threading Your Way Through the Labeling Requirements Under the Textile and Wool Acts[R]. Washington D.C.: FTC, 2"
+      },
+      {
+       "title": "EU Textile Labelling Requirements \u2013 EaseCert | GPSR Compliance",
+       "url": "https://easecert.com/blogs/insights/eu-textile-labelling-requirements",
+       "snippet": "Fibre composition must always be on a permanent label or marking on the product.\n Swing tags cannot replace mandatory textile composition labels.\n The EU Textile Regulation is entirely focused on fibre composition and textile terminology.\n Language translations are required for every EU Member State where the product is sold.\n Safety warnings and care labels are outside the scope of the Textile Re"
+      }
+     ],
+     "cached": false
+    },
+    "summary": "4 sources for: hoodie NW-HD-14 import requirements Germany: labelling, fibre composition, care labels, chemical restrictions",
+    "evidence_id": "E4",
+    "call_id": null,
+    "created_at": "2026-10-25T10:18:11.555686",
+    "model": null,
+    "tier": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "latency_ms": null,
+    "cost_usd": null,
+    "call_source": null
+   },
+   {
     "id": 101,
-    "seq": 4,
+    "seq": 7,
     "round": 1,
     "kind": "tool",
     "name": "lookup_buyer",
@@ -406,14 +545,14 @@
      "country": "Germany"
     },
     "output": {
-     "evidence_id": "E3",
+     "evidence_id": "E5",
      "query": "Nordwind Textil GmbH Germany apparel company news",
-     "answer": "The sources do not provide specific news about Nordwind Textil GmbH Germany apparel company. However, they mention a general crisis in the German fashion industry, citing an example of a high-end brand that filed for insolvency in 2025 due to high debt and rising financing costs. The sources also highlight broader industry trends and concerns, such as the conflict between morality and profit in textile production, but do not give details about Nordwind Textil GmbH specifically.",
+     "answer": "The sources indicate that the Germany apparel market is facing challenges with weak demand and increased costs, leading to profitability issues. Specifically, a high-end brand, Closed GmbH, filed for insolvency in August 2025 due to high debt and rising financing costs, although operations continue under provincial administration. The sources do not provide specific news about Nordwind Textil GmbH Germany apparel company.",
      "sources": [
       {
-       "title": "Apparel & Garment Industry News, Latest Updates & Trends - Fibre2Fashion",
-       "url": "https://www.fibre2fashion.com/news/apparel-news",
-       "snippet": "Fashion\n\n US' Vionic expands footwear innovation with Hummingbird launch\n\nFinland\u2019s UPM opens wood-based chemicals biorefinery in Germany\n\nChemicals\n\n Finland\u2019s UPM opens wood-based chemicals biorefinery in Germany\n\nHoliday 2026: Real growth weakest in three years\n\nRetail\n\n Holiday 2026: Real growth weakest in three years\n\nIndia gets reprieve from Graham Act tariffs over Russian oil\n\nTextiles\n\n In"
+       "title": "Germany Apparel Market Faces Headwinds & Weak Demand",
+       "url": "https://www.globaltextiletimes.com/news/germany-apparel-market-faces-headwinds-weak-demand",
+       "snippet": "### Robotic Innovations Revolutionizing Textile Manufacturing\n\n    \n\n    ### Visual Merchandising: Enhancing Sales and Brand Impact\n More\n  + Contact Us\n\nApparelNews\n\n# Germany Apparel Market Faces Headwinds & Weak Demand\n\nShare\n\nFacebookXPinterestWhatsAppLinkedin\n\nretail\n\nNote\\ - All images used are for editorial and illustrative purposes only and may not originate from the original news provider"
       },
       {
        "title": "German Fashion Industry Faces a Deepening Crisis | German Fashion Industry | Business Mirror",
@@ -426,17 +565,17 @@
        "snippet": "Accessibility Statement Skip Navigation\n\n# Textiles\n\nNews stories from around the globe concerning the textiles industry. Releases in this section cover a variety of topics including fashion, textile and fabric production, manufacturing and technological advances, industry trends and corporate earnings.\n\nMaking a selection with these dropdown will cause content on this page to change. News listing"
       },
       {
-       "title": "Textile Production in Low-Income Countries | Made in Germany",
-       "url": "https://www.youtube.com/watch?v=kWSmxKk5rqo",
-       "snippet": "# Textile Production in Low-Income Countries | Made in Germany\n## Channel: DW News (verified)\n6.47M subscribers\n194 likes [...] [1:03] a recent fire in a Bangladesh Factory once internal investigations have been completed even the industry Association\n[1:10] is critical of Discounter pricing we appeal to every company to behave responsibly those who want\n[1:17] long-term success must manage the co"
+       "title": "Textile World | Trusted textile industry news and technology insight for manufacturers, brands and innovators | Page 366",
+       "url": "https://www.textileworld.com/page/366?id_478c3173abf4c2ff26fb09ef8647b868=&json_true=&page_detail=",
+       "snippet": "#### FEATURED ARTICLES\n\n\n\n### From Textile Waste To Spinnable Fiber: Why Classification Comes First\n\n\n\n### Techtextil And Texprocess 2026 Bring Innovation To Frankfurt\n\n\n\n### High Performance Rotor Spinning at Nazar Tekstil\n\n Advertising\n Career Center\n Innovation Forum\n\n\u00a9 Copyright 2017 Textile Industries Media Group, LLC. [...] Home\n News\n  + Breaking News\n  + Composites\n  + Cotton News\n  + Dyei"
       }
      ],
      "cached": false
     },
     "summary": "4 sources for: Nordwind Textil GmbH Germany apparel company news",
-    "evidence_id": "E3",
+    "evidence_id": "E5",
     "call_id": null,
-    "created_at": "2026-10-24T19:16:50.658457",
+    "created_at": "2026-10-25T10:18:14.032603",
     "model": null,
     "tier": null,
     "input_tokens": null,
@@ -447,7 +586,7 @@
    },
    {
     "id": 102,
-    "seq": 5,
+    "seq": 8,
     "round": 2,
     "kind": "llm",
     "name": "plan",
@@ -455,106 +594,25 @@
      "task": "planning"
     },
     "output": {
-     "content": "",
-     "reasoning": "We need to output final JSON with summary, flags, info_checked.\n\nFrom prefetched evidence: Order ID 9, version 1, first order, no changes. Delivery feasibility verdict \"tight\", suggested severity medium, reason: Feasible but tight: 100% of free capacity used, 0 days of slack. So it's feasible but tight -> maybe flag? According to rubric: high if current delivery plan infeasible (capacity or lead time). Here it's feasible but tight => not infeasible, so not high. Medium: needs a decision or confirmation before replying (tight capacity). That matches: tight capacity, still feasible. Could be medium flag category \"delivery\"? Actually category could be \"delivery\". Reason includes utilization near 100%, slack 0. Provide evidence E2.\n\nAlso check buyer: earlier_orders_from_buyer = 0, meaning no earlier orders. We called lookup_buyer, got generic info, no adverse findings. Since no earlier orders, we might add info_checked about buyer being new.\n\nCompliance: destination country Germany, product hoodie (cotton? Not specified). Need to run check_compliance? It's optional but we can if needed. Since we haven't yet, we should consider calling check_compliance for Germany, product \"hoodie\". Let",
-     "tool_calls": [
-      {
-       "name": "check_compliance",
-       "arguments": "{\"destination_country\": \"Germany\", \"product\": \"hoodie\"}"
-      }
-     ]
-    },
-    "summary": "Calls check_compliance",
-    "evidence_id": null,
-    "call_id": 109,
-    "created_at": "2026-10-24T19:16:53.526128",
-    "model": "nvidia/nemotron-3-super-120b-a12b",
-    "tier": "super",
-    "input_tokens": 3680,
-    "output_tokens": 321,
-    "latency_ms": 2862,
-    "cost_usd": "0.00139290",
-    "call_source": "live"
-   },
-   {
-    "id": 103,
-    "seq": 6,
-    "round": 2,
-    "kind": "tool",
-    "name": "check_compliance",
-    "input": {
-     "destination_country": "Germany",
-     "product": "hoodie"
-    },
-    "output": {
-     "evidence_id": "E4",
-     "query": "hoodie import requirements Germany: labelling, fibre composition, care labels, chemical restrictions",
-     "answer": "According to the sources, Germany's textile labelling requirements are largely governed by EU law, specifically Regulation (EU) No 1007/2011, which mandates fibre composition labelling in the official language(s) of the Member State where the product is sold. The German Textilkennzeichnungsgesetz requires fibre-composition declarations in German but permits additional languages. Care labelling is not a legal requirement under the textile fibre regulation, which focuses on fibre names, fibre composition, and non-textile parts of animal origin. Care instructions must be accurate and suitable for the finished garment, ensuring no physical shrinkage exceeding commercial tolerances or garment color bleeding. Fibre composition text must be in the official national language(s) of the specific EU member state, and care instructions must comply with the destination market's mandatory requirements",
-     "sources": [
-      {
-       "title": "German Textile Labelling Rules for Imported Apparel",
-       "url": "https://surajmal.com/blog/2026/03/german-textile-labelling-requirements",
-       "snippet": "The German act requires manufacturers and importers to keep records of the facts on which the labelling or marking of the fibre composition is based, for two calendar years. The period runs from the end of the calendar year in which the last of the products covered by those records was placed on the market. Distributors keep their equivalent records for as long as the products are made available. "
-      },
-      {
-       "title": "Clothing Labeling Requirements for USA, UK & EU (2026) \u2013 Dpassion Sportswear (Wholesale & Bulk Supplier)",
-       "url": "https://dpassion.co.in/blogs/news/clothing-labeling-requirements-usa-uk-eu",
-       "snippet": "2. Product category: Identify the garment type, such as T-shirts, hoodies, leggings, sportswear or tracksuits.\n\n3. Fibre composition: Provide the confirmed material specification for each product and relevant component.\n\n4. Label artwork: Supply the approved brand logo, wording, size and placement instructions.\n\n5. Care instructions: Confirm the instructions suitable for the finished garment and t"
-      },
-      {
-       "title": "Textile Labeling Regulations Guide: Fiber Content & Care Labels | TradeAider",
-       "url": "https://www.tradeaiders.com/de/wiki/textile-labeling-regulations-fiber-content-and-care-labeling",
-       "snippet": "Under EU Regulation 1007/2011, fiber composition text must be written in the official national language(s) of the specific EU member state where the garment is sold to end consumers (e.g., French for France, German for Germany). Utilizing standardized ISO 3758 care symbols eliminates written text requirements for care steps.\n\n### Q5: What happens if a customs inspection discovers incorrect fiber c"
-      },
-      {
-       "title": "Threading Your Way Through the Labeling Requirements Under the Textile and Wool Acts | Federal Trade Commission",
-       "url": "https://www.ftc.gov/business-guidance/resources/threading-your-way-through-labeling-requirements-under-textile-wool-acts",
-       "snippet": "## Introduction\n\nFederal labeling requirements for textile and wool products, enforced by the FTC, require that most of these products have a label listing the fiber content, country of origin and identity of the manufacturer or another business responsible for marketing or handling the item.1 Fur products have label requirements as well.2 Care labels for clothing are required by another rule enfo"
-      }
-     ],
-     "cached": false
-    },
-    "summary": "4 sources for: hoodie import requirements Germany: labelling, fibre composition, care labels, chemical restrictions",
-    "evidence_id": "E4",
-    "call_id": null,
-    "created_at": "2026-10-24T19:16:56.684619",
-    "model": null,
-    "tier": null,
-    "input_tokens": null,
-    "output_tokens": null,
-    "latency_ms": null,
-    "cost_usd": null,
-    "call_source": null
-   },
-   {
-    "id": 104,
-    "seq": 7,
-    "round": 3,
-    "kind": "llm",
-    "name": "plan",
-    "input": {
-     "task": "planning"
-    },
-    "output": {
-     "content": "\n{\n  \"summary\": \"The purchase order NW-5520 is for 1,400 hoodies at EUR 11.90 FOB Chennai, with delivery requested by 26 February 2027 to Germany. The feasibility check indicates the plan is feasible but tight, using essentially all available capacity with zero slack.\",\n  \"flags\": [\n    {\n      \"severity\": \"medium\",\n      \"category\": \"delivery\",\n      \"reason\": \"Utilisation 99.7%, slack 0 days, capacity left 1,528 pcs for the order.\",\n      \"evidence\": [\"E2\"]\n    }\n  ],\n  \"info_checked\": [\n    {\n      \"topic\": \"buyer\",\n      \"finding\": \"No adverse information found for Nordwind Textil GmbH; sources note a general German fashion industry crisis but no specifics about the buyer.\",\n      \"evidence\": [\"E3\"]\n    },\n    {\n      \"topic\": \"compliance\",\n      \"finding\": \"Germany requires fibre composition labelling in German per EU Regulation 1007/2011 for imported apparel such as hoodies.\",\n      \"evidence\": [\"E4\"]\n    }\n  ]\n}",
-     "reasoning": "We need to output final JSON with summary, flags, info_checked.\n\nFrom prefetched evidence: This is first version, no changes. Delivery feasibility verdict: tight, suggested severity medium. So flag? According to rubric: high if current delivery plan infeasible (capacity or lead time). Here it's feasible but tight => not infeasible, so maybe medium flag for capacity/tightness. Need to include reason with key numbers: utilization 0.997, slack_days 0, capacity left 1528 pcs etc. Evidence IDs: E2.\n\nAlso check buyer: earlier_orders_from_buyer = 0 (no earlier orders). We called lookup_buyer, got no adverse info, just general industry crisis. That's info_checked, not flag because no adverse finding.\n\nCompliance: we checked compliance for Germany hoodie. Need to see if any flag? Compliance flag only if violation? We just have info; no adverse. So info_checked.\n\nThus flags: one medium capacity/delivery tightness.\n\nInfo_checked: buyer lookup result, compliance summary.\n\nLet's craft.\n\nSummary: two sentences for merchandiser: The PO is for 1,400 hoodies at EUR 11.90, delivery 26 Feb 2027 from Chennai to Germany. Capacity check shows the plan is feasible but tight with virtually no slack.\n\nFlag",
+     "content": "{\n  \"summary\": \"The new PO NW-5520 for 1,400 hoodies with delivery 26 Feb 2027 is infeasible: only 957 pcs of free capacity remain in the window, leaving a 443 pc shortfall. The email also cites two different unit prices (EUR 11.40 and EUR 11.90), which must be confirmed before booking.\",\n  \"flags\": [\n    {\n      \"severity\": \"high\",\n      \"category\": \"delivery\",\n      \"reason\": \"1,400 pcs needed but only 957 pcs of free capacity remain before 2027-02-26 after other orders (443 pcs short).\",\n      \"evidence\": [\"E2\", \"E3\"]\n    },\n    {\n      \"severity\": \"medium\",\n      \"category\": \"price\",\n      \"reason\": \"Email states two unit prices: EUR 11.40 (agreed on phone) and EUR 11.90 (listed in PO); confirmation required.\",\n      \"evidence\": [\"E1\"]\n    }\n  ],\n  \"info_checked\": [\n    {\n      \"topic\": \"compliance\",\n      \"finding\": \"EU Regulation (EU) No 1007/2011 requires fibre composition labelling in German; REACH/MRSL/POPs chemical restrictions apply.\",\n      \"evidence\": [\"E4\"]\n    },\n    {\n      \"topic\": \"buyer\",\n      \"finding\": \"No adverse information (insolvency, sanctions, fraud, disputes) found for Nordwind Textil GmbH; general German apparel market headwinds noted.\",\n      \"evidenc",
+     "reasoning": "The user has provided a JSON with email analysis and prefetched evidence. I need to analyze this and produce a JSON response with summary, flags, and info_checked.\n\nLet me review the evidence:\n\n1. E1: Order found - NW-5520, order_id 9, version 1, 1400 pcs, EUR 11.90, delivery 2027-02-26, Germany. No earlier orders from buyer.\n\n2. E2: Delivery feasibility check - INFEASIBLE. 1,400 pcs needed but only 957 pcs free capacity before 2027-02-26. Shortfall 443 pcs. Utilisation 1.009. Production days needed 83, slack days -1. Other orders listed.\n\n3. E3: Delivery options - earliest feasible date for full quantity is 2027-02-27 (just 1 day later). Partial shipment: 900 on requested date, 500 balance on 2027-02-27.\n\n4. E4: Compliance check for Germany - EU Regulation (EU) No 1007/2011 for fibre composition labelling, REACH, MRSL, POPs, etc.\n\n5. E5: Buyer lookup - No specific adverse info on Nordwind Textil GmbH. General market headwinds mentioned, but no insolvency/sanctions/fraud for this specific company.\n\nAlso note from extracted data: \"fields_needing_review\": [\"unit_price: The email states more than one unit price: 11.40 besides 11.90. Confirm which is agreed.\"] - The email says \"at EUR ",
      "tool_calls": []
     },
     "summary": "Writes the risk report",
     "evidence_id": null,
-    "call_id": 110,
-    "created_at": "2026-10-24T19:17:02.550923",
-    "model": "nvidia/nemotron-3-super-120b-a12b",
-    "tier": "super",
-    "input_tokens": 4518,
-    "output_tokens": 667,
-    "latency_ms": 5849,
-    "cost_usd": "0.00195570",
+    "call_id": 156,
+    "created_at": "2026-10-25T10:18:19.879186",
+    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+    "tier": "ultra",
+    "input_tokens": 4693,
+    "output_tokens": 1133,
+    "latency_ms": 5841,
+    "cost_usd": "0.00809200",
     "call_source": "live"
    }
   ],
-  "ultra_calls": 0,
-  "total_cost_usd": "0.00445980",
+  "ultra_calls": 2,
+  "total_cost_usd": "0.01359600",
   "notice": null
  },
  "drafts": [
@@ -564,19 +622,19 @@
    "order_id": 9,
    "kind": "buyer_reply",
    "subject": "Re: Bestellung NW-5520",
-   "body": "Hello Anna,\n\nThank you for your email. I confirm receipt of your request to place a new purchase order (PO\u202fNW\u20115520) for the hoodie style\u202fNW\u2011HD\u201114.\n\nDetails as per your message:\n- Quantity: 1,400 pieces (Waldgr\u00fcn\u202f600\u202fpcs, Anthrazit\u202f800\u202fpcs)\n- Unit price: EUR\u202f11.90\n- Incoterms: FOB Chennai\n- Requested delivery date: 26\u202fFebruary\u202f2027\n- Destination: Germany\n\nOur current plan shows the delivery date is feasible but tight \u2013 we have zero days of slack and the fabric is not yet ready. We will proceed with the schedule and notify you immediately should any change arise.\n\nPlease confirm that the above details are correct and that you accept the tight timeline. Once confirmed, we will issue the order confirmation.\n\nBest regards,  \nKarthik  \nMerchandiser  \nSri Velan Knits",
+   "body": "Hello Anna,\n\nThank you for your email requesting a new purchase order for style\u202fNW\u2011HD\u201114. I confirm receipt of your request to place PO\u202fNW\u20115520 for 1,400 hoodies at EUR\u202f11,90 per piece, FOB Chennai, with delivery from the factory by\u202f26\u202fFebruary\u202f2027.\n\nRegarding the unit price, you mentioned two figures: EUR\u202f11,40 agreed on the phone and EUR\u202f11,90 stated in the PO. Please confirm which price should apply.\n\nDue to current capacity constraints (1,400 pcs needed but only 957 pcs of free capacity remain before\u202f26\u202fFeb\u202f2027 after other orders, leaving a shortfall of 443 pcs), we cannot ship the full quantity by the requested date. We can offer:\n\n- A partial shipment of 900 pcs on\u202f26\u202fFeb\u202f2027, with the remaining 500 pcs on\u202f27\u202fFeb\u202f2027; or  \n- The full 1,400 pcs shipped on\u202f27\u202fFeb\u202f2027.\n\nPlease let us know which option you prefer and confirm the final unit price.\n\nBest regards,  \nKarthik  \nMerchandiser  \nSri Velan Knits",
    "edited_body": null,
-   "text": "Hello Anna,\n\nThank you for your email. I confirm receipt of your request to place a new purchase order (PO\u202fNW\u20115520) for the hoodie style\u202fNW\u2011HD\u201114.\n\nDetails as per your message:\n- Quantity: 1,400 pieces (Waldgr\u00fcn\u202f600\u202fpcs, Anthrazit\u202f800\u202fpcs)\n- Unit price: EUR\u202f11.90\n- Incoterms: FOB Chennai\n- Requested delivery date: 26\u202fFebruary\u202f2027\n- Destination: Germany\n\nOur current plan shows the delivery date is feasible but tight \u2013 we have zero days of slack and the fabric is not yet ready. We will proceed with the schedule and notify you immediately should any change arise.\n\nPlease confirm that the above details are correct and that you accept the tight timeline. Once confirmed, we will issue the order confirmation.\n\nBest regards,  \nKarthik  \nMerchandiser  \nSri Velan Knits",
+   "text": "Hello Anna,\n\nThank you for your email requesting a new purchase order for style\u202fNW\u2011HD\u201114. I confirm receipt of your request to place PO\u202fNW\u20115520 for 1,400 hoodies at EUR\u202f11,90 per piece, FOB Chennai, with delivery from the factory by\u202f26\u202fFebruary\u202f2027.\n\nRegarding the unit price, you mentioned two figures: EUR\u202f11,40 agreed on the phone and EUR\u202f11,90 stated in the PO. Please confirm which price should apply.\n\nDue to current capacity constraints (1,400 pcs needed but only 957 pcs of free capacity remain before\u202f26\u202fFeb\u202f2027 after other orders, leaving a shortfall of 443 pcs), we cannot ship the full quantity by the requested date. We can offer:\n\n- A partial shipment of 900 pcs on\u202f26\u202fFeb\u202f2027, with the remaining 500 pcs on\u202f27\u202fFeb\u202f2027; or  \n- The full 1,400 pcs shipped on\u202f27\u202fFeb\u202f2027.\n\nPlease let us know which option you prefer and confirm the final unit price.\n\nBest regards,  \nKarthik  \nMerchandiser  \nSri Velan Knits",
    "status": "pending",
-   "checked": 5,
+   "checked": 15,
    "violations": [],
    "reviewed_by": null,
    "reviewed_at": null,
    "sent_at": null,
    "reject_reason": null,
-   "created_at": "2026-10-24T19:17:16.139913",
+   "created_at": "2026-10-25T10:18:46.687933",
    "model": "nvidia/nemotron-3-super-120b-a12b",
-   "cost_usd": "0.00110340",
+   "cost_usd": "0.00128250",
    "email_subject": "Bestellung NW-5520",
    "email_sender": "Anna Vogt <a.vogt@nordwind-textil.example>",
    "offer": null
@@ -587,19 +645,19 @@
    "order_id": 9,
    "kind": "internal_note",
    "subject": "Internal: Bestellung NW-5520",
-   "body": "- Buyer placed PO\u202fNW\u20115520 for 1,400 hoodies (NW\u2011HD\u201114) at EUR\u202f11.90 each, FOB Chennai, delivery\u202f2027\u201102\u201126; colours Waldgr\u00fcn (S100\u202fM200\u202fL200\u202fXL100) and Anthrazit (S150\u202fM250\u202fL250\u202fXL150).  \n- Risk: medium severity delivery issue \u2013 utilisation\u202f99.7%, slack\u202f0\u202fdays, capacity left\u202f1,528\u202fpcs for this order.  \n- Management decision: confirm acceptance of the order despite tight capacity or request a revised schedule.  \n- Production: prepare fabric and cut for 1,400 units but hold final loading/scheduling until buyer confirms go\u2011ahead.",
+   "body": "- Buyer placed new PO NW-5520 for 1,400 hoodies (style NW-HD-14) at EUR 11.90 per piece, delivery FOB Chennai by 2027-02-26; email also notes agreed phone price EUR 11.40.  \n- High risk: delivery infeasible \u2013 only 957 pcs free capacity before 2027-02-26, shortfall 443 pcs.  \n- Medium risk: price conflict \u2013 email lists EUR 11.90 while phone agreement cites EUR 11.40, needing clarification.  \n- Management decision: confirm final unit price (EUR 11.90 or EUR 11.40) and approve capacity solution to meet full quantity or accept partial shipment.  \n- Production: prepare materials and schedule for up to 957 pcs by 2027-02-26; hold remaining 443 pcs pending management direction.",
    "edited_body": null,
-   "text": "- Buyer placed PO\u202fNW\u20115520 for 1,400 hoodies (NW\u2011HD\u201114) at EUR\u202f11.90 each, FOB Chennai, delivery\u202f2027\u201102\u201126; colours Waldgr\u00fcn (S100\u202fM200\u202fL200\u202fXL100) and Anthrazit (S150\u202fM250\u202fL250\u202fXL150).  \n- Risk: medium severity delivery issue \u2013 utilisation\u202f99.7%, slack\u202f0\u202fdays, capacity left\u202f1,528\u202fpcs for this order.  \n- Management decision: confirm acceptance of the order despite tight capacity or request a revised schedule.  \n- Production: prepare fabric and cut for 1,400 units but hold final loading/scheduling until buyer confirms go\u2011ahead.",
+   "text": "- Buyer placed new PO NW-5520 for 1,400 hoodies (style NW-HD-14) at EUR 11.90 per piece, delivery FOB Chennai by 2027-02-26; email also notes agreed phone price EUR 11.40.  \n- High risk: delivery infeasible \u2013 only 957 pcs free capacity before 2027-02-26, shortfall 443 pcs.  \n- Medium risk: price conflict \u2013 email lists EUR 11.90 while phone agreement cites EUR 11.40, needing clarification.  \n- Management decision: confirm final unit price (EUR 11.90 or EUR 11.40) and approve capacity solution to meet full quantity or accept partial shipment.  \n- Production: prepare materials and schedule for up to 957 pcs by 2027-02-26; hold remaining 443 pcs pending management direction.",
    "status": "pending",
-   "checked": 5,
+   "checked": 14,
    "violations": [],
    "reviewed_by": null,
    "reviewed_at": null,
    "sent_at": null,
    "reject_reason": null,
-   "created_at": "2026-10-24T19:17:16.139917",
+   "created_at": "2026-10-25T10:18:46.687937",
    "model": "nvidia/nemotron-3-super-120b-a12b",
-   "cost_usd": "0.00120960",
+   "cost_usd": "0.00267930",
    "email_subject": "Bestellung NW-5520",
    "email_sender": "Anna Vogt <a.vogt@nordwind-textil.example>",
    "offer": null
@@ -608,118 +666,102 @@
  "match_questions": [],
  "calls": [
   {
-   "id": 112,
+   "id": 158,
    "run_id": null,
    "task_type": "draft_internal_note",
    "tier": "super",
    "model": "nvidia/nemotron-3-super-120b-a12b",
-   "input_tokens": 1020,
-   "output_tokens": 1004,
-   "latency_ms": 6442,
-   "cost_usd": "0.00120960",
+   "input_tokens": 1221,
+   "output_tokens": 2570,
+   "latency_ms": 19283,
+   "cost_usd": "0.00267930",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:17:16.137790"
+   "created_at": "2026-10-25T10:18:46.685660"
   },
   {
-   "id": 111,
+   "id": 157,
    "run_id": null,
    "task_type": "draft_reply",
    "tier": "super",
    "model": "nvidia/nemotron-3-super-120b-a12b",
-   "input_tokens": 1146,
-   "output_tokens": 844,
-   "latency_ms": 5644,
-   "cost_usd": "0.00110340",
+   "input_tokens": 1347,
+   "output_tokens": 976,
+   "latency_ms": 5966,
+   "cost_usd": "0.00128250",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:17:09.690602"
+   "created_at": "2026-10-25T10:18:27.395739"
   },
   {
-   "id": 110,
+   "id": 156,
    "run_id": 12,
    "task_type": "planning",
-   "tier": "super",
-   "model": "nvidia/nemotron-3-super-120b-a12b",
-   "input_tokens": 4518,
-   "output_tokens": 667,
-   "latency_ms": 5849,
-   "cost_usd": "0.00195570",
+   "tier": "ultra",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "input_tokens": 4693,
+   "output_tokens": 1133,
+   "latency_ms": 5841,
+   "cost_usd": "0.00809200",
    "source": "live",
-   "detail": null,
+   "detail": "ultra escalation: current plan infeasible: delivery options need weighing",
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:17:02.549697"
+   "created_at": "2026-10-25T10:18:19.878419"
   },
   {
-   "id": 109,
+   "id": 155,
    "run_id": 12,
    "task_type": "planning",
-   "tier": "super",
-   "model": "nvidia/nemotron-3-super-120b-a12b",
-   "input_tokens": 3680,
-   "output_tokens": 321,
-   "latency_ms": 2862,
-   "cost_usd": "0.00139290",
+   "tier": "ultra",
+   "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "input_tokens": 3068,
+   "output_tokens": 812,
+   "latency_ms": 3317,
+   "cost_usd": "0.00550400",
    "source": "live",
-   "detail": null,
+   "detail": "ultra escalation: current plan infeasible: delivery options need weighing",
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:16:53.525080"
+   "created_at": "2026-10-25T10:18:08.384990"
   },
   {
-   "id": 108,
-   "run_id": 12,
-   "task_type": "planning",
-   "tier": "super",
-   "model": "nvidia/nemotron-3-super-120b-a12b",
-   "input_tokens": 2891,
-   "output_tokens": 271,
-   "latency_ms": 3638,
-   "cost_usd": "0.00111120",
-   "source": "live",
-   "detail": null,
-   "success": true,
-   "error": null,
-   "created_at": "2026-10-24T19:16:48.070826"
-  },
-  {
-   "id": 107,
+   "id": 154,
    "run_id": null,
    "task_type": "extract",
    "tier": "nano",
    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
    "input_tokens": 922,
-   "output_tokens": 601,
-   "latency_ms": 5977,
-   "cost_usd": "0.00019956",
+   "output_tokens": 603,
+   "latency_ms": 5477,
+   "cost_usd": "0.00020004",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:16:42.627416"
+   "created_at": "2026-10-25T10:18:04.669928"
   },
   {
-   "id": 106,
+   "id": 153,
    "run_id": null,
    "task_type": "classify",
    "tier": "nano",
    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
    "input_tokens": 633,
    "output_tokens": 91,
-   "latency_ms": 1671,
+   "latency_ms": 1695,
    "cost_usd": "0.00005982",
    "source": "live",
    "detail": null,
    "success": true,
    "error": null,
-   "created_at": "2026-10-24T19:16:36.646667"
+   "created_at": "2026-10-25T10:17:59.188455"
   }
  ],
- "cost_usd": 0.007032,
- "model_latency_ms": 32083
+ "cost_usd": 0.017818,
+ "model_latency_ms": 41579
 }
