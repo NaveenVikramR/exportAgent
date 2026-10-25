@@ -4,6 +4,14 @@ Model: production can start once fabric is ready (fabric lead time after the
 as-of date, unless fabric is already in-house). From then until ex-factory the
 factory has its free capacity (weekly capacity minus the share already booked
 outside ExportAgent), shared with other ExportAgent orders due in the same window.
+
+Deliberate simplification: every other order due between the as-of date and this
+ex-factory date is charged to that sewing window, including orders due before the
+fabric arrives, which in reality could be sewn while it is on its way. This is the
+reading of TEST_V2_SPEC section 4 ("free capacity in that window") that every DEV
+and TEST label was derived with, and it errs towards flagging a plan. On a busy
+order book it can call a plan infeasible that a full schedule would fit (T1 in
+docs/test-run/REPORT.md).
 """
 
 from dataclasses import asdict, dataclass

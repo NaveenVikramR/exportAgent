@@ -30,6 +30,23 @@ Tom
 Blue Kite Goods"""
 
 
+# --- the capacity model, pinned with T1's numbers ------------------------------------------------
+
+
+def test_other_orders_are_charged_to_the_sewing_window_after_fabric():
+    """Documented model (see feasibility.py): T1, 3,000 pcs by 29 Jan 2027, emailed 24 Oct 2026,
+    with 39,900 pcs of other orders due in between. The 55 days after the 42-day fabric lead time
+    hold 31,428 pcs, so the plan is infeasible; with no other orders it is comfortably feasible."""
+    profile = load_profile("india_tiruppur")
+    args = dict(quantity=3000, delivery_date=date(2027, 1, 29), as_of=date(2026, 10, 24), profile=profile)
+
+    busy = check_feasibility(**args, other_orders_load=39900)
+    assert (busy.verdict, busy.capacity_in_window, busy.shortfall_pcs) == ("infeasible", 31428, 3000)
+
+    quiet = check_feasibility(**args)
+    assert quiet.verdict == "feasible" and quiet.production_days_available == 55
+
+
 # --- destination must be stated (T4) -----------------------------------------------------------
 
 
