@@ -39,3 +39,7 @@ Thumbs.db
 # Demo video footage (kept locally, not in git)
 docs/video/*.mp4
 docs/video/clips/
+docs/video/voice-samples/
+docs/video/audio/
+docs/video/*.wav
+docs/video/frames/

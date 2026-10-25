@@ -1,107 +1,107 @@
 1
-00:00:00,000 --> 00:00:06,500
+00:00:00,000 --> 00:00:05,525
 This is ExportAgent, an AI export desk for apparel and textile exporters.
 
 2
-00:00:06,500 --> 00:00:13,500
+00:00:06,500 --> 00:00:14,116
 A German buyer has just sent a revised purchase order: Rev 1 of PO NW-45120.
 
 3
-00:00:13,500 --> 00:00:20,000
+00:00:14,366 --> 00:00:19,059
 Here is their email, with the purchase order attached as a PDF.
 
 4
-00:00:20,130 --> 00:00:27,130
+00:00:20,130 --> 00:00:26,253
 Nemotron Nano extracted every field, with a confidence score and the exact source quote.
 
 5
-00:00:27,130 --> 00:00:34,130
+00:00:26,530 --> 00:00:32,333
 Python then checks each one: is the quote really in the email, and do the sizes add up?
 
 6
-00:00:34,130 --> 00:00:40,630
+00:00:32,930 --> 00:00:37,730
 The order keeps every version, and Python compares them field by field.
 
 7
-00:00:40,630 --> 00:00:46,130
-The total is up 1,500 pieces, and the ex-factory date moved 15 days earlier.
+00:00:38,630 --> 00:00:44,923
+The total is up 1,500 pieces, and the date moved 15 days earlier.
 
 8
-00:00:46,130 --> 00:00:51,530
+00:00:45,530 --> 00:00:50,799
 Navy alone is up 33%. Every change goes to the risk check.
 
 9
-00:00:51,560 --> 00:00:56,560
-Python found the new plan infeasible, so this run escalated to Nemotron Ultra.
+00:00:51,560 --> 00:00:56,360
+The plan is infeasible, so this run escalated to Nemotron Ultra.
 
 10
-00:00:56,560 --> 00:01:01,160
-The factory is 4,186 pieces short, and the contract value is up 12.5%.
+00:00:56,610 --> 00:01:03,437
+4,186 pieces short, and the contract value is up 12.5%.
 
 11
-00:01:01,160 --> 00:01:05,960
-The trace shows every step, and the Python result behind each flag.
+00:01:03,687 --> 00:01:05,756
+The trace shows every step.
 
 12
-00:01:05,990 --> 00:01:10,990
+00:01:05,990 --> 00:01:10,833
 Ultra chose to check Germany's labelling rules with a Tavily web search.
 
 13
-00:01:10,990 --> 00:01:16,390
+00:01:11,083 --> 00:01:15,648
 Every source is listed under the finding, as a link you can open.
 
 14
-00:01:16,420 --> 00:01:22,420
-Nemotron Super drafted the reply. A Python fact check verified all 14 values in it.
+00:01:16,420 --> 00:01:21,711
+Nemotron Super wrote the reply, and Python checked all 14 values in it.
 
 15
-00:01:22,420 --> 00:01:28,820
-Both delivery options, the full quantity on 8 December or a split shipment, were computed in Python.
+00:01:21,961 --> 00:01:27,230
+Both delivery options, all on 8 December or a split shipment, come from Python.
 
 16
-00:01:28,850 --> 00:01:33,850
+00:01:28,850 --> 00:01:33,479
 A person approves every reply. Nothing is emailed automatically.
 
 17
-00:01:33,880 --> 00:01:40,380
+00:01:33,880 --> 00:01:38,787
 Capacity, lead times and invoice formats live in factory profiles.
 
 18
-00:01:40,380 --> 00:01:46,380
-The same revision is infeasible in Tiruppur, but feasible in Dhaka, at 72% of free capacity.
+00:01:39,280 --> 00:01:46,341
+The same revision is infeasible in Tiruppur, but feasible in Dhaka, at 72% of capacity.
 
 19
-00:01:46,380 --> 00:01:51,380
+00:01:46,591 --> 00:01:51,285
 Switching profiles changes the exporter, the port and the paperwork.
 
 20
-00:01:51,410 --> 00:01:56,910
+00:01:51,410 --> 00:01:55,378
 The buyer accepts the split shipment, so we record that decision.
 
 21
-00:01:56,910 --> 00:02:01,910
+00:01:56,910 --> 00:02:01,497
 ExportAgent generates an invoice and a packing list for each shipment.
 
 22
-00:02:01,910 --> 00:02:07,510
+00:02:01,910 --> 00:02:07,393
 Every number is computed in Python. Anything unknown prints as TO BE CONFIRMED.
 
 23
-00:02:07,540 --> 00:02:14,540
+00:02:07,540 --> 00:02:14,495
 Every model call runs on Nebius Token Factory. Nano reads, Super drafts and judges risk.
 
 24
-00:02:14,540 --> 00:02:21,540
+00:02:14,745 --> 00:02:20,163
 Ultra is used only when a trigger fires: about 21% of risk runs.
 
 25
-00:02:21,540 --> 00:02:28,540
+00:02:21,540 --> 00:02:27,087
 Measured live, a whole email costs under one cent: $0.0094.
 
 26
-00:02:28,540 --> 00:02:35,940
+00:02:28,540 --> 00:02:32,316
 On a held-out test set, it found every high-risk issue.
 
 27
-00:02:35,970 --> 00:02:44,570
+00:02:35,970 --> 00:02:41,858
 ExportAgent: every buyer email read, checked and answered, with a person in control.
