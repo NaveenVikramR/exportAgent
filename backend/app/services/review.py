@@ -40,6 +40,30 @@ def _evidence_states(name: str, value: str, evidence: str) -> bool:
     return name == "currency" and any(symbol in quote for symbol in _CURRENCY_SYMBOLS.get(value.upper(), ()))
 
 
+# A price with its currency: "EUR 11,40", "USD 4.20", "€11.90", "11,90 EUR". Exactly two decimals,
+# so quantities ("1.400") and totals ("65,475") are not read as prices.
+_CURRENCY = r"(?:USD|EUR|GBP|AUD|CAD|JPY|US\$|A\$|\$|€|£)"
+_AMOUNT = r"(?<![\d.,])(\d{1,4}[.,]\d{2})(?!\d)(?![.,]\d)"
+_PRICES = re.compile(rf"{_CURRENCY}\s?{_AMOUNT}|{_AMOUNT}\s?{_CURRENCY}")
+
+
+def _price_conflict(fields, source_text: str) -> str | None:
+    """A new PO that states two different unit prices for the same goods (e.g. "11,40 as agreed"
+    in the text and 11,90 in the table). Per-line prices are different goods, not a conflict."""
+    if fields.unit_price.value is None or any(item.unit_price is not None for item in fields.line_items):
+        return None
+    try:
+        extracted = float(str(fields.unit_price.value).replace(",", "."))
+    except ValueError:
+        return None
+    stated = {float((a or b).replace(",", ".")) for a, b in _PRICES.findall(source_text)}
+    others = sorted(p for p in stated if p != extracted and 0.5 <= p / extracted <= 2)
+    if not others:
+        return None
+    return (f"The email states more than one unit price: {', '.join(f'{p:.2f}' for p in others)} "
+            f"besides {extracted:.2f}. Confirm which is agreed.")
+
+
 def inherit_from_previous(reviewed: ReviewedExtraction, previous: dict) -> None:
     """A field the email did not restate keeps the order's previous value: it is not missing."""
     inherited = [
@@ -115,6 +139,11 @@ def review_extraction(
                 detail=f"Line items add up to {sum(item_quantities)}, total says {total.value}.",
             )
         )
+
+    conflict = _price_conflict(fields, source_text) if category == EmailCategory.NEW_PO else None
+    if conflict:
+        fields.unit_price.confidence = min(fields.unit_price.confidence, _UNVERIFIED_CONFIDENCE)
+        flags.append(ReviewFlag(field="unit_price", reason="price_conflict", detail=conflict))
 
     already_flagged = {flag.field for flag in flags}
     for name in SCALAR_FIELDS:

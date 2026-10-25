@@ -272,7 +272,7 @@ def test_order_category_forces_extraction(settings, session_factory):
                                            ("España", "Spain"), ("Japan", "Japan")])
 def test_country_short_forms_get_one_name(raw, name):
     extraction = _po(destination_country=raw)
-    normalise_extraction(extraction, "")
+    normalise_extraction(extraction, f"Destination: {raw}")
     assert extraction.destination_country.value == name
 
 

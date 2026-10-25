@@ -80,7 +80,7 @@ def test_unresolved_delivery_date_is_marked_for_review():
 
 def test_resolved_delivery_date_keeps_its_type():
     extraction = _po(delivery_date="2027-04-03", destination_country="USA")
-    normalise_extraction(extraction, "Ex-factory 03/04/2027")
+    normalise_extraction(extraction, "Ex-factory 03/04/2027 to our Savannah, GA warehouse")
 
     assert extraction.delivery_date.value == date(2027, 3, 4) and extraction.ambiguous_dates == []
 

@@ -20,6 +20,7 @@ from datetime import date
 from decimal import Decimal, InvalidOperation
 
 from app.schemas.extraction import POExtraction
+from app.services.places import names_country
 
 _REVISION_MARKER = r"(?:rev(?:ision)?|r|amendment|amend|amdt|amd|version|ver|v)"
 _REVISION_NUMBER = r"\.?\s*(?:no\.?|nr\.?|number)?\s*[-#:.]?\s*(?P<rev>[A-Z]|\d{1,3})"
@@ -163,6 +164,7 @@ def normalise_extraction(extraction: POExtraction, text: str) -> list[str]:
             extraction.po_number.value, extraction.po_revision = base, revision
             extraction.style.value = None
             notes.append(f"Style '{style}' read as PO {base}, revision {revision}.")
+    notes += _style_is_not_the_po(extraction, text)
     for item in extraction.line_items:
         if item.colour and clean_colour_name(item.colour) != item.colour:
             notes.append(f"Colour '{item.colour}' read as '{clean_colour_name(item.colour)}'.")
@@ -171,8 +173,36 @@ def normalise_extraction(extraction: POExtraction, text: str) -> list[str]:
     country = extraction.destination_country.value
     if isinstance(country, str) and _country_key(country) in _COUNTRY_NAMES:
         extraction.destination_country.value = _COUNTRY_NAMES[_country_key(country)]
+        country = extraction.destination_country.value
+    if isinstance(country, str) and not names_country(text, country):
+        # Inferred, not stated (e.g. from the buyer's name). It would also settle ambiguous
+        # dates below, so no destination rather than a guess.
+        extraction.destination_country.value, extraction.destination_country.evidence = None, None
+        notes.append(f"Destination '{country}' is not stated in the email; left empty.")
     notes += resolve_delivery_date(extraction, text)
     return notes
+
+
+def _code_key(code: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", code.casefold())
+
+
+_STYLE_LABEL = r"(?:style|art(?:icle|ikel)?|item|model|ref(?:erence)?)\s*(?:no\.?|nr\.?|number|#|code)?\s*[:#.-]?\s*"
+
+
+def _style_is_not_the_po(extraction: POExtraction, text: str) -> list[str]:
+    """The PO number copied into the style field, when the email names no style: drop it,
+    so a follow-up keeps the order's style instead of recording a false style change."""
+    style, po = extraction.style.value, extraction.po_number.value
+    if not (isinstance(style, str) and isinstance(po, str)):
+        return []
+    style_base, _ = split_po_revision(style)
+    if _code_key(style_base) != _code_key(po):
+        return []
+    if re.search(_STYLE_LABEL + re.escape(style_base), text, re.IGNORECASE):
+        return []  # the email really calls it the style
+    extraction.style.value, extraction.style.evidence = None, None
+    return [f"Style '{style}' is the PO number; the email names no style."]
 
 
 def _country_key(name: str) -> str:
